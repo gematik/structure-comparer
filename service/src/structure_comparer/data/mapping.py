@@ -14,6 +14,7 @@ from ..manual_entries import (
     ManualEntries,
 )
 from ..model.mapping import MappingBase as MappingBaseModel
+from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
 from .config import MappingConfig, MappingProfileConfig
 from .profile import Profile, ProfileField
@@ -294,6 +295,31 @@ class Mapping:
                 sources=sources,
                 target=target,
                 url=self.url,
+            )
+
+        except ValidationError as e:
+            print(e.errors())
+
+        else:
+            return model
+
+    def to_details_model(self) -> MappingDetailsModel:
+        sources = [p.to_model() for p in self.sources]
+        target = self.target.to_model()
+
+        fields = [f.to_model() for f in self.fields.values()]
+
+        try:
+            model = MappingDetailsModel(
+                id=self.id,
+                name=self.name,
+                version=self.version,
+                last_updated=self.last_updated,
+                status=self.status,
+                sources=sources,
+                target=target,
+                url=self.url,
+                fields=fields,
             )
 
         except ValidationError as e:

@@ -22,6 +22,7 @@ from .model.error import Error as ErrorModel
 from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
 from .model.mapping import MappingBase as MappingBaseModel
+from .model.mapping import MappingDetails as MappingDetailsModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -520,7 +521,7 @@ async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
 )
 async def get_mapping(
     project_key: str, mapping_id: str, response: Response
-) -> MappingBaseModel | ErrorModel:
+) -> MappingDetailsModel | ErrorModel:
     """
     Get the available mappings
     Returns a list with all mappings, including the name and the url to access it.

@@ -19,6 +19,7 @@ from .errors import (
 from .helpers import get_field_by_id
 from .manual_entries import MANUAL_ENTRIES_CLASSIFICATION, MANUAL_ENTRIES_EXTRA
 from .model.mapping import MappingBase as MappingBaseModel
+from .model.mapping import MappingDetails as MappingDetailsModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -135,9 +136,9 @@ class ProjectsHandler:
 
         return [comp.to_base_model() for comp in proj.mappings.values()]
 
-    def get_mapping(self, project_key: str, mapping_id: str) -> MappingBaseModel:
+    def get_mapping(self, project_key: str, mapping_id: str) -> MappingDetailsModel:
         mapping = self.__get_mapping(project_key, mapping_id)
-        return mapping.to_base_model()
+        return mapping.to_details_model()
 
     def get_mapping_fields(
         self, project_key: str, mapping_id: str
