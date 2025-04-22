@@ -116,7 +116,7 @@ class Project:
         return any([p.name == name and p.version == version for p in self.pkgs])
 
     def to_model(self) -> ProjectModel:
-        mappings = [comp.to_model() for comp in self.mappings.values()]
+        mappings = [comp.to_base_model() for comp in self.mappings.values()]
         pkgs = [p.to_model() for p in self.pkgs]
 
         return ProjectModel(name=self.name, mappings=mappings, packages=pkgs)

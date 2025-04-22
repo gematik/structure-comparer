@@ -4,7 +4,7 @@ from ..classification import Classification
 from .profile import Profile, ProfileField
 
 
-class Mapping(BaseModel):
+class MappingBase(BaseModel):
     id: str
     name: str
     url: str

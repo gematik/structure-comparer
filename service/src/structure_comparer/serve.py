@@ -21,7 +21,7 @@ from .handler import ProjectsHandler
 from .model.error import Error as ErrorModel
 from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
-from .model.mapping import Mapping as MappingModel
+from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -414,7 +414,7 @@ async def get_mappings(
 @app.get(
     "/mapping/{id}", tags=["Mappings"], responses={404: {}, 412: {}}, deprecated=True
 )
-async def get_mapping_old(id: str, response: Response) -> MappingModel:
+async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
     """
     Get a specific mapping
     Returns the mapping with the given id. This includes all details like classifications, presences in profiles, etc.
@@ -520,7 +520,7 @@ async def get_mapping_old(id: str, response: Response) -> MappingModel:
 )
 async def get_mapping(
     project_key: str, mapping_id: str, response: Response
-) -> MappingModel | ErrorModel:
+) -> MappingBaseModel | ErrorModel:
     """
     Get the available mappings
     Returns a list with all mappings, including the name and the url to access it.

@@ -13,7 +13,7 @@ from ..manual_entries import (
     MANUAL_ENTRIES_REMARK,
     ManualEntries,
 )
-from ..model.mapping import Mapping as MappingModel
+from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingField as MappingFieldModel
 from .config import MappingConfig, MappingProfileConfig
 from .profile import Profile, ProfileField
@@ -280,12 +280,12 @@ class Mapping:
                     all_profiles_keys[:-1], all_profiles_keys[-1]
                 )
 
-    def to_model(self) -> MappingModel:
+    def to_base_model(self) -> MappingBaseModel:
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
 
         try:
-            model = MappingModel(
+            model = MappingBaseModel(
                 id=self.id,
                 name=self.name,
                 version=self.version,
