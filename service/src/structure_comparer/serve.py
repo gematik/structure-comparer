@@ -22,6 +22,7 @@ from .model.init_project_input import InitProjectInput
 from .model.mapping import Mapping as MappingModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
+from .model.profile import ProfileList as ProfileListModel
 from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
@@ -138,6 +139,21 @@ async def update_or_create_project(
     project_key: str, project: ProjectInputModel
 ) -> ProjectModel:
     proj = handler.update_or_create_project(project_key, project)
+
+    return proj
+
+
+@app.get(
+    "/project/{project_key}/profile",
+    tags=["Profiles"],
+    responses={404: {"error": {}}},
+)
+async def get_profiles(project_key: str) -> ProfileListModel:
+    try:
+        proj = handler.get_project_profiles(project_key)
+
+    except ProjectNotFound as e:
+        return {"error": str(e)}
 
     return proj
 

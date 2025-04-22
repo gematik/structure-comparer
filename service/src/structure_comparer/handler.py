@@ -20,6 +20,7 @@ from .manual_entries import MANUAL_ENTRIES_CLASSIFICATION, MANUAL_ENTRIES_EXTRA
 from .model.mapping import Mapping as MappingModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
+from .model.profile import ProfileList as ProfileListModel
 from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
@@ -77,6 +78,16 @@ class ProjectsHandler:
             self.__projs[proj_key] = proj
 
         return proj.to_model()
+
+    def get_project_profiles(self, proj_key: str) -> ProfileListModel:
+        proj = self.__projs.get(proj_key)
+
+        if proj is None:
+            raise ProjectNotFound()
+
+        profs = [prof.to_pkg_model() for pkg in proj.pkgs for prof in pkg.profiles]
+
+        return ProfileListModel(profiles=profs)
 
     @staticmethod
     def get_classifications() -> Dict[str, List[Dict[str, str]]]:
