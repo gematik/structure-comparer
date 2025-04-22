@@ -7,12 +7,12 @@
         {
             "name": "de.gematik.dev.epa",
             "version": "1.0.0",
-            "display": null
+            "display": "ePA Basic Dev"
         },
         {
             "name": "de.basisprofil.r4",
             "version": "1.5.0-ballot2",
-            "display": null
+            "display": "Basisprofil DE (R4)"
         }
     ],
     "mapping_output_file": "mapping.json",

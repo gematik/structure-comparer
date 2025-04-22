@@ -13,6 +13,7 @@ from .errors import (
     MappingTargetMissing,
     MappingTargetNotFound,
     MappingValueMissing,
+    PackageNotFound,
     ProjectNotFound,
 )
 from .helpers import get_field_by_id
@@ -20,6 +21,8 @@ from .manual_entries import MANUAL_ENTRIES_CLASSIFICATION, MANUAL_ENTRIES_EXTRA
 from .model.mapping import Mapping as MappingModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
+from .model.package import Package as PackageModel
+from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
 from .model.profile import ProfileList as ProfileListModel
 from .model.project import Project as ProjectModel
@@ -88,6 +91,24 @@ class ProjectsHandler:
 
         pkgs = [p.to_model() for p in proj.pkgs]
         return PackageListModel(packages=pkgs)
+
+    def update_project_package(
+        self, proj_key: str, package_id: str, package_input: PackageInputModel
+    ) -> PackageModel:
+        proj = self.__projs.get(proj_key)
+
+        if proj is None:
+            raise ProjectNotFound()
+
+        pkg = proj.get_package(package_id)
+
+        if pkg is None:
+            raise PackageNotFound()
+
+        # Update package information
+        pkg.display = package_input.display
+
+        return pkg
 
     def get_project_profiles(self, proj_key: str) -> ProfileListModel:
         proj = self.__projs.get(proj_key)

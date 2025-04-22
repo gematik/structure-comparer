@@ -8,5 +8,9 @@ class Package(BaseModel):
     version: str
 
 
+class PackageInput(BaseModel):
+    display: str
+
+
 class PackageList(BaseModel):
     packages: list[Package]

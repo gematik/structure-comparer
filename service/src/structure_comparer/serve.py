@@ -13,6 +13,7 @@ from .errors import (
     MappingTargetMissing,
     MappingTargetNotFound,
     MappingValueMissing,
+    PackageNotFound,
     ProjectAlreadyExists,
     ProjectNotFound,
 )
@@ -23,6 +24,8 @@ from .model.init_project_input import InitProjectInput
 from .model.mapping import Mapping as MappingModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
+from .model.package import Package as PackageModel
+from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
 from .model.profile import ProfileList as ProfileListModel
 from .model.project import Project as ProjectModel
@@ -164,6 +167,30 @@ async def get_package_list(
         return ErrorModel.from_except(e)
 
     return proj
+
+
+@app.post(
+    "/project/{project_key}/package/{package_id}",
+    tags=["Packages"],
+    responses={404: {"error": {}}},
+)
+async def update_package(
+    project_key: str,
+    package_id: str,
+    package_input: PackageInputModel,
+    response: Response,
+) -> PackageModel | ErrorModel:
+    """
+    Update the information of a package
+    """
+    try:
+        pkg = handler.update_project_package(project_key, package_id, package_input)
+
+    except (ProjectNotFound, PackageNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return pkg
 
 
 @app.get(
