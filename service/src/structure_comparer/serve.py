@@ -23,6 +23,7 @@ from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingDetails as MappingDetailsModel
+from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -750,6 +751,69 @@ async def get_mapping_fields(
         return handler.get_mapping_fields(project_key, mapping_id)
 
     except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_id}",
+    tags=["Fields"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_mapping_field(
+    project_key: str, mapping_id: str, field_id: str, response: Response
+) -> MappingFieldModel | ErrorModel:
+    """
+    Get the fields of a mapping
+    Returns a brief list of the fields
+    ---
+    produces:
+      - application/json
+    async definitions:
+      - schema:
+          id: MappingFieldShort
+          type: object
+          reuqired:
+            - id
+            - name
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+      - schema:
+          id: MappingShort
+          type: object
+          required:
+            - id
+            - fields
+          properties:
+            fields:
+              type: array
+              items:
+                $ref: "#/async definitions/MappingFieldShort"
+            id:
+              type: string
+    parameters:
+      - in: path
+        name: id
+        type: string
+        required: true
+        description: The id of the mapping
+    responses:
+      200:
+        description: The fields of the mapping
+        schema:
+          $ref: "#/async definitions/MappingShort"
+      404:
+        description: Mapping not found
+    """
+    try:
+        return handler.get_mapping_field(project_key, mapping_id, field_id)
+
+    except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
 

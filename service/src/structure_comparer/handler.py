@@ -20,6 +20,7 @@ from .helpers import get_field_by_id
 from .manual_entries import MANUAL_ENTRIES_CLASSIFICATION, MANUAL_ENTRIES_EXTRA
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingDetails as MappingDetailsModel
+from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -148,6 +149,18 @@ class ProjectsHandler:
         fields = [f.to_model() for f in mapping.fields.values()]
 
         return MappingFieldsOutputModel(id=mapping_id, fields=fields)
+
+    def get_mapping_field(
+        self, project_key: str, mapping_id: str, field_id: str
+    ) -> MappingFieldsOutputModel:
+        mapping = self.__get_mapping(project_key, mapping_id)
+
+        field = get_field_by_id(mapping, field_id)
+
+        if field is None:
+            raise FieldNotFound()
+
+        return field.to_model()
 
     def set_mapping_classification(
         self, project_key: str, mapping_id: str, field_id: str, mapping: MappingInput
