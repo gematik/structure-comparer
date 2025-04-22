@@ -1,5 +1,8 @@
-def get_field_by_id(mapping, field_id: str):
+from .data.mapping import Mapping, MappingField
+
+
+def get_field_by_name(mapping: Mapping, field_name: str) -> MappingField:
     for field in mapping.fields.values():
-        if field.id == field_id:
+        if field.name == field_name:
             return field
     return None

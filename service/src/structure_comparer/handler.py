@@ -16,7 +16,7 @@ from .errors import (
     PackageNotFound,
     ProjectNotFound,
 )
-from .helpers import get_field_by_id
+from .helpers import get_field_by_name
 from .manual_entries import MANUAL_ENTRIES_ACTION, MANUAL_ENTRIES_EXTRA
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingDetails as MappingDetailsModel
@@ -150,11 +150,11 @@ class ProjectsHandler:
         return MappingFieldsOutputModel(id=mapping_id, fields=fields)
 
     def get_mapping_field(
-        self, project_key: str, mapping_id: str, field_id: str
+        self, project_key: str, mapping_id: str, field_name: str
     ) -> MappingFieldsOutputModel:
         mapping = self.__get_mapping(project_key, mapping_id)
 
-        field = get_field_by_id(mapping, field_id)
+        field = get_field_by_name(mapping, field_name)
 
         if field is None:
             raise FieldNotFound()
@@ -162,13 +162,13 @@ class ProjectsHandler:
         return field.to_model()
 
     def set_mapping_classification(
-        self, project_key: str, mapping_id: str, field_id: str, mapping: MappingInput
+        self, project_key: str, mapping_id: str, field_name: str, mapping: MappingInput
     ):
         proj = self.__projs.get(project_key)
 
         # Easiest way to get the fields is from mapping
         mapping = self.__get_mapping(project_key, mapping_id, proj)
-        field = get_field_by_id(mapping, field_id)
+        field = get_field_by_name(mapping, field_name)
 
         if field is None:
             raise FieldNotFound()
@@ -176,17 +176,17 @@ class ProjectsHandler:
         action = Action(mapping.action)
 
         # Check if action is allowed for this field
-        if action not in field.classifications_allowed:
+        if action not in field.actions_allowed:
             raise MappingNotFound(
                 f"action '{action.value}' not allowed for this field, allowed: {
-                    ', '.join([field.value for field in field.classifications_allowed])}"
+                    ', '.join([field.value for field in field.actions_allowed])}"
             )
 
         # Build the entry that should be created/updated
         new_entry = {MANUAL_ENTRIES_ACTION: action}
         if action == Action.COPY_FROM or action == Action.COPY_TO:
             if target_id := mapping.target:
-                target = get_field_by_id(mapping, target_id)
+                target = get_field_by_name(mapping, target_id)
 
                 if target is None:
                     raise MappingTargetNotFound()

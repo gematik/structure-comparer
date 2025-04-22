@@ -756,14 +756,14 @@ async def get_mapping_fields(
 
 
 @app.get(
-    "/project/{project_key}/mapping/{mapping_id}/field/{field_id}",
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}",
     tags=["Fields"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
     responses={404: {}},
 )
 async def get_mapping_field(
-    project_key: str, mapping_id: str, field_id: str, response: Response
+    project_key: str, mapping_id: str, field_name: str, response: Response
 ) -> MappingFieldModel | ErrorModel:
     """
     Get the fields of a mapping
@@ -811,7 +811,7 @@ async def get_mapping_field(
         description: Mapping not found
     """
     try:
-        return handler.get_mapping_field(project_key, mapping_id, field_id)
+        return handler.get_mapping_field(project_key, mapping_id, field_name)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
@@ -903,7 +903,7 @@ async def post_mapping_field_classification_old(
 
 
 @app.post(
-    "/project/{project_key}/mapping/{mapping_id}/field/{field_id}/classification",
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/classification",
     tags=["Fields"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
@@ -912,7 +912,7 @@ async def post_mapping_field_classification_old(
 async def post_mapping_field_classification(
     project_key: str,
     mapping_id: str,
-    field_id: str,
+    field_name: str,
     mapping: MappingInput,
     response: Response,
 ):
@@ -970,7 +970,7 @@ async def post_mapping_field_classification(
     """
     try:
         return handler.set_mapping_classification(
-            project_key, mapping_id, field_id, mapping
+            project_key, mapping_id, field_name, mapping
         )
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
