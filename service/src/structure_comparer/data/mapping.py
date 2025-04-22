@@ -260,7 +260,7 @@ class Mapping:
         for profile in all_profiles:
             for field in profile.fields.values():
                 # Check if field already exists or needs to be created
-                if field not in self.fields:
+                if field.path_full not in self.fields:
                     self.fields[field.path_full] = MappingField()
 
                 self.fields[field.path_full].profiles[profile.key] = field
