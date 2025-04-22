@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class Profile(BaseModel):
+    id: str
     profile_key: str
     name: str
     version: str

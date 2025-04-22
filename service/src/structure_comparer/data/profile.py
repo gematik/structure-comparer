@@ -77,7 +77,7 @@ class Profile:
     def to_model(self) -> ProfileModel:
         try:
             model = ProfileModel(
-                profile_key=self.key, name=self.name, version=self.version
+                id=self.id, profile_key=self.key, name=self.name, version=self.version
             )
         except ValidationError as e:
             logger.exception(e)
@@ -88,6 +88,7 @@ class Profile:
     def to_pkg_model(self) -> ProfileModel:
         try:
             model = PackageProfileModel(
+                id=self.id,
                 profile_key=self.key,
                 name=self.name,
                 version=self.version,
