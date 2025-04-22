@@ -7,9 +7,9 @@ from typing import Dict
 import yaml
 from pydantic import BaseModel
 
-from .classification import Classification
+from .action import Action
 
-MANUAL_ENTRIES_CLASSIFICATION = "classification"
+MANUAL_ENTRIES_ACTION = "classification"
 MANUAL_ENTRIES_REMARK = "remark"
 MANUAL_ENTRIES_EXTRA = "extra"
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class ManualMapping(BaseModel):
-    classification: Classification
+    classification: Action
     extra: str = None
     remark: str = None
 
@@ -42,9 +42,7 @@ class ManualMappings:
         data = copy.deepcopy(self.data)
         for name, value in data.items():
             try:
-                value[MANUAL_ENTRIES_CLASSIFICATION] = value[
-                    MANUAL_ENTRIES_CLASSIFICATION
-                ].value
+                value[MANUAL_ENTRIES_ACTION] = value[MANUAL_ENTRIES_ACTION].value
             except TypeError as e:
                 e.add_note(f"converting field {name}")
                 raise

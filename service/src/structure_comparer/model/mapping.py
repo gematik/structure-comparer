@@ -1,10 +1,19 @@
 from pydantic import BaseModel
 
-from ..classification import Classification
+from ..action import Action
 from .profile import Profile, ProfileField
 
 
-class Mapping(BaseModel):
+class MappingField(BaseModel):
+    name: str
+    action: Action
+    extra: str | None = None
+    profiles: dict[str, ProfileField]
+    remark: str
+    actions_allowed: list[Action]
+
+
+class MappingBase(BaseModel):
     id: str
     name: str
     url: str
@@ -15,14 +24,8 @@ class Mapping(BaseModel):
     target: Profile
 
 
-class MappingField(BaseModel):
-    id: str
-    name: str
-    classification: Classification
-    extra: str | None = None
-    profiles: dict[str, ProfileField]
-    remark: str
-    classifications_allowed: list[Classification]
+class MappingDetails(MappingBase):
+    fields: list[MappingField]
 
 
 class MappingFieldsOutput(BaseModel):

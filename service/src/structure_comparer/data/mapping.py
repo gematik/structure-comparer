@@ -5,33 +5,34 @@ from typing import Dict, List
 
 from pydantic import ValidationError
 
-from ..classification import Classification
+from ..action import Action
 from ..consts import REMARKS
 from ..manual_entries import (
-    MANUAL_ENTRIES_CLASSIFICATION,
+    MANUAL_ENTRIES_ACTION,
     MANUAL_ENTRIES_EXTRA,
     MANUAL_ENTRIES_REMARK,
     ManualEntries,
 )
-from ..model.mapping import Mapping as MappingModel
+from ..model.mapping import MappingBase as MappingBaseModel
+from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
 from .config import MappingConfig, MappingProfileConfig
 from .profile import Profile, ProfileField
 
 MANUAL_SUFFIXES = ["reference", "profile"]
 
-# These classification generate a remark with extra information
-EXTRA_CLASSIFICATIONS = [
-    Classification.COPY_FROM,
-    Classification.COPY_TO,
-    Classification.FIXED,
+# These actions generate a remark with extra information
+EXTRA_ACTIONS = [
+    Action.COPY_FROM,
+    Action.COPY_TO,
+    Action.FIXED,
 ]
 
-# These classifications can be derived from their parents
-DERIVED_CLASSIFICATIONS = [
-    Classification.EMPTY,
-    Classification.NOT_USE,
-] + EXTRA_CLASSIFICATIONS
+# These actions can be derived from their parents
+DERIVED_ACTIONS = [
+    Action.EMPTY,
+    Action.NOT_USE,
+] + EXTRA_ACTIONS
 
 logger = logging.getLogger(__name__)
 
@@ -39,34 +40,12 @@ logger = logging.getLogger(__name__)
 @dataclass(init=False)
 class MappingField:
     def __init__(self) -> None:
-        self.classification: Classification = None
+        self.action: Action = None
         self.extension: str = None
         self.extra: str = None
         self.profiles: Dict[str, ProfileField] = {}
         self.remark = None
-        self.classifications_allowed: List[Classification] = []
-
-    def dict(self) -> dict:
-        result = {
-            "classification": self.classification.value,
-            "profiles": [field.__dict__ for field in self.profiles.values()],
-            "remark": self.remark,
-            "id": self.id,
-            "name": self.name,
-            "classifications_allowed": [c.value for c in self.classifications_allowed],
-        }
-
-        if self.extension:
-            result["extension"] = self.extension
-
-        if self.extra:
-            result["extra"] = self.extra
-
-        return result
-
-    @property
-    def id(self) -> str:
-        return list(self.profiles.values())[0].id
+        self.actions_allowed: List[Action] = []
 
     @property
     def name(self) -> str:
@@ -80,10 +59,8 @@ class MappingField:
     def name_parent(self) -> str:
         return self.name.rsplit(".", 1)[0]
 
-    def fill_allowed_classifications(
-        self, source_profiles: List[str], target_profile: str
-    ):
-        allowed = set([c for c in Classification])
+    def fill_allowed_actions(self, source_profiles: List[str], target_profile: str):
+        allowed = set([c for c in Action])
 
         any_source_present = any(
             [self.profiles[profile] is not None for profile in source_profiles]
@@ -91,17 +68,13 @@ class MappingField:
         target_present = self.profiles[target_profile] is not None
 
         if not any_source_present:
-            allowed -= set(
-                [Classification.USE, Classification.NOT_USE, Classification.COPY_TO]
-            )
+            allowed -= set([Action.USE, Action.NOT_USE, Action.COPY_TO])
         else:
-            allowed -= set([Classification.EMPTY])
+            allowed -= set([Action.EMPTY])
         if not target_present:
-            allowed -= set(
-                [Classification.USE, Classification.EMPTY, Classification.COPY_FROM]
-            )
+            allowed -= set([Action.USE, Action.EMPTY, Action.COPY_FROM])
 
-        self.classifications_allowed = list(allowed)
+        self.actions_allowed = list(allowed)
 
     def classify_remark_field(
         self, comparison: "Mapping", manual_entries: Dict
@@ -113,40 +86,38 @@ class MappingField:
         based on the presence of the property in the KBV and ePA profiles.
         """
 
-        classification = None
+        action = None
         remark = None
         extra = None
 
         # If there is a manual entry for this property, use it
         if manual_entries is not None and (manual_entry := manual_entries[self.name]):
-            classification = manual_entry.get(
-                MANUAL_ENTRIES_CLASSIFICATION, Classification.MANUAL
-            )
+            action = manual_entry.get(MANUAL_ENTRIES_ACTION, Action.MANUAL)
 
             # If there is a remark in the manual entry, use it else use the default remark
-            remark = manual_entry.get(MANUAL_ENTRIES_REMARK, REMARKS[classification])
+            remark = manual_entry.get(MANUAL_ENTRIES_REMARK, REMARKS[action])
 
-            # If the classification needs extra information, generate the remark with the extra information
-            if classification in EXTRA_CLASSIFICATIONS:
+            # If the action needs extra information, generate the remark with the extra information
+            if action in EXTRA_ACTIONS:
                 extra = manual_entry[MANUAL_ENTRIES_EXTRA]
-                remark = REMARKS[classification].format(extra)
+                remark = REMARKS[action].format(extra)
 
-        # If the last element from the property is in the manual list, use the manual classification
+        # If the last element from the property is in the manual list, use the manual action
         elif self.name_child in MANUAL_SUFFIXES:
-            classification = Classification.MANUAL
+            action = Action.MANUAL
 
-        # If the parent has a classification that can be derived use the parent's classification
+        # If the parent has an action that can be derived use the parent's action
         elif (
             parent_update := comparison.fields.get(self.name_parent)
-        ) and parent_update.classification in DERIVED_CLASSIFICATIONS:
-            classification = parent_update.classification
+        ) and parent_update.action in DERIVED_ACTIONS:
+            action = parent_update.action
 
-            # If the classification needs extra information derived that information from the parent
-            if classification in EXTRA_CLASSIFICATIONS:
+            # If the action needs extra information derived that information from the parent
+            if action in EXTRA_ACTIONS:
 
                 # Cut away the common part with the parent and add the remainder to the parent's extra
                 extra = parent_update.extra + self.name[len(self.name_parent) :]
-                remark = REMARKS[classification].format(extra)
+                remark = REMARKS[action].format(extra)
 
             # Else use the parent's remark
             else:
@@ -157,16 +128,16 @@ class MappingField:
             [self.profiles[profile.key] is not None for profile in comparison.sources]
         ):
             if self.profiles[comparison.target.key] is not None:
-                classification = Classification.USE
+                action = Action.USE
             else:
-                classification = Classification.EXTENSION
+                action = Action.EXTENSION
         else:
-            classification = Classification.EMPTY
+            action = Action.EMPTY
 
         if not remark:
-            remark = REMARKS[classification]
+            remark = REMARKS[action]
 
-        self.classification = classification
+        self.action = action
         self.remark = remark
         self.extra = extra
 
@@ -174,13 +145,12 @@ class MappingField:
         profiles = {k: p.to_model() for k, p in self.profiles.items() if p}
 
         return MappingFieldModel(
-            id=self.id,
             name=self.name,
-            classification=self.classification,
+            action=self.action,
             extra=self.extra,
             profiles=profiles,
             remark=self.remark,
-            classifications_allowed=self.classifications_allowed,
+            actions_allowed=self.actions_allowed,
         )
 
 
@@ -228,7 +198,7 @@ class Mapping:
     def manual_entries(self) -> ManualEntries:
         return self.__project.manual_entries
 
-    def fill_classification_remark(self, manual_entries: ManualEntries):
+    def fill_action_remark(self, manual_entries: ManualEntries):
         manual_entries = manual_entries.entries.get(self.id)
         for field in self.fields.values():
             field.classify_remark_field(self, manual_entries)
@@ -259,7 +229,7 @@ class Mapping:
         for profile in all_profiles:
             for field in profile.fields.values():
                 # Check if field already exists or needs to be created
-                if field not in self.fields:
+                if field.path_full not in self.fields:
                     self.fields[field.path_full] = MappingField()
 
                 self.fields[field.path_full].profiles[profile.key] = field
@@ -274,18 +244,18 @@ class Mapping:
                     if profile_key not in field.profiles:
                         field.profiles[profile_key] = None
 
-            # Add remarks and classifications for each field
+            # Add remarks and actions for each field
             for field in self.fields.values():
-                field.fill_allowed_classifications(
+                field.fill_allowed_actions(
                     all_profiles_keys[:-1], all_profiles_keys[-1]
                 )
 
-    def to_model(self) -> MappingModel:
+    def to_base_model(self) -> MappingBaseModel:
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
 
         try:
-            model = MappingModel(
+            model = MappingBaseModel(
                 id=self.id,
                 name=self.name,
                 version=self.version,
@@ -294,6 +264,31 @@ class Mapping:
                 sources=sources,
                 target=target,
                 url=self.url,
+            )
+
+        except ValidationError as e:
+            print(e.errors())
+
+        else:
+            return model
+
+    def to_details_model(self) -> MappingDetailsModel:
+        sources = [p.to_model() for p in self.sources]
+        target = self.target.to_model()
+
+        fields = [f.to_model() for f in self.fields.values()]
+
+        try:
+            model = MappingDetailsModel(
+                id=self.id,
+                name=self.name,
+                version=self.version,
+                last_updated=self.last_updated,
+                status=self.status,
+                sources=sources,
+                target=target,
+                url=self.url,
+                fields=fields,
             )
 
         except ValidationError as e:

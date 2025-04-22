@@ -21,7 +21,9 @@ from .handler import ProjectsHandler
 from .model.error import Error as ErrorModel
 from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
-from .model.mapping import Mapping as MappingModel
+from .model.mapping import MappingBase as MappingBaseModel
+from .model.mapping import MappingDetails as MappingDetailsModel
+from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -72,12 +74,22 @@ async def get_projects_old():
     return handler.project_keys
 
 
-@app.get("/project", tags=["Projects"])
+@app.get(
+    "/project",
+    tags=["Projects"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+)
 async def get_project_list() -> ProjectListModel:
     return handler.get_project_list()
 
 
-@app.get("/project/{project_key}", tags=["Projects"])
+@app.get(
+    "/project/{project_key}",
+    tags=["Projects"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+)
 async def get_project(
     project_key: str, response: Response
 ) -> ProjectModel | ErrorModel:
@@ -140,6 +152,8 @@ async def create_project_old(project_name: str, response: Response):
 @app.post(
     "/project/{project_key}",
     tags=["Projects"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     status_code=201,
 )
 async def update_or_create_project(
@@ -151,6 +165,8 @@ async def update_or_create_project(
 @app.get(
     "/project/{project_key}/package",
     tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {"error": {}}},
 )
 async def get_package_list(
@@ -172,6 +188,8 @@ async def get_package_list(
 @app.post(
     "/project/{project_key}/package/{package_id}",
     tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {"error": {}}},
 )
 async def update_package(
@@ -196,6 +214,8 @@ async def update_package(
 @app.get(
     "/project/{project_key}/profile",
     tags=["Profiles"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {"error": {}}},
 )
 async def get_profile_list(
@@ -214,7 +234,12 @@ async def get_profile_list(
     return proj
 
 
-@app.get("/classification", tags=["Classification"])
+@app.get(
+    "/classification",
+    tags=["Classification"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+)
 async def get_classifications():
     """
     Get all classifications
@@ -329,8 +354,9 @@ async def get_mappings_old(response: Response) -> GetMappingsOutput:
 @app.get(
     "/project/{project_key}/mapping",
     tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {}},
-    deprecated=True,
 )
 async def get_mappings(
     project_key: str, response: Response
@@ -415,7 +441,7 @@ async def get_mappings(
 @app.get(
     "/mapping/{id}", tags=["Mappings"], responses={404: {}, 412: {}}, deprecated=True
 )
-async def get_mapping_old(id: str, response: Response) -> MappingModel:
+async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
     """
     Get a specific mapping
     Returns the mapping with the given id. This includes all details like classifications, presences in profiles, etc.
@@ -517,11 +543,13 @@ async def get_mapping_old(id: str, response: Response) -> MappingModel:
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}",
     tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {}},
 )
 async def get_mapping(
     project_key: str, mapping_id: str, response: Response
-) -> MappingModel | ErrorModel:
+) -> MappingDetailsModel | ErrorModel:
     """
     Get the available mappings
     Returns a list with all mappings, including the name and the url to access it.
@@ -667,6 +695,8 @@ async def get_mapping_fields_old(
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}/field",
     tags=["Fields"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {}},
 )
 async def get_mapping_fields(
@@ -721,6 +751,69 @@ async def get_mapping_fields(
         return handler.get_mapping_fields(project_key, mapping_id)
 
     except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}",
+    tags=["Fields"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_mapping_field(
+    project_key: str, mapping_id: str, field_name: str, response: Response
+) -> MappingFieldModel | ErrorModel:
+    """
+    Get the fields of a mapping
+    Returns a brief list of the fields
+    ---
+    produces:
+      - application/json
+    async definitions:
+      - schema:
+          id: MappingFieldShort
+          type: object
+          reuqired:
+            - id
+            - name
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+      - schema:
+          id: MappingShort
+          type: object
+          required:
+            - id
+            - fields
+          properties:
+            fields:
+              type: array
+              items:
+                $ref: "#/async definitions/MappingFieldShort"
+            id:
+              type: string
+    parameters:
+      - in: path
+        name: id
+        type: string
+        required: true
+        description: The id of the mapping
+    responses:
+      200:
+        description: The fields of the mapping
+        schema:
+          $ref: "#/async definitions/MappingShort"
+      404:
+        description: Mapping not found
+    """
+    try:
+        return handler.get_mapping_field(project_key, mapping_id, field_name)
+
+    except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
 
@@ -810,14 +903,16 @@ async def post_mapping_field_classification_old(
 
 
 @app.post(
-    "/project/{project_key}/mapping/{mapping_id}/field/{field_id}/classification",
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/classification",
     tags=["Fields"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={400: {}, 404: {}},
 )
 async def post_mapping_field_classification(
     project_key: str,
     mapping_id: str,
-    field_id: str,
+    field_name: str,
     mapping: MappingInput,
     response: Response,
 ):
@@ -875,7 +970,7 @@ async def post_mapping_field_classification(
     """
     try:
         return handler.set_mapping_classification(
-            project_key, mapping_id, field_id, mapping
+            project_key, mapping_id, field_name, mapping
         )
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:

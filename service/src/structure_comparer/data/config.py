@@ -72,5 +72,5 @@ class ProjectConfig(BaseModel):
             return config
 
     def write(self):
-        content = self.model_dump_json(indent=4)
+        content = self.model_dump_json(indent=4, exclude_none=True, exclude_unset=True)
         self._file_path.write_text(content, encoding="utf-8")

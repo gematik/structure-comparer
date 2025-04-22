@@ -65,20 +65,37 @@ class Profile:
 
     @property
     def key(self) -> str:
-        return f"{self.name}|{self.version}"
+        return f"{self.url}|{self.version}"
 
     @property
     def id(self) -> str:
         return self.__data.id
 
+    @property
+    def url(self) -> str:
+        return self.__data.url
+
     def __lt__(self, other: "Profile") -> bool:
         return self.key < other.key
 
+    def __to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "url": self.url,
+            "key": self.key,
+            "name": self.name,
+            "version": self.version,
+        }
+
+    def __to_pkg_dict(self) -> dict:
+        dict_ = self.__to_dict()
+        dict_["package"] = self.__package.id
+
+        return dict_
+
     def to_model(self) -> ProfileModel:
         try:
-            model = ProfileModel(
-                profile_key=self.key, name=self.name, version=self.version
-            )
+            model = ProfileModel(**self.__to_dict())
         except ValidationError as e:
             logger.exception(e)
 
@@ -87,12 +104,7 @@ class Profile:
 
     def to_pkg_model(self) -> ProfileModel:
         try:
-            model = PackageProfileModel(
-                profile_key=self.key,
-                name=self.name,
-                version=self.version,
-                package=self.__package.id,
-            )
+            model = PackageProfileModel(**self.__to_pkg_dict())
         except ValidationError as e:
             logger.exception(e)
 
