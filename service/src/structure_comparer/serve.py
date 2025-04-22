@@ -152,6 +152,9 @@ async def update_or_create_project(
 async def get_profile_list(
     project_key: str, response: Response
 ) -> ProfileListModel | ErrorModel:
+    """
+    Returns a list of all profiles in this project
+    """
     try:
         proj = handler.get_project_profiles(project_key)
 
