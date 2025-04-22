@@ -48,10 +48,6 @@ class MappingField:
         self.actions_allowed: List[Action] = []
 
     @property
-    def id(self) -> str:
-        return list(self.profiles.values())[0].id
-
-    @property
     def name(self) -> str:
         return list(self.profiles.values())[0].path_full
 
@@ -149,7 +145,6 @@ class MappingField:
         profiles = {k: p.to_model() for k, p in self.profiles.items() if p}
 
         return MappingFieldModel(
-            id=self.id,
             name=self.name,
             action=self.action,
             extra=self.extra,

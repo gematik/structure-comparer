@@ -5,7 +5,6 @@ from .profile import Profile, ProfileField
 
 
 class MappingField(BaseModel):
-    id: str
     name: str
     action: Action
     extra: str | None = None
