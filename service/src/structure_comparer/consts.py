@@ -1,25 +1,25 @@
-from .classification import Classification
+from .action import Action
 
 REMARKS = {
-    Classification.USE: "Property and value(s) will be retained",
-    Classification.NOT_USE: "Property and value(s) will NOT be retained",
-    Classification.EMPTY: "Will remain empty for now, as no source information is available",
-    Classification.EXTENSION: "Extension and value(s) will be retained",
-    Classification.MANUAL: "",
-    Classification.COPY_FROM: "Mapped from '{}'",
-    Classification.COPY_TO: "Mapped to '{}'",
-    Classification.FIXED: "Set to '{}' fixed value",
-    Classification.MEDICATION_SERVICE: "Set by the Medication Service",
+    Action.USE: "Property and value(s) will be retained",
+    Action.NOT_USE: "Property and value(s) will NOT be retained",
+    Action.EMPTY: "Will remain empty for now, as no source information is available",
+    Action.EXTENSION: "Extension and value(s) will be retained",
+    Action.MANUAL: "",
+    Action.COPY_FROM: "Mapped from '{}'",
+    Action.COPY_TO: "Mapped to '{}'",
+    Action.FIXED: "Set to '{}' fixed value",
+    Action.MEDICATION_SERVICE: "Set by the Medication Service",
 }
 
 INSTRUCTIONS = {
-    Classification.USE: "Property and value(s) will be RETAINED",
-    Classification.NOT_USE: "Property and value(s) will NOT be retained",
-    Classification.EMPTY: "Will remain EMPTY for now, as no source information is available",
-    Classification.EXTENSION: "Extension and value(s) will be RETAINED",
-    Classification.MANUAL: "Make your own NOTE",
-    Classification.COPY_FROM: "Value(s) will be MAPPED FROM another field",
-    Classification.COPY_TO: "Value(s) will be MAPPED TO another field",
-    Classification.FIXED: "Value will be FIXED",
-    Classification.MEDICATION_SERVICE: "Value set by the MEDICATION SERVICE",
+    Action.USE: "Property and value(s) will be RETAINED",
+    Action.NOT_USE: "Property and value(s) will NOT be retained",
+    Action.EMPTY: "Will remain EMPTY for now, as no source information is available",
+    Action.EXTENSION: "Extension and value(s) will be RETAINED",
+    Action.MANUAL: "Make your own NOTE",
+    Action.COPY_FROM: "Value(s) will be MAPPED FROM another field",
+    Action.COPY_TO: "Value(s) will be MAPPED TO another field",
+    Action.FIXED: "Value will be FIXED",
+    Action.MEDICATION_SERVICE: "Value set by the MEDICATION SERVICE",
 }

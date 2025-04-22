@@ -6,19 +6,19 @@ from typing import Dict, List
 from jinja2 import Environment, FileSystemLoader
 from structure_comparer.helpers import split_parent_child
 
-from .classification import Classification
+from .action import Action
 from .data.mapping import Mapping
 
 CSS_CLASS = {
-    Classification.USE: "row-use",
-    Classification.NOT_USE: "row-not-use",
-    Classification.EMPTY: "row-not-use",
-    Classification.EXTENSION: "row-extension",
-    Classification.MANUAL: "row-manual",
-    Classification.COPY_FROM: "row-manual",
-    Classification.COPY_TO: "row-manual",
-    Classification.FIXED: "row-manual",
-    Classification.MEDICATION_SERVICE: "row-not-use",
+    Action.USE: "row-use",
+    Action.NOT_USE: "row-not-use",
+    Action.EMPTY: "row-not-use",
+    Action.EXTENSION: "row-extension",
+    Action.MANUAL: "row-manual",
+    Action.COPY_FROM: "row-manual",
+    Action.COPY_TO: "row-manual",
+    Action.FIXED: "row-manual",
+    Action.MEDICATION_SERVICE: "row-not-use",
 }
 
 STYLE_FILE_NAME = "style.css"
@@ -84,17 +84,15 @@ def create_results_html(
                 else:
                     source_max_card = int(source_max_card)
 
-                if comparison_parent and comparison_parent.classification in [
-                    Classification.USE
-                ]:
+                if comparison_parent and comparison_parent.action in [Action.USE]:
                     # Skip the specific warning if the parent is being copied or extended
                     if target_max_card < source_max_card:
                         continue
 
-                if source_max_card > target_max_card and entry.classification not in [
-                    Classification.COPY_TO,
-                    Classification.COPY_FROM,
-                    Classification.EXTENSION,
+                if source_max_card > target_max_card and entry.action not in [
+                    Action.COPY_TO,
+                    Action.COPY_FROM,
+                    Action.EXTENSION,
                 ]:
                     warnings.add(
                         "The maximum cardinality of one of the source profiles exceeds the maximum cardinality of the target profile"
@@ -104,11 +102,11 @@ def create_results_html(
                 if (
                     source_max_card != 0
                     and source_min_card < target_min_card
-                    and entry.classification
+                    and entry.action
                     not in [
-                        Classification.COPY_TO,
-                        Classification.COPY_FROM,
-                        Classification.EXTENSION,
+                        Action.COPY_TO,
+                        Action.COPY_FROM,
+                        Action.EXTENSION,
                     ]
                 ):
                     warnings.add(
@@ -118,8 +116,8 @@ def create_results_html(
             number_of_warnings += len(warnings)  # Increment the warning counter
 
             entries[field] = {
-                "classification": entry.classification,
-                "css_class": CSS_CLASS[entry.classification],
+                "classification": entry.action,
+                "css_class": CSS_CLASS[entry.action],
                 "extension": entry.extension,
                 "extra": entry.extra,
                 "profiles": entry.profiles,

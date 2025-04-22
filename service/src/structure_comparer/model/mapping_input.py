@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
-from ..classification import Classification
+from ..action import Action
 
 
 class MappingInput(BaseModel):
-    action: Classification
+    action: Action
     target: str | None = None
     value: str | None = None

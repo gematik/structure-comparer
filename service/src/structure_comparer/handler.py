@@ -4,7 +4,7 @@ from typing import Dict, List
 
 from pydantic import ValidationError
 
-from .classification import Classification
+from .action import Action
 from .consts import INSTRUCTIONS, REMARKS
 from .data.project import Project
 from .errors import (
@@ -17,10 +17,9 @@ from .errors import (
     ProjectNotFound,
 )
 from .helpers import get_field_by_id
-from .manual_entries import MANUAL_ENTRIES_CLASSIFICATION, MANUAL_ENTRIES_EXTRA
+from .manual_entries import MANUAL_ENTRIES_ACTION, MANUAL_ENTRIES_EXTRA
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingDetails as MappingDetailsModel
-from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -125,7 +124,7 @@ class ProjectsHandler:
     def get_classifications() -> Dict[str, List[Dict[str, str]]]:
         classifications = [
             {"value": c.value, "remark": REMARKS[c], "instruction": INSTRUCTIONS[c]}
-            for c in Classification
+            for c in Action
         ]
         return {"classifications": classifications}
 
@@ -174,7 +173,7 @@ class ProjectsHandler:
         if field is None:
             raise FieldNotFound()
 
-        action = Classification(mapping.action)
+        action = Action(mapping.action)
 
         # Check if action is allowed for this field
         if action not in field.classifications_allowed:
@@ -184,8 +183,8 @@ class ProjectsHandler:
             )
 
         # Build the entry that should be created/updated
-        new_entry = {MANUAL_ENTRIES_CLASSIFICATION: action}
-        if action == Classification.COPY_FROM or action == Classification.COPY_TO:
+        new_entry = {MANUAL_ENTRIES_ACTION: action}
+        if action == Action.COPY_FROM or action == Action.COPY_TO:
             if target_id := mapping.target:
                 target = get_field_by_id(mapping, target_id)
 
@@ -195,7 +194,7 @@ class ProjectsHandler:
                 new_entry[MANUAL_ENTRIES_EXTRA] = target.name
             else:
                 raise MappingTargetMissing()
-        elif action == Classification.FIXED:
+        elif action == Action.FIXED:
             if fixed := mapping.value:
                 new_entry[MANUAL_ENTRIES_EXTRA] = fixed
             else:
@@ -204,8 +203,8 @@ class ProjectsHandler:
         # Clean up possible manual entry this was copied from before
         manual_entries = proj.manual_entries[mapping_id]
         if (manual_entry := manual_entries[field.name]) and (
-            manual_entry[MANUAL_ENTRIES_CLASSIFICATION] == Classification.COPY_FROM
-            or manual_entry[MANUAL_ENTRIES_CLASSIFICATION] == Classification.COPY_TO
+            manual_entry[MANUAL_ENTRIES_ACTION] == Action.COPY_FROM
+            or manual_entry[MANUAL_ENTRIES_ACTION] == Action.COPY_TO
         ):
             del manual_entries[manual_entry[MANUAL_ENTRIES_EXTRA]]
 
@@ -213,14 +212,14 @@ class ProjectsHandler:
         manual_entries[field.name] = new_entry
 
         # Handle the partner entry for copy actions
-        if action == Classification.COPY_FROM:
+        if action == Action.COPY_FROM:
             manual_entries[target.name] = {
-                MANUAL_ENTRIES_CLASSIFICATION: Classification.COPY_TO,
+                MANUAL_ENTRIES_ACTION: Action.COPY_TO,
                 MANUAL_ENTRIES_EXTRA: field.name,
             }
-        elif action == Classification.COPY_TO:
+        elif action == Action.COPY_TO:
             manual_entries[target.name] = {
-                MANUAL_ENTRIES_CLASSIFICATION: Classification.COPY_FROM,
+                MANUAL_ENTRIES_ACTION: Action.COPY_FROM,
                 MANUAL_ENTRIES_EXTRA: field.name,
             }
 
@@ -241,6 +240,6 @@ class ProjectsHandler:
         if not mapping:
             raise MappingNotFound()
 
-        mapping.fill_classification_remark(proj.manual_entries)
+        mapping.fill_action_remark(proj.manual_entries)
 
         return mapping

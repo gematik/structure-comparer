@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Classification(Enum):
+class Action(Enum):
     USE = "use"
     NOT_USE = "not_use"
     EMPTY = "empty"

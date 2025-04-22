@@ -1,17 +1,17 @@
 from pydantic import BaseModel
 
-from ..classification import Classification
+from ..action import Action
 from .profile import Profile, ProfileField
 
 
 class MappingField(BaseModel):
     id: str
     name: str
-    classification: Classification
+    action: Action
     extra: str | None = None
     profiles: dict[str, ProfileField]
     remark: str
-    classifications_allowed: list[Classification]
+    actions_allowed: list[Action]
 
 
 class MappingBase(BaseModel):
