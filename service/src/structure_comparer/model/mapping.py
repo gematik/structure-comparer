@@ -4,12 +4,16 @@ from ..action import Action
 from .profile import Profile, ProfileField
 
 
-class MappingField(BaseModel):
-    name: str
+class MappingFieldBase(BaseModel):
     action: Action
-    extra: str | None = None
+    other: str | None = None
+    fixed: str | None = None
+    remark: str | None = None
+
+
+class MappingField(MappingFieldBase):
+    name: str
     profiles: dict[str, ProfileField]
-    remark: str
     actions_allowed: list[Action]
 
 

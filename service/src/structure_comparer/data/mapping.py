@@ -147,7 +147,7 @@ class MappingField:
         return MappingFieldModel(
             name=self.name,
             action=self.action,
-            extra=self.extra,
+            other=self.extra,
             profiles=profiles,
             remark=self.remark,
             actions_allowed=self.actions_allowed,
