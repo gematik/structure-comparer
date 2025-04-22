@@ -330,7 +330,6 @@ async def get_mappings_old(response: Response) -> GetMappingsOutput:
     "/project/{project_key}/mapping",
     tags=["Mappings"],
     responses={404: {}},
-    deprecated=True,
 )
 async def get_mappings(
     project_key: str, response: Response
