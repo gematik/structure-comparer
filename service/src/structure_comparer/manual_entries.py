@@ -5,9 +5,8 @@ from pathlib import Path
 from typing import Dict
 
 import yaml
-from pydantic import BaseModel
 
-from .action import Action
+from .model.mapping import MappingFieldBase
 
 MANUAL_ENTRIES_ACTION = "classification"
 MANUAL_ENTRIES_REMARK = "remark"
@@ -16,15 +15,9 @@ MANUAL_ENTRIES_EXTRA = "extra"
 logger = logging.getLogger(__name__)
 
 
-class ManualMapping(BaseModel):
-    classification: Action
-    extra: str = None
-    remark: str = None
-
-
 class ManualMappings:
     def __init__(self, data: Dict[str, dict]) -> None:
-        self.data = {k: ManualMapping(**v) for k, v in data.items()}
+        self.data = {k: MappingFieldBase.model_validate(v) for k, v in data.items()}
 
     def __iter__(self):
         return iter(self.data)

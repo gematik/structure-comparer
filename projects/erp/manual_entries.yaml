@@ -1,529 +1,539 @@
 0760ae49-8551-459b-bc65-39bfb47697f8:
   MedicationRequest.dosageInstruction.extension:Dosierungskennzeichen:
-    classification: not_use
+    action: not_use
   MedicationRequest.extension:BVG:
-    classification: not_use
+    action: not_use
   MedicationRequest.extension:Mehrfachverordnung:
-    classification: copy_from
-    extra: MedicationRequest.extension:multiplePrescription
+    action: copy_from
+    other: MedicationRequest.extension:multiplePrescription
   MedicationRequest.extension:Notdienstgebuehr:
-    classification: not_use
+    action: not_use
   MedicationRequest.extension:Unfallinformationen:
-    classification: not_use
+    action: not_use
   MedicationRequest.extension:Zuzahlungsstatus:
-    classification: not_use
+    action: not_use
   MedicationRequest.extension:multiplePrescription:
-    classification: copy_to
-    extra: MedicationRequest.extension:Mehrfachverordnung
+    action: copy_to
+    other: MedicationRequest.extension:Mehrfachverordnung
   MedicationRequest.identifier:rxPrescriptionProcessIdentifier:
-    classification: empty
-    remark: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn
+    action: empty
+    remark:
+      Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn
       zusammen. Er wird durch den Medication Service vergeben.
   MedicationRequest.insurance.reference:
-    classification: not_use
+    action: not_use
     remark: "Eigenschaft und Wert(e) werden NICHT \xFCbernommen"
   MedicationRequest.intent:
-    classification: fixed
-    extra: filler-order
+    action: fixed
+    fixed: filler-order
   MedicationRequest.medication[x].reference:
-    classification: empty
+    action: empty
   MedicationRequest.medication[x]:medicationReference:
-    classification: manual
-    remark: Die Referenz der KBV-Medikation wird durch eine Referenz auf eine EPA-Medikation
+    action: manual
+    remark:
+      Die Referenz der KBV-Medikation wird durch eine Referenz auf eine EPA-Medikation
       ersetzt.
   MedicationRequest.medication[x]:medicationReference.reference:
-    classification: manual
+    action: manual
     remark: Die Referenz ergibt sich aus der neu erzeugten EPA-Medikation.
   MedicationRequest.meta.profile:
-    classification: not_use
+    action: not_use
   MedicationRequest.requester.reference:
-    classification: not_use
+    action: not_use
   MedicationRequest.subject.identifier:
-    classification: medication_service
+    action: medication_service
   MedicationRequest.subject.reference:
-    classification: not_use
+    action: not_use
   MedicationRequest.substitution.allowed[x]:allowedBoolean:
-    classification: use
+    action: use
 10ac71f3-3204-4b82-b8a3-f7ecc4a7a98a:
   Medication.amount.numerator.extension:Gesamtmenge:
-    classification: copy_to
-    extra: Medication.amount.numerator.extension:totalQuantity
+    action: copy_to
+    other: Medication.amount.numerator.extension:totalQuantity
   Medication.amount.numerator.extension:Packungsgroesse:
-    classification: copy_to
-    extra: Medication.amount.numerator.extension:packagingSize
+    action: copy_to
+    other: Medication.amount.numerator.extension:packagingSize
   Medication.amount.numerator.extension:packagingSize:
-    classification: copy_from
-    extra: Medication.amount.numerator.extension:Packungsgroesse
+    action: copy_from
+    other: Medication.amount.numerator.extension:Packungsgroesse
   Medication.amount.numerator.extension:totalQuantity:
-    classification: copy_from
-    extra: Medication.amount.numerator.extension:Gesamtmenge
+    action: copy_from
+    other: Medication.amount.numerator.extension:Gesamtmenge
   Medication.code.coding:PZN:
-    classification: copy_from
-    extra: Medication.code.coding:pznCode
+    action: copy_from
+    other: Medication.code.coding:pznCode
   Medication.code.coding:PZN.display:
-    classification: empty
+    action: empty
   Medication.code.coding:PZN.userSelected:
-    classification: empty
+    action: empty
   Medication.code.coding:PZN.version:
-    classification: empty
+    action: empty
   Medication.code.coding:pznCode:
-    classification: copy_to
-    extra: Medication.code.coding:PZN
+    action: copy_to
+    other: Medication.code.coding:PZN
   Medication.code.coding:pznCode.display:
-    classification: empty
+    action: empty
   Medication.code.coding:pznCode.userSelected:
-    classification: empty
+    action: empty
   Medication.code.coding:pznCode.version:
-    classification: empty
+    action: empty
   Medication.code.coding:verordnungskategorieCode:
-    classification: not_use
+    action: not_use
   Medication.extension:Arzneimittelkategorie:
-    classification: copy_to
-    extra: Medication.extension:drugCategory
+    action: copy_to
+    other: Medication.extension:drugCategory
   Medication.extension:Herstellungsanweisung:
-    classification: copy_to
-    extra: Medication.extension:manufacturingInstructions
+    action: copy_to
+    other: Medication.extension:manufacturingInstructions
   Medication.extension:Impfstoff:
-    classification: copy_to
-    extra: Medication.extension:isVaccine
+    action: copy_to
+    other: Medication.extension:isVaccine
   Medication.extension:Kategorie:
-    classification: not_use
+    action: not_use
   Medication.extension:Normgroesse:
-    classification: copy_to
-    extra: Medication.extension:normSizeCode
+    action: copy_to
+    other: Medication.extension:normSizeCode
   Medication.extension:RxPrescriptionProcessIdentifier:
-    classification: medication_service
+    action: medication_service
   Medication.extension:Verpackung:
-    classification: copy_to
-    extra: Medication.extension:packaging
+    action: copy_to
+    other: Medication.extension:packaging
   Medication.extension:drugCategory:
-    classification: copy_from
-    extra: Medication.extension:Arzneimittelkategorie
+    action: copy_from
+    other: Medication.extension:Arzneimittelkategorie
   Medication.extension:isVaccine:
-    classification: copy_from
-    extra: Medication.extension:Impfstoff
+    action: copy_from
+    other: Medication.extension:Impfstoff
   Medication.extension:manufacturingInstructions:
-    classification: copy_from
-    extra: Medication.extension:Herstellungsanweisung
+    action: copy_from
+    other: Medication.extension:Herstellungsanweisung
   Medication.extension:normSizeCode:
-    classification: copy_from
-    extra: Medication.extension:Normgroesse
+    action: copy_from
+    other: Medication.extension:Normgroesse
   Medication.extension:packaging:
-    classification: copy_from
-    extra: Medication.extension:Verpackung
+    action: copy_from
+    other: Medication.extension:Verpackung
   Medication.form.coding:KBVDarreichungsform:
-    classification: copy_from
-    extra: Medication.form.coding:kbvDarreichungsform
+    action: copy_from
+    other: Medication.form.coding:kbvDarreichungsform
   Medication.form.coding:KBVDarreichungsform.userSelected:
-    classification: empty
+    action: empty
   Medication.form.coding:KBVDarreichungsform.version:
-    classification: empty
+    action: empty
   Medication.form.coding:kbvDarreichungsform:
-    classification: copy_to
-    extra: Medication.form.coding:KBVDarreichungsform
+    action: copy_to
+    other: Medication.form.coding:KBVDarreichungsform
   Medication.identifier:ePAMedicationUniqueIdentifier:
-    classification: medication_service
+    action: medication_service
   Medication.ingredient.extension:Darreichungsform:
-    classification: copy_to
-    extra: Medication.ingredient.extension:darreichungsform
+    action: copy_to
+    other: Medication.ingredient.extension:darreichungsform
   Medication.ingredient.extension:darreichungsform:
-    classification: copy_from
-    extra: Medication.ingredient.extension:Darreichungsform
+    action: copy_from
+    other: Medication.ingredient.extension:Darreichungsform
   Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK:
-    classification: copy_from
-    extra: Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode
+    action: copy_from
+    other: Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode
   Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.display:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.userSelected:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.version:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN:
-    classification: copy_from
-    extra: Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode
+    action: copy_from
+    other: Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode
   Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.display:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.userSelected:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.version:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode:
-    classification: copy_to
-    extra: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK
+    action: copy_to
+    other: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK
   Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode:
-    classification: copy_to
-    extra: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN
+    action: copy_to
+    other: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN
   Medication.ingredient.item[x]:itemReference.reference:
-    classification: empty
+    action: empty
   Medication.ingredient.strength.extension:MengeFreitext:
-    classification: copy_to
-    extra: Medication.ingredient.strength.extension:amountText
+    action: copy_to
+    other: Medication.ingredient.strength.extension:amountText
   Medication.ingredient.strength.extension:amountText:
-    classification: copy_from
-    extra: Medication.ingredient.strength.extension:MengeFreitext
+    action: copy_from
+    other: Medication.ingredient.strength.extension:MengeFreitext
   Medication.ingredient.strength.numerator:
-    classification: manual
-    remark: "If Property and value exists, it will be retained. If it is missing please\
-        \ add a new extension with the following content:\n\"extension\": [\n  {\n \
-        \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
-        ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
+    action: manual
+    remark:
+      "If Property and value exists, it will be retained. If it is missing please\
+      \ add a new extension with the following content:\n\"extension\": [\n  {\n \
+      \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
+      ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
   Medication.ingredient.strength.numerator.code:
-    classification: manual
-    remark: "If Property and value exists, it will be retained. If it is missing please\
+    action: manual
+    remark:
+      "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
   Medication.ingredient.strength.numerator.system:
-    classification: manual
-    remark: "If Property and value exists, it will be retained. If it is missing please\
+    action: manual
+    remark:
+      "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
   Medication.ingredient.strength.numerator.value:
-    classification: manual
-    remark: "If Property and value exists, it will be retained. If it is missing please\
+    action: manual
+    remark:
+      "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
   Medication.manufacturer.reference:
-    classification: empty
+    action: empty
   Medication.meta.profile:
-    classification: not_use
+    action: not_use
 477e227a-6664-437d-8084-325bc9d25405:
   Medication.amount.numerator.extension:Gesamtmenge:
-    classification: copy_to
-    extra: Medication.amount.numerator.extension:totalQuantity
+    action: copy_to
+    other: Medication.amount.numerator.extension:totalQuantity
   Medication.amount.numerator.extension:Packungsgroesse:
-    classification: copy_to
-    extra: Medication.amount.numerator.extension:packagingSize
+    action: copy_to
+    other: Medication.amount.numerator.extension:packagingSize
   Medication.amount.numerator.extension:packagingSize:
-    classification: copy_from
-    extra: Medication.amount.numerator.extension:Packungsgroesse
+    action: copy_from
+    other: Medication.amount.numerator.extension:Packungsgroesse
   Medication.amount.numerator.extension:totalQuantity:
-    classification: copy_from
-    extra: Medication.amount.numerator.extension:Gesamtmenge
+    action: copy_from
+    other: Medication.amount.numerator.extension:Gesamtmenge
   Medication.code.coding:PZN:
-    classification: copy_from
-    extra: Medication.code.coding:pznCode
+    action: copy_from
+    other: Medication.code.coding:pznCode
   Medication.code.coding:PZN.display:
-    classification: empty
+    action: empty
   Medication.code.coding:PZN.userSelected:
-    classification: empty
+    action: empty
   Medication.code.coding:PZN.version:
-    classification: empty
+    action: empty
   Medication.code.coding:pznCode:
-    classification: copy_to
-    extra: Medication.code.coding:PZN
+    action: copy_to
+    other: Medication.code.coding:PZN
   Medication.code.coding:pznCode.display:
-    classification: empty
+    action: empty
   Medication.code.coding:pznCode.userSelected:
-    classification: empty
+    action: empty
   Medication.code.coding:pznCode.version:
-    classification: empty
+    action: empty
   Medication.code.coding:verordnungskategorieCode:
-    classification: not_use
+    action: not_use
   Medication.extension:Arzneimittelkategorie:
-    classification: copy_to
-    extra: Medication.extension:drugCategory
+    action: copy_to
+    other: Medication.extension:drugCategory
   Medication.extension:Herstellungsanweisung:
-    classification: copy_to
-    extra: Medication.extension:manufacturingInstructions
+    action: copy_to
+    other: Medication.extension:manufacturingInstructions
   Medication.extension:Impfstoff:
-    classification: copy_to
-    extra: Medication.extension:isVaccine
+    action: copy_to
+    other: Medication.extension:isVaccine
   Medication.extension:Kategorie:
-    classification: not_use
+    action: not_use
   Medication.extension:Normgroesse:
-    classification: copy_to
-    extra: Medication.extension:normSizeCode
+    action: copy_to
+    other: Medication.extension:normSizeCode
   Medication.extension:RxPrescriptionProcessIdentifier:
-    classification: medication_service
+    action: medication_service
   Medication.extension:drugCategory:
-    classification: copy_from
-    extra: Medication.extension:Arzneimittelkategorie
+    action: copy_from
+    other: Medication.extension:Arzneimittelkategorie
   Medication.extension:isVaccine:
-    classification: copy_from
-    extra: Medication.extension:Impfstoff
+    action: copy_from
+    other: Medication.extension:Impfstoff
   Medication.extension:manufacturingInstructions:
-    classification: copy_from
-    extra: Medication.extension:Herstellungsanweisung
+    action: copy_from
+    other: Medication.extension:Herstellungsanweisung
   Medication.extension:normSizeCode:
-    classification: copy_from
-    extra: Medication.extension:Normgroesse
+    action: copy_from
+    other: Medication.extension:Normgroesse
   Medication.form.coding:KBVDarreichungsform:
-    classification: copy_from
-    extra: Medication.form.coding:kbvDarreichungsform
+    action: copy_from
+    other: Medication.form.coding:kbvDarreichungsform
   Medication.form.coding:KBVDarreichungsform.userSelected:
-    classification: empty
+    action: empty
   Medication.form.coding:KBVDarreichungsform.version:
-    classification: empty
+    action: empty
   Medication.form.coding:kbvDarreichungsform:
-    classification: copy_to
-    extra: Medication.form.coding:KBVDarreichungsform
+    action: copy_to
+    other: Medication.form.coding:KBVDarreichungsform
   Medication.identifier:ePAMedicationUniqueIdentifier:
-    classification: medication_service
+    action: medication_service
   Medication.ingredient.extension:Darreichungsform:
-    classification: copy_to
-    extra: Medication.ingredient.extension:darreichungsform
+    action: copy_to
+    other: Medication.ingredient.extension:darreichungsform
   Medication.ingredient.extension:darreichungsform:
-    classification: copy_from
-    extra: Medication.ingredient.extension:Darreichungsform
+    action: copy_from
+    other: Medication.ingredient.extension:Darreichungsform
   Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK:
-    classification: copy_from
-    extra: Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode
+    action: copy_from
+    other: Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode
   Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.display:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.userSelected:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.version:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN:
-    classification: copy_from
-    extra: Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode
+    action: copy_from
+    other: Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode
   Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.display:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.userSelected:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.version:
-    classification: empty
+    action: empty
   Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode:
-    classification: copy_to
-    extra: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK
+    action: copy_to
+    other: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK
   Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode:
-    classification: copy_to
-    extra: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN
+    action: copy_to
+    other: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN
   Medication.ingredient.item[x]:itemReference.reference:
-    classification: empty
+    action: empty
   Medication.ingredient.strength.extension:MengeFreitext:
-    classification: copy_to
-    extra: Medication.ingredient.strength.extension:amountText
+    action: copy_to
+    other: Medication.ingredient.strength.extension:amountText
   Medication.ingredient.strength.extension:amountText:
-    classification: copy_from
-    extra: Medication.ingredient.strength.extension:MengeFreitext
+    action: copy_from
+    other: Medication.ingredient.strength.extension:MengeFreitext
   Medication.ingredient.strength.numerator:
-    classification: manual
-    remark: "If Property and value exists, it will be retained. If it is missing please\
-        \ add a new extension with the following content:\n\"extension\": [\n  {\n \
-        \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
-        ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
+    action: manual
+    remark:
+      "If Property and value exists, it will be retained. If it is missing please\
+      \ add a new extension with the following content:\n\"extension\": [\n  {\n \
+      \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
+      ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
   Medication.ingredient.strength.numerator.code:
-    classification: manual
-    remark: "If Property and value exists, it will be retained. If it is missing please\
+    action: manual
+    remark:
+      "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
   Medication.ingredient.strength.numerator.system:
-    classification: manual
-    remark: "If Property and value exists, it will be retained. If it is missing please\
+    action: manual
+    remark:
+      "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
   Medication.ingredient.strength.numerator.value:
-    classification: manual
-    remark: "If Property and value exists, it will be retained. If it is missing please\
+    action: manual
+    remark:
+      "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
   Medication.manufacturer.reference:
-    classification: empty
+    action: empty
   Medication.meta.profile:
-    classification: not_use
+    action: not_use
 615205d2-7288-47ce-a65a-009c37ed8447:
   Practitioner.identifier:
-    classification: manual
+    action: manual
     remark: Muss mindestens die TelematikID des Arztes enthalten, die auch im Signaturzertifikat der QES angegeben ist.
   Practitioner.identifier:ANR:
-    classification: copy_to
-    extra: Practitioner.identifier:LANR
+    action: copy_to
+    other: Practitioner.identifier:LANR
   Practitioner.identifier:LANR:
-    classification: copy_from
-    extra: Practitioner.identifier:ANR
+    action: copy_from
+    other: Practitioner.identifier:ANR
   Practitioner.identifier:Telematik-ID:
-    classification: copy_to
-    extra: Practitioner.identifier:TelematikID
+    action: copy_to
+    other: Practitioner.identifier:TelematikID
   Practitioner.identifier:TelematikID:
-    classification: copy_from
-    extra: Practitioner.identifier:Telematik-ID
+    action: copy_from
+    other: Practitioner.identifier:Telematik-ID
   Practitioner.identifier:ZANR.system:
-    classification: use
+    action: use
   Practitioner.identifier:ZANR.type:
-    classification: use
+    action: use
   Practitioner.identifier:ZANR.type.coding:
-    classification: use
+    action: use
   Practitioner.identifier:ZANR.type.coding.code:
-    classification: use
+    action: use
   Practitioner.identifier:ZANR.type.coding.system:
-    classification: use
+    action: use
   Practitioner.identifier:ZANR.use:
-    classification: use
+    action: use
   Practitioner.identifier:ZANR.value:
-    classification: use
+    action: use
   Practitioner.meta.profile:
-    classification: not_use
+    action: not_use
   Practitioner.name.family:
-    classification: copy_from
-    extra: Practitioner.name:name.family
+    action: copy_from
+    other: Practitioner.name:name.family
   Practitioner.name.given:
-    classification: copy_from
-    extra: Practitioner.name:name.given
+    action: copy_from
+    other: Practitioner.name:name.given
   Practitioner.name.prefix:
-    classification: copy_from
-    extra: Practitioner.name:name.prefix
+    action: copy_from
+    other: Practitioner.name:name.prefix
   Practitioner.name.use:
-    classification: copy_from
-    extra: Practitioner.name:name.use
+    action: copy_from
+    other: Practitioner.name:name.use
   Practitioner.name:name:
-    classification: not_use
+    action: not_use
   Practitioner.name.text:
-    classification: manual
+    action: manual
     remark: "Property is concatinated from values of {prefix-qualifier} {name.prefix} {name.given} {vorsatzwort} {nachname} {namenszusatz}"
   Practitioner.name:name.family:
-    classification: copy_to
-    extra: Practitioner.name.family
+    action: copy_to
+    other: Practitioner.name.family
   Practitioner.name:name.family.extension:nachname:
-    classification: manual
+    action: manual
     remark: "Property will be used in Practitioner.name.text"
   Practitioner.name:name.family.extension:namenszusatz:
-    classification: manual
+    action: manual
     remark: "Property will be used in Practitioner.name.text"
   Practitioner.name:name.family.extension:vorsatzwort:
-    classification: manual
+    action: manual
     remark: "Property will be used in Practitioner.name.text"
   Practitioner.name:name.family.value:
-    classification: not_use
+    action: not_use
   Practitioner.name:name.given:
-    classification: manual
+    action: manual
     remark: "Property will be used in Practitioner.name.text and mapped to Practitioner.name.given"
   Practitioner.name:name.prefix:
-    classification: manual
+    action: manual
     remark: "Property will be used in Practitioner.name.text and mapped to Practitioner.name.prefix"
   Practitioner.name:name.prefix.extension:prefix-qualifier:
-    classification: manual
+    action: manual
     remark: "Property will be used in Practitioner.name.text"
   Practitioner.name:name.prefix.value:
-    classification: not_use
+    action: not_use
   Practitioner.name:name.use:
-    classification: copy_to
-    extra: Practitioner.name.use
+    action: copy_to
+    other: Practitioner.name.use
   Practitioner.qualification:
-    classification: not_use
+    action: not_use
   Practitioner.qualification:ASV-Fachgruppennummer:
-    classification: not_use
+    action: not_use
   Practitioner.qualification:Berufsbezeichnung:
-    classification: not_use
+    action: not_use
   Practitioner.qualification:Typ:
-    classification: not_use
+    action: not_use
 79595f0e-d292-4c12-9413-cb8836d7de34:
   Organization.identifier:
-    classification: manual
+    action: manual
     remark: Muss mindestens die TelematikID der Organisation enthalten, die auch im ACCESS_TOKEN der Anfrage angegeben ist.
   Organization.name:
-    classification: manual
+    action: manual
     remark: Sollte den Namen der Organisation enthalten, wie er auch im ACCESS_TOKEN der Anfrage angegeben ist.
   Organization.identifier:BSNR:
-    classification: copy_from
-    extra: Organization.identifier:Betriebsstaettennummer
+    action: copy_from
+    other: Organization.identifier:Betriebsstaettennummer
   Organization.identifier:Betriebsstaettennummer:
-    classification: copy_to
-    extra: Organization.identifier:BSNR
+    action: copy_to
+    other: Organization.identifier:BSNR
   Organization.identifier:IKNR:
-    classification: copy_from
-    extra: Organization.identifier:Institutionskennzeichen
+    action: copy_from
+    other: Organization.identifier:Institutionskennzeichen
   Organization.identifier:Institutionskennzeichen:
-    classification: copy_to
-    extra: Organization.identifier:IKNR
+    action: copy_to
+    other: Organization.identifier:IKNR
   Organization.identifier:KZV-Abrechnungsnummer:
-    classification: copy_to
-    extra: Organization.identifier:KZVA
+    action: copy_to
+    other: Organization.identifier:KZVA
   Organization.identifier:KZVA:
-    classification: copy_from
-    extra: Organization.identifier:KZV-Abrechnungsnummer
+    action: copy_from
+    other: Organization.identifier:KZV-Abrechnungsnummer
   Organization.identifier:Telematik-ID:
-    classification: copy_to
-    extra: Organization.identifier:TelematikID
+    action: copy_to
+    other: Organization.identifier:TelematikID
   Organization.identifier:TelematikID:
-    classification: copy_from
-    extra: Organization.identifier:Telematik-ID
+    action: copy_from
+    other: Organization.identifier:Telematik-ID
   Organization.meta.profile:
-    classification: not_use
+    action: not_use
   Organization.meta.tag:
-    classification: manual
+    action: manual
     remark: Will be set by the mapping system
   Organization.meta.tag:Origin:
-    classification: manual
+    action: manual
     remark: Will be set by the mapping system
   Organization.meta.tag:Origin.system:
-    classification: fixed
-    extra: https://gematik.de/fhir/directory/CodeSystem/Origin
+    action: fixed
+    fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
   Organization.meta.tag:Origin.code:
-    classification: fixed
-    extra: ldap
+    action: fixed
+    fixed: ldap
 86750842-3975-4344-9656-48d74c5d8a00:
   MedicationDispense.extension:rxPrescriptionProcessIdentifier:
-    classification: manual
-    extra: MedicationDispense.identifier:prescriptionID
-    remark: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn
-      zusammen. Er wird durch den Medication Service vergeben.
+    action: manual
+    remark: "MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird durch den Medication Service vergeben."
   MedicationDispense.subject.identifier:
-    classification: manual
+    action: manual
     remark: 'Ist mit der Krankenversichertennummer des Versicherten im System "http://fhir.de/sid/gkv/kvid-10" zu befüllen.'
   MedicationDispense.identifier:
-    classification: manual
-    remark: "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
+    action: manual
+    remark:
+      "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
       \ \xFCbernommen"
   MedicationDispense.identifier:RxOriginatorProcessIdentifier:
-    classification: manual
-    remark: "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
+    action: manual
+    remark:
+      "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
       \ jede Prescription-ID mit der urspr\xFCnglichen Resource-ID zur genauen Nachverfolgung\
       \ der Medikationsdaten im Format resourceID + \u2018_\u2019 + prescriptionID."
   MedicationDispense.identifier:prescriptionID:
-    classification: copy_from
-    extra: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    action: copy_from
+    other: MedicationDispense.extension:rxPrescriptionProcessIdentifier
   MedicationDispense.meta.profile:
-    classification: manual
+    action: manual
     remark: Wird auf die meta.profile Angabe des Zielprofils umgeschrieben
 aeeb2f06-297e-4ed9-b189-d0030fd883fe:
   MedicationDispense.extension:rxPrescriptionProcessIdentifier:
-    classification: manual
-    extra: MedicationDispense.identifier:prescriptionID
-    remark: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn
-      zusammen. Er wird durch den Medication Service vergeben.
+    action: manual
+    remark: "MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird durch den Medication Service vergeben."
   MedicationDispense.identifier:
-    classification: manual
-    remark: "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
+    action: manual
+    remark:
+      "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
       \ \xFCbernommen"
   MedicationDispense.identifier:RxOriginatorProcessIdentifier:
-    classification: manual
-    remark: "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
+    action: manual
+    remark:
+      "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
       \ jede Prescription-ID mit der urspr\xFCnglichen Resource-ID zur genauen Nachverfolgung\
       \ der Medikationsdaten im Format resourceID + \u2018_\u2019 + prescriptionID."
   MedicationDispense.identifier:prescriptionID:
-    classification: copy_from
-    extra: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    action: copy_from
+    other: MedicationDispense.extension:rxPrescriptionProcessIdentifier
   MedicationDispense.meta.profile:
-    classification: manual
+    action: manual
     remark: Wird auf die meta.profile Angabe des Zielprofils umgeschrieben
 db59e5db-b93d-4a34-82b3-948bb1656392:
   MedicationDispense.extension:rxPrescriptionProcessIdentifier:
-    classification: manual
-    extra: MedicationDispense.identifier:prescriptionID
-    remark: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn
-      zusammen. Er wird durch den Medication Service vergeben.
+    action: manual
+    remark: "MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird durch den Medication Service vergeben."
   MedicationDispense.subject.identifier:
-    classification: manual
+    action: manual
     remark: 'Ist mit der Krankenversichertennummer des Versicherten im System "http://fhir.de/sid/gkv/kvid-10" zu befüllen.'
   MedicationDispense.identifier:
-    classification: manual
-    remark: "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
+    action: manual
+    remark:
+      "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
       \ \xFCbernommen"
   MedicationDispense.identifier:RxOriginatorProcessIdentifier:
-    classification: manual
-    remark: "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
+    action: manual
+    remark:
+      "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
       \ jede Prescription-ID mit der urspr\xFCnglichen Resource-ID zur genauen Nachverfolgung\
       \ der Medikationsdaten im Format resourceID + \u2018_\u2019 + prescriptionID."
   MedicationDispense.identifier:prescriptionID:
-    classification: copy_from
-    extra: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    action: copy_from
+    other: MedicationDispense.extension:rxPrescriptionProcessIdentifier
   MedicationDispense.meta.profile:
-    classification: manual
+    action: manual
     remark: Wird auf die meta.profile Angabe des Zielprofils umgeschrieben
