@@ -73,12 +73,22 @@ async def get_projects_old():
     return handler.project_keys
 
 
-@app.get("/project", tags=["Projects"])
+@app.get(
+    "/project",
+    tags=["Projects"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+)
 async def get_project_list() -> ProjectListModel:
     return handler.get_project_list()
 
 
-@app.get("/project/{project_key}", tags=["Projects"])
+@app.get(
+    "/project/{project_key}",
+    tags=["Projects"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+)
 async def get_project(
     project_key: str, response: Response
 ) -> ProjectModel | ErrorModel:
@@ -141,6 +151,8 @@ async def create_project_old(project_name: str, response: Response):
 @app.post(
     "/project/{project_key}",
     tags=["Projects"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     status_code=201,
 )
 async def update_or_create_project(
@@ -152,6 +164,8 @@ async def update_or_create_project(
 @app.get(
     "/project/{project_key}/package",
     tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {"error": {}}},
 )
 async def get_package_list(
@@ -173,6 +187,8 @@ async def get_package_list(
 @app.post(
     "/project/{project_key}/package/{package_id}",
     tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {"error": {}}},
 )
 async def update_package(
@@ -197,6 +213,8 @@ async def update_package(
 @app.get(
     "/project/{project_key}/profile",
     tags=["Profiles"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {"error": {}}},
 )
 async def get_profile_list(
@@ -215,7 +233,12 @@ async def get_profile_list(
     return proj
 
 
-@app.get("/classification", tags=["Classification"])
+@app.get(
+    "/classification",
+    tags=["Classification"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+)
 async def get_classifications():
     """
     Get all classifications
@@ -330,6 +353,8 @@ async def get_mappings_old(response: Response) -> GetMappingsOutput:
 @app.get(
     "/project/{project_key}/mapping",
     tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {}},
 )
 async def get_mappings(
@@ -517,6 +542,8 @@ async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}",
     tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {}},
 )
 async def get_mapping(
@@ -667,6 +694,8 @@ async def get_mapping_fields_old(
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}/field",
     tags=["Fields"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={404: {}},
 )
 async def get_mapping_fields(
@@ -812,6 +841,8 @@ async def post_mapping_field_classification_old(
 @app.post(
     "/project/{project_key}/mapping/{mapping_id}/field/{field_id}/classification",
     tags=["Fields"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
     responses={400: {}, 404: {}},
 )
 async def post_mapping_field_classification(
