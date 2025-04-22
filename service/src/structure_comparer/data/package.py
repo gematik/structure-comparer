@@ -6,10 +6,11 @@ from .profile import Profile
 
 
 class Package:
-    def __init__(self, data_dir: Path, config: PackageConfig):
+    def __init__(self, data_dir: Path, config: PackageConfig, parent):
         self.data_dir = data_dir
         self.config = config
         self.profiles: list[Profile] = None
+        self.__parent = parent
         self.__load_profiles()
 
     @property
@@ -28,6 +29,14 @@ class Package:
     def display(self) -> str:
         return self.config.display
 
+    @display.setter
+    def display(self, value) -> None:
+        self.config.display = value
+        self.write_config()
+
+    def write_config(self):
+        self.__parent.write_config()
+
     def __load_profiles(self) -> None:
         self.profiles = [
             Profile.from_json(file, self)
@@ -36,12 +45,11 @@ class Package:
         ]
 
     def to_model(self) -> PackageModel:
-        profiles = [p.to_model() for p in self.profiles]
 
         definition = {
+            "id": self.id,
             "name": self.name,
             "version": self.version,
-            "profiles": profiles,
         }
 
         if self.display:

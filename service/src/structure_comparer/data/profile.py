@@ -8,6 +8,7 @@ from fhir.resources.R4B.elementdefinition import ElementDefinition
 from fhir.resources.R4B.structuredefinition import StructureDefinition
 from pydantic import ValidationError
 
+from ..model.profile import PackageProfile as PackageProfileModel
 from ..model.profile import Profile as ProfileModel
 from ..model.profile import ProfileField as ProfileFieldModel
 
@@ -77,6 +78,20 @@ class Profile:
         try:
             model = ProfileModel(
                 profile_key=self.key, name=self.name, version=self.version
+            )
+        except ValidationError as e:
+            logger.exception(e)
+
+        else:
+            return model
+
+    def to_pkg_model(self) -> ProfileModel:
+        try:
+            model = PackageProfileModel(
+                profile_key=self.key,
+                name=self.name,
+                version=self.version,
+                package=self.__package.id,
             )
         except ValidationError as e:
             logger.exception(e)

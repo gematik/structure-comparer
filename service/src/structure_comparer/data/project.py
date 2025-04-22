@@ -28,7 +28,7 @@ class Project:
 
     def __load_packages(self) -> None:
         # Load packages from config
-        self.pkgs = [Package(self.data_dir, p) for p in self.config.packages]
+        self.pkgs = [Package(self.data_dir, p, self) for p in self.config.packages]
 
         # Check for local packages not in config
         for dir in self.data_dir.iterdir():
@@ -41,7 +41,7 @@ class Project:
                     self.config.write()
 
                     # Create and append package
-                    self.pkgs.append(Package(self.data_dir, cfg))
+                    self.pkgs.append(Package(self.data_dir, cfg, self))
 
     def __load_mappings(self):
         self.mappings = {
@@ -67,9 +67,9 @@ class Project:
         manual_entries_file.touch()
 
         # Create default config.json file
-        config_file = path / "config.json"
         config_data = ProjectConfig(name=project_name)
-        config_file.write_text(config_data.model_dump_json(indent=4), encoding="utf-8")
+        config_data._file_path = path / "config.json"
+        config_data.write()
 
         return Project(path)
 
@@ -94,6 +94,16 @@ class Project:
     def data_dir(self) -> Path:
         return self.dir / self.config.data_dir
 
+    def write_config(self):
+        self.config.write()
+
+    def get_package(self, id: str) -> Package | None:
+        for pkg in self.pkgs:
+            if pkg.id == id:
+                return pkg
+
+        return None
+
     def get_profile(self, id: str, version: str):
         for pkg in self.pkgs:
             for profile in pkg.profiles:
@@ -101,6 +111,9 @@ class Project:
                     return profile
 
         return None
+
+    def __has_pkg(self, name: str, version: str) -> bool:
+        return any([p.name == name and p.version == version for p in self.pkgs])
 
     def to_model(self) -> ProjectModel:
         mappings = [comp.to_model() for comp in self.mappings.values()]
@@ -110,6 +123,3 @@ class Project:
 
     def to_overview_model(self) -> ProjectOverviewModel:
         return ProjectOverviewModel(name=self.name, url=self.url)
-
-    def __has_pkg(self, name: str, version: str) -> bool:
-        return any([p.name == name and p.version == version for p in self.pkgs])
