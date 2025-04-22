@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class Profile(BaseModel):
     id: str
-    profile_key: str
+    url: str
     name: str
     version: str
 

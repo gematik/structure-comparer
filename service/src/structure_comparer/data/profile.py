@@ -71,13 +71,17 @@ class Profile:
     def id(self) -> str:
         return self.__data.id
 
+    @property
+    def url(self) -> str:
+        return self.__data.url
+
     def __lt__(self, other: "Profile") -> bool:
         return self.key < other.key
 
     def to_model(self) -> ProfileModel:
         try:
             model = ProfileModel(
-                id=self.id, profile_key=self.key, name=self.name, version=self.version
+                id=self.id, url=self.url, name=self.name, version=self.version
             )
         except ValidationError as e:
             logger.exception(e)
@@ -89,7 +93,7 @@ class Profile:
         try:
             model = PackageProfileModel(
                 id=self.id,
-                profile_key=self.key,
+                url=self.url,
                 name=self.name,
                 version=self.version,
                 package=self.__package.id,
