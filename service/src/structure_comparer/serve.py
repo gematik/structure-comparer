@@ -17,6 +17,7 @@ from .errors import (
     ProjectNotFound,
 )
 from .handler import ProjectsHandler
+from .model.error import Error as ErrorModel
 from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
 from .model.mapping import Mapping as MappingModel
@@ -73,14 +74,16 @@ async def get_project_list() -> ProjectListModel:
 
 
 @app.get("/project/{project_key}", tags=["Projects"])
-async def get_project(project_key: str, response: Response) -> ProjectModel:
+async def get_project(
+    project_key: str, response: Response
+) -> ProjectModel | ErrorModel:
     try:
         proj = handler.get_project(project_key)
         return proj
 
-    except ProjectNotFound:
+    except ProjectNotFound as e:
         response.status_code = 404
-        return {"error": "Project not found"}
+        return ErrorModel.from_except(e)
 
 
 @app.post(
@@ -138,9 +141,7 @@ async def create_project_old(project_name: str, response: Response):
 async def update_or_create_project(
     project_key: str, project: ProjectInputModel
 ) -> ProjectModel:
-    proj = handler.update_or_create_project(project_key, project)
-
-    return proj
+    return handler.update_or_create_project(project_key, project)
 
 
 @app.get(
@@ -148,12 +149,15 @@ async def update_or_create_project(
     tags=["Profiles"],
     responses={404: {"error": {}}},
 )
-async def get_profiles(project_key: str) -> ProfileListModel:
+async def get_profile_list(
+    project_key: str, response: Response
+) -> ProfileListModel | ErrorModel:
     try:
         proj = handler.get_project_profiles(project_key)
 
     except ProjectNotFound as e:
-        return {"error": str(e)}
+        response.status_code = 404
+        return ErrorModel.from_except(e)
 
     return proj
 
@@ -276,7 +280,9 @@ async def get_mappings_old(response: Response) -> GetMappingsOutput:
     responses={404: {}},
     deprecated=True,
 )
-async def get_mappings(project_key: str, response: Response) -> GetMappingsOutput:
+async def get_mappings(
+    project_key: str, response: Response
+) -> GetMappingsOutput | ErrorModel:
     """
     Get the available mappings
     Returns a list with all mappings, including the name and the url to access it.
@@ -349,9 +355,9 @@ async def get_mappings(project_key: str, response: Response) -> GetMappingsOutpu
         mappings = handler.get_mappings(project_key)
         return GetMappingsOutput(mappings=mappings)
 
-    except ProjectNotFound:
+    except ProjectNotFound as e:
         response.status_code = 404
-        return {"error": "Project not found"}
+        return ErrorModel.from_except(e)
 
 
 @app.get(
@@ -463,7 +469,7 @@ async def get_mapping_old(id: str, response: Response) -> MappingModel:
 )
 async def get_mapping(
     project_key: str, mapping_id: str, response: Response
-) -> MappingModel:
+) -> MappingModel | ErrorModel:
     """
     Get the available mappings
     Returns a list with all mappings, including the name and the url to access it.
@@ -537,7 +543,7 @@ async def get_mapping(
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
-        return {"error": str(e)}
+        return ErrorModel.from_except(e)
 
 
 @app.get(
@@ -613,7 +619,7 @@ async def get_mapping_fields_old(
 )
 async def get_mapping_fields(
     project_key: str, mapping_id: str, response: Response
-) -> MappingFieldsOutputModel:
+) -> MappingFieldsOutputModel | ErrorModel:
     """
     Get the fields of a mapping
     Returns a brief list of the fields
@@ -664,7 +670,7 @@ async def get_mapping_fields(
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
-        return {"error": str(e)}
+        return ErrorModel.from_except(e)
 
 
 @app.post(
@@ -822,7 +828,7 @@ async def post_mapping_field_classification(
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
-        return {"error": str(e)}
+        return ErrorModel.from_except(e)
 
     except (
         MappingActionNotAllowed,
@@ -831,7 +837,7 @@ async def post_mapping_field_classification(
         MappingValueMissing,
     ) as e:
         response.status_code = 400
-        return {"error": str(e)}
+        return ErrorModel.from_except(e)
 
 
 def serve():
