@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class Profile(BaseModel):
     id: str
     url: str
+    key: str
     name: str
     version: str
 
