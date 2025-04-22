@@ -23,6 +23,7 @@ from .model.init_project_input import InitProjectInput
 from .model.mapping import Mapping as MappingModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
+from .model.package import PackageList as PackageListModel
 from .model.profile import ProfileList as ProfileListModel
 from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
@@ -142,6 +143,27 @@ async def update_or_create_project(
     project_key: str, project: ProjectInputModel
 ) -> ProjectModel:
     return handler.update_or_create_project(project_key, project)
+
+
+@app.get(
+    "/project/{project_key}/package",
+    tags=["Packages"],
+    responses={404: {"error": {}}},
+)
+async def get_package_list(
+    project_key: str, response: Response
+) -> PackageListModel | ErrorModel:
+    """
+    Returns a list of the packages in the project
+    """
+    try:
+        proj = handler.get_project_packages(project_key)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return proj
 
 
 @app.get(

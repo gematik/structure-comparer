@@ -36,13 +36,11 @@ class Package:
         ]
 
     def to_model(self) -> PackageModel:
-        profiles = [p.to_model() for p in self.profiles]
 
         definition = {
             "id": self.id,
             "name": self.name,
             "version": self.version,
-            "profiles": profiles,
         }
 
         if self.display:
