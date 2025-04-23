@@ -17,9 +17,9 @@ from .errors import (
     ProjectNotFound,
 )
 from .helpers import get_field_by_name
-from .manual_entries import MANUAL_ENTRIES_ACTION, MANUAL_ENTRIES_EXTRA
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingDetails as MappingDetailsModel
+from .model.mapping import MappingFieldBase as MappingFieldBaseModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -183,7 +183,7 @@ class ProjectsHandler:
             )
 
         # Build the entry that should be created/updated
-        new_entry = {MANUAL_ENTRIES_ACTION: action}
+        new_entry = MappingFieldBaseModel(name=field.name, action=action)
         if action == Action.COPY_FROM or action == Action.COPY_TO:
             if target_id := mapping.target:
                 target = get_field_by_name(mapping, target_id)
@@ -191,38 +191,34 @@ class ProjectsHandler:
                 if target is None:
                     raise MappingTargetNotFound()
 
-                new_entry[MANUAL_ENTRIES_EXTRA] = target.name
+                new_entry.other = target.name
             else:
                 raise MappingTargetMissing()
         elif action == Action.FIXED:
             if fixed := mapping.value:
-                new_entry[MANUAL_ENTRIES_EXTRA] = fixed
+                new_entry.fixed = fixed
             else:
                 raise MappingValueMissing()
 
         # Clean up possible manual entry this was copied from before
         manual_entries = proj.manual_entries[mapping_id]
         if (manual_entry := manual_entries[field.name]) and (
-            manual_entry[MANUAL_ENTRIES_ACTION] == Action.COPY_FROM
-            or manual_entry[MANUAL_ENTRIES_ACTION] == Action.COPY_TO
+            manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
         ):
-            del manual_entries[manual_entry[MANUAL_ENTRIES_EXTRA]]
+            del manual_entries[manual_entry.other]
 
         # Apply the manual entry
         manual_entries[field.name] = new_entry
 
         # Handle the partner entry for copy actions
         if action == Action.COPY_FROM:
-            manual_entries[target.name] = {
-                MANUAL_ENTRIES_ACTION: Action.COPY_TO,
-                MANUAL_ENTRIES_EXTRA: field.name,
-            }
+            manual_entries[target.name] = MappingFieldBaseModel(
+                name=target.name, action=Action.COPY_TO, other=field.name
+            )
         elif action == Action.COPY_TO:
-            manual_entries[target.name] = {
-                MANUAL_ENTRIES_ACTION: Action.COPY_FROM,
-                MANUAL_ENTRIES_EXTRA: field.name,
-            }
-
+            manual_entries[target.name] = MappingFieldBaseModel(
+                name=target.name, action=Action.COPY_FROM, other=field.name
+            )
         # Save the changes
         manual_entries.write()
 

@@ -1,91 +1,55 @@
-import copy
-import json
 import logging
+from enum import StrEnum
 from pathlib import Path
-from typing import Dict
 
 import yaml
 
-from .model.mapping import MappingFieldBase
-
-MANUAL_ENTRIES_ACTION = "classification"
-MANUAL_ENTRIES_REMARK = "remark"
-MANUAL_ENTRIES_EXTRA = "extra"
+from .model.manual_entries import ManualEntries as ManualEntriesModel
+from .model.manual_entries import ManualEntriesMapping as ManualEntriesMappingModel
 
 logger = logging.getLogger(__name__)
 
-
-class ManualMappings:
-    def __init__(self, data: Dict[str, dict]) -> None:
-        self.data = {k: MappingFieldBase.model_validate(v) for k, v in data.items()}
-
-    def __iter__(self):
-        return iter(self.data)
-
-    def __getitem__(self, key) -> "ManualEntries":
-        return self.data.get(key)
-
-    def __setitem__(self, key, value) -> None:
-        self.data[key] = value
-
-    def __delitem__(self, key):
-        del self.data[key]
-
-    def to_dict(self) -> Dict:
-        data = copy.deepcopy(self.data)
-        for name, value in data.items():
-            try:
-                value[MANUAL_ENTRIES_ACTION] = value[MANUAL_ENTRIES_ACTION].value
-            except TypeError as e:
-                e.add_note(f"converting field {name}")
-                raise
-        return data
+yaml.SafeDumper.add_multi_representer(
+    StrEnum,
+    yaml.representer.SafeRepresenter.represent_str,
+)
 
 
 class ManualEntries:
-    _data = {}
+    _data: ManualEntriesModel = None
     _file: Path = None
 
     @property
-    def entries(self) -> Dict[str, ManualMappings] | None:
-        return self._data.get("entries")
+    def entries(self) -> list[ManualEntriesMappingModel]:
+        return self._data.entries
 
     def read(self, file: str | Path):
         self._file = Path(file)
         content = self._file.read_text(encoding="utf-8")
 
         if self._file.suffix == ".json":
-            data = json.loads(content)
+            self._data = ManualEntriesModel.model_validate_json(content)
         elif self._file.suffix == ".yaml":
-            data = yaml.safe_load(content)
-
-        self._data["entries"] = {}
-        if data is not None:
-            self._data["entries"] = {
-                id: ManualMappings(mappings) for id, mappings in data.items()
-            }
+            self._data = ManualEntriesModel.model_validate(yaml.safe_load(content))
 
     def write(self):
-        data = {}
-        for id, mappings in self.entries.items():
-            try:
-                data[id] = mappings.to_dict()
-            except TypeError as e:
-                e.add_note(f"with ID {id}")
-                raise
         if self._file.suffix == ".json":
-            content = json.dumps(data, indent=4)
+            content = self._data.model_dump_json(indent=4)
         elif self._file.suffix == ".yaml":
-            content = yaml.safe_dump(data)
+            content = yaml.safe_dump(self._data.model_dump())
 
         if content is not None:
             self._file.write_text(content, encoding="utf-8")
 
     def __iter__(self):
-        return iter(self._data["entries"])
+        return iter(self.entries)
 
-    def __getitem__(self, key):
-        return self._data["entries"].get(key)
+    def get(self, key, default=None) -> ManualEntriesMappingModel:
+        return next((e for e in self.entries if e.id == key), default)
 
-    def __setitem__(self, key, value):
-        self._data["entries"][key] = value
+    def __getitem__(self, key) -> ManualEntriesMappingModel:
+        return next((e for e in self.entries if e.id == key))
+
+    def __setitem__(self, key, value) -> None:
+        i = next(i for i in enumerate(self.entries) if self.entries[i].id == key)
+        self.entries[i] = value

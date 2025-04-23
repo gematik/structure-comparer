@@ -5,6 +5,7 @@ from .profile import Profile, ProfileField
 
 
 class MappingFieldBase(BaseModel):
+    name: str
     action: Action
     other: str | None = None
     fixed: str | None = None
@@ -12,7 +13,6 @@ class MappingFieldBase(BaseModel):
 
 
 class MappingField(MappingFieldBase):
-    name: str
     profiles: dict[str, ProfileField]
     actions_allowed: list[Action]
 

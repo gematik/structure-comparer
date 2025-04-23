@@ -57,6 +57,7 @@ class Project:
 
         self.manual_entries = ManualEntries()
         self.manual_entries.read(manual_entries_file)
+        self.manual_entries.write()
 
     @staticmethod
     def create(path: Path, project_name: str) -> "Project":

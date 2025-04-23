@@ -7,12 +7,8 @@ from pydantic import ValidationError
 
 from ..action import Action
 from ..consts import REMARKS
-from ..manual_entries import (
-    MANUAL_ENTRIES_ACTION,
-    MANUAL_ENTRIES_EXTRA,
-    MANUAL_ENTRIES_REMARK,
-    ManualEntries,
-)
+from ..manual_entries import ManualEntries
+from ..model.manual_entries import ManualEntriesMapping as ManualEntriesMappingModel
 from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
@@ -77,7 +73,7 @@ class MappingField:
         self.actions_allowed = list(allowed)
 
     def classify_remark_field(
-        self, comparison: "Mapping", manual_entries: Dict
+        self, mapping: "Mapping", manual_entries: ManualEntriesMappingModel
     ) -> None:
         """
         Classify and get the remark for the property
@@ -92,15 +88,21 @@ class MappingField:
 
         # If there is a manual entry for this property, use it
         if manual_entries is not None and (manual_entry := manual_entries[self.name]):
-            action = manual_entry.get(MANUAL_ENTRIES_ACTION, Action.MANUAL)
+            action = manual_entry.action if manual_entry.action else Action.MANUAL
 
             # If there is a remark in the manual entry, use it else use the default remark
-            remark = manual_entry.get(MANUAL_ENTRIES_REMARK, REMARKS[action])
+            remark = manual_entry.remark if manual_entry.remark else REMARKS[action]
 
             # If the action needs extra information, generate the remark with the extra information
             if action in EXTRA_ACTIONS:
-                extra = manual_entry[MANUAL_ENTRIES_EXTRA]
-                remark = REMARKS[action].format(extra)
+                extra = None
+                if action == Action.FIXED:
+                    extra = manual_entry.fixed
+                elif action == Action.COPY_FROM or action == Action.COPY_TO:
+                    extra = manual_entry.other
+
+                if extra:
+                    remark = REMARKS[action].format(extra)
 
         # If the last element from the property is in the manual list, use the manual action
         elif self.name_child in MANUAL_SUFFIXES:
@@ -108,7 +110,7 @@ class MappingField:
 
         # If the parent has an action that can be derived use the parent's action
         elif (
-            parent_update := comparison.fields.get(self.name_parent)
+            parent_update := mapping.fields.get(self.name_parent)
         ) and parent_update.action in DERIVED_ACTIONS:
             action = parent_update.action
 
@@ -125,9 +127,9 @@ class MappingField:
 
         # If present in any of the source profiles
         elif any(
-            [self.profiles[profile.key] is not None for profile in comparison.sources]
+            [self.profiles[profile.key] is not None for profile in mapping.sources]
         ):
-            if self.profiles[comparison.target.key] is not None:
+            if self.profiles[mapping.target.key] is not None:
                 action = Action.USE
             else:
                 action = Action.EXTENSION
@@ -199,9 +201,9 @@ class Mapping:
         return self.__project.manual_entries
 
     def fill_action_remark(self, manual_entries: ManualEntries):
-        manual_entries = manual_entries.entries.get(self.id)
+        manual_mappings = manual_entries.get(self.id)
         for field in self.fields.values():
-            field.classify_remark_field(self, manual_entries)
+            field.classify_remark_field(self, manual_mappings)
 
     def __get_sources(self) -> None:
         self.sources = []

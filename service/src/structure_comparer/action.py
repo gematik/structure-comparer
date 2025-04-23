@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Action(Enum):
+class Action(StrEnum):
     USE = "use"
     NOT_USE = "not_use"
     EMPTY = "empty"

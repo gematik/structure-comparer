@@ -1,539 +1,979 @@
-0760ae49-8551-459b-bc65-39bfb47697f8:
-  MedicationRequest.dosageInstruction.extension:Dosierungskennzeichen:
-    action: not_use
-  MedicationRequest.extension:BVG:
-    action: not_use
-  MedicationRequest.extension:Mehrfachverordnung:
-    action: copy_from
+entries:
+- fields:
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.dosageInstruction.extension:Dosierungskennzeichen
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.extension:BVG
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung
     other: MedicationRequest.extension:multiplePrescription
-  MedicationRequest.extension:Notdienstgebuehr:
-    action: not_use
-  MedicationRequest.extension:Unfallinformationen:
-    action: not_use
-  MedicationRequest.extension:Zuzahlungsstatus:
-    action: not_use
-  MedicationRequest.extension:multiplePrescription:
-    action: copy_to
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.extension:Notdienstgebuehr
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.extension:Unfallinformationen
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.extension:Zuzahlungsstatus
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription
     other: MedicationRequest.extension:Mehrfachverordnung
-  MedicationRequest.identifier:rxPrescriptionProcessIdentifier:
-    action: empty
-    remark:
-      Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.identifier:rxPrescriptionProcessIdentifier
+    other: null
+    remark: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn
       zusammen. Er wird durch den Medication Service vergeben.
-  MedicationRequest.insurance.reference:
-    action: not_use
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.insurance.reference
+    other: null
     remark: "Eigenschaft und Wert(e) werden NICHT \xFCbernommen"
-  MedicationRequest.intent:
-    action: fixed
+  - action: fixed
     fixed: filler-order
-  MedicationRequest.medication[x].reference:
-    action: empty
-  MedicationRequest.medication[x]:medicationReference:
-    action: manual
-    remark:
-      Die Referenz der KBV-Medikation wird durch eine Referenz auf eine EPA-Medikation
+    name: MedicationRequest.intent
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.medication[x].reference
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference
+    other: null
+    remark: Die Referenz der KBV-Medikation wird durch eine Referenz auf eine EPA-Medikation
       ersetzt.
-  MedicationRequest.medication[x]:medicationReference.reference:
-    action: manual
+  - action: manual
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference.reference
+    other: null
     remark: Die Referenz ergibt sich aus der neu erzeugten EPA-Medikation.
-  MedicationRequest.meta.profile:
-    action: not_use
-  MedicationRequest.requester.reference:
-    action: not_use
-  MedicationRequest.subject.identifier:
-    action: medication_service
-  MedicationRequest.subject.reference:
-    action: not_use
-  MedicationRequest.substitution.allowed[x]:allowedBoolean:
-    action: use
-10ac71f3-3204-4b82-b8a3-f7ecc4a7a98a:
-  Medication.amount.numerator.extension:Gesamtmenge:
-    action: copy_to
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.meta.profile
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.requester.reference
+    other: null
+    remark: null
+  - action: medication_service
+    fixed: null
+    name: MedicationRequest.subject.identifier
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.subject.reference
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationRequest.substitution.allowed[x]:allowedBoolean
+    other: null
+    remark: null
+  id: 0760ae49-8551-459b-bc65-39bfb47697f8
+- fields:
+  - action: copy_to
+    fixed: null
+    name: Medication.amount.numerator.extension:Gesamtmenge
     other: Medication.amount.numerator.extension:totalQuantity
-  Medication.amount.numerator.extension:Packungsgroesse:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.amount.numerator.extension:Packungsgroesse
     other: Medication.amount.numerator.extension:packagingSize
-  Medication.amount.numerator.extension:packagingSize:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.amount.numerator.extension:packagingSize
     other: Medication.amount.numerator.extension:Packungsgroesse
-  Medication.amount.numerator.extension:totalQuantity:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.amount.numerator.extension:totalQuantity
     other: Medication.amount.numerator.extension:Gesamtmenge
-  Medication.code.coding:PZN:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.code.coding:PZN
     other: Medication.code.coding:pznCode
-  Medication.code.coding:PZN.display:
-    action: empty
-  Medication.code.coding:PZN.userSelected:
-    action: empty
-  Medication.code.coding:PZN.version:
-    action: empty
-  Medication.code.coding:pznCode:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:PZN.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:PZN.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:PZN.version
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.code.coding:pznCode
     other: Medication.code.coding:PZN
-  Medication.code.coding:pznCode.display:
-    action: empty
-  Medication.code.coding:pznCode.userSelected:
-    action: empty
-  Medication.code.coding:pznCode.version:
-    action: empty
-  Medication.code.coding:verordnungskategorieCode:
-    action: not_use
-  Medication.extension:Arzneimittelkategorie:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:pznCode.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:pznCode.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:pznCode.version
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.code.coding:verordnungskategorieCode
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Arzneimittelkategorie
     other: Medication.extension:drugCategory
-  Medication.extension:Herstellungsanweisung:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Herstellungsanweisung
     other: Medication.extension:manufacturingInstructions
-  Medication.extension:Impfstoff:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff
     other: Medication.extension:isVaccine
-  Medication.extension:Kategorie:
-    action: not_use
-  Medication.extension:Normgroesse:
-    action: copy_to
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.extension:Kategorie
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Normgroesse
     other: Medication.extension:normSizeCode
-  Medication.extension:RxPrescriptionProcessIdentifier:
-    action: medication_service
-  Medication.extension:Verpackung:
-    action: copy_to
+    remark: null
+  - action: medication_service
+    fixed: null
+    name: Medication.extension:RxPrescriptionProcessIdentifier
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Verpackung
     other: Medication.extension:packaging
-  Medication.extension:drugCategory:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory
     other: Medication.extension:Arzneimittelkategorie
-  Medication.extension:isVaccine:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine
     other: Medication.extension:Impfstoff
-  Medication.extension:manufacturingInstructions:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions
     other: Medication.extension:Herstellungsanweisung
-  Medication.extension:normSizeCode:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:normSizeCode
     other: Medication.extension:Normgroesse
-  Medication.extension:packaging:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:packaging
     other: Medication.extension:Verpackung
-  Medication.form.coding:KBVDarreichungsform:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.form.coding:KBVDarreichungsform
     other: Medication.form.coding:kbvDarreichungsform
-  Medication.form.coding:KBVDarreichungsform.userSelected:
-    action: empty
-  Medication.form.coding:KBVDarreichungsform.version:
-    action: empty
-  Medication.form.coding:kbvDarreichungsform:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.form.coding:KBVDarreichungsform.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.form.coding:KBVDarreichungsform.version
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.form.coding:kbvDarreichungsform
     other: Medication.form.coding:KBVDarreichungsform
-  Medication.identifier:ePAMedicationUniqueIdentifier:
-    action: medication_service
-  Medication.ingredient.extension:Darreichungsform:
-    action: copy_to
+    remark: null
+  - action: medication_service
+    fixed: null
+    name: Medication.identifier:ePAMedicationUniqueIdentifier
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.ingredient.extension:Darreichungsform
     other: Medication.ingredient.extension:darreichungsform
-  Medication.ingredient.extension:darreichungsform:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.extension:darreichungsform
     other: Medication.ingredient.extension:Darreichungsform
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK
     other: Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.display:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.userSelected:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.version:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN:
-    action: copy_from
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.version
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN
     other: Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.display:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.userSelected:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.version:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.version
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode
     other: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode
     other: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN
-  Medication.ingredient.item[x]:itemReference.reference:
-    action: empty
-  Medication.ingredient.strength.extension:MengeFreitext:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference.reference
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.ingredient.strength.extension:MengeFreitext
     other: Medication.ingredient.strength.extension:amountText
-  Medication.ingredient.strength.extension:amountText:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.strength.extension:amountText
     other: Medication.ingredient.strength.extension:MengeFreitext
-  Medication.ingredient.strength.numerator:
-    action: manual
-    remark:
-      "If Property and value exists, it will be retained. If it is missing please\
+    remark: null
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator
+    other: null
+    remark: "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
-  Medication.ingredient.strength.numerator.code:
-    action: manual
-    remark:
-      "If Property and value exists, it will be retained. If it is missing please\
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator.code
+    other: null
+    remark: "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
-  Medication.ingredient.strength.numerator.system:
-    action: manual
-    remark:
-      "If Property and value exists, it will be retained. If it is missing please\
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator.system
+    other: null
+    remark: "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
-  Medication.ingredient.strength.numerator.value:
-    action: manual
-    remark:
-      "If Property and value exists, it will be retained. If it is missing please\
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator.value
+    other: null
+    remark: "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
-  Medication.manufacturer.reference:
-    action: empty
-  Medication.meta.profile:
-    action: not_use
-477e227a-6664-437d-8084-325bc9d25405:
-  Medication.amount.numerator.extension:Gesamtmenge:
-    action: copy_to
+  - action: empty
+    fixed: null
+    name: Medication.manufacturer.reference
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile
+    other: null
+    remark: null
+  id: 10ac71f3-3204-4b82-b8a3-f7ecc4a7a98a
+- fields:
+  - action: copy_to
+    fixed: null
+    name: Medication.amount.numerator.extension:Gesamtmenge
     other: Medication.amount.numerator.extension:totalQuantity
-  Medication.amount.numerator.extension:Packungsgroesse:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.amount.numerator.extension:Packungsgroesse
     other: Medication.amount.numerator.extension:packagingSize
-  Medication.amount.numerator.extension:packagingSize:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.amount.numerator.extension:packagingSize
     other: Medication.amount.numerator.extension:Packungsgroesse
-  Medication.amount.numerator.extension:totalQuantity:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.amount.numerator.extension:totalQuantity
     other: Medication.amount.numerator.extension:Gesamtmenge
-  Medication.code.coding:PZN:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.code.coding:PZN
     other: Medication.code.coding:pznCode
-  Medication.code.coding:PZN.display:
-    action: empty
-  Medication.code.coding:PZN.userSelected:
-    action: empty
-  Medication.code.coding:PZN.version:
-    action: empty
-  Medication.code.coding:pznCode:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:PZN.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:PZN.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:PZN.version
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.code.coding:pznCode
     other: Medication.code.coding:PZN
-  Medication.code.coding:pznCode.display:
-    action: empty
-  Medication.code.coding:pznCode.userSelected:
-    action: empty
-  Medication.code.coding:pznCode.version:
-    action: empty
-  Medication.code.coding:verordnungskategorieCode:
-    action: not_use
-  Medication.extension:Arzneimittelkategorie:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:pznCode.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:pznCode.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:pznCode.version
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.code.coding:verordnungskategorieCode
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Arzneimittelkategorie
     other: Medication.extension:drugCategory
-  Medication.extension:Herstellungsanweisung:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Herstellungsanweisung
     other: Medication.extension:manufacturingInstructions
-  Medication.extension:Impfstoff:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff
     other: Medication.extension:isVaccine
-  Medication.extension:Kategorie:
-    action: not_use
-  Medication.extension:Normgroesse:
-    action: copy_to
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.extension:Kategorie
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Normgroesse
     other: Medication.extension:normSizeCode
-  Medication.extension:RxPrescriptionProcessIdentifier:
-    action: medication_service
-  Medication.extension:drugCategory:
-    action: copy_from
+    remark: null
+  - action: medication_service
+    fixed: null
+    name: Medication.extension:RxPrescriptionProcessIdentifier
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory
     other: Medication.extension:Arzneimittelkategorie
-  Medication.extension:isVaccine:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine
     other: Medication.extension:Impfstoff
-  Medication.extension:manufacturingInstructions:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions
     other: Medication.extension:Herstellungsanweisung
-  Medication.extension:normSizeCode:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:normSizeCode
     other: Medication.extension:Normgroesse
-  Medication.form.coding:KBVDarreichungsform:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.form.coding:KBVDarreichungsform
     other: Medication.form.coding:kbvDarreichungsform
-  Medication.form.coding:KBVDarreichungsform.userSelected:
-    action: empty
-  Medication.form.coding:KBVDarreichungsform.version:
-    action: empty
-  Medication.form.coding:kbvDarreichungsform:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.form.coding:KBVDarreichungsform.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.form.coding:KBVDarreichungsform.version
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.form.coding:kbvDarreichungsform
     other: Medication.form.coding:KBVDarreichungsform
-  Medication.identifier:ePAMedicationUniqueIdentifier:
-    action: medication_service
-  Medication.ingredient.extension:Darreichungsform:
-    action: copy_to
+    remark: null
+  - action: medication_service
+    fixed: null
+    name: Medication.identifier:ePAMedicationUniqueIdentifier
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.ingredient.extension:Darreichungsform
     other: Medication.ingredient.extension:darreichungsform
-  Medication.ingredient.extension:darreichungsform:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.extension:darreichungsform
     other: Medication.ingredient.extension:Darreichungsform
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK
     other: Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.display:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.userSelected:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.version:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN:
-    action: copy_from
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK.version
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN
     other: Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.display:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.userSelected:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.version:
-    action: empty
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.userSelected
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN.version
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:askCode
     other: Medication.ingredient.item[x]:itemCodeableConcept.coding:ASK
-  Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pznCode
     other: Medication.ingredient.item[x]:itemCodeableConcept.coding:PZN
-  Medication.ingredient.item[x]:itemReference.reference:
-    action: empty
-  Medication.ingredient.strength.extension:MengeFreitext:
-    action: copy_to
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference.reference
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.ingredient.strength.extension:MengeFreitext
     other: Medication.ingredient.strength.extension:amountText
-  Medication.ingredient.strength.extension:amountText:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.strength.extension:amountText
     other: Medication.ingredient.strength.extension:MengeFreitext
-  Medication.ingredient.strength.numerator:
-    action: manual
-    remark:
-      "If Property and value exists, it will be retained. If it is missing please\
+    remark: null
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator
+    other: null
+    remark: "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
-  Medication.ingredient.strength.numerator.code:
-    action: manual
-    remark:
-      "If Property and value exists, it will be retained. If it is missing please\
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator.code
+    other: null
+    remark: "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
-  Medication.ingredient.strength.numerator.system:
-    action: manual
-    remark:
-      "If Property and value exists, it will be retained. If it is missing please\
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator.system
+    other: null
+    remark: "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
-  Medication.ingredient.strength.numerator.value:
-    action: manual
-    remark:
-      "If Property and value exists, it will be retained. If it is missing please\
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator.value
+    other: null
+    remark: "If Property and value exists, it will be retained. If it is missing please\
       \ add a new extension with the following content:\n\"extension\": [\n  {\n \
       \   \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
       ,\n    \"valueCode\": \"unknown\"\n  }\n]\n"
-  Medication.manufacturer.reference:
-    action: empty
-  Medication.meta.profile:
-    action: not_use
-615205d2-7288-47ce-a65a-009c37ed8447:
-  Practitioner.identifier:
-    action: manual
-    remark: Muss mindestens die TelematikID des Arztes enthalten, die auch im Signaturzertifikat der QES angegeben ist.
-  Practitioner.identifier:ANR:
-    action: copy_to
+  - action: empty
+    fixed: null
+    name: Medication.manufacturer.reference
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile
+    other: null
+    remark: null
+  id: 477e227a-6664-437d-8084-325bc9d25405
+- fields:
+  - action: manual
+    fixed: null
+    name: Practitioner.identifier
+    other: null
+    remark: Muss mindestens die TelematikID des Arztes enthalten, die auch im Signaturzertifikat
+      der QES angegeben ist.
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR
     other: Practitioner.identifier:LANR
-  Practitioner.identifier:LANR:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Practitioner.identifier:LANR
     other: Practitioner.identifier:ANR
-  Practitioner.identifier:Telematik-ID:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:Telematik-ID
     other: Practitioner.identifier:TelematikID
-  Practitioner.identifier:TelematikID:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Practitioner.identifier:TelematikID
     other: Practitioner.identifier:Telematik-ID
-  Practitioner.identifier:ZANR.system:
-    action: use
-  Practitioner.identifier:ZANR.type:
-    action: use
-  Practitioner.identifier:ZANR.type.coding:
-    action: use
-  Practitioner.identifier:ZANR.type.coding.code:
-    action: use
-  Practitioner.identifier:ZANR.type.coding.system:
-    action: use
-  Practitioner.identifier:ZANR.use:
-    action: use
-  Practitioner.identifier:ZANR.value:
-    action: use
-  Practitioner.meta.profile:
-    action: not_use
-  Practitioner.name.family:
-    action: copy_from
+    remark: null
+  - action: use
+    fixed: null
+    name: Practitioner.identifier:ZANR.system
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Practitioner.identifier:ZANR.type
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Practitioner.identifier:ZANR.type.coding
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Practitioner.identifier:ZANR.type.coding.code
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Practitioner.identifier:ZANR.type.coding.system
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Practitioner.identifier:ZANR.use
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Practitioner.identifier:ZANR.value
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Practitioner.meta.profile
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Practitioner.name.family
     other: Practitioner.name:name.family
-  Practitioner.name.given:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Practitioner.name.given
     other: Practitioner.name:name.given
-  Practitioner.name.prefix:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Practitioner.name.prefix
     other: Practitioner.name:name.prefix
-  Practitioner.name.use:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Practitioner.name.use
     other: Practitioner.name:name.use
-  Practitioner.name:name:
-    action: not_use
-  Practitioner.name.text:
-    action: manual
-    remark: "Property is concatinated from values of {prefix-qualifier} {name.prefix} {name.given} {vorsatzwort} {nachname} {namenszusatz}"
-  Practitioner.name:name.family:
-    action: copy_to
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Practitioner.name:name
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.name.text
+    other: null
+    remark: Property is concatinated from values of {prefix-qualifier} {name.prefix}
+      {name.given} {vorsatzwort} {nachname} {namenszusatz}
+  - action: copy_to
+    fixed: null
+    name: Practitioner.name:name.family
     other: Practitioner.name.family
-  Practitioner.name:name.family.extension:nachname:
-    action: manual
-    remark: "Property will be used in Practitioner.name.text"
-  Practitioner.name:name.family.extension:namenszusatz:
-    action: manual
-    remark: "Property will be used in Practitioner.name.text"
-  Practitioner.name:name.family.extension:vorsatzwort:
-    action: manual
-    remark: "Property will be used in Practitioner.name.text"
-  Practitioner.name:name.family.value:
-    action: not_use
-  Practitioner.name:name.given:
-    action: manual
-    remark: "Property will be used in Practitioner.name.text and mapped to Practitioner.name.given"
-  Practitioner.name:name.prefix:
-    action: manual
-    remark: "Property will be used in Practitioner.name.text and mapped to Practitioner.name.prefix"
-  Practitioner.name:name.prefix.extension:prefix-qualifier:
-    action: manual
-    remark: "Property will be used in Practitioner.name.text"
-  Practitioner.name:name.prefix.value:
-    action: not_use
-  Practitioner.name:name.use:
-    action: copy_to
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: not_use
+    fixed: null
+    name: Practitioner.name:name.family.value
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.given
+    other: null
+    remark: Property will be used in Practitioner.name.text and mapped to Practitioner.name.given
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix
+    other: null
+    remark: Property will be used in Practitioner.name.text and mapped to Practitioner.name.prefix
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: not_use
+    fixed: null
+    name: Practitioner.name:name.prefix.value
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.name:name.use
     other: Practitioner.name.use
-  Practitioner.qualification:
-    action: not_use
-  Practitioner.qualification:ASV-Fachgruppennummer:
-    action: not_use
-  Practitioner.qualification:Berufsbezeichnung:
-    action: not_use
-  Practitioner.qualification:Typ:
-    action: not_use
-79595f0e-d292-4c12-9413-cb8836d7de34:
-  Organization.identifier:
-    action: manual
-    remark: Muss mindestens die TelematikID der Organisation enthalten, die auch im ACCESS_TOKEN der Anfrage angegeben ist.
-  Organization.name:
-    action: manual
-    remark: Sollte den Namen der Organisation enthalten, wie er auch im ACCESS_TOKEN der Anfrage angegeben ist.
-  Organization.identifier:BSNR:
-    action: copy_from
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Practitioner.qualification
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Practitioner.qualification:ASV-Fachgruppennummer
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Practitioner.qualification:Berufsbezeichnung
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Practitioner.qualification:Typ
+    other: null
+    remark: null
+  id: 615205d2-7288-47ce-a65a-009c37ed8447
+- fields:
+  - action: manual
+    fixed: null
+    name: Organization.identifier
+    other: null
+    remark: Muss mindestens die TelematikID der Organisation enthalten, die auch im
+      ACCESS_TOKEN der Anfrage angegeben ist.
+  - action: manual
+    fixed: null
+    name: Organization.name
+    other: null
+    remark: Sollte den Namen der Organisation enthalten, wie er auch im ACCESS_TOKEN
+      der Anfrage angegeben ist.
+  - action: copy_from
+    fixed: null
+    name: Organization.identifier:BSNR
     other: Organization.identifier:Betriebsstaettennummer
-  Organization.identifier:Betriebsstaettennummer:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer
     other: Organization.identifier:BSNR
-  Organization.identifier:IKNR:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Organization.identifier:IKNR
     other: Organization.identifier:Institutionskennzeichen
-  Organization.identifier:Institutionskennzeichen:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen
     other: Organization.identifier:IKNR
-  Organization.identifier:KZV-Abrechnungsnummer:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer
     other: Organization.identifier:KZVA
-  Organization.identifier:KZVA:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Organization.identifier:KZVA
     other: Organization.identifier:KZV-Abrechnungsnummer
-  Organization.identifier:Telematik-ID:
-    action: copy_to
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID
     other: Organization.identifier:TelematikID
-  Organization.identifier:TelematikID:
-    action: copy_from
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Organization.identifier:TelematikID
     other: Organization.identifier:Telematik-ID
-  Organization.meta.profile:
-    action: not_use
-  Organization.meta.tag:
-    action: manual
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.meta.profile
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.meta.tag
+    other: null
     remark: Will be set by the mapping system
-  Organization.meta.tag:Origin:
-    action: manual
+  - action: manual
+    fixed: null
+    name: Organization.meta.tag:Origin
+    other: null
     remark: Will be set by the mapping system
-  Organization.meta.tag:Origin.system:
-    action: fixed
+  - action: fixed
     fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
-  Organization.meta.tag:Origin.code:
-    action: fixed
+    name: Organization.meta.tag:Origin.system
+    other: null
+    remark: null
+  - action: fixed
     fixed: ldap
-86750842-3975-4344-9656-48d74c5d8a00:
-  MedicationDispense.extension:rxPrescriptionProcessIdentifier:
-    action: manual
-    remark: "MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird durch den Medication Service vergeben."
-  MedicationDispense.subject.identifier:
-    action: manual
-    remark: 'Ist mit der Krankenversichertennummer des Versicherten im System "http://fhir.de/sid/gkv/kvid-10" zu befüllen.'
-  MedicationDispense.identifier:
-    action: manual
-    remark:
-      "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
+    name: Organization.meta.tag:Origin.code
+    other: null
+    remark: null
+  id: 79595f0e-d292-4c12-9413-cb8836d7de34
+- fields:
+  - action: manual
+    fixed: null
+    name: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    other: null
+    remark: 'MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt
+      sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird
+      durch den Medication Service vergeben.'
+  - action: manual
+    fixed: null
+    name: MedicationDispense.subject.identifier
+    other: null
+    remark: "Ist mit der Krankenversichertennummer des Versicherten im System \"http://fhir.de/sid/gkv/kvid-10\"\
+      \ zu bef\xFCllen."
+  - action: manual
+    fixed: null
+    name: MedicationDispense.identifier
+    other: null
+    remark: "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
       \ \xFCbernommen"
-  MedicationDispense.identifier:RxOriginatorProcessIdentifier:
-    action: manual
-    remark:
-      "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
+  - action: manual
+    fixed: null
+    name: MedicationDispense.identifier:RxOriginatorProcessIdentifier
+    other: null
+    remark: "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
       \ jede Prescription-ID mit der urspr\xFCnglichen Resource-ID zur genauen Nachverfolgung\
       \ der Medikationsdaten im Format resourceID + \u2018_\u2019 + prescriptionID."
-  MedicationDispense.identifier:prescriptionID:
-    action: copy_from
+  - action: copy_from
+    fixed: null
+    name: MedicationDispense.identifier:prescriptionID
     other: MedicationDispense.extension:rxPrescriptionProcessIdentifier
-  MedicationDispense.meta.profile:
-    action: manual
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationDispense.meta.profile
+    other: null
     remark: Wird auf die meta.profile Angabe des Zielprofils umgeschrieben
-aeeb2f06-297e-4ed9-b189-d0030fd883fe:
-  MedicationDispense.extension:rxPrescriptionProcessIdentifier:
-    action: manual
-    remark: "MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird durch den Medication Service vergeben."
-  MedicationDispense.identifier:
-    action: manual
-    remark:
-      "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
+  id: 86750842-3975-4344-9656-48d74c5d8a00
+- fields:
+  - action: manual
+    fixed: null
+    name: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    other: null
+    remark: 'MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt
+      sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird
+      durch den Medication Service vergeben.'
+  - action: manual
+    fixed: null
+    name: MedicationDispense.identifier
+    other: null
+    remark: "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
       \ \xFCbernommen"
-  MedicationDispense.identifier:RxOriginatorProcessIdentifier:
-    action: manual
-    remark:
-      "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
+  - action: manual
+    fixed: null
+    name: MedicationDispense.identifier:RxOriginatorProcessIdentifier
+    other: null
+    remark: "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
       \ jede Prescription-ID mit der urspr\xFCnglichen Resource-ID zur genauen Nachverfolgung\
       \ der Medikationsdaten im Format resourceID + \u2018_\u2019 + prescriptionID."
-  MedicationDispense.identifier:prescriptionID:
-    action: copy_from
+  - action: copy_from
+    fixed: null
+    name: MedicationDispense.identifier:prescriptionID
     other: MedicationDispense.extension:rxPrescriptionProcessIdentifier
-  MedicationDispense.meta.profile:
-    action: manual
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationDispense.meta.profile
+    other: null
     remark: Wird auf die meta.profile Angabe des Zielprofils umgeschrieben
-db59e5db-b93d-4a34-82b3-948bb1656392:
-  MedicationDispense.extension:rxPrescriptionProcessIdentifier:
-    action: manual
-    remark: "MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird durch den Medication Service vergeben."
-  MedicationDispense.subject.identifier:
-    action: manual
-    remark: 'Ist mit der Krankenversichertennummer des Versicherten im System "http://fhir.de/sid/gkv/kvid-10" zu befüllen.'
-  MedicationDispense.identifier:
-    action: manual
-    remark:
-      "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
+  id: aeeb2f06-297e-4ed9-b189-d0030fd883fe
+- fields:
+  - action: manual
+    fixed: null
+    name: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    other: null
+    remark: 'MedicationDispense.identifier:prescriptionID: Dieser Identifier setzt
+      sich aus der Task-ID und dem MedicationRequest.authoredOn zusammen. Er wird
+      durch den Medication Service vergeben.'
+  - action: manual
+    fixed: null
+    name: MedicationDispense.subject.identifier
+    other: null
+    remark: "Ist mit der Krankenversichertennummer des Versicherten im System \"http://fhir.de/sid/gkv/kvid-10\"\
+      \ zu bef\xFCllen."
+  - action: manual
+    fixed: null
+    name: MedicationDispense.identifier
+    other: null
+    remark: "Der Identifier.value (TaskId) wird in MedicationDispense.identifier:prescriptionID\
       \ \xFCbernommen"
-  MedicationDispense.identifier:RxOriginatorProcessIdentifier:
-    action: manual
-    remark:
-      "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
+  - action: manual
+    fixed: null
+    name: MedicationDispense.identifier:RxOriginatorProcessIdentifier
+    other: null
+    remark: "Der Identifier wird vom Medication Service erstellt und verkn\xFCpft\
       \ jede Prescription-ID mit der urspr\xFCnglichen Resource-ID zur genauen Nachverfolgung\
       \ der Medikationsdaten im Format resourceID + \u2018_\u2019 + prescriptionID."
-  MedicationDispense.identifier:prescriptionID:
-    action: copy_from
+  - action: copy_from
+    fixed: null
+    name: MedicationDispense.identifier:prescriptionID
     other: MedicationDispense.extension:rxPrescriptionProcessIdentifier
-  MedicationDispense.meta.profile:
-    action: manual
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationDispense.meta.profile
+    other: null
     remark: Wird auf die meta.profile Angabe des Zielprofils umgeschrieben
+  id: db59e5db-b93d-4a34-82b3-948bb1656392
