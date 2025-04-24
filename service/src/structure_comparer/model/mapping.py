@@ -4,12 +4,25 @@ from ..action import Action
 from .profile import Profile, ProfileField
 
 
-class MappingField(BaseModel):
-    name: str
+class MappingFieldMinimal(BaseModel):
+    """Minimal model that is used to update a field"""
+
     action: Action
-    extra: str | None = None
+    other: str | None = None
+    fixed: str | None = None
+    remark: str | None = None
+
+
+class MappingFieldBase(MappingFieldMinimal):
+    """Base model that is e.g. written as manual entry"""
+
+    name: str
+
+
+class MappingField(MappingFieldBase):
+    """Representation for when getting a field"""
+
     profiles: dict[str, ProfileField]
-    remark: str
     actions_allowed: list[Action]
 
 

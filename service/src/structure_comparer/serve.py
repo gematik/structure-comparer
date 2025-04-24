@@ -24,6 +24,7 @@ from .model.init_project_input import InitProjectInput
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingDetails as MappingDetailsModel
 from .model.mapping import MappingField as MappingFieldModel
+from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
@@ -884,9 +885,7 @@ async def post_mapping_field_classification_old(
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        return handler.set_mapping_classification(
-            cur_proj, mapping_id, field_id, mapping
-        )
+        return handler.set_mapping_field(cur_proj, mapping_id, field_id, mapping)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
@@ -903,19 +902,19 @@ async def post_mapping_field_classification_old(
 
 
 @app.post(
-    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/classification",
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}",
     tags=["Fields"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
     responses={400: {}, 404: {}},
 )
-async def post_mapping_field_classification(
+async def post_mapping_field(
     project_key: str,
     mapping_id: str,
     field_name: str,
-    mapping: MappingInput,
+    mapping: MappingFieldMinimalModel,
     response: Response,
-):
+) -> MappingFieldModel | ErrorModel:
     """
     Post a manual classification for a field
     Overrides the async default action of a field. `action` that should set for the field, `target` is the target of copy action and `value` may be a fixed value.
@@ -969,9 +968,8 @@ async def post_mapping_field_classification(
         description: Mapping or field not found
     """
     try:
-        return handler.set_mapping_classification(
-            project_key, mapping_id, field_name, mapping
-        )
+        handler.set_mapping_field(project_key, mapping_id, field_name, mapping)
+        return handler.get_mapping_field(project_key, mapping_id, field_name)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
