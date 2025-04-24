@@ -18,6 +18,7 @@ from .errors import (
     ProjectNotFound,
 )
 from .handler import ProjectsHandler
+from .model.action import ActionOutput as ActionOutputModel
 from .model.error import Error as ErrorModel
 from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
@@ -236,12 +237,12 @@ async def get_profile_list(
 
 
 @app.get(
-    "/classification",
-    tags=["Classification"],
+    "/action",
+    tags=["Action"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
 )
-async def get_classifications():
+async def get_action_options() -> ActionOutputModel:
     """
     Get all classifications
     ---
@@ -266,7 +267,7 @@ async def get_classifications():
                   instruction:
                     type: string
     """
-    return handler.get_classifications()
+    return handler.get_action_options()
 
 
 @app.get("/mappings", tags=["Mappings"], responses={412: {}}, deprecated=True)

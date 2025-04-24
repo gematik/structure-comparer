@@ -5,7 +5,6 @@ from typing import Dict, List
 from pydantic import ValidationError
 
 from .action import Action
-from .consts import INSTRUCTIONS, REMARKS
 from .data.project import Project
 from .errors import (
     FieldNotFound,
@@ -17,6 +16,7 @@ from .errors import (
     ProjectNotFound,
 )
 from .helpers import get_field_by_name
+from .model.action import ActionOutput as ActionOutputModel
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingDetails as MappingDetailsModel
 from .model.mapping import MappingField as MappingFieldModel
@@ -122,12 +122,8 @@ class ProjectsHandler:
         return ProfileListModel(profiles=profs)
 
     @staticmethod
-    def get_classifications() -> Dict[str, List[Dict[str, str]]]:
-        classifications = [
-            {"value": c.value, "remark": REMARKS[c], "instruction": INSTRUCTIONS[c]}
-            for c in Action
-        ]
-        return {"classifications": classifications}
+    def get_action_options() -> ActionOutputModel:
+        return ActionOutputModel.from_enum()
 
     def get_mappings(self, project_key: str) -> List[MappingBaseModel]:
         proj = self.__projs.get(project_key)
