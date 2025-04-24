@@ -119,7 +119,7 @@ def create_results_html(
                 "classification": entry.action,
                 "css_class": CSS_CLASS[entry.action],
                 "extension": entry.extension,
-                "extra": entry.extra,
+                "extra": entry.other,
                 "profiles": entry.profiles,
                 "remark": entry.remark,
                 "warning": list(warnings),  # Convert set back to list

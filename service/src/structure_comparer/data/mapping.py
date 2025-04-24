@@ -38,7 +38,8 @@ class MappingField:
     def __init__(self) -> None:
         self.action: Action = None
         self.extension: str = None
-        self.extra: str = None
+        self.other: str = None
+        self.fixed: str = None
         self.profiles: Dict[str, ProfileField] = {}
         self.remark = None
         self.actions_allowed: List[Action] = []
@@ -82,66 +83,61 @@ class MappingField:
         based on the presence of the property in the KBV and ePA profiles.
         """
 
-        action = None
-        remark = None
-        extra = None
-
         # If there is a manual entry for this property, use it
-        if manual_entries is not None and (manual_entry := manual_entries[self.name]):
-            action = manual_entry.action if manual_entry.action else Action.MANUAL
+        if manual_entries is not None and (
+            manual_entry := manual_entries.get(self.name)
+        ):
+            self.action = manual_entry.action if manual_entry.action else Action.MANUAL
 
             # If there is a remark in the manual entry, use it else use the default remark
-            remark = manual_entry.remark if manual_entry.remark else REMARKS[action]
+            if manual_entry.remark:
+                self.remark = manual_entry.remark
 
             # If the action needs extra information, generate the remark with the extra information
-            if action in EXTRA_ACTIONS:
-                extra = None
-                if action == Action.FIXED:
-                    extra = manual_entry.fixed
-                elif action == Action.COPY_FROM or action == Action.COPY_TO:
-                    extra = manual_entry.other
+            if self.action == Action.FIXED:
+                self.fixed = manual_entry.fixed
+                self.other = None
+                self.remark = REMARKS[self.action].format(self.fixed)
 
-                if extra:
-                    remark = REMARKS[action].format(extra)
+            elif self.action == Action.COPY_FROM or self.action == Action.COPY_TO:
+                self.fixed = None
+                self.other = manual_entry.other
+                self.remark = REMARKS[self.action].format(self.other)
 
         # If the last element from the property is in the manual list, use the manual action
         elif self.name_child in MANUAL_SUFFIXES:
-            action = Action.MANUAL
+            self.action = Action.MANUAL
 
         # If the parent has an action that can be derived use the parent's action
         elif (
             parent_update := mapping.fields.get(self.name_parent)
         ) and parent_update.action in DERIVED_ACTIONS:
-            action = parent_update.action
+            self.action = parent_update.action
 
             # If the action needs extra information derived that information from the parent
-            if action in EXTRA_ACTIONS:
+            if self.action in EXTRA_ACTIONS:
 
                 # Cut away the common part with the parent and add the remainder to the parent's extra
-                extra = parent_update.extra + self.name[len(self.name_parent) :]
-                remark = REMARKS[action].format(extra)
+                self.other = parent_update.other + self.name[len(self.name_parent) :]
+                self.remark = REMARKS[self.action].format(self.other)
 
             # Else use the parent's remark
             else:
-                remark = parent_update.remark
+                self.remark = parent_update.remark
 
         # If present in any of the source profiles
         elif any(
             [self.profiles[profile.key] is not None for profile in mapping.sources]
         ):
             if self.profiles[mapping.target.key] is not None:
-                action = Action.USE
+                self.action = Action.USE
             else:
-                action = Action.EXTENSION
+                self.action = Action.EXTENSION
         else:
-            action = Action.EMPTY
+            self.action = Action.EMPTY
 
-        if not remark:
-            remark = REMARKS[action]
-
-        self.action = action
-        self.remark = remark
-        self.extra = extra
+        if not self.remark:
+            self.remark = REMARKS[self.action]
 
     def to_model(self) -> MappingFieldModel:
         profiles = {k: p.to_model() for k, p in self.profiles.items() if p}
@@ -149,7 +145,8 @@ class MappingField:
         return MappingFieldModel(
             name=self.name,
             action=self.action,
-            other=self.extra,
+            other=self.other,
+            fixed=self.fixed,
             profiles=profiles,
             remark=self.remark,
             actions_allowed=self.actions_allowed,

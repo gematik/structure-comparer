@@ -43,7 +43,7 @@ def gen_mapping_dict(structured_mapping: Dict[str, Mapping]):
 
                 # If 'manual' and should always be set to a fixed value
                 if presences.action == Action.FIXED:
-                    profile_handling[DICT_FIXED][field] = presences.extra
+                    profile_handling[DICT_FIXED][field] = presences.fixed
 
                 # Otherwise only if value is present
                 elif presences.profiles[source_profile.key].present:
@@ -57,7 +57,7 @@ def gen_mapping_dict(structured_mapping: Dict[str, Mapping]):
 
                     # If 'copy_to' get the target field from extra field
                     elif presences.action == Action.COPY_TO:
-                        profile_handling[DICT_MAPPINGS][field] = presences.extra
+                        profile_handling[DICT_MAPPINGS][field] = presences.other
 
                     # Do not handle when classification should be ignored,
                     # or add to ignore if parent was not ignored or fixed
@@ -74,7 +74,12 @@ def gen_mapping_dict(structured_mapping: Dict[str, Mapping]):
                     else:
                         # Log fall-through
                         logger.warning(
-                            f"gen_mapping_dict: did not handle {source_profile.key}:{mappings.target.key}:{field}:{presences.action} {presences.remark}"
+                            "gen_mapping_dict: did not handle %s:%s:%s:%s %s",
+                            source_profile.key,
+                            mappings.target.key,
+                            field,
+                            presences.action,
+                            presences.remark,
                         )
 
             if source_profile.key not in result:
