@@ -14,8 +14,16 @@ class ManualEntriesMapping(BaseModel):
         return next((f for f in self.fields if f.name == key))
 
     def __setitem__(self, key, value) -> None:
-        i = next(i for i in enumerate(self.fields) if self.fields[i].name == key)
-        self.fields[i] = value
+        # Try to find the index of the field
+        i = next((i for i, field in enumerate(self.fields) if field.name == key), None)
+
+        # Replace the field if found
+        if i is not None:
+            self.fields[i] = value
+
+        # Otherwise, append a new field
+        else:
+            self.fields.append(value)
 
 
 class ManualEntries(BaseModel):

@@ -19,9 +19,10 @@ from .errors import (
 from .helpers import get_field_by_name
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingDetails as MappingDetailsModel
+from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldBase as MappingFieldBaseModel
+from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
-from .model.mapping_input import MappingInput
 from .model.package import Package as PackageModel
 from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
@@ -161,9 +162,13 @@ class ProjectsHandler:
 
         return field.to_model()
 
-    def set_mapping_classification(
-        self, project_key: str, mapping_id: str, field_name: str, mapping: MappingInput
-    ):
+    def set_mapping_field(
+        self,
+        project_key: str,
+        mapping_id: str,
+        field_name: str,
+        input: MappingFieldMinimalModel,
+    ) -> MappingFieldModel:
         proj = self.__projs.get(project_key)
 
         # Easiest way to get the fields is from mapping
@@ -173,19 +178,17 @@ class ProjectsHandler:
         if field is None:
             raise FieldNotFound()
 
-        action = Action(mapping.action)
-
         # Check if action is allowed for this field
-        if action not in field.actions_allowed:
+        if input.action not in field.actions_allowed:
             raise MappingNotFound(
-                f"action '{action.value}' not allowed for this field, allowed: {
+                f"action '{input.action.value}' not allowed for this field, allowed: {
                     ', '.join([field.value for field in field.actions_allowed])}"
             )
 
         # Build the entry that should be created/updated
-        new_entry = MappingFieldBaseModel(name=field.name, action=action)
-        if action == Action.COPY_FROM or action == Action.COPY_TO:
-            if target_id := mapping.target:
+        new_entry = MappingFieldBaseModel(name=field.name, action=input.action)
+        if new_entry.action == Action.COPY_FROM or new_entry.action == Action.COPY_TO:
+            if target_id := input.other:
                 target = get_field_by_name(mapping, target_id)
 
                 if target is None:
@@ -194,15 +197,15 @@ class ProjectsHandler:
                 new_entry.other = target.name
             else:
                 raise MappingTargetMissing()
-        elif action == Action.FIXED:
-            if fixed := mapping.value:
+        elif new_entry.action == Action.FIXED:
+            if fixed := input.fixed:
                 new_entry.fixed = fixed
             else:
                 raise MappingValueMissing()
 
         # Clean up possible manual entry this was copied from before
         manual_entries = proj.manual_entries[mapping_id]
-        if (manual_entry := manual_entries[field.name]) and (
+        if (manual_entry := manual_entries.get(field.name)) and (
             manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
         ):
             del manual_entries[manual_entry.other]
@@ -211,16 +214,16 @@ class ProjectsHandler:
         manual_entries[field.name] = new_entry
 
         # Handle the partner entry for copy actions
-        if action == Action.COPY_FROM:
+        if new_entry.action == Action.COPY_FROM:
             manual_entries[target.name] = MappingFieldBaseModel(
                 name=target.name, action=Action.COPY_TO, other=field.name
             )
-        elif action == Action.COPY_TO:
+        elif new_entry.action == Action.COPY_TO:
             manual_entries[target.name] = MappingFieldBaseModel(
                 name=target.name, action=Action.COPY_FROM, other=field.name
             )
         # Save the changes
-        manual_entries.write()
+        proj.manual_entries.write()
 
         return True
 
