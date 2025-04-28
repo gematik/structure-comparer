@@ -18,6 +18,7 @@ from .errors import (
     ProjectAlreadyExists,
     ProjectNotFound,
 )
+from .handler.mapping import MappingHandler
 from .handler.project import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
 from .model.comparison import ComparisonBase as ComparisonBaseModel
@@ -43,16 +44,20 @@ from .model.project import ProjectList as ProjectListModel
 
 origins = ["http://localhost:4200"]
 project_handler: ProjectsHandler = None
+mapping_handler: MappingHandler = None
 cur_proj: str = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global project_handler
+    global mapping_handler
 
     # Set up
     project_handler = ProjectsHandler(Path(os.environ["PROJECTS_DIR"]))
     project_handler.load_projects()
+
+    mapping_handler = MappingHandler(project_handler)
 
     # Let the app do its job
     yield
@@ -466,7 +471,7 @@ async def get_mappings_old(response: Response) -> GetMappingsOutput:
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        mappings = project_handler.get_mappings(cur_proj)
+        mappings = mapping_handler.get_list(cur_proj)
         return GetMappingsOutput(mappings=mappings)
 
     except ProjectNotFound:
@@ -553,7 +558,7 @@ async def get_mappings(
                 $ref: "#/async definitions/OverviewMapping"
     """
     try:
-        mappings = project_handler.get_mappings(project_key)
+        mappings = mapping_handler.get_list(project_key)
         return GetMappingsOutput(mappings=mappings)
 
     except ProjectNotFound as e:
@@ -656,7 +661,7 @@ async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        return project_handler.get_mapping(cur_proj, id)
+        return mapping_handler.get(cur_proj, id)
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
@@ -742,7 +747,7 @@ async def get_mapping(
                 $ref: "#/async definitions/OverviewMapping"
     """
     try:
-        return project_handler.get_mapping(project_key, mapping_id)
+        return mapping_handler.get(project_key, mapping_id)
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
@@ -808,7 +813,7 @@ async def get_mapping_fields_old(
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        return project_handler.get_mapping_fields(cur_proj, id)
+        return mapping_handler.get_field_list(cur_proj, id)
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
@@ -871,7 +876,7 @@ async def get_mapping_fields(
         description: Mapping not found
     """
     try:
-        return project_handler.get_mapping_fields(project_key, mapping_id)
+        return mapping_handler.get_field_list(project_key, mapping_id)
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
@@ -934,7 +939,7 @@ async def get_mapping_field(
         description: Mapping not found
     """
     try:
-        return project_handler.get_mapping_field(project_key, mapping_id, field_name)
+        return mapping_handler.get_field(project_key, mapping_id, field_name)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
@@ -1007,9 +1012,7 @@ async def post_mapping_field_classification_old(
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        return project_handler.set_mapping_field(
-            cur_proj, mapping_id, field_id, mapping
-        )
+        return mapping_handler.set_field(cur_proj, mapping_id, field_id, mapping)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
@@ -1092,8 +1095,11 @@ async def post_mapping_field(
         description: Mapping or field not found
     """
     try:
-        project_handler.set_mapping_field(project_key, mapping_id, field_name, mapping)
-        return project_handler.get_mapping_field(project_key, mapping_id, field_name)
+        # Update the field
+        mapping_handler.set_field(project_key, mapping_id, field_name, mapping)
+
+        # Get the update data
+        return mapping_handler.get_field(project_key, mapping_id, field_name)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
