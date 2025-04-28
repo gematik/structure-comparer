@@ -7,6 +7,7 @@ from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from .errors import (
+    ComparisonNotFound,
     FieldNotFound,
     MappingActionNotAllowed,
     MappingNotFound,
@@ -19,6 +20,10 @@ from .errors import (
 )
 from .handler import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
+from .model.comparison import ComparisonBase as ComparisonBaseModel
+from .model.comparison import ComparisonFull as ComparisonFullModel
+from .model.comparison import ComparisonList as ComparisonListModel
+from .model.comparison import ComparisonMinimal as ComparisonMinimalModel
 from .model.error import Error as ErrorModel
 from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
@@ -234,6 +239,120 @@ async def get_profile_list(
         return ErrorModel.from_except(e)
 
     return proj
+
+
+@app.get(
+    "/project/{project_key}/comparison",
+    tags=["Comparison"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def get_comparison_list(
+    project_key: str, response: Response
+) -> ComparisonListModel:
+    """
+    Returns a list of all comparisons in this project
+    """
+    try:
+        comps = handler.get_comparison_list(project_key)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return comps
+
+
+@app.post(
+    "/project/{project_key}/comparison",
+    tags=["Comparison"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={400: {"error": {}}, 404: {"error": {}}},
+)
+async def create_comparison(
+    project_key: str, input: ComparisonBaseModel, response: Response
+) -> ComparisonBaseModel | ErrorModel:
+    """
+    Creates a new comparison
+    """
+    try:
+        comp = handler.create_comparison(project_key, input)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return comp
+
+
+@app.get(
+    "/project/{project_key}/comparison/{comparison_id}",
+    tags=["Comparison"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def get_comparison(
+    project_key: str, comparison_id: str, response: Response
+) -> ComparisonFullModel | ErrorModel:
+    """
+    Get a comparison
+    """
+    try:
+        comp = handler.get_comparison(project_key, comparison_id)
+
+    except (ProjectNotFound, ComparisonNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return comp
+
+
+@app.post(
+    "/project/{project_key}/comparison/{comparison_id}",
+    tags=["Comparison"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def update_comparison(
+    project_key: str,
+    comparison_id: str,
+    input: ComparisonMinimalModel,
+    response: Response,
+) -> ComparisonBaseModel | ErrorModel:
+    """
+    Update an existing comparison
+    """
+    try:
+        comp = handler.update_comparison(project_key, comparison_id, input)
+
+    except (ProjectNotFound, ComparisonNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return comp
+
+
+@app.delete(
+    "/project/{project_key}/comparison/{comparison_id}",
+    tags=["Comparison"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def delete_comparison(project_key: str, comparison_id: str, response: Response):
+    """
+    Delete an existing comparison
+    """
+    try:
+        handler.delete_comparison(project_key, comparison_id)
+
+    except (ProjectNotFound, ComparisonNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
 
 
 @app.get(
