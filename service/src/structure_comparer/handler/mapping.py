@@ -25,7 +25,7 @@ class MappingHandler:
         self.project_handler: ProjectsHandler = project_handler
 
     def get_list(self, project_key: str) -> List[MappingBaseModel]:
-        proj = self.project_handler.get(project_key)
+        proj = self.project_handler._get(project_key)
         return [comp.to_base_model() for comp in proj.mappings.values()]
 
     def get(self, project_key: str, mapping_id: str) -> MappingDetailsModel:
@@ -60,7 +60,7 @@ class MappingHandler:
         field_name: str,
         input: MappingFieldMinimalModel,
     ) -> MappingFieldModel:
-        proj = self.project_handler.get(project_key)
+        proj = self.project_handler._get(project_key)
 
         # Easiest way to get the fields is from mapping
         mapping = self.__get(project_key, mapping_id, proj)
@@ -120,7 +120,7 @@ class MappingHandler:
 
     def __get(self, project_key, mapping_id, proj: Project = None):
         if proj is None:
-            proj = self.project_handler.get(project_key)
+            proj = self.project_handler._get(project_key)
 
         if proj is None:
             raise ProjectNotFound()

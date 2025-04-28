@@ -55,7 +55,7 @@ async def lifespan(app: FastAPI):
 
     # Set up
     project_handler = ProjectsHandler(Path(os.environ["PROJECTS_DIR"]))
-    project_handler.load_projects()
+    project_handler.load()
 
     mapping_handler = MappingHandler(project_handler)
 
@@ -83,7 +83,7 @@ async def ping():
 
 @app.get("/projects", tags=["Projects"], deprecated=True)
 async def get_projects_old():
-    return project_handler.project_keys
+    return project_handler.keys
 
 
 @app.get(
@@ -93,7 +93,7 @@ async def get_projects_old():
     response_model_exclude_none=True,
 )
 async def get_project_list() -> ProjectListModel:
-    return project_handler.get_project_list()
+    return project_handler.get_list()
 
 
 @app.get(
@@ -106,7 +106,7 @@ async def get_project(
     project_key: str, response: Response
 ) -> ProjectModel | ErrorModel:
     try:
-        proj = project_handler.get_project(project_key)
+        proj = project_handler.get(project_key)
         return proj
 
     except ProjectNotFound as e:
@@ -128,7 +128,7 @@ async def post_init_project(data: InitProjectInput, response: Response):
         response.status_code = 400
         return {"error": "Project name is required"}
 
-    if data.project_name not in project_handler.project_keys:
+    if data.project_name not in project_handler.keys:
         response.status_code = 404
         return {"error": "Project does not exist"}
 
@@ -152,7 +152,7 @@ async def create_project_old(project_name: str, response: Response):
         return {"error": "Project name is required"}
 
     try:
-        project_handler.update_or_create_project(project_name)
+        project_handler.update_or_create(project_name)
 
     except ProjectAlreadyExists as e:
         response.status_code = 409
@@ -171,7 +171,7 @@ async def create_project_old(project_name: str, response: Response):
 async def update_or_create_project(
     project_key: str, project: ProjectInputModel
 ) -> ProjectModel:
-    return project_handler.update_or_create_project(project_key, project)
+    return project_handler.update_or_create(project_key, project)
 
 
 @app.get(

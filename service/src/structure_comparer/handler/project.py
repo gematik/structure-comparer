@@ -24,10 +24,10 @@ class ProjectsHandler:
         self.__projs: Dict[str, Project] = None
 
     @property
-    def project_keys(self) -> List[str]:
+    def keys(self) -> List[str]:
         return list(self.__projs.keys())
 
-    def load_projects(self) -> None:
+    def load(self) -> None:
         self.__projs = {}
 
         for path in self.__projs_dir.iterdir():
@@ -39,11 +39,11 @@ class ProjectsHandler:
                     logger.error(e.errors())
                     raise e
 
-    def get_project_list(self) -> ProjectListModel:
+    def get_list(self) -> ProjectListModel:
         projects = [p.to_overview_model() for p in self.__projs.values()]
         return ProjectListModel(projects=projects)
 
-    def get(self, project_key: str) -> Project:
+    def _get(self, project_key: str) -> Project:
         proj = self.__projs.get(project_key)
 
         if proj is None:
@@ -51,13 +51,11 @@ class ProjectsHandler:
 
         return proj
 
-    def get_project(self, project_key: str) -> ProjectModel:
-        proj = self.get(project_key)
+    def get(self, project_key: str) -> ProjectModel:
+        proj = self._get(project_key)
         return proj.to_model()
 
-    def update_or_create_project(
-        self, proj_key: str, input: ProjectInputModel
-    ) -> ProjectModel:
+    def update_or_create(self, proj_key: str, input: ProjectInputModel) -> ProjectModel:
 
         # Check if update
         if proj := self.__projs.get(proj_key):
@@ -74,14 +72,14 @@ class ProjectsHandler:
         return proj.to_model()
 
     def get_project_packages(self, proj_key: str) -> PackageListModel:
-        proj = self.get(proj_key)
+        proj = self._get(proj_key)
         pkgs = [p.to_model() for p in proj.pkgs]
         return PackageListModel(packages=pkgs)
 
     def update_project_package(
         self, proj_key: str, package_id: str, package_input: PackageInputModel
     ) -> PackageModel:
-        proj = self.get(proj_key)
+        proj = self._get(proj_key)
         pkg = proj.get_package(package_id)
 
         if pkg is None:
@@ -93,7 +91,7 @@ class ProjectsHandler:
         return pkg
 
     def get_project_profiles(self, proj_key: str) -> ProfileListModel:
-        proj = self.get(proj_key)
+        proj = self._get(proj_key)
 
         profs = [prof.to_pkg_model() for pkg in proj.pkgs for prof in pkg.profiles]
         return ProfileListModel(profiles=profs)
