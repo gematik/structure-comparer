@@ -4,9 +4,9 @@ from typing import Dict, List
 
 from pydantic import ValidationError
 
-from .action import Action
-from .data.project import Project
-from .errors import (
+from ..action import Action
+from ..data.project import Project
+from ..errors import (
     FieldNotFound,
     MappingNotFound,
     MappingTargetMissing,
@@ -15,21 +15,21 @@ from .errors import (
     PackageNotFound,
     ProjectNotFound,
 )
-from .helpers import get_field_by_name
-from .model.action import ActionOutput as ActionOutputModel
-from .model.mapping import MappingBase as MappingBaseModel
-from .model.mapping import MappingDetails as MappingDetailsModel
-from .model.mapping import MappingField as MappingFieldModel
-from .model.mapping import MappingFieldBase as MappingFieldBaseModel
-from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
-from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
-from .model.package import Package as PackageModel
-from .model.package import PackageInput as PackageInputModel
-from .model.package import PackageList as PackageListModel
-from .model.profile import ProfileList as ProfileListModel
-from .model.project import Project as ProjectModel
-from .model.project import ProjectInput as ProjectInputModel
-from .model.project import ProjectList as ProjectListModel
+from ..helpers import get_field_by_name
+from ..model.action import ActionOutput as ActionOutputModel
+from ..model.mapping import MappingBase as MappingBaseModel
+from ..model.mapping import MappingDetails as MappingDetailsModel
+from ..model.mapping import MappingField as MappingFieldModel
+from ..model.mapping import MappingFieldBase as MappingFieldBaseModel
+from ..model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
+from ..model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
+from ..model.package import Package as PackageModel
+from ..model.package import PackageInput as PackageInputModel
+from ..model.package import PackageList as PackageListModel
+from ..model.profile import ProfileList as ProfileListModel
+from ..model.project import Project as ProjectModel
+from ..model.project import ProjectInput as ProjectInputModel
+from ..model.project import ProjectList as ProjectListModel
 
 logger = logging.getLogger(__name__)
 

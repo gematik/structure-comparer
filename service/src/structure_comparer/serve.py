@@ -18,7 +18,7 @@ from .errors import (
     ProjectAlreadyExists,
     ProjectNotFound,
 )
-from .handler import ProjectsHandler
+from .handler.project import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
 from .model.comparison import ComparisonBase as ComparisonBaseModel
 from .model.comparison import ComparisonFull as ComparisonFullModel
@@ -42,17 +42,17 @@ from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
 
 origins = ["http://localhost:4200"]
-handler: ProjectsHandler = None
+project_handler: ProjectsHandler = None
 cur_proj: str = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global handler
+    global project_handler
 
     # Set up
-    handler = ProjectsHandler(Path(os.environ["PROJECTS_DIR"]))
-    handler.load_projects()
+    project_handler = ProjectsHandler(Path(os.environ["PROJECTS_DIR"]))
+    project_handler.load_projects()
 
     # Let the app do its job
     yield
@@ -78,7 +78,7 @@ async def ping():
 
 @app.get("/projects", tags=["Projects"], deprecated=True)
 async def get_projects_old():
-    return handler.project_keys
+    return project_handler.project_keys
 
 
 @app.get(
@@ -88,7 +88,7 @@ async def get_projects_old():
     response_model_exclude_none=True,
 )
 async def get_project_list() -> ProjectListModel:
-    return handler.get_project_list()
+    return project_handler.get_project_list()
 
 
 @app.get(
@@ -101,7 +101,7 @@ async def get_project(
     project_key: str, response: Response
 ) -> ProjectModel | ErrorModel:
     try:
-        proj = handler.get_project(project_key)
+        proj = project_handler.get_project(project_key)
         return proj
 
     except ProjectNotFound as e:
@@ -123,7 +123,7 @@ async def post_init_project(data: InitProjectInput, response: Response):
         response.status_code = 400
         return {"error": "Project name is required"}
 
-    if data.project_name not in handler.project_keys:
+    if data.project_name not in project_handler.project_keys:
         response.status_code = 404
         return {"error": "Project does not exist"}
 
@@ -147,7 +147,7 @@ async def create_project_old(project_name: str, response: Response):
         return {"error": "Project name is required"}
 
     try:
-        handler.update_or_create_project(project_name)
+        project_handler.update_or_create_project(project_name)
 
     except ProjectAlreadyExists as e:
         response.status_code = 409
@@ -166,7 +166,7 @@ async def create_project_old(project_name: str, response: Response):
 async def update_or_create_project(
     project_key: str, project: ProjectInputModel
 ) -> ProjectModel:
-    return handler.update_or_create_project(project_key, project)
+    return project_handler.update_or_create_project(project_key, project)
 
 
 @app.get(
@@ -183,7 +183,7 @@ async def get_package_list(
     Returns a list of the packages in the project
     """
     try:
-        proj = handler.get_project_packages(project_key)
+        proj = project_handler.get_project_packages(project_key)
 
     except ProjectNotFound as e:
         response.status_code = 404
@@ -209,7 +209,9 @@ async def update_package(
     Update the information of a package
     """
     try:
-        pkg = handler.update_project_package(project_key, package_id, package_input)
+        pkg = project_handler.update_project_package(
+            project_key, package_id, package_input
+        )
 
     except (ProjectNotFound, PackageNotFound) as e:
         response.status_code = 404
@@ -232,7 +234,7 @@ async def get_profile_list(
     Returns a list of all profiles in this project
     """
     try:
-        proj = handler.get_project_profiles(project_key)
+        proj = project_handler.get_project_profiles(project_key)
 
     except ProjectNotFound as e:
         response.status_code = 404
@@ -255,7 +257,7 @@ async def get_comparison_list(
     Returns a list of all comparisons in this project
     """
     try:
-        comps = handler.get_comparison_list(project_key)
+        comps = project_handler.get_comparison_list(project_key)
 
     except ProjectNotFound as e:
         response.status_code = 404
@@ -278,7 +280,7 @@ async def create_comparison(
     Creates a new comparison
     """
     try:
-        comp = handler.create_comparison(project_key, input)
+        comp = project_handler.create_comparison(project_key, input)
 
     except ProjectNotFound as e:
         response.status_code = 404
@@ -301,7 +303,7 @@ async def get_comparison(
     Get a comparison
     """
     try:
-        comp = handler.get_comparison(project_key, comparison_id)
+        comp = project_handler.get_comparison(project_key, comparison_id)
 
     except (ProjectNotFound, ComparisonNotFound) as e:
         response.status_code = 404
@@ -327,7 +329,7 @@ async def update_comparison(
     Update an existing comparison
     """
     try:
-        comp = handler.update_comparison(project_key, comparison_id, input)
+        comp = project_handler.update_comparison(project_key, comparison_id, input)
 
     except (ProjectNotFound, ComparisonNotFound) as e:
         response.status_code = 404
@@ -348,7 +350,7 @@ async def delete_comparison(project_key: str, comparison_id: str, response: Resp
     Delete an existing comparison
     """
     try:
-        handler.delete_comparison(project_key, comparison_id)
+        project_handler.delete_comparison(project_key, comparison_id)
 
     except (ProjectNotFound, ComparisonNotFound) as e:
         response.status_code = 404
@@ -386,7 +388,7 @@ async def get_action_options() -> ActionOutputModel:
                   instruction:
                     type: string
     """
-    return handler.get_action_options()
+    return project_handler.get_action_options()
 
 
 @app.get("/mappings", tags=["Mappings"], responses={412: {}}, deprecated=True)
@@ -464,7 +466,7 @@ async def get_mappings_old(response: Response) -> GetMappingsOutput:
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        mappings = handler.get_mappings(cur_proj)
+        mappings = project_handler.get_mappings(cur_proj)
         return GetMappingsOutput(mappings=mappings)
 
     except ProjectNotFound:
@@ -551,7 +553,7 @@ async def get_mappings(
                 $ref: "#/async definitions/OverviewMapping"
     """
     try:
-        mappings = handler.get_mappings(project_key)
+        mappings = project_handler.get_mappings(project_key)
         return GetMappingsOutput(mappings=mappings)
 
     except ProjectNotFound as e:
@@ -654,7 +656,7 @@ async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        return handler.get_mapping(cur_proj, id)
+        return project_handler.get_mapping(cur_proj, id)
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
@@ -740,7 +742,7 @@ async def get_mapping(
                 $ref: "#/async definitions/OverviewMapping"
     """
     try:
-        return handler.get_mapping(project_key, mapping_id)
+        return project_handler.get_mapping(project_key, mapping_id)
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
@@ -806,7 +808,7 @@ async def get_mapping_fields_old(
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        return handler.get_mapping_fields(cur_proj, id)
+        return project_handler.get_mapping_fields(cur_proj, id)
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
@@ -869,7 +871,7 @@ async def get_mapping_fields(
         description: Mapping not found
     """
     try:
-        return handler.get_mapping_fields(project_key, mapping_id)
+        return project_handler.get_mapping_fields(project_key, mapping_id)
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
@@ -932,7 +934,7 @@ async def get_mapping_field(
         description: Mapping not found
     """
     try:
-        return handler.get_mapping_field(project_key, mapping_id, field_name)
+        return project_handler.get_mapping_field(project_key, mapping_id, field_name)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
@@ -1005,7 +1007,9 @@ async def post_mapping_field_classification_old(
         return {"error": "Project needs to be initialized before accessing"}
 
     try:
-        return handler.set_mapping_field(cur_proj, mapping_id, field_id, mapping)
+        return project_handler.set_mapping_field(
+            cur_proj, mapping_id, field_id, mapping
+        )
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
@@ -1088,8 +1092,8 @@ async def post_mapping_field(
         description: Mapping or field not found
     """
     try:
-        handler.set_mapping_field(project_key, mapping_id, field_name, mapping)
-        return handler.get_mapping_field(project_key, mapping_id, field_name)
+        project_handler.set_mapping_field(project_key, mapping_id, field_name, mapping)
+        return project_handler.get_mapping_field(project_key, mapping_id, field_name)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
