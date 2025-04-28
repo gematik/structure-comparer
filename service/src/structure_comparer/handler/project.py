@@ -5,12 +5,8 @@ from typing import Dict, List
 from pydantic import ValidationError
 
 from ..data.project import Project
-from ..errors import PackageNotFound, ProjectNotFound
+from ..errors import ProjectNotFound
 from ..model.action import ActionOutput as ActionOutputModel
-from ..model.package import Package as PackageModel
-from ..model.package import PackageInput as PackageInputModel
-from ..model.package import PackageList as PackageListModel
-from ..model.profile import ProfileList as ProfileListModel
 from ..model.project import Project as ProjectModel
 from ..model.project import ProjectInput as ProjectInputModel
 from ..model.project import ProjectList as ProjectListModel
@@ -70,31 +66,6 @@ class ProjectsHandler:
             self.__projs[proj_key] = proj
 
         return proj.to_model()
-
-    def get_project_packages(self, proj_key: str) -> PackageListModel:
-        proj = self._get(proj_key)
-        pkgs = [p.to_model() for p in proj.pkgs]
-        return PackageListModel(packages=pkgs)
-
-    def update_project_package(
-        self, proj_key: str, package_id: str, package_input: PackageInputModel
-    ) -> PackageModel:
-        proj = self._get(proj_key)
-        pkg = proj.get_package(package_id)
-
-        if pkg is None:
-            raise PackageNotFound()
-
-        # Update package information
-        pkg.display = package_input.display
-
-        return pkg
-
-    def get_project_profiles(self, proj_key: str) -> ProfileListModel:
-        proj = self._get(proj_key)
-
-        profs = [prof.to_pkg_model() for pkg in proj.pkgs for prof in pkg.profiles]
-        return ProfileListModel(profiles=profs)
 
     @staticmethod
     def get_action_options() -> ActionOutputModel:

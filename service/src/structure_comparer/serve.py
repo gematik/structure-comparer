@@ -19,6 +19,7 @@ from .errors import (
     ProjectNotFound,
 )
 from .handler.mapping import MappingHandler
+from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
 from .model.comparison import ComparisonBase as ComparisonBaseModel
@@ -44,6 +45,7 @@ from .model.project import ProjectList as ProjectListModel
 
 origins = ["http://localhost:4200"]
 project_handler: ProjectsHandler = None
+package_handler: PackageHandler = None
 mapping_handler: MappingHandler = None
 cur_proj: str = None
 
@@ -51,12 +53,14 @@ cur_proj: str = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global project_handler
+    global package_handler
     global mapping_handler
 
     # Set up
     project_handler = ProjectsHandler(Path(os.environ["PROJECTS_DIR"]))
     project_handler.load()
 
+    package_handler = PackageHandler(project_handler)
     mapping_handler = MappingHandler(project_handler)
 
     # Let the app do its job
@@ -188,7 +192,7 @@ async def get_package_list(
     Returns a list of the packages in the project
     """
     try:
-        proj = project_handler.get_project_packages(project_key)
+        proj = package_handler.get_list(project_key)
 
     except ProjectNotFound as e:
         response.status_code = 404
@@ -214,9 +218,7 @@ async def update_package(
     Update the information of a package
     """
     try:
-        pkg = project_handler.update_project_package(
-            project_key, package_id, package_input
-        )
+        pkg = package_handler.update(project_key, package_id, package_input)
 
     except (ProjectNotFound, PackageNotFound) as e:
         response.status_code = 404
@@ -239,7 +241,7 @@ async def get_profile_list(
     Returns a list of all profiles in this project
     """
     try:
-        proj = project_handler.get_project_profiles(project_key)
+        proj = package_handler.get_profiles(project_key)
 
     except ProjectNotFound as e:
         response.status_code = 404
