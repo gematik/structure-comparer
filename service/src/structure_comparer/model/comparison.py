@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from .profile import Profile
+
 
 class ComparisonMinimal(BaseModel):
     name: str
@@ -11,7 +13,8 @@ class ComparisonBase(ComparisonMinimal):
 
 
 class ComparisonFull(ComparisonBase):
-    pass
+    sources: list[Profile]
+    target_id: Profile
 
 
 class ComparisonList(BaseModel):

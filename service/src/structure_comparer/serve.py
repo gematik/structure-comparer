@@ -18,6 +18,7 @@ from .errors import (
     ProjectAlreadyExists,
     ProjectNotFound,
 )
+from .handler.comparison import ComparisonHandler
 from .handler.mapping import MappingHandler
 from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
@@ -46,6 +47,7 @@ from .model.project import ProjectList as ProjectListModel
 origins = ["http://localhost:4200"]
 project_handler: ProjectsHandler = None
 package_handler: PackageHandler = None
+comparison_handler: ComparisonHandler = None
 mapping_handler: MappingHandler = None
 cur_proj: str = None
 
@@ -54,6 +56,7 @@ cur_proj: str = None
 async def lifespan(app: FastAPI):
     global project_handler
     global package_handler
+    global comparison_handler
     global mapping_handler
 
     # Set up
@@ -61,6 +64,7 @@ async def lifespan(app: FastAPI):
     project_handler.load()
 
     package_handler = PackageHandler(project_handler)
+    comparison_handler = ComparisonHandler(project_handler)
     mapping_handler = MappingHandler(project_handler)
 
     # Let the app do its job
@@ -264,7 +268,7 @@ async def get_comparison_list(
     Returns a list of all comparisons in this project
     """
     try:
-        comps = project_handler.get_comparison_list(project_key)
+        comps = comparison_handler.get_list(project_key)
 
     except ProjectNotFound as e:
         response.status_code = 404
@@ -287,7 +291,7 @@ async def create_comparison(
     Creates a new comparison
     """
     try:
-        comp = project_handler.create_comparison(project_key, input)
+        comp = comparison_handler.create(project_key, input)
 
     except ProjectNotFound as e:
         response.status_code = 404
@@ -310,7 +314,7 @@ async def get_comparison(
     Get a comparison
     """
     try:
-        comp = project_handler.get_comparison(project_key, comparison_id)
+        comp = comparison_handler.get(project_key, comparison_id)
 
     except (ProjectNotFound, ComparisonNotFound) as e:
         response.status_code = 404
@@ -336,7 +340,7 @@ async def update_comparison(
     Update an existing comparison
     """
     try:
-        comp = project_handler.update_comparison(project_key, comparison_id, input)
+        comp = comparison_handler.update(project_key, comparison_id, input)
 
     except (ProjectNotFound, ComparisonNotFound) as e:
         response.status_code = 404
@@ -357,7 +361,7 @@ async def delete_comparison(project_key: str, comparison_id: str, response: Resp
     Delete an existing comparison
     """
     try:
-        project_handler.delete_comparison(project_key, comparison_id)
+        comparison_handler.delete(project_key, comparison_id)
 
     except (ProjectNotFound, ComparisonNotFound) as e:
         response.status_code = 404
