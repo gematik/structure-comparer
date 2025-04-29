@@ -15,21 +15,26 @@ class PackageConfig(BaseModel):
     display: str | None = None
 
 
-class MappingProfileConfig(BaseModel):
+class ComparisonProfileConfig(BaseModel):
     id: str
     version: str
 
 
-class MappingProfilesConfig(BaseModel):
-    sourceprofiles: list[MappingProfileConfig]
-    targetprofile: MappingProfileConfig
+class ComparisonProfilesConfig(BaseModel):
+    sourceprofiles: list[ComparisonProfileConfig]
+    targetprofile: ComparisonProfileConfig
+
+
+class ComparisonConfig(BaseModel):
+    id: str
+    comparison: ComparisonProfilesConfig = None
 
 
 class MappingConfig(BaseModel):
     id: str
     version: str
     status: str = "draft"
-    mappings: MappingProfilesConfig = []
+    mappings: ComparisonProfilesConfig = None
     last_updated: str = (datetime.now(timezone.utc) + timedelta(hours=2)).strftime(
         "%Y-%m-%d %H:%M:%S"
     )
@@ -41,6 +46,7 @@ class ProjectConfig(BaseModel):
     data_dir: str = "data"
     html_output_dir: str = "docs"
     packages: list[PackageConfig] = []
+    comparisons: list[ComparisonConfig] = []
     mapping_output_file: str = "mapping.json"
     mappings: list[MappingConfig] = []
     show_remarks: bool = True
