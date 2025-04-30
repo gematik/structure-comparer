@@ -3,6 +3,7 @@ from uuid import uuid4
 from ..data.config import ComparisonConfig
 from ..data.config import ComparisonProfileConfig as ComparisonProfileConfigModel
 from ..data.config import ComparisonProfilesConfig
+from ..errors import ComparisonNotFound
 from ..model.comparison import ComparisonCreate as ComparisonCreateModel
 from ..model.comparison import ComparisonList as ComparisonListModel
 from .project import ProjectsHandler
@@ -44,7 +45,17 @@ class ComparisonHandler:
         pass
 
     def delete(self, project_key, comparison_id):
-        pass
+        p = self.project_handler._get(project_key)
+
+        if comparison_id not in p.comparisons:
+            raise ComparisonNotFound()
+
+        p.config.comparisons = [
+            c for c in p.config.comparisons if c.id != comparison_id
+        ]
+        p.config.write()
+
+        p.load_comparisons()
 
 
 def _to_profiles_config(url: str) -> ComparisonProfileConfigModel:
