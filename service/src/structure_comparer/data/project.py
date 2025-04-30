@@ -121,10 +121,13 @@ class Project:
         return any([p.name == name and p.version == version for p in self.pkgs])
 
     def to_model(self) -> ProjectModel:
-        mappings = [comp.to_base_model() for comp in self.mappings.values()]
+        mappings = [m.to_base_model() for m in self.mappings.values()]
         pkgs = [p.to_model() for p in self.pkgs]
+        comparisons = [c.to_overview_model() for c in self.comparisons.values()]
 
-        return ProjectModel(name=self.name, mappings=mappings, packages=pkgs)
+        return ProjectModel(
+            name=self.name, mappings=mappings, comparisons=comparisons, packages=pkgs
+        )
 
     def to_overview_model(self) -> ProjectOverviewModel:
         return ProjectOverviewModel(name=self.name, url=self.url)
