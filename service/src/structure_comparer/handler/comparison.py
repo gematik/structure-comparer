@@ -19,7 +19,13 @@ class ComparisonHandler:
         return ComparisonListModel(comparisons=cs)
 
     def get(self, project_key, comparison_id):
-        pass
+        p = self.project_handler._get(project_key)
+
+        if c := p.comparisons.get(comparison_id):
+            return c.to_detail_model()
+
+        else:
+            raise ComparisonNotFound()
 
     def create(self, project_key, input: ComparisonCreateModel):
         p = self.project_handler._get(project_key)

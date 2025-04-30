@@ -1,6 +1,11 @@
 from pydantic import BaseModel
 
-from .profile import Profile
+from .profile import Profile, ProfileField
+
+
+class ComparisonField(BaseModel):
+    name: str
+    profiles: dict[str, ProfileField | None]
 
 
 class ComparisonCreate(BaseModel):
@@ -20,6 +25,7 @@ class ComparisonDetail(BaseModel):
     name: str
     sources: list[Profile]
     target: Profile
+    fields: list[ComparisonField]
 
 
 class ComparisonList(BaseModel):

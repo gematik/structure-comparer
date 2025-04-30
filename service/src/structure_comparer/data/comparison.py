@@ -4,6 +4,7 @@ from collections import OrderedDict
 from pydantic import ValidationError
 
 from ..model.comparison import ComparisonDetail as ComparisonDetailModel
+from ..model.comparison import ComparisonField as ComparisonFieldModel
 from ..model.comparison import ComparisonOverview as ComparisonOverviewModel
 from .config import ComparisonConfig, ComparisonProfileConfig
 from .profile import Profile, ProfileField
@@ -15,6 +16,10 @@ class ComparisonField:
     def __init__(self, name: str) -> None:
         self.name = name
         self.profiles: OrderedDict[str, ProfileField] = OrderedDict()
+
+    def to_model(self) -> ComparisonFieldModel:
+        profiles = {k: p.to_model() if p else None for k, p in self.profiles.items()}
+        return ComparisonFieldModel(name=self.name, profiles=profiles)
 
 
 class Comparison:
@@ -98,6 +103,7 @@ class Comparison:
     def to_detail_model(self) -> ComparisonDetailModel:
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
+        fields = [f.to_model() for f in self.fields.values()]
 
         try:
             model = ComparisonDetailModel(
@@ -105,6 +111,7 @@ class Comparison:
                 name=self.name,
                 sources=sources,
                 target=target,
+                fields=fields,
             )
 
         except ValidationError as e:
