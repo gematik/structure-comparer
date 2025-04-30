@@ -4,6 +4,7 @@ from typing import Dict
 from ..manual_entries import ManualEntries
 from ..model.project import Project as ProjectModel
 from ..model.project import ProjectOverview as ProjectOverviewModel
+from .comparison import Comparison
 from .config import PackageConfig, ProjectConfig
 from .mapping import Mapping
 from .package import Package
@@ -15,14 +16,13 @@ class Project:
         self.config = ProjectConfig.from_json(path / "config.json")
 
         self.mappings: Dict[str, Mapping] = None
+        self.comparisons: Dict[str, Comparison] = None
         self.manual_entries: ManualEntries = None
 
         self.pkgs: list[Package] = None
 
-        # Get profiles to compare
-        self.mappings_list = self.config.mappings
-
         self.__load_packages()
+        self.load_comparisons()
         self.__load_mappings()
         self.__read_manual_entries()
 
@@ -43,11 +43,13 @@ class Project:
                     # Create and append package
                     self.pkgs.append(Package(self.data_dir, cfg, self))
 
-    def __load_mappings(self):
-        self.mappings = {
-            mapping_conf.id: Mapping(mapping_conf, self)
-            for mapping_conf in self.mappings_list
+    def load_comparisons(self):
+        self.comparisons = {
+            c.id: Comparison(c, self).init_ext() for c in self.config.comparisons
         }
+
+    def __load_mappings(self):
+        self.mappings = {m.id: Mapping(m, self) for m in self.config.mappings}
 
     def __read_manual_entries(self):
         manual_entries_file = self.dir / self.config.manual_entries_file
@@ -105,10 +107,12 @@ class Project:
 
         return None
 
-    def get_profile(self, id: str, version: str):
+    def get_profile(self, id: str, url: str, version: str):
         for pkg in self.pkgs:
             for profile in pkg.profiles:
-                if profile.id == id and profile.version == version:
+                if (
+                    profile.id == id or profile.url == url
+                ) and profile.version == version:
                     return profile
 
         return None

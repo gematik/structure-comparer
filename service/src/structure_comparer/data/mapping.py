@@ -1,6 +1,5 @@
 import logging
 from collections import OrderedDict
-from dataclasses import dataclass
 from typing import Dict, List
 
 from pydantic import ValidationError
@@ -12,7 +11,7 @@ from ..model.manual_entries import ManualEntriesMapping as ManualEntriesMappingM
 from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
-from .config import MappingConfig, MappingProfileConfig
+from .config import ComparisonProfileConfig, MappingConfig
 from .profile import Profile, ProfileField
 
 MANUAL_SUFFIXES = ["reference", "profile"]
@@ -33,7 +32,6 @@ DERIVED_ACTIONS = [
 logger = logging.getLogger(__name__)
 
 
-@dataclass(init=False)
 class MappingField:
     def __init__(self) -> None:
         self.action: Action = None
@@ -214,10 +212,11 @@ class Mapping:
         if profile:
             self.target = profile
 
-    def __get_profile(self, mapping_profile_config: MappingProfileConfig) -> Profile:
+    def __get_profile(self, mapping_profile_config: ComparisonProfileConfig) -> Profile:
         id = mapping_profile_config.id
+        url = mapping_profile_config.url
         version = mapping_profile_config.version
-        if profile := self.__project.get_profile(id, version):
+        if profile := self.__project.get_profile(id, url, version):
             return profile
         else:
             logger.error("source %s#%s not found", id, version)

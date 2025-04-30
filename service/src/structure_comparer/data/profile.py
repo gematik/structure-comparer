@@ -149,6 +149,10 @@ class ProfileField:
         return self.__data.max
 
     @property
+    def max_num(self) -> float:
+        return float("inf") if self.max == "*" else int(self.max)
+
+    @property
     def must_support(self) -> bool:
         return self.__data.mustSupport if self.__data.mustSupport else False
 

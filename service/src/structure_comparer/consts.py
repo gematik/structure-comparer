@@ -12,7 +12,7 @@ REMARKS = {
     Action.MEDICATION_SERVICE: "Set by the Medication Service",
 }
 
-INSTRUCTIONS = {
+DESCRIPTIONS = {
     Action.USE: "Property and value(s) will be RETAINED",
     Action.NOT_USE: "Property and value(s) will NOT be retained",
     Action.EMPTY: "Will remain EMPTY for now, as no source information is available",

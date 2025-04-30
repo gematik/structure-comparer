@@ -13,6 +13,11 @@ class PackageNotFound(Exception):
         super().__init__(msg, *args, **kwargs)
 
 
+class ComparisonNotFound(Exception):
+    def __init__(self, msg="Comparison not found", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
 class MappingNotFound(Exception):
     def __init__(self, msg="Mapping not found", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
