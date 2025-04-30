@@ -1,11 +1,20 @@
+from enum import StrEnum
+
 from pydantic import BaseModel
 
 from .profile import Profile, ProfileField
 
 
+class ComparisonClassification(StrEnum):
+    COMPAT = "compatible"
+    WARN = "warning"
+    INCOMPAT = "incompatible"
+
+
 class ComparisonField(BaseModel):
     name: str
     profiles: dict[str, ProfileField | None]
+    classification: ComparisonClassification
 
 
 class ComparisonCreate(BaseModel):

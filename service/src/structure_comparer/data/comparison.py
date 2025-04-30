@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 from pydantic import ValidationError
 
+from ..model.comparison import ComparisonClassification
 from ..model.comparison import ComparisonDetail as ComparisonDetailModel
 from ..model.comparison import ComparisonField as ComparisonFieldModel
 from ..model.comparison import ComparisonOverview as ComparisonOverviewModel
@@ -16,10 +17,41 @@ class ComparisonField:
     def __init__(self, name: str) -> None:
         self.name = name
         self.profiles: OrderedDict[str, ProfileField] = OrderedDict()
+        self.classification: ComparisonClassification = None
+
+    def classify(self, sources: list[Profile], target: Profile) -> None:
+        sp = [self.profiles[p.key] for p in sources]
+        tp = self.profiles[target.key]
+
+        # If target is not set, its incompatible
+        if tp is None:
+            self.classification = ComparisonClassification.INCOMPAT
+
+        # If any source is absent and target is required
+        elif any([p is None for p in sp]) and tp.min > 0:
+            self.classification = ComparisonClassification.INCOMPAT
+
+        # Incompatible if any min is lower or max is greater than target
+        elif any([p.min < tp.min or p.max > tp.max for p in sp if p]):
+            self.classification = ComparisonClassification.INCOMPAT
+
+        # Potential incompatible if cards or MS not matching
+        elif any([p.min > tp.min or p.max < tp.max for p in sp if p]) or any(
+            [p.must_support != tp.must_support for p in sp if p]
+        ):
+            self.classification = ComparisonClassification.WARN
+
+        elif any([p is None for p in sp]):
+            self.classification = ComparisonClassification.WARN
+
+        else:
+            self.classification = ComparisonClassification.COMPAT
 
     def to_model(self) -> ComparisonFieldModel:
         profiles = {k: p.to_model() if p else None for k, p in self.profiles.items()}
-        return ComparisonFieldModel(name=self.name, profiles=profiles)
+        return ComparisonFieldModel(
+            name=self.name, profiles=profiles, classification=self.classification
+        )
 
 
 class Comparison:
@@ -80,6 +112,10 @@ class Comparison:
             for profile_key in all_profiles_keys:
                 if profile_key not in field.profiles:
                     field.profiles[profile_key] = None
+
+        # Classify all fields
+        for field in self.fields.values():
+            field.classify(self.sources, self.target)
 
     def to_overview_model(self) -> ComparisonOverviewModel:
         sources = [p.name for p in self.sources]
