@@ -16,7 +16,8 @@ class PackageConfig(BaseModel):
 
 
 class ComparisonProfileConfig(BaseModel):
-    id: str
+    id: str | None = None
+    url: str | None = None
     version: str
 
 

@@ -1,12 +1,15 @@
 from pydantic import BaseModel
 
 
-class Profile(BaseModel):
-    id: str
+class ProfileMin(BaseModel):
     url: str
+    version: str
+
+
+class Profile(ProfileMin):
+    id: str
     key: str
     name: str
-    version: str
 
 
 class PackageProfile(Profile):

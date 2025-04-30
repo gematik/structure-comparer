@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 from pydantic import ValidationError
 
-from ..model.comparison import ComparisonBase as ComparisonBaseModel
+from ..model.comparison import ComparisonFull as ComparisonFullModel
 from .config import ComparisonConfig, ComparisonProfileConfig
 from .profile import Profile, ProfileField
 
@@ -27,7 +27,9 @@ class Comparison:
     def init_ext(self):
         self.__get_sources(self.__config.comparison.sourceprofiles)
         self.__get_target(self.__config.comparison.targetprofile)
-        self.__gen_fields(self.__config.comparison)
+        self.__gen_fields()
+
+        return self
 
     @property
     def id(self) -> str:
@@ -48,11 +50,10 @@ class Comparison:
         self.target = p if (p := self.__get_profile(profile_config)) else None
 
     def __get_profile(self, c: ComparisonProfileConfig) -> Profile:
-        id, version = c.id, c.version
-        if profile := self.__project.get_profile(id, version):
+        if profile := self.__project.get_profile(c.id, c.url, c.version):
             return profile
         else:
-            logger.error("source %s#%s not found", id, version)
+            logger.error("source %s %s#%s not found", c.id, c.url, c.version)
 
     def __gen_fields(self) -> None:
         all_profiles = [self.target] + self.sources
@@ -74,12 +75,12 @@ class Comparison:
                 if profile_key not in field.profiles:
                     field.profiles[profile_key] = None
 
-    def to_base_model(self) -> ComparisonBaseModel:
+    def to_base_model(self) -> ComparisonFullModel:
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
 
         try:
-            model = ComparisonBaseModel(
+            model = ComparisonFullModel(
                 id=self.id,
                 name=self.name,
                 sources=sources,
@@ -88,6 +89,7 @@ class Comparison:
 
         except ValidationError as e:
             print(e.errors())
+            raise e
 
         else:
             return model

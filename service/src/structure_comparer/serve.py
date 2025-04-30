@@ -286,18 +286,18 @@ async def get_comparison_list(
 )
 async def create_comparison(
     project_key: str, input: ComparisonBaseModel, response: Response
-) -> ComparisonBaseModel | ErrorModel:
+) -> ComparisonFullModel | ErrorModel:
     """
     Creates a new comparison
     """
     try:
-        comp = comparison_handler.create(project_key, input)
+        c = comparison_handler.create(project_key, input)
 
     except ProjectNotFound as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
 
-    return comp
+    return c
 
 
 @app.get(

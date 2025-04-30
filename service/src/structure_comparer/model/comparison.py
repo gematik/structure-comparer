@@ -7,14 +7,16 @@ class ComparisonMinimal(BaseModel):
     name: str
 
 
-class ComparisonBase(ComparisonMinimal):
+class ComparisonBase(BaseModel):
     source_ids: list[str]
     target_id: str
 
 
-class ComparisonFull(ComparisonBase):
+class ComparisonFull(BaseModel):
+    id: str
+    name: str
     sources: list[Profile]
-    target_id: Profile
+    target: Profile
 
 
 class ComparisonList(BaseModel):

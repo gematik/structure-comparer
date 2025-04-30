@@ -22,7 +22,7 @@ class Project:
         self.pkgs: list[Package] = None
 
         self.__load_packages()
-        self.__load_comparisons()
+        self.load_comparisons()
         self.__load_mappings()
         self.__read_manual_entries()
 
@@ -43,8 +43,10 @@ class Project:
                     # Create and append package
                     self.pkgs.append(Package(self.data_dir, cfg, self))
 
-    def __load_comparisons(self):
-        self.comparisons = {c.id: Comparison(c, self) for c in self.config.comparisons}
+    def load_comparisons(self):
+        self.comparisons = {
+            c.id: Comparison(c, self).init_ext() for c in self.config.comparisons
+        }
 
     def __load_mappings(self):
         self.mappings = {m.id: Mapping(m, self) for m in self.config.mappings}
@@ -105,10 +107,12 @@ class Project:
 
         return None
 
-    def get_profile(self, id: str, version: str):
+    def get_profile(self, id: str, url: str, version: str):
         for pkg in self.pkgs:
             for profile in pkg.profiles:
-                if profile.id == id and profile.version == version:
+                if (
+                    profile.id == id or profile.url == url
+                ) and profile.version == version:
                     return profile
 
         return None

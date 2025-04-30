@@ -214,8 +214,9 @@ class Mapping:
 
     def __get_profile(self, mapping_profile_config: ComparisonProfileConfig) -> Profile:
         id = mapping_profile_config.id
+        url = mapping_profile_config.url
         version = mapping_profile_config.version
-        if profile := self.__project.get_profile(id, version):
+        if profile := self.__project.get_profile(id, url, version):
             return profile
         else:
             logger.error("source %s#%s not found", id, version)
