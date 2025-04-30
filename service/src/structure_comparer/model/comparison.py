@@ -3,16 +3,19 @@ from pydantic import BaseModel
 from .profile import Profile
 
 
-class ComparisonMinimal(BaseModel):
-    name: str
-
-
-class ComparisonBase(BaseModel):
+class ComparisonCreate(BaseModel):
     source_ids: list[str]
     target_id: str
 
 
-class ComparisonFull(BaseModel):
+class ComparisonOverview(BaseModel):
+    id: str
+    name: str
+    sources: list[str]
+    target: str
+
+
+class ComparisonDetail(BaseModel):
     id: str
     name: str
     sources: list[Profile]
@@ -20,4 +23,4 @@ class ComparisonFull(BaseModel):
 
 
 class ComparisonList(BaseModel):
-    comparisons: list[ComparisonBase]
+    comparisons: list[ComparisonOverview]

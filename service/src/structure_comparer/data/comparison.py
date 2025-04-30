@@ -3,7 +3,8 @@ from collections import OrderedDict
 
 from pydantic import ValidationError
 
-from ..model.comparison import ComparisonFull as ComparisonFullModel
+from ..model.comparison import ComparisonDetail as ComparisonDetailModel
+from ..model.comparison import ComparisonOverview as ComparisonOverviewModel
 from .config import ComparisonConfig, ComparisonProfileConfig
 from .profile import Profile, ProfileField
 
@@ -75,12 +76,31 @@ class Comparison:
                 if profile_key not in field.profiles:
                     field.profiles[profile_key] = None
 
-    def to_base_model(self) -> ComparisonFullModel:
+    def to_overview_model(self) -> ComparisonOverviewModel:
+        sources = [p.name for p in self.sources]
+        target = self.target.name
+
+        try:
+            model = ComparisonOverviewModel(
+                id=self.id,
+                name=self.name,
+                sources=sources,
+                target=target,
+            )
+
+        except ValidationError as e:
+            print(e.errors())
+            raise e
+
+        else:
+            return model
+
+    def to_detail_model(self) -> ComparisonDetailModel:
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
 
         try:
-            model = ComparisonFullModel(
+            model = ComparisonDetailModel(
                 id=self.id,
                 name=self.name,
                 sources=sources,

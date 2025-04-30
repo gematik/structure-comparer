@@ -23,10 +23,10 @@ from .handler.mapping import MappingHandler
 from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
-from .model.comparison import ComparisonBase as ComparisonBaseModel
-from .model.comparison import ComparisonFull as ComparisonFullModel
+from .model.comparison import ComparisonCreate as ComparisonCreateModel
+from .model.comparison import ComparisonDetail as ComparisonDetailModel
 from .model.comparison import ComparisonList as ComparisonListModel
-from .model.comparison import ComparisonMinimal as ComparisonMinimalModel
+from .model.comparison import ComparisonOverview as ComparisonOverviewModel
 from .model.error import Error as ErrorModel
 from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
@@ -285,8 +285,8 @@ async def get_comparison_list(
     responses={400: {"error": {}}, 404: {"error": {}}},
 )
 async def create_comparison(
-    project_key: str, input: ComparisonBaseModel, response: Response
-) -> ComparisonFullModel | ErrorModel:
+    project_key: str, input: ComparisonCreateModel, response: Response
+) -> ComparisonOverviewModel | ErrorModel:
     """
     Creates a new comparison
     """
@@ -309,38 +309,12 @@ async def create_comparison(
 )
 async def get_comparison(
     project_key: str, comparison_id: str, response: Response
-) -> ComparisonFullModel | ErrorModel:
+) -> ComparisonDetailModel | ErrorModel:
     """
     Get a comparison
     """
     try:
         comp = comparison_handler.get(project_key, comparison_id)
-
-    except (ProjectNotFound, ComparisonNotFound) as e:
-        response.status_code = 404
-        return ErrorModel.from_except(e)
-
-    return comp
-
-
-@app.post(
-    "/project/{project_key}/comparison/{comparison_id}",
-    tags=["Comparison"],
-    response_model_exclude_unset=True,
-    response_model_exclude_none=True,
-    responses={404: {"error": {}}},
-)
-async def update_comparison(
-    project_key: str,
-    comparison_id: str,
-    input: ComparisonMinimalModel,
-    response: Response,
-) -> ComparisonBaseModel | ErrorModel:
-    """
-    Update an existing comparison
-    """
-    try:
-        comp = comparison_handler.update(project_key, comparison_id, input)
 
     except (ProjectNotFound, ComparisonNotFound) as e:
         response.status_code = 404
