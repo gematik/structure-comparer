@@ -139,7 +139,9 @@ class Comparison:
     def to_detail_model(self) -> ComparisonDetailModel:
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
-        fields = [f.to_model() for f in self.fields.values()]
+        fields = sorted(
+            [f.to_model() for f in self.fields.values()], key=lambda x: x.name
+        )
 
         try:
             model = ComparisonDetailModel(
