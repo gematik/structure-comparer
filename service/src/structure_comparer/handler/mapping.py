@@ -1,6 +1,7 @@
 from typing import List
 
 from ..action import Action
+from ..data.mapping import MappingField
 from ..data.project import Project
 from ..errors import (
     FieldNotFound,
@@ -11,6 +12,7 @@ from ..errors import (
     ProjectNotFound,
 )
 from ..helpers import get_field_by_name
+from ..model.manual_entries import ManualEntriesMapping
 from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
@@ -43,7 +45,7 @@ class MappingHandler:
 
     def get_field(
         self, project_key: str, mapping_id: str, field_name: str
-    ) -> MappingFieldsOutputModel:
+    ) -> MappingFieldModel:
         mapping = self.__get(project_key, mapping_id)
 
         field = get_field_by_name(mapping, field_name)
@@ -59,7 +61,7 @@ class MappingHandler:
         mapping_id: str,
         field_name: str,
         input: MappingFieldMinimalModel,
-    ) -> MappingFieldModel:
+    ) -> MappingFieldBaseModel:
         proj = self.project_handler._get(project_key)
 
         # Easiest way to get the fields is from mapping
@@ -78,6 +80,7 @@ class MappingHandler:
 
         # Build the entry that should be created/updated
         new_entry = MappingFieldBaseModel(name=field.name, action=input.action)
+        target: MappingField | None = None
         if new_entry.action == Action.COPY_FROM or new_entry.action == Action.COPY_TO:
             if target_id := input.other:
                 target = get_field_by_name(mapping, target_id)
@@ -95,7 +98,12 @@ class MappingHandler:
                 raise MappingValueMissing()
 
         # Clean up possible manual entry this was copied from before
-        manual_entries = proj.manual_entries[mapping_id]
+        manual_entries = proj.manual_entries.get(mapping_id)
+
+        if manual_entries is None:
+            manual_entries = ManualEntriesMapping(id=mapping_id)
+            proj.manual_entries[mapping_id] = manual_entries
+
         if (manual_entry := manual_entries.get(field.name)) and (
             manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
         ):
@@ -116,9 +124,9 @@ class MappingHandler:
         # Save the changes
         proj.manual_entries.write()
 
-        return True
+        return new_entry
 
-    def __get(self, project_key, mapping_id, proj: Project = None):
+    def __get(self, project_key, mapping_id, proj: Project | None = None):
         if proj is None:
             proj = self.project_handler._get(project_key)
 

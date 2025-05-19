@@ -50,3 +50,7 @@ class MappingValueMissing(Exception):
 
 class InitializationError(Exception):
     pass
+
+
+class NotInitialized(Exception):
+    pass

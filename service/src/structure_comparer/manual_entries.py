@@ -4,6 +4,7 @@ from pathlib import Path
 
 import yaml
 
+from .errors import NotInitialized
 from .model.manual_entries import ManualEntries as ManualEntriesModel
 from .model.manual_entries import ManualEntriesMapping as ManualEntriesMappingModel
 
@@ -16,11 +17,15 @@ yaml.SafeDumper.add_multi_representer(
 
 
 class ManualEntries:
-    _data: ManualEntriesModel = None
-    _file: Path = None
+    def __init__(self) -> None:
+        self._data: ManualEntriesModel | None = None
+        self._file: Path | None = None
 
     @property
     def entries(self) -> list[ManualEntriesMappingModel]:
+        if self._data is None:
+            raise NotInitialized("ManualEntries data was not initialized")
+
         return self._data.entries
 
     def read(self, file: str | Path):
@@ -33,6 +38,13 @@ class ManualEntries:
             self._data = ManualEntriesModel.model_validate(yaml.safe_load(content))
 
     def write(self):
+        if self._file is None:
+            raise NotInitialized("ManualEntries file was not set")
+
+        if self._data is None:
+            raise NotInitialized("ManualEntries data was not initialized")
+
+        content = None
         if self._file.suffix == ".json":
             content = self._data.model_dump_json(indent=4)
         elif self._file.suffix == ".yaml":
@@ -44,12 +56,17 @@ class ManualEntries:
     def __iter__(self):
         return iter(self.entries)
 
-    def get(self, key, default=None) -> ManualEntriesMappingModel:
+    def get(self, key, default=None) -> ManualEntriesMappingModel | None:
         return next((e for e in self.entries if e.id == key), default)
 
     def __getitem__(self, key) -> ManualEntriesMappingModel:
         return next((e for e in self.entries if e.id == key))
 
     def __setitem__(self, key, value) -> None:
-        i = next(i for i in enumerate(self.entries) if self.entries[i].id == key)
-        self.entries[i] = value
+        i = next((i for i, e in enumerate(self.entries) if e.id == key), None)
+
+        if i is None:
+            self.entries.append(value)
+
+        else:
+            self.entries[i] = value

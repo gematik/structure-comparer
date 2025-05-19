@@ -5,9 +5,9 @@ from .mapping import MappingFieldBase
 
 class ManualEntriesMapping(BaseModel):
     id: str
-    fields: list[MappingFieldBase]
+    fields: list[MappingFieldBase] = []
 
-    def get(self, key, default=None) -> MappingFieldBase:
+    def get(self, key, default=None) -> MappingFieldBase | None:
         return next((f for f in self.fields if f.name == key), default)
 
     def __getitem__(self, key) -> MappingFieldBase:
@@ -24,6 +24,11 @@ class ManualEntriesMapping(BaseModel):
         # Otherwise, append a new field
         else:
             self.fields.append(value)
+
+    def __delitem__(self, key):
+        del_i = next((i for i, f in enumerate(self.fields) if f.name == key), None)
+        if del_i is not None:
+            del self.fields[del_i]
 
 
 class ManualEntries(BaseModel):
