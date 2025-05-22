@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 from ..action import Action
 from .comparison import ComparisonField
-from .profile import Profile, ProfileField
+from .profile import Profile
 
 
 class MappingFieldMinimal(BaseModel):
@@ -41,5 +41,6 @@ class MappingDetails(MappingBase):
     fields: list[MappingField]
 
 
-class MappingFieldsOutput(MappingDetails):
+class MappingFieldsOutput(BaseModel):
     id: str
+    fields: list[MappingField]
