@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from ..action import Action
+from .comparison import ComparisonField
 from .profile import Profile, ProfileField
 
 
@@ -19,10 +20,9 @@ class MappingFieldBase(MappingFieldMinimal):
     name: str
 
 
-class MappingField(MappingFieldBase):
+class MappingField(MappingFieldBase, ComparisonField):
     """Representation for when getting a field"""
 
-    profiles: dict[str, ProfileField]
     actions_allowed: list[Action]
 
 
@@ -41,6 +41,5 @@ class MappingDetails(MappingBase):
     fields: list[MappingField]
 
 
-class MappingFieldsOutput(BaseModel):
+class MappingFieldsOutput(MappingDetails):
     id: str
-    fields: list[MappingField]

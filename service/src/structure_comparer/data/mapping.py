@@ -1,18 +1,19 @@
 import logging
 from collections import OrderedDict
-from typing import Dict, List
+from typing import List
 
 from pydantic import ValidationError
 
 from ..action import Action
 from ..consts import REMARKS
+from ..errors import NotInitialized
 from ..manual_entries import ManualEntries
 from ..model.manual_entries import ManualEntriesMapping as ManualEntriesMappingModel
 from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
-from .config import ComparisonProfileConfig, MappingConfig
-from .profile import Profile, ProfileField
+from .comparison import Comparison, ComparisonField
+from .config import MappingConfig
 
 MANUAL_SUFFIXES = ["reference", "profile"]
 
@@ -32,19 +33,15 @@ DERIVED_ACTIONS = [
 logger = logging.getLogger(__name__)
 
 
-class MappingField:
-    def __init__(self) -> None:
-        self.action: Action = None
-        self.extension: str = None
-        self.other: str = None
-        self.fixed: str = None
-        self.profiles: Dict[str, ProfileField] = {}
+class MappingField(ComparisonField):
+    def __init__(self, name: str) -> None:
+        super().__init__(name)
+        self.action: Action = Action.USE
+        self.extension: str | None = None
+        self.other: str | None = None
+        self.fixed: str | None = None
         self.remark = None
         self.actions_allowed: List[Action] = []
-
-    @property
-    def name(self) -> str:
-        return list(self.profiles.values())[0].path_full
 
     @property
     def name_child(self) -> str:
@@ -148,107 +145,66 @@ class MappingField:
             profiles=profiles,
             remark=self.remark,
             actions_allowed=self.actions_allowed,
+            classification=self.classification,
         )
 
 
-class Mapping:
+class Mapping(Comparison):
     def __init__(self, config: MappingConfig, project) -> None:
-        self.__config = config
-        self.__project = project
-        self.sources: List[Profile] | None = None
-        self.target: Profile | None = None
+        super().__init__(config, project)
+
         self.fields: OrderedDict[str, MappingField] = OrderedDict()
 
-        self.__get_sources()
-        self.__get_target()
-        self.__gen_fields()
+    def init_ext(self) -> "Mapping":
+        self._get_sources(self._config.mappings.sourceprofiles)
+        self._get_target(self._config.mappings.targetprofile)
+        self._gen_fields()
 
-    @property
-    def id(self) -> str:
-        return self.__config.id
+        return self
 
     @property
     def version(self) -> str:
-        return self.__config.version
+        return self._config.version
 
     @property
     def last_updated(self) -> str:
-        return self.__config.last_updated
+        return self._config.last_updated
 
     @property
     def status(self) -> str:
-        return self.__config.status
-
-    @property
-    def name(self) -> str:
-        source_profiles = ", ".join(
-            f"{profile.name}|{profile.version}" for profile in self.sources
-        )
-        target_profile = f"{self.target.name}|{self.target.version}"
-        return f"{source_profiles} -> {target_profile}"
+        return self._config.status
 
     @property
     def url(self) -> str:
-        return f"/project/{self.__project.key}/mapping/{self.id}"
+        return f"/project/{self._project.key}/mapping/{self.id}"
 
     @property
     def manual_entries(self) -> ManualEntries:
-        return self.__project.manual_entries
+        return self._project.manual_entries
 
     def fill_action_remark(self, manual_entries: ManualEntries):
         manual_mappings = manual_entries.get(self.id)
-        for field in self.fields.values():
-            field.classify_remark_field(self, manual_mappings)
 
-    def __get_sources(self) -> None:
-        self.sources = []
-        for source in self.__config.mappings.sourceprofiles:
-            profile = self.__get_profile(source)
-            if profile:
-                self.sources.append(profile)
+        if manual_mappings is not None:
+            for field in self.fields.values():
+                field.classify_remark_field(self, manual_mappings)
 
-    def __get_target(self) -> None:
-        profile = self.__get_profile(self.__config.mappings.targetprofile)
-        if profile:
-            self.target = profile
+    def _gen_fields(self) -> None:
+        super()._gen_fields(MappingField)
 
-    def __get_profile(self, mapping_profile_config: ComparisonProfileConfig) -> Profile:
-        id = mapping_profile_config.id
-        url = mapping_profile_config.url
-        version = mapping_profile_config.version
-        if profile := self.__project.get_profile(id, url, version):
-            return profile
-        else:
-            logger.error("source %s#%s not found", id, version)
+        if self.sources is None or self.target is None:
+            raise NotInitialized()
 
-    def __gen_fields(self) -> None:
         all_profiles = [self.target] + self.sources
-
-        for profile in all_profiles:
-            for field in profile.fields.values():
-                # Check if field already exists or needs to be created
-                if field.path_full not in self.fields:
-                    self.fields[field.path_full] = MappingField()
-
-                self.fields[field.path_full].profiles[profile.key] = field
-
-            # Sort the fields by name
-            self.fields = OrderedDict(sorted(self.fields.items(), key=lambda x: x[0]))
-
-            # Fill the absent profiles
-            all_profiles_keys = [profile.key for profile in all_profiles]
-            for field in self.fields.values():
-                for profile_key in all_profiles_keys:
-                    if profile_key not in field.profiles:
-                        field.profiles[profile_key] = None
-
-            # Add remarks and actions for each field
-            for field in self.fields.values():
-                field.fill_allowed_actions(
-                    all_profiles_keys[:-1], all_profiles_keys[-1]
-                )
+        all_profiles_keys = [profile.key for profile in all_profiles]
+        # Add remarks and actions for each field
+        for field in self.fields.values():
+            field.fill_allowed_actions(all_profiles_keys[:-1], all_profiles_keys[-1])
 
     def to_base_model(self) -> MappingBaseModel:
+        if self.sources is None or self.target is None:
+            raise NotInitialized()
+
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
 
@@ -266,11 +222,15 @@ class Mapping:
 
         except ValidationError as e:
             print(e.errors())
+            raise e
 
         else:
             return model
 
     def to_details_model(self) -> MappingDetailsModel:
+        if self.sources is None or self.target is None:
+            raise NotInitialized()
+
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
 
@@ -291,6 +251,7 @@ class Mapping:
 
         except ValidationError as e:
             print(e.errors())
+            raise e
 
         else:
             return model

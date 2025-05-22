@@ -49,7 +49,9 @@ class Project:
         }
 
     def __load_mappings(self):
-        self.mappings = {m.id: Mapping(m, self) for m in self.config.mappings}
+        self.mappings = {
+            m.id: Mapping(m, self).init_ext() for m in self.config.mappings
+        }
 
     def __read_manual_entries(self):
         manual_entries_file = self.dir / self.config.manual_entries_file
