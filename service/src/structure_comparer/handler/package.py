@@ -5,6 +5,7 @@ from tempfile import TemporaryDirectory
 
 from fastapi import UploadFile
 
+from ..data.package import Package
 from ..errors import (
     InvalidFileFormat,
     PackageAlreadyExists,
@@ -47,7 +48,7 @@ class PackageHandler:
         profs = [prof.to_pkg_model() for pkg in proj.pkgs for prof in pkg.profiles]
         return ProfileListModel(profiles=profs)
 
-    def new_from_file_upload(self, proj_key: str, file: UploadFile):
+    def new_from_file_upload(self, proj_key: str, file: UploadFile) -> PackageModel:
         if file.content_type != "application/gzip":
             raise InvalidFileFormat()
 
@@ -82,4 +83,7 @@ class PackageHandler:
             # Move package contents to package directory
             (tmp / "package").rename(pkg_dir / "package")
 
-        pass
+        pkg = Package(pkg_dir, proj)
+        proj.pkgs.append(pkg)
+
+        return pkg.to_model()

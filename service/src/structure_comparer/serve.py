@@ -222,7 +222,9 @@ async def get_package_list(
     response_model_exclude_none=True,
     responses={404: {"error": {}}, 409: {"error": {}}, 422: {"error": {}}},
 )
-async def post_package(project_key: str, file: UploadFile, response: Response):
+async def post_package(
+    project_key: str, file: UploadFile, response: Response
+) -> PackageModel | ErrorModel:
     """
     Add a new package from the uploaded file
     """
