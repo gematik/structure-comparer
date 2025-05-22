@@ -45,11 +45,11 @@ from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
 
 origins = ["http://localhost:4200"]
-project_handler: ProjectsHandler = None
-package_handler: PackageHandler = None
-comparison_handler: ComparisonHandler = None
-mapping_handler: MappingHandler = None
-cur_proj: str = None
+project_handler: ProjectsHandler
+package_handler: PackageHandler
+comparison_handler: ComparisonHandler
+mapping_handler: MappingHandler
+cur_proj: str
 
 
 @asynccontextmanager
@@ -91,6 +91,7 @@ async def ping():
 
 @app.get("/projects", tags=["Projects"], deprecated=True)
 async def get_projects_old():
+    global project_handler
     return project_handler.keys
 
 
@@ -101,6 +102,7 @@ async def get_projects_old():
     response_model_exclude_none=True,
 )
 async def get_project_list() -> ProjectListModel:
+    global project_handler
     return project_handler.get_list()
 
 
@@ -113,6 +115,8 @@ async def get_project_list() -> ProjectListModel:
 async def get_project(
     project_key: str, response: Response
 ) -> ProjectModel | ErrorModel:
+    global project_handler
+
     try:
         proj = project_handler.get(project_key)
         return proj
@@ -179,6 +183,7 @@ async def create_project_old(project_name: str, response: Response):
 async def update_or_create_project(
     project_key: str, project: ProjectInputModel
 ) -> ProjectModel:
+    global project_handler
     return project_handler.update_or_create(project_key, project)
 
 
@@ -195,6 +200,7 @@ async def get_package_list(
     """
     Returns a list of the packages in the project
     """
+    global project_handler
     try:
         proj = package_handler.get_list(project_key)
 
@@ -221,6 +227,7 @@ async def update_package(
     """
     Update the information of a package
     """
+    global package_handler
     try:
         pkg = package_handler.update(project_key, package_id, package_input)
 
@@ -244,6 +251,7 @@ async def get_profile_list(
     """
     Returns a list of all profiles in this project
     """
+    global package_handler
     try:
         proj = package_handler.get_profiles(project_key)
 
@@ -263,10 +271,11 @@ async def get_profile_list(
 )
 async def get_comparison_list(
     project_key: str, response: Response
-) -> ComparisonListModel:
+) -> ComparisonListModel | ErrorModel:
     """
     Returns a list of all comparisons in this project
     """
+    global comparison_handler
     try:
         comps = comparison_handler.get_list(project_key)
 
@@ -290,6 +299,7 @@ async def create_comparison(
     """
     Creates a new comparison
     """
+    global comparison_handler
     try:
         c = comparison_handler.create(project_key, input)
 
@@ -313,6 +323,7 @@ async def get_comparison(
     """
     Get a comparison
     """
+    global comparison_handler
     try:
         comp = comparison_handler.get(project_key, comparison_id)
 
@@ -334,6 +345,7 @@ async def delete_comparison(project_key: str, comparison_id: str, response: Resp
     """
     Delete an existing comparison
     """
+    global comparison_handler
     try:
         comparison_handler.delete(project_key, comparison_id)
 
@@ -373,11 +385,12 @@ async def get_action_options() -> ActionOutputModel:
                   instruction:
                     type: string
     """
+    global project_handler
     return project_handler.get_action_options()
 
 
 @app.get("/mappings", tags=["Mappings"], responses={412: {}}, deprecated=True)
-async def get_mappings_old(response: Response) -> GetMappingsOutput:
+async def get_mappings_old(response: Response) -> GetMappingsOutput | ErrorModel:
     """
     Get the available mappings
     Returns a list with all mappings, including the name and the url to access it.
@@ -446,6 +459,7 @@ async def get_mappings_old(response: Response) -> GetMappingsOutput:
               items:
                 $ref: "#/async definitions/OverviewMapping"
     """
+    global cur_proj, mapping_handler
     if cur_proj is None:
         response.status_code = 412
         return {"error": "Project needs to be initialized before accessing"}
@@ -456,7 +470,7 @@ async def get_mappings_old(response: Response) -> GetMappingsOutput:
 
     except ProjectNotFound:
         response.status_code = 404
-        return {"error": "Project not found"}
+        return ErrorModel(error="Project not found")
 
 
 @app.get(
@@ -537,6 +551,7 @@ async def get_mappings(
               items:
                 $ref: "#/async definitions/OverviewMapping"
     """
+    global mapping_handler
     try:
         mappings = mapping_handler.get_list(project_key)
         return GetMappingsOutput(mappings=mappings)
@@ -549,7 +564,7 @@ async def get_mappings(
 @app.get(
     "/mapping/{id}", tags=["Mappings"], responses={404: {}, 412: {}}, deprecated=True
 )
-async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
+async def get_mapping_old(id: str, response: Response) -> MappingBaseModel | ErrorModel:
     """
     Get a specific mapping
     Returns the mapping with the given id. This includes all details like classifications, presences in profiles, etc.
@@ -636,6 +651,7 @@ async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
       404:
         description: Mapping not found
     """
+    global cur_proj, mapping_handler
     if cur_proj is None:
         response.status_code = 412
         return {"error": "Project needs to be initialized before accessing"}
@@ -645,7 +661,7 @@ async def get_mapping_old(id: str, response: Response) -> MappingBaseModel:
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
-        return {"error": str(e)}
+        return ErrorModel.from_except(e)
 
 
 @app.get(
@@ -726,6 +742,7 @@ async def get_mapping(
               items:
                 $ref: "#/async definitions/OverviewMapping"
     """
+    global mapping_handler
     try:
         return mapping_handler.get(project_key, mapping_id)
 
@@ -742,7 +759,7 @@ async def get_mapping(
 )
 async def get_mapping_fields_old(
     id: str, response: Response
-) -> MappingFieldsOutputModel:
+) -> MappingFieldsOutputModel | ErrorModel:
     """
     Get the fields of a mapping
     Returns a brief list of the fields
@@ -788,6 +805,7 @@ async def get_mapping_fields_old(
       404:
         description: Mapping not found
     """
+    global cur_proj, mapping_handler
     if cur_proj is None:
         response.status_code = 412
         return {"error": "Project needs to be initialized before accessing"}
@@ -797,7 +815,7 @@ async def get_mapping_fields_old(
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
-        return {"error": str(e)}
+        return ErrorModel.from_except(e)
 
 
 @app.get(
@@ -855,6 +873,7 @@ async def get_mapping_fields(
       404:
         description: Mapping not found
     """
+    global mapping_handler
     try:
         return mapping_handler.get_field_list(project_key, mapping_id)
 
@@ -918,6 +937,7 @@ async def get_mapping_field(
       404:
         description: Mapping not found
     """
+    global mapping_handler
     try:
         return mapping_handler.get_field(project_key, mapping_id, field_name)
 
@@ -987,6 +1007,7 @@ async def post_mapping_field_classification_old(
       404:
         description: Mapping or field not found
     """
+    global cur_proj, mapping_handler
     if cur_proj is None:
         response.status_code = 412
         return {"error": "Project needs to be initialized before accessing"}
@@ -1074,6 +1095,7 @@ async def post_mapping_field(
       404:
         description: Mapping or field not found
     """
+    global mapping_handler
     try:
         # Update the field
         mapping_handler.set_field(project_key, mapping_id, field_name, mapping)
