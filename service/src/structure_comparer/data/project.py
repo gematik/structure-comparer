@@ -15,11 +15,11 @@ class Project:
         self.dir = path
         self.config = ProjectConfig.from_json(path / "config.json")
 
-        self.mappings: Dict[str, Mapping] = None
-        self.comparisons: Dict[str, Comparison] = None
-        self.manual_entries: ManualEntries = None
+        self.mappings: Dict[str, Mapping]
+        self.comparisons: Dict[str, Comparison]
+        self.manual_entries: ManualEntries
 
-        self.pkgs: list[Package] = None
+        self.pkgs: list[Package]
 
         self.__load_packages()
         self.load_comparisons()
@@ -28,20 +28,25 @@ class Project:
 
     def __load_packages(self) -> None:
         # Load packages from config
-        self.pkgs = [Package(self.data_dir, p, self) for p in self.config.packages]
+        self.pkgs = [Package(self.data_dir, self, p) for p in self.config.packages]
 
         # Check for local packages not in config
         for dir in self.data_dir.iterdir():
             if dir.is_dir():
                 name, version = dir.name.split("#")
                 if not self.__has_pkg(name, version):
-                    # Create new config entry
-                    cfg = PackageConfig(name=name, version=version)
-                    self.config.packages.append(cfg)
-                    self.config.write()
+                    # FHIR package brings own information with it
+                    if (dir / "package/package.json").exists():
+                        self.pkgs.append(Package(dir, self))
 
-                    # Create and append package
-                    self.pkgs.append(Package(self.data_dir, cfg, self))
+                    # Create new config entry for package
+                    else:
+                        cfg = PackageConfig(name=name, version=version)
+                        self.config.packages.append(cfg)
+                        self.config.write()
+
+                        # Create and append package
+                        self.pkgs.append(Package(dir, self, cfg))
 
     def load_comparisons(self):
         self.comparisons = {

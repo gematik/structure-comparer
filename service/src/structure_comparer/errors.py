@@ -53,4 +53,27 @@ class InitializationError(Exception):
 
 
 class NotInitialized(Exception):
-    pass
+    def __init__(self, msg="Instance was not initialized (correctly)", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class NotAllowed(Exception):
+    def __init__(self, msg="Operation not allowed", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class InvalidFileFormat(Exception):
+    def __init__(
+        self, msg="A file with an incorrect format was provided", *args, **kwargs
+    ):
+        super().__init__(msg, *args, **kwargs)
+
+
+class PackageCorrupted(Exception):
+    def __init__(self, msg="Package is corrupted", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class PackageAlreadyExists(Exception):
+    def __init__(self, msg="Package already exists", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)

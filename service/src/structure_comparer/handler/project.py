@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 class ProjectsHandler:
     def __init__(self, projects_dir: Path):
-        self.__projs_dir = projects_dir
-        self.__projs: Dict[str, Project] = None
+        self.projs_dir = projects_dir
+        self.__projs: Dict[str, Project]
 
     @property
     def keys(self) -> List[str]:
@@ -26,7 +26,7 @@ class ProjectsHandler:
     def load(self) -> None:
         self.__projs = {}
 
-        for path in self.__projs_dir.iterdir():
+        for path in self.projs_dir.iterdir():
             # Only handle directories
             if path.is_dir():
                 try:
@@ -59,7 +59,7 @@ class ProjectsHandler:
 
         # Create new one otherwise
         else:
-            project_path = self.__projs_dir / proj_key
+            project_path = self.projs_dir / proj_key
 
             # Load the newly created project
             proj = Project.create(project_path, input.name)
