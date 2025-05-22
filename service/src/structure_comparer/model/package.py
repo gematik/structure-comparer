@@ -1,6 +1,18 @@
 from pydantic import BaseModel
 
 
+class PackageInfo(BaseModel):
+    """
+    Package information from the JSON file
+    """
+
+    name: str
+    version: str
+    title: str
+    canonical: str
+    url: str
+
+
 class Package(BaseModel):
     display: str | None = None
     id: str

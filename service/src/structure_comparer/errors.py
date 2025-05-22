@@ -53,7 +53,13 @@ class InitializationError(Exception):
 
 
 class NotInitialized(Exception):
-    pass
+    def __init__(self, msg="Instance was not initialized (correctly)", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class NotAllowed(Exception):
+    def __init__(self, msg="Operation not allowed", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
 
 
 class InvalidFileFormat(Exception):

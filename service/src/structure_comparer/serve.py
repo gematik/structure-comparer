@@ -15,6 +15,7 @@ from .errors import (
     MappingTargetMissing,
     MappingTargetNotFound,
     MappingValueMissing,
+    NotAllowed,
     PackageAlreadyExists,
     PackageCorrupted,
     PackageNotFound,
@@ -219,7 +220,7 @@ async def get_package_list(
     tags=["Packages"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
-    responses={404: {"error": {}}},
+    responses={404: {"error": {}}, 409: {"error": {}}, 422: {"error": {}}},
 )
 async def post_package(project_key: str, file: UploadFile, response: Response):
     """
@@ -250,7 +251,7 @@ async def post_package(project_key: str, file: UploadFile, response: Response):
     tags=["Packages"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
-    responses={404: {"error": {}}},
+    responses={400: {"error": {}}, 404: {"error": {}}},
 )
 async def update_package(
     project_key: str,
@@ -267,6 +268,10 @@ async def update_package(
 
     except (ProjectNotFound, PackageNotFound) as e:
         response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except NotAllowed as e:
+        response.status_code = 400
         return ErrorModel.from_except(e)
 
     return pkg
