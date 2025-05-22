@@ -3,17 +3,20 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 import uvicorn
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from .errors import (
     ComparisonNotFound,
     FieldNotFound,
+    InvalidFileFormat,
     MappingActionNotAllowed,
     MappingNotFound,
     MappingTargetMissing,
     MappingTargetNotFound,
     MappingValueMissing,
+    PackageAlreadyExists,
+    PackageCorrupted,
     PackageNotFound,
     ProjectAlreadyExists,
     ProjectNotFound,
@@ -200,15 +203,46 @@ async def get_package_list(
     """
     Returns a list of the packages in the project
     """
-    global project_handler
+    global package_handler
     try:
-        proj = package_handler.get_list(project_key)
+        pkg = package_handler.get_list(project_key)
 
     except ProjectNotFound as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
 
-    return proj
+    return pkg
+
+
+@app.post(
+    "/project/{project_key}/package",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def post_package(project_key: str, file: UploadFile, response: Response):
+    """
+    Add a new package from the uploaded file
+    """
+    global package_handler
+
+    try:
+        pkg = package_handler.new_from_file_upload(project_key, file)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except (InvalidFileFormat, PackageCorrupted) as e:
+        response.status_code = 422
+        return ErrorModel.from_except(e)
+
+    except PackageAlreadyExists as e:
+        response.status_code = 409
+        return ErrorModel.from_except(e)
+
+    return pkg
 
 
 @app.post(
