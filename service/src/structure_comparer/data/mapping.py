@@ -146,6 +146,7 @@ class MappingField(ComparisonField):
             remark=self.remark,
             actions_allowed=self.actions_allowed,
             classification=self.classification,
+            issues=self.issues if self.issues else None,
         )
 
 
