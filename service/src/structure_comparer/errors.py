@@ -74,6 +74,11 @@ class PackageCorrupted(Exception):
         super().__init__(msg, *args, **kwargs)
 
 
+class PackageNoSnapshots(Exception):
+    def __init__(self, msg="Package does not contain snapshots", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
 class PackageAlreadyExists(Exception):
     def __init__(self, msg="Package already exists", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)

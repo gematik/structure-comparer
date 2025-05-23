@@ -10,6 +10,7 @@ from ..errors import (
     InvalidFileFormat,
     PackageAlreadyExists,
     PackageCorrupted,
+    PackageNoSnapshots,
     PackageNotFound,
 )
 from ..model.package import Package as PackageModel
@@ -71,6 +72,14 @@ class PackageHandler:
                 raise PackageCorrupted()
 
             pkg_info = json.loads(pkg_info_file.read_text(encoding="utf-8"))
+
+            # try to find first StructureDefintion to determine if package has snapshots
+            for f in (tmp / "package").glob("**/*.json"):
+                content = json.loads(f.read_text(encoding="utf-8"))
+                if content.get(
+                    "resourceType"
+                ) == "StructureDefinition" and not content.get("snapshot"):
+                    raise PackageNoSnapshots()
 
             # Create package directory below project directory
             pkg_dir = Path(proj.data_dir) / f"{pkg_info['name']}#{pkg_info['version']}"
