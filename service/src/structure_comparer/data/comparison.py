@@ -55,7 +55,7 @@ class ComparisonField:
                 self.issues.append(ComparisonIssue.MIN)
 
             # Incompatible if any min is lower or max is greater than target
-            if any([p.max > tp.max for p in sp if p]):
+            if any([p.max_num > tp.max_num for p in sp if p]):
                 self.classification = ComparisonClassification.INCOMPAT
                 self.issues.append(ComparisonIssue.MAX)
 
