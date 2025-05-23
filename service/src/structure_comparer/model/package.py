@@ -8,9 +8,10 @@ class PackageInfo(BaseModel):
 
     name: str
     version: str
-    title: str
-    canonical: str
-    url: str
+    title: str | None = None
+    description: str | None = None
+    canonical: str | None = None
+    url: str | None = None
 
 
 class Package(BaseModel):

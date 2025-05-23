@@ -18,6 +18,7 @@ from .errors import (
     NotAllowed,
     PackageAlreadyExists,
     PackageCorrupted,
+    PackageNoSnapshots,
     PackageNotFound,
     ProjectAlreadyExists,
     ProjectNotFound,
@@ -228,7 +229,8 @@ async def post_package(
     """
     Add a new package from the uploaded file
 
-    The uploaded file needs to be valid FHIR package tarball.
+    The uploaded file needs to be valid FHIR package tarball and the profiles
+    need to include snapshots.
     """
     global package_handler
 
@@ -239,7 +241,7 @@ async def post_package(
         response.status_code = 404
         return ErrorModel.from_except(e)
 
-    except (InvalidFileFormat, PackageCorrupted) as e:
+    except (InvalidFileFormat, PackageCorrupted, PackageNoSnapshots) as e:
         response.status_code = 422
         return ErrorModel.from_except(e)
 

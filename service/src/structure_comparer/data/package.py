@@ -54,8 +54,11 @@ class Package:
 
     @property
     def display(self) -> str | None:
-        if self.info is not None:
+        if self.info is not None and self.info.title is not None:
             return self.info.title
+
+        if self.info is not None and self.info.description is not None:
+            return self.info.description
 
         elif self.config is not None:
             return self.config.display
