@@ -160,13 +160,26 @@ class ProfileField:
         return self.__data.mustSupport if self.__data.mustSupport else False
 
     @property
+    def ref_types(self) -> list[str]:
+        return (
+            [
+                p
+                for t in self.__data.type
+                if t.code == "Reference"
+                for p in t.targetProfile
+            ]
+            if self.__data.type is not None
+            else []
+        )
+
+    @property
     def is_default(self) -> bool:
         return self == self.__data.base
 
-    def eq_flags(self, other: "ProfileField") -> bool:
-        pass
-
     def to_model(self) -> ProfileFieldModel:
         return ProfileFieldModel(
-            min=self.min, max=self.max, must_support=self.must_support
+            min=self.min,
+            max=self.max,
+            must_support=self.must_support,
+            ref_types=self.ref_types if len(self.ref_types) else None,
         )

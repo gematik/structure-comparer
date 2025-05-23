@@ -20,6 +20,7 @@ class ProfileField(BaseModel):
     min: int
     max: str
     must_support: bool
+    ref_types: list[str] | None
 
 
 class ProfileList(BaseModel):
