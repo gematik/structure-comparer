@@ -126,6 +126,9 @@ class ProfileField:
     def __repr__(self) -> str:
         return str(self)
 
+    def __eq__(self, value: object) -> bool:
+        return self.min == value.min and self.max == value.max
+
     @property
     def id(self) -> str:
         return self.__id
@@ -155,6 +158,13 @@ class ProfileField:
     @property
     def must_support(self) -> bool:
         return self.__data.mustSupport if self.__data.mustSupport else False
+
+    @property
+    def is_default(self) -> bool:
+        return self == self.__data.base
+
+    def eq_flags(self, other: "ProfileField") -> bool:
+        pass
 
     def to_model(self) -> ProfileFieldModel:
         return ProfileFieldModel(

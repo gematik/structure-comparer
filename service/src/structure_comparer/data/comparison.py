@@ -7,6 +7,7 @@ from ..errors import NotInitialized
 from ..model.comparison import ComparisonClassification
 from ..model.comparison import ComparisonDetail as ComparisonDetailModel
 from ..model.comparison import ComparisonField as ComparisonFieldModel
+from ..model.comparison import ComparisonIssue
 from ..model.comparison import ComparisonOverview as ComparisonOverviewModel
 from .config import ComparisonConfig, ComparisonProfileConfig
 from .profile import Profile, ProfileField
@@ -18,40 +19,58 @@ class ComparisonField:
     def __init__(self, name: str) -> None:
         self.name = name
         self.profiles: OrderedDict[str, ProfileField | None] = OrderedDict()
-        self.classification: ComparisonClassification = None
+        self._classification: ComparisonClassification = ComparisonClassification.COMPAT
+        self.issues: list[ComparisonIssue] = []
+
+    @property
+    def classification(self) -> ComparisonClassification:
+        return self._classification
+
+    @classification.setter
+    def classification(self, value: ComparisonClassification) -> None:
+        if self._classification < value:
+            self._classification = value
 
     def classify(self, sources: list[Profile], target: Profile) -> None:
         sp = [self.profiles[p.key] for p in sources]
         tp = self.profiles[target.key]
+        al = sp + [tp]
 
-        # If target is not set, its incompatible
-        if tp is None:
+        self.classification = ComparisonClassification.COMPAT
+
+        # If target is not set, but the others are not all either 'None' or the default value, its incompatible
+        if tp is None and any([not p.is_default for p in sp if p is not None]):
             self.classification = ComparisonClassification.INCOMPAT
 
-        # If any source is absent and target is required
-        elif any([p is None for p in sp]) and tp.min > 0:
-            self.classification = ComparisonClassification.INCOMPAT
+        if tp is not None:
 
-        # Incompatible if any min is lower or max is greater than target
-        elif any([p.min < tp.min or p.max > tp.max for p in sp if p]):
-            self.classification = ComparisonClassification.INCOMPAT
+            # If any source is absent and target is required
+            if any([p is None for p in sp]) and tp.min > 0:
+                self.classification = ComparisonClassification.INCOMPAT
+                self.issues.append(ComparisonIssue.MIN)
 
-        # Potential incompatible if cards or MS not matching
-        elif any([p.min > tp.min or p.max < tp.max for p in sp if p]) or any(
-            [p.must_support != tp.must_support for p in sp if p]
-        ):
-            self.classification = ComparisonClassification.WARN
+            # Incompatible if any min is lower or max is greater than target
+            if any([p.min < tp.min for p in sp if p]):
+                self.classification = ComparisonClassification.INCOMPAT
+                self.issues.append(ComparisonIssue.MIN)
 
-        elif any([p is None for p in sp]):
-            self.classification = ComparisonClassification.WARN
+            # Incompatible if any min is lower or max is greater than target
+            if any([p.max > tp.max for p in sp if p]):
+                self.classification = ComparisonClassification.INCOMPAT
+                self.issues.append(ComparisonIssue.MAX)
 
-        else:
-            self.classification = ComparisonClassification.COMPAT
+            # Warning if MS or other flags are not matching
+            if any([p.must_support != tp.must_support for p in sp if p]):
+                self.classification = ComparisonClassification.WARN
+                self.issues.append(ComparisonIssue.MS)
 
     def to_model(self) -> ComparisonFieldModel:
         profiles = {k: p.to_model() if p else None for k, p in self.profiles.items()}
         return ComparisonFieldModel(
-            name=self.name, profiles=profiles, classification=self.classification
+            name=self.name,
+            profiles=profiles,
+            classification=self.classification,
+            issues=self.issues if self.issues else None,
         )
 
 
