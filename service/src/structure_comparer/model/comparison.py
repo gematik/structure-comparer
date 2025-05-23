@@ -28,6 +28,7 @@ class ComparisonIssue(StrEnum):
     MS = "ms"
     MIN = "min"
     MAX = "max"
+    REF = "ref"
 
 
 class ComparisonField(BaseModel):

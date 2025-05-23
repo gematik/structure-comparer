@@ -59,6 +59,11 @@ class ComparisonField:
                 self.classification = ComparisonClassification.INCOMPAT
                 self.issues.append(ComparisonIssue.MAX)
 
+            # Check reference types if available
+            if any([p.ref_types != tp.ref_types for p in sp if p]):
+                self.classification = ComparisonClassification.WARN
+                self.issues.append(ComparisonIssue.REF)
+
     def to_model(self) -> ComparisonFieldModel:
         profiles = {k: p.to_model() if p else None for k, p in self.profiles.items()}
         return ComparisonFieldModel(
