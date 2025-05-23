@@ -227,6 +227,8 @@ async def post_package(
 ) -> PackageModel | ErrorModel:
     """
     Add a new package from the uploaded file
+
+    The uploaded file needs to be valid FHIR package tarball.
     """
     global package_handler
 
