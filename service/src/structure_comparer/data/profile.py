@@ -126,6 +126,9 @@ class ProfileField:
     def __repr__(self) -> str:
         return str(self)
 
+    def __eq__(self, value: object) -> bool:
+        return self.min == value.min and self.max == value.max
+
     @property
     def id(self) -> str:
         return self.__id
@@ -156,7 +159,27 @@ class ProfileField:
     def must_support(self) -> bool:
         return self.__data.mustSupport if self.__data.mustSupport else False
 
+    @property
+    def ref_types(self) -> list[str]:
+        return (
+            [
+                p
+                for t in self.__data.type
+                if t.code == "Reference"
+                for p in t.targetProfile
+            ]
+            if self.__data.type is not None
+            else []
+        )
+
+    @property
+    def is_default(self) -> bool:
+        return self == self.__data.base
+
     def to_model(self) -> ProfileFieldModel:
         return ProfileFieldModel(
-            min=self.min, max=self.max, must_support=self.must_support
+            min=self.min,
+            max=self.max,
+            must_support=self.must_support,
+            ref_types=self.ref_types if len(self.ref_types) else None,
         )

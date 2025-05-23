@@ -10,11 +10,32 @@ class ComparisonClassification(StrEnum):
     WARN = "warning"
     INCOMPAT = "incompatible"
 
+    def __lt__(self, value: str) -> bool:
+        other = ComparisonClassification(value)
+        return (
+            self == ComparisonClassification.COMPAT
+            and other == ComparisonClassification.WARN
+        ) or (
+            (
+                self == ComparisonClassification.COMPAT
+                or self == ComparisonClassification.WARN
+            )
+            and other == ComparisonClassification.INCOMPAT
+        )
+
+
+class ComparisonIssue(StrEnum):
+    MS = "ms"
+    MIN = "min"
+    MAX = "max"
+    REF = "ref"
+
 
 class ComparisonField(BaseModel):
     name: str
     profiles: dict[str, ProfileField | None]
     classification: ComparisonClassification
+    issues: list[ComparisonIssue] | None
 
 
 class ComparisonCreate(BaseModel):
