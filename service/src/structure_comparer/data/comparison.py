@@ -59,11 +59,6 @@ class ComparisonField:
                 self.classification = ComparisonClassification.INCOMPAT
                 self.issues.append(ComparisonIssue.MAX)
 
-            # Warning if MS or other flags are not matching
-            if any([p.must_support != tp.must_support for p in sp if p]):
-                self.classification = ComparisonClassification.WARN
-                self.issues.append(ComparisonIssue.MS)
-
     def to_model(self) -> ComparisonFieldModel:
         profiles = {k: p.to_model() if p else None for k, p in self.profiles.items()}
         return ComparisonFieldModel(
