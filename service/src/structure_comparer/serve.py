@@ -65,7 +65,9 @@ async def lifespan(app: FastAPI):
     global mapping_handler
 
     # Set up
-    project_handler = ProjectsHandler(Path(os.environ["PROJECTS_DIR"]))
+    project_handler = ProjectsHandler(
+        Path(os.environ["STRUCTURE_COMPARER_PROJECTS_DIR"])
+    )
     project_handler.load()
 
     package_handler = PackageHandler(project_handler)

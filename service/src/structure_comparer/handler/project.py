@@ -28,7 +28,7 @@ class ProjectsHandler:
 
         for path in self.projs_dir.iterdir():
             # Only handle directories
-            if path.is_dir():
+            if path.is_dir() and (path / "config.json").exists():
                 try:
                     self.__projs[path.name] = Project(path)
                 except ValidationError as e:
