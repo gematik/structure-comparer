@@ -53,8 +53,10 @@
             "name": "Start Server",
             "type": "debugpy",
             "request": "launch",
-            "program": "server.py",
-            "cwd": "${workspaceFolder}/service/src",
+            "module": "structure_comparer",
+            "args": [
+                "serve"
+            ],
             "env": {
                 "PROJECTS_DIR": "../../projects"
             },
