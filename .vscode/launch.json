@@ -58,7 +58,7 @@
                 "serve"
             ],
             "env": {
-                "STRUCTURE_COMPARER_PROJECTS_DIR": "../../projects"
+                "STRUCTURE_COMPARER_PROJECTS_DIR": "../structure-comparer-projects"
             },
             "jinja": true,
             "justMyCode": true
