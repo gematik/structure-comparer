@@ -1,4 +1,5 @@
 import json
+import shutil
 import tarfile
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -90,7 +91,7 @@ class PackageHandler:
             pkg_dir.mkdir()
 
             # Move package contents to package directory
-            (tmp / "package").rename(pkg_dir / "package")
+            shutil.copytree(tmp / "package", pkg_dir / "package")
 
         pkg = Package(pkg_dir, proj)
         proj.pkgs.append(pkg)
