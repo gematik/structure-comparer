@@ -1,0 +1,9 @@
+services:
+  service:
+    container_name: structure-comparer
+    build: service
+    image: structure-comparer
+    volumes:
+      - "../structure-comparer-projects:/app/projects"
+    ports:
+      - "8000:8000"
