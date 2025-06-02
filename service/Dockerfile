@@ -1,9 +1,14 @@
 FROM python:3.13-alpine AS builder
 
 WORKDIR /build
-COPY . .
 
 RUN pip install poetry
+
+COPY ./src ./src
+COPY ./poetry.lock .
+COPY ./pyproject.toml .
+COPY README.md .
+
 RUN poetry build
 
 
