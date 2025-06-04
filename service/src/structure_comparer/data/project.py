@@ -118,7 +118,7 @@ class Project:
         for pkg in self.pkgs:
             for profile in pkg.profiles:
                 if (
-                    profile.id == id or profile.url == url
+                    (id is None or profile.id == id) or profile.url == url
                 ) and profile.version == version:
                     return profile
 
