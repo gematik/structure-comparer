@@ -10,11 +10,11 @@ For more information see [service/](service/).
 
 ## License
 
-Copyright [Jahr] gematik GmbH
+Copyright 2025 gematik GmbH
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 
-See the [LICENSE](./LICENSE) for the specific language governing permissions and limitations under the License.
+See the [LICENSE](./LICENSE.md) for the specific language governing permissions and limitations under the License.
 
 ## Additional Notes and Disclaimer from gematik GmbH
 
