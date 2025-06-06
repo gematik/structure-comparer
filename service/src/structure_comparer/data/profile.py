@@ -1,7 +1,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 from uuid import uuid4
 
 from fhir.resources.R4B.elementdefinition import ElementDefinition
@@ -18,38 +18,36 @@ logger = logging.getLogger(__name__)
 class Profile:
     def __init__(self, data: dict, package=None) -> None:
         self.__data = StructureDefinition.model_validate(data)
-        self.__fields: List[str, ProfileField] = None
+        self.__fields: Dict[str, ProfileField] = {}
         self.__init_fields()
         self.__package = package
 
+    def __init_fields(self) -> None:
+        for elem in self.__data.snapshot.element:
+            field = ProfileField(elem)
+            if field.path:
+                self.__fields[field.id] = field
+
     def __str__(self) -> str:
-        return f"(name={self.name}, version={self.version}, fields={self.fields})"
+        return f"(name={self.name}, version={self.version}, fields={list(self.fields)})"
 
     def __repr__(self) -> str:
         return str(self)
-
-    def __init_fields(self) -> None:
-        self.__fields: Dict[str, ProfileField] = {}
-        for elem in self.__data.snapshot.element:
-            field = ProfileField(elem)
-            if field.path is not None:
-                self.__fields[field.id] = field
 
     @staticmethod
     def from_json(path: Path, package=None) -> "Profile":
         if not path.exists():
             raise FileNotFoundError(
-                f"The file {path} does not exist. Please check the file path and try again."
+                f"The file {path} does not exist. Please check the path and try again."
             )
 
         try:
-            return Profile(
-                data=json.loads(path.read_text(encoding="utf-8")), package=package
-            )
-
+            data = json.loads(path.read_text(encoding="utf-8"))
+            return Profile(data=data, package=package)
         except Exception as e:
-            logger.error("failed to read file '%s'", str(path))
+            logger.error("Failed to read profile from '%s'", path)
             logger.exception(e)
+            raise
 
     @property
     def name(self) -> str:
@@ -78,7 +76,7 @@ class Profile:
     def __lt__(self, other: "Profile") -> bool:
         return self.key < other.key
 
-    def __to_dict(self) -> dict:
+    def _to_dict(self) -> dict:
         return {
             "id": self.id,
             "url": self.url,
@@ -87,36 +85,28 @@ class Profile:
             "version": self.version,
         }
 
-    def __to_pkg_dict(self) -> dict:
-        dict_ = self.__to_dict()
-        dict_["package"] = self.__package.id
+    def _to_pkg_dict(self) -> dict:
+        d = self._to_dict()
+        d["package"] = self.__package.id if self.__package else None
+        return d
 
-        return dict_
-
-    def to_model(self) -> ProfileModel:
+    def to_model(self) -> Optional[ProfileModel]:
         try:
-            model = ProfileModel(**self.__to_dict())
+            return ProfileModel(**self._to_dict())
         except ValidationError as e:
-            logger.exception(e)
+            logger.exception("Failed to convert Profile to ProfileModel: %s", e)
+            return None
 
-        else:
-            return model
-
-    def to_pkg_model(self) -> ProfileModel:
+    def to_pkg_model(self) -> Optional[PackageProfileModel]:
         try:
-            model = PackageProfileModel(**self.__to_pkg_dict())
+            return PackageProfileModel(**self._to_pkg_dict())
         except ValidationError as e:
-            logger.exception(e)
-
-        else:
-            return model
+            logger.exception("Failed to convert Profile to PackageProfileModel: %s", e)
+            return None
 
 
 class ProfileField:
-    def __init__(
-        self,
-        data: ElementDefinition,
-    ) -> None:
+    def __init__(self, data: ElementDefinition) -> None:
         self.__data = data
         self.__id = str(uuid4())
 
@@ -127,7 +117,7 @@ class ProfileField:
         return str(self)
 
     def __eq__(self, value: object) -> bool:
-        return self.min == value.min and self.max == value.max
+        return isinstance(value, ProfileField) and self.min == value.min and self.max == value.max
 
     @property
     def id(self) -> str:
@@ -138,10 +128,8 @@ class ProfileField:
         return self.__data.id
 
     @property
-    def path(self) -> str:
-        return (
-            ("." + self.path_full.split(".", 1)[1]) if "." in self.path_full else None
-        )
+    def path(self) -> Optional[str]:
+        return "." + self.path_full.split(".", 1)[1] if "." in self.path_full else None
 
     @property
     def min(self) -> int:
@@ -157,29 +145,28 @@ class ProfileField:
 
     @property
     def must_support(self) -> bool:
-        return self.__data.mustSupport if self.__data.mustSupport else False
+        return bool(self.__data.mustSupport)
 
     @property
-    def ref_types(self) -> list[str]:
-        return (
-            [
-                p
-                for t in self.__data.type
-                if t.code == "Reference"
-                for p in t.targetProfile
-            ]
-            if self.__data.type is not None
-            else []
-        )
+    def ref_types(self) -> List[str]:
+        if not self.__data.type:
+            return []
+        return [
+            p
+            for t in self.__data.type
+            if t.code == "Reference" and t.targetProfile
+            for p in t.targetProfile
+        ]
 
     @property
     def is_default(self) -> bool:
-        return self == self.__data.base
+        return self.__data.base == self
 
     def to_model(self) -> ProfileFieldModel:
+        ref_types = self.ref_types
         return ProfileFieldModel(
             min=self.min,
             max=self.max,
             must_support=self.must_support,
-            ref_types=self.ref_types if len(self.ref_types) else None,
+            ref_types=ref_types if ref_types else None,
         )
