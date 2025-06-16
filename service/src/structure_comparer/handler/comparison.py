@@ -43,7 +43,7 @@ class ComparisonHandler:
         p.config.comparisons.append(cc)
         p.config.write()
 
-        p.load_comparisons()
+        p._load_comparisons()
 
         return p.comparisons[cc.id].to_overview_model()
 
@@ -61,7 +61,7 @@ class ComparisonHandler:
         ]
         p.config.write()
 
-        p.load_comparisons()
+        p._load_comparisons()
 
 
 def _to_profiles_config(url: str) -> ComparisonProfileConfigModel:

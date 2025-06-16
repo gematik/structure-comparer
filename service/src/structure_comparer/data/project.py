@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
 from ..manual_entries import ManualEntries
 from ..model.project import Project as ProjectModel
@@ -15,71 +15,66 @@ class Project:
         self.dir = path
         self.config = ProjectConfig.from_json(path / "config.json")
 
-        self.mappings: Dict[str, Mapping]
-        self.comparisons: Dict[str, Comparison]
-        self.manual_entries: ManualEntries
+        self.mappings: Dict[str, Mapping] = {}
+        self.comparisons: Dict[str, Comparison] = {}
+        self.manual_entries: ManualEntries = ManualEntries()
+        self.pkgs: list[Package] = []
 
-        self.pkgs: list[Package]
+        self._load_packages()
+        self._load_comparisons()
+        self._load_mappings()
+        self._read_manual_entries()
 
-        self.__load_packages()
-        self.load_comparisons()
-        self.__load_mappings()
-        self.__read_manual_entries()
+    def _load_packages(self) -> None:
+        # Trigger creation of data_dir via property
+        data_dir = self.data_dir  # <- erstellt Verzeichnis dank Property
 
-    def __load_packages(self) -> None:
         # Load packages from config
-        self.pkgs = [Package(self.data_dir, self, p) for p in self.config.packages]
+        self.pkgs = [Package(data_dir, self, cfg) for cfg in self.config.packages]
 
-        # Check for local packages not in config
+        # Add any local packages not yet in config
         for dir in self.data_dir.iterdir():
             if dir.is_dir():
-                name, version = dir.name.split("#")
-                if not self.__has_pkg(name, version):
-                    # FHIR package brings own information with it
+                try:
+                    name, version = dir.name.split("#", maxsplit=1)
+                except ValueError:
+                    continue  # skip invalid folder names
+
+                if not self._has_package(name, version):
                     if (dir / "package/package.json").exists():
                         self.pkgs.append(Package(dir, self))
-
-                    # Create new config entry for package
                     else:
-                        cfg = PackageConfig(name=name, version=version)
-                        self.config.packages.append(cfg)
+                        new_cfg = PackageConfig(name=name, version=version)
+                        self.config.packages.append(new_cfg)
                         self.config.write()
+                        self.pkgs.append(Package(dir, self, new_cfg))
 
-                        # Create and append package
-                        self.pkgs.append(Package(dir, self, cfg))
-
-    def load_comparisons(self):
+    def _load_comparisons(self) -> None:
         self.comparisons = {
-            c.id: Comparison(c, self).init_ext() for c in self.config.comparisons
+            cmp.id: Comparison(cmp, self).init_ext() for cmp in self.config.comparisons
         }
 
-    def __load_mappings(self):
+    def _load_mappings(self) -> None:
         self.mappings = {
-            m.id: Mapping(m, self).init_ext() for m in self.config.mappings
+            mp.id: Mapping(mp, self).init_ext() for mp in self.config.mappings
         }
 
-    def __read_manual_entries(self):
-        manual_entries_file = self.dir / self.config.manual_entries_file
+    def _read_manual_entries(self) -> None:
+        manual_file = self.dir / self.config.manual_entries_file
+        manual_file.touch(exist_ok=True)
 
-        if not manual_entries_file.exists():
-            manual_entries_file.touch()
-
-        self.manual_entries = ManualEntries()
-        self.manual_entries.read(manual_entries_file)
+        self.manual_entries.read(manual_file)
         self.manual_entries.write()
 
     @staticmethod
     def create(path: Path, project_name: str) -> "Project":
         path.mkdir(parents=True, exist_ok=True)
 
-        # Create empty manual_entries.yaml file
-        manual_entries_file = path / "manual_entries.yaml"
-        manual_entries_file.touch()
+        (path / "manual_entries.yaml").touch()
 
-        # Create default config.json file
-        config_data = ProjectConfig(name=project_name)
-        config_data._file_path = path / "config.json"
-        config_data.write()
+        config = ProjectConfig(name=project_name)
+        config._file_path = path / "config.json"
+        config.write()
 
         return Project(path)
 
@@ -87,32 +82,30 @@ class Project:
     def name(self) -> str:
         return self.config.name
 
+    @name.setter
+    def name(self, value: str) -> None:
+        self.config.name = value
+        self.config.write()
+
     @property
     def key(self) -> str:
         return self.dir.name
 
     @property
     def url(self) -> str:
-        return "/project/" + self.key
-
-    @name.setter
-    def name(self, value: str):
-        self.config.name = value
-        self.config.write()
+        return f"/project/{self.key}"
 
     @property
     def data_dir(self) -> Path:
-        return self.dir / self.config.data_dir
+        data_path = self.dir / self.config.data_dir
+        data_path.mkdir(parents=True, exist_ok=True)
+        return data_path
 
-    def write_config(self):
+    def write_config(self) -> None:
         self.config.write()
 
-    def get_package(self, id: str) -> Package | None:
-        for pkg in self.pkgs:
-            if pkg.id == id:
-                return pkg
-
-        return None
+    def get_package(self, id: str) -> Optional[Package]:
+        return next((pkg for pkg in self.pkgs if pkg.id == id), None)
 
     def get_profile(self, id: str, url: str, version: str):
         for pkg in self.pkgs:
@@ -121,19 +114,17 @@ class Project:
                     profile.id == id or profile.url == url
                 ) and profile.version == version:
                     return profile
-
         return None
 
-    def __has_pkg(self, name: str, version: str) -> bool:
-        return any([p.name == name and p.version == version for p in self.pkgs])
+    def _has_package(self, name: str, version: str) -> bool:
+        return any(p.name == name and p.version == version for p in self.pkgs)
 
     def to_model(self) -> ProjectModel:
-        mappings = [m.to_base_model() for m in self.mappings.values()]
-        pkgs = [p.to_model() for p in self.pkgs]
-        comparisons = [c.to_overview_model() for c in self.comparisons.values()]
-
         return ProjectModel(
-            name=self.name, mappings=mappings, comparisons=comparisons, packages=pkgs
+            name=self.name,
+            mappings=[m.to_base_model() for m in self.mappings.values()],
+            comparisons=[c.to_overview_model() for c in self.comparisons.values()],
+            packages=[p.to_model() for p in self.pkgs],
         )
 
     def to_overview_model(self) -> ProjectOverviewModel:
