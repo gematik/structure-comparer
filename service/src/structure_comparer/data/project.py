@@ -51,14 +51,12 @@ class Project:
 
     def _load_comparisons(self) -> None:
         self.comparisons = {
-            cmp.id: Comparison(cmp, self).init_ext()
-            for cmp in self.config.comparisons
+            cmp.id: Comparison(cmp, self).init_ext() for cmp in self.config.comparisons
         }
 
     def _load_mappings(self) -> None:
         self.mappings = {
-            mp.id: Mapping(mp, self).init_ext()
-            for mp in self.config.mappings
+            mp.id: Mapping(mp, self).init_ext() for mp in self.config.mappings
         }
 
     def _read_manual_entries(self) -> None:
@@ -112,7 +110,9 @@ class Project:
     def get_profile(self, id: str, url: str, version: str):
         for pkg in self.pkgs:
             for profile in pkg.profiles:
-                if (profile.id == id or profile.url == url) and profile.version == version:
+                if (
+                    profile.id == id or profile.url == url
+                ) and profile.version == version:
                     return profile
         return None
 
@@ -124,7 +124,7 @@ class Project:
             name=self.name,
             mappings=[m.to_base_model() for m in self.mappings.values()],
             comparisons=[c.to_overview_model() for c in self.comparisons.values()],
-            packages=[p.to_model() for p in self.pkgs]
+            packages=[p.to_model() for p in self.pkgs],
         )
 
     def to_overview_model(self) -> ProjectOverviewModel:

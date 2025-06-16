@@ -117,7 +117,11 @@ class ProfileField:
         return str(self)
 
     def __eq__(self, value: object) -> bool:
-        return isinstance(value, ProfileField) and self.min == value.min and self.max == value.max
+        return (
+            isinstance(value, ProfileField)
+            and self.min == value.min
+            and self.max == value.max
+        )
 
     @property
     def id(self) -> str:

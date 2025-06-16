@@ -6,10 +6,8 @@ from typing import Iterator
 import yaml
 
 from .errors import NotInitialized
-from .model.manual_entries import (
-    ManualEntries as ManualEntriesModel,
-    ManualEntriesMapping as ManualEntriesMappingModel,
-)
+from .model.manual_entries import ManualEntries as ManualEntriesModel
+from .model.manual_entries import ManualEntriesMapping as ManualEntriesMappingModel
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +33,9 @@ class ManualEntries:
         content = self._file.read_text(encoding="utf-8").strip()
 
         if not content:
-            logger.warning(f"ManualEntries file {self._file} is empty. Using default model.")
+            logger.warning(
+                f"ManualEntries file {self._file} is empty. Using default model."
+            )
             self._data = ManualEntriesModel(entries=[])
             return
 
