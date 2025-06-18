@@ -4,6 +4,7 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI, Response, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from .errors import (
@@ -792,6 +793,46 @@ async def get_mapping(
     global mapping_handler
     try:
         return mapping_handler.get(project_key, mapping_id)
+
+    except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/mapping/{mapping_id}/results",
+    tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_mapping_results(
+    project_key: str, mapping_id: str, show_remarks: bool, show_warnings: bool, response: Response
+) -> FileResponse:  # MappingDetailsModel | ErrorModel:
+    """
+    Get a static HTML page with the mappings
+    Returns a static HTML page with all mappings.
+    ---
+    produces:
+      - text/html
+    responses:
+      200:
+        description: A static HTML page with the mappings
+        content:
+          text/html:
+            schema:
+              type: string
+              format: binary
+        headers:
+          Content-Disposition:
+            description: The filename of the HTML file
+            schema:
+              type: string
+              example: "mapping_results.html"
+    """
+    global mapping_handler
+    try:
+        return FileResponse(mapping_handler.get_html(project_key, mapping_id, show_remarks, show_warnings), media_type="text/html")
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404

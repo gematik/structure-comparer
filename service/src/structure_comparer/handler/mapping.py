@@ -20,6 +20,7 @@ from ..model.mapping import MappingFieldBase as MappingFieldBaseModel
 from ..model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from ..model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .project import ProjectsHandler
+from ..results_html import create_results_html
 
 
 class MappingHandler:
@@ -54,6 +55,18 @@ class MappingHandler:
             raise FieldNotFound()
 
         return field.to_model()
+    
+    def get_html(
+            self, project_key: str, mapping_id: str, show_remarks: bool, show_warnings: bool
+    ) -> str:
+        mapping = self.get(project_key, mapping_id)
+        mappingDict = {mapping.name: mapping}
+        html_output_dir = self.project_handler._get(project_key).config.html_output_dir
+        print(f"Mapping:{mapping.name}")
+        
+        return create_results_html(
+            mappingDict, html_output_dir, show_remarks, show_warnings)
+        # return mapping
 
     def set_field(
         self,
