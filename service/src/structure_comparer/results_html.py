@@ -84,7 +84,7 @@ def create_results_html(
 
             match = re.search(r"[.:](?=[^.:]*$)", field)
             if match:
-                parent = field[:match.start()]
+                parent = field[: match.start()]
             else:
                 parent = field
             # parent = field.rsplit(".", 1)[0]
@@ -150,14 +150,14 @@ def create_results_html(
                 "key": comp.target.key,
                 "url": comp.target.url,  # simplifier_url,
                 "name": comp.target.name,
-                "version": comp.target.version
+                "version": comp.target.version,
             },
             "source_profiles": [
                 {
                     "key": profile.key,
                     "url": profile.url,  # .simplifier_url,
                     "name": profile.name,
-                    "version": profile.version
+                    "version": profile.version,
                 }
                 for profile in comp.sources
             ],
@@ -178,7 +178,7 @@ def create_results_html(
             / f"{comp.name.replace("|", "#").replace(" -> ", "_to_")}.html"
         )
         html_file.write_text(content, encoding="utf-8")
-        
+
         return str(html_file)
 
 
