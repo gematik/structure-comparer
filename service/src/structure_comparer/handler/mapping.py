@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from ..action import Action
 from ..data.mapping import MappingField
@@ -57,12 +57,20 @@ class MappingHandler:
         return field.to_model()
 
     def get_html(
-        self, project_key: str, mapping_id: str, show_remarks: bool, show_warnings: bool
+        self,
+        project_key: str,
+        mapping_id: str,
+        show_remarks: bool,
+        show_warnings: bool,
+        html_output_dir: Optional[str] = None,
     ) -> str:
         mapping = self.get(project_key, mapping_id)
         mappingDict = {mapping.name: mapping}
-        html_output_dir = self.project_handler._get(project_key).config.html_output_dir
-        print(f"Mapping:{mapping.name}")
+
+        if html_output_dir is None:
+            html_output_dir = self.project_handler._get(
+                project_key
+            ).config.html_output_dir
 
         return create_results_html(
             mappingDict, html_output_dir, show_remarks, show_warnings

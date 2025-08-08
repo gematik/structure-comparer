@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class ProjectsHandler:
     def __init__(self, projects_dir: Path):
         self.projs_dir = projects_dir
-        self.__projs: Dict[str, Project]
+        self.__projs: Dict[str, Project] = {}
 
     @property
     def keys(self) -> List[str]:
@@ -35,13 +35,21 @@ class ProjectsHandler:
                     logger.error(e.errors())
                     raise e
 
+        if not self.__projs:
+            path = self.projs_dir
+            if path.is_dir() and (path / "config.json").exists():
+                try:
+                    self.__projs[path.name] = Project(path)
+                except ValidationError as e:
+                    logger.error(e.errors())
+                    raise e
+
     def get_list(self) -> ProjectListModel:
         projects = [p.to_overview_model() for p in self.__projs.values()]
         return ProjectListModel(projects=projects)
 
     def _get(self, project_key: str) -> Project:
         proj = self.__projs.get(project_key)
-
         if proj is None:
             raise ProjectNotFound()
 
