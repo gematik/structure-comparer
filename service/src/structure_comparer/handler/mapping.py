@@ -125,6 +125,15 @@ class MappingHandler:
         proj.manual_entries.write()
 
         return new_entry
+    
+    def create_new(self, project_key, mapping: MappingBaseModel) -> MappingDetailsModel:
+        proj = self.project_handler.get(project_key)  # Ensure project exists
+        if proj is not None:
+            new_mapping = proj.mappings.create(mapping)
+            new_mapping.fill_action_remark(proj.manual_entries)
+            proj.config.mappings.append(new_mapping.to_base_model())
+            proj.config.write()
+            return new_mapping.to_details_model()
 
     def __get(self, project_key, mapping_id, proj: Project | None = None):
         if proj is None:

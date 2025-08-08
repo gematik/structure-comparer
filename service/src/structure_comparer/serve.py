@@ -994,6 +994,63 @@ async def get_mapping_field(
 
 
 @app.post(
+    "/project/{project_key}/mapping/",
+    tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={400: {}, 404: {}},
+)
+async def post_mapping(
+    project_key: str,
+    mapping: MappingBaseModel,
+    response: Response,
+) -> MappingFieldModel | ErrorModel:
+    """
+    Post a new mapping for a project
+    Creates a new mapping in the project with the given key.
+    The mapping needs to be a valid MappingBaseModel.
+
+    ---
+    consumes:
+      - application/json
+    parameters:
+      - in: path
+        name: project_key
+        type: string
+        required: true
+        description: The key of the project      
+    responses:
+      200:
+        description: The mapping was created
+      400:
+        description: There was something wrong with the request
+        schema:
+          properties:
+            error:
+              type: string
+              description: An error message
+      404:
+        description: Project not found
+    """
+    global mapping_handler
+    try:
+        return mapping_handler.create_new(project_key, mapping)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except (
+        MappingActionNotAllowed,
+        MappingTargetMissing,
+        MappingTargetNotFound,
+        MappingValueMissing,
+    ) as e:
+        response.status_code = 400
+        return ErrorModel.from_except(e)
+
+
+@app.post(
     "/mapping/{mapping_id}/field/{field_id}/classification",
     tags=["Fields"],
     responses={400: {}, 404: {}, 412: {}},
