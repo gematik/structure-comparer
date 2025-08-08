@@ -32,7 +32,11 @@ def output(project_dir: str, output_format: str = "html", mapping_id: str = None
                 if output_format == "html":
                     print(f"Generating HTML for mapping: {mapping.id}")
                     mapping_handler.get_html(
-                        project_key, mapping.id, show_remarks, show_warnings, html_output_dir
+                        project_key,
+                        mapping.id,
+                        show_remarks,
+                        show_warnings,
+                        html_output_dir,
                     ),
                 elif output_format == "json":
                     raise NotImplementedError("JSON not implemented yet")
