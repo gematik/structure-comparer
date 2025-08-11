@@ -144,8 +144,9 @@ def create_results_html(
                 "warning": list(warnings),  # Convert set back to list
             }
 
+        inline_css = (styles_file).read_text()
         data = {
-            "css_file": STYLE_FILE_NAME,
+            "inline_css": inline_css,
             "target_profile": {
                 "key": comp.target.key,
                 "url": comp.target.url,  # simplifier_url,

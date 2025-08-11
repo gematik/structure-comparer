@@ -2,10 +2,12 @@
 <html>
 
 <head>
-    <title>Mapping: {% for profile in source_profiles %}{{ profile['key'] }}{% if not loop.last %}, {% endif %}{% endfor %} in {{ target_profile['key'] }}</title>
-    <link rel='stylesheet' type='text/css' href='./{{ css_file }}'>
+    <title>Mapping: {% for profile in source_profiles %}{{ profile['key'] }}{% if not loop.last %}, {% endif %}{% endfor %} in {{ target_profile['key'] }}</title>       
     <link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+    <style>
+        {{ inline_css | safe }}
+    </style> 
     <script type='text/javascript' src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
     <script type='text/javascript' src='https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js'></script>
 </head>
