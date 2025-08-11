@@ -14,6 +14,7 @@ from ..errors import (
 from ..helpers import get_field_by_name
 from ..model.manual_entries import ManualEntriesMapping
 from ..model.mapping import MappingBase as MappingBaseModel
+from ..model.mapping import MappingCreate as MappingCreateModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
 from ..model.mapping import MappingFieldBase as MappingFieldBaseModel
@@ -126,9 +127,10 @@ class MappingHandler:
 
         return new_entry
     
-    def create_new(self, project_key, mapping: MappingBaseModel) -> MappingDetailsModel:
+    def create_new(self, project_key, mapping: MappingCreateModel) -> MappingDetailsModel:
         proj = self.project_handler.get(project_key)  # Ensure project exists
         if proj is not None:
+            print(mapping)
             new_mapping = proj.mappings.create(mapping)
             new_mapping.fill_action_remark(proj.manual_entries)
             proj.config.mappings.append(new_mapping.to_base_model())

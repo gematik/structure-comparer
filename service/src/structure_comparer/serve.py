@@ -36,6 +36,7 @@ from .model.error import Error as ErrorModel
 from .model.get_mappings_output import GetMappingsOutput
 from .model.init_project_input import InitProjectInput
 from .model.mapping import MappingBase as MappingBaseModel
+from .model.mapping import MappingCreate as MappingCreateModel
 from .model.mapping import MappingDetails as MappingDetailsModel
 from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
@@ -994,7 +995,7 @@ async def get_mapping_field(
 
 
 @app.post(
-    "/project/{project_key}/mapping/",
+    "/project/{project_key}/mapping",
     tags=["Mappings"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
@@ -1002,7 +1003,7 @@ async def get_mapping_field(
 )
 async def post_mapping(
     project_key: str,
-    mapping: MappingBaseModel,
+    mappingData: MappingCreateModel,
     response: Response,
 ) -> MappingFieldModel | ErrorModel:
     """
@@ -1018,7 +1019,7 @@ async def post_mapping(
         name: project_key
         type: string
         required: true
-        description: The key of the project      
+        description: The key of the project
     responses:
       200:
         description: The mapping was created
@@ -1034,7 +1035,7 @@ async def post_mapping(
     """
     global mapping_handler
     try:
-        return mapping_handler.create_new(project_key, mapping)
+        return mapping_handler.create_new(project_key, mappingData)
 
     except ProjectNotFound as e:
         response.status_code = 404
