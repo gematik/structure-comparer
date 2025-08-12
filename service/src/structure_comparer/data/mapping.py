@@ -114,9 +114,11 @@ class MappingField(ComparisonField):
 
                 # Cut away the common part with the parent and add the remainder to the parent's extra
                 if parent_update.other is not None:
-                    self.other = parent_update.other + self.name[len(self.name_parent):]
+                    self.other = (
+                        parent_update.other + self.name[len(self.name_parent) :]
+                    )
                 else:
-                    self.other = self.name[len(self.name_parent):]
+                    self.other = self.name[len(self.name_parent) :]
                 self.remark = REMARKS[self.action].format(self.other)
 
             # Else use the parent's remark
