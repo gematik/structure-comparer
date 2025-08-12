@@ -1005,7 +1005,7 @@ async def post_mapping(
     project_key: str,
     mappingData: MappingCreateModel,
     response: Response,
-) -> MappingFieldModel | ErrorModel:
+) -> MappingDetailsModel | ErrorModel:
     """
     Post a new mapping for a project
     Creates a new mapping in the project with the given key.

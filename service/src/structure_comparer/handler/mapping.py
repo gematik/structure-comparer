@@ -1,4 +1,6 @@
+from datetime import datetime
 from typing import List
+from uuid import uuid4
 
 from ..action import Action
 from ..data.mapping import MappingField
@@ -20,6 +22,10 @@ from ..model.mapping import MappingField as MappingFieldModel
 from ..model.mapping import MappingFieldBase as MappingFieldBaseModel
 from ..model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from ..model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
+from ..data.config import MappingConfig as MappingConfigModel
+from ..data.config import ComparisonProfilesConfig as ComparisonProfilesConfigModel
+from ..data.config import ComparisonProfileConfig as ComparisonProfileConfigModel
+from ..data.mapping import Mapping as MappingModel
 from .project import ProjectsHandler
 
 
@@ -126,16 +132,37 @@ class MappingHandler:
         proj.manual_entries.write()
 
         return new_entry
-    
-    def create_new(self, project_key, mapping: MappingCreateModel) -> MappingDetailsModel:
-        proj = self.project_handler.get(project_key)  # Ensure project exists
+
+    def create_new(
+        self, project_key, mapping: MappingCreateModel
+    ) -> MappingDetailsModel:
+        proj = self.project_handler._get(project_key)  # Ensure project exists
         if proj is not None:
-            print(mapping)
-            new_mapping = proj.mappings.create(mapping)
-            new_mapping.fill_action_remark(proj.manual_entries)
-            proj.config.mappings.append(new_mapping.to_base_model())
-            proj.config.write()
+            # new_mapping = proj.mappings.append(mapping)
+            new_mappingConfig = MappingConfigModel(
+                id=str(uuid4()),
+                version="1.0",
+                last_updated=datetime.now().isoformat(),
+                status="active",
+                mappings=ComparisonProfilesConfigModel(
+                    sourceprofiles=[
+                        self._to_profiles_config(id) for id in mapping.source_ids
+                    ],
+                    targetprofile=self._to_profiles_config(mapping.target_id),
+                ),
+            )
+            new_mapping = MappingModel(new_mappingConfig, proj)
+            new_mapping.init_ext()
+            # new_mapping.fill_action_remark(proj.manual_entries)
+            proj.config.mappings.append(new_mappingConfig)
+            # proj.config.write()
+            proj.write_config()
+            proj.load_mappings()
             return new_mapping.to_details_model()
+
+    def _to_profiles_config(self, url: str) -> ComparisonProfileConfigModel:
+        url, version = url.split("|")
+        return ComparisonProfileConfigModel(url=url, version=version)
 
     def __get(self, project_key, mapping_id, proj: Project | None = None):
         if proj is None:
