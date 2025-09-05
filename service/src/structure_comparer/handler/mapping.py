@@ -139,7 +139,7 @@ class MappingHandler:
         proj = self.project_handler._get(project_key)  # Ensure project exists
         if proj is None:
             raise ProjectNotFound()
-            
+
         # new_mapping = proj.mappings.append(mapping)
         new_mappingConfig = MappingConfigModel(
             id=str(uuid4()),
