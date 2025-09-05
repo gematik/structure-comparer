@@ -64,19 +64,18 @@ def create_results_html(
         number_of_warnings = 0  # Initialize the warning counter
 
         fields = {field.name: field for field in comp.fields}
-        for entry in comp.fields:  # .items():
-            # field, entry
+        for entry in comp.fields:
             field = entry.name
             warnings = set()  # Use a set to collect unique warnings
             if comp.target.key not in entry.profiles:
                 warnings.add(
                     "The target profile does not contain this field, so it cannot be compared"
                 )
-                target_min_card = 0  # _cardinality
-                target_max_card = 0  # _cardinality
+                target_min_card = 0
+                target_max_card = 0
             else:
-                target_min_card = entry.profiles[comp.target.key].min  # _cardinality
-                target_max_card = entry.profiles[comp.target.key].max  # _cardinality
+                target_min_card = entry.profiles[comp.target.key].min
+                target_max_card = entry.profiles[comp.target.key].max
             if target_max_card == "*":
                 target_max_card = float("inf")
             else:
@@ -87,13 +86,13 @@ def create_results_html(
                 parent = field[: match.start()]
             else:
                 parent = field
-            # parent = field.rsplit(".", 1)[0]
+
             comparison_parent = fields.get(parent)
 
             for profile in comp.sources:
                 if profile.key in entry.profiles:
-                    source_min_card = entry.profiles[profile.key].min  # _cardinality
-                    source_max_card = entry.profiles[profile.key].max  # _cardinality
+                    source_min_card = entry.profiles[profile.key].min
+                    source_max_card = entry.profiles[profile.key].max
                 else:
                     source_min_card = 0
                     source_max_card = 0
@@ -137,7 +136,7 @@ def create_results_html(
             entries[field] = {
                 "classification": entry.action,
                 "css_class": CSS_CLASS[entry.action],
-                "extension": None,  # entry.extension,
+                "extension": None,
                 "extra": entry.other,
                 "profiles": entry.profiles,
                 "remark": entry.remark,
@@ -149,14 +148,14 @@ def create_results_html(
             "inline_css": inline_css,
             "target_profile": {
                 "key": comp.target.key,
-                "url": comp.target.url,  # simplifier_url,
+                "url": comp.target.url,
                 "name": comp.target.name,
                 "version": comp.target.version,
             },
             "source_profiles": [
                 {
                     "key": profile.key,
-                    "url": profile.url,  # .simplifier_url,
+                    "url": profile.url,
                     "name": profile.name,
                     "version": profile.version,
                 }
