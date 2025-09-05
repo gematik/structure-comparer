@@ -6,7 +6,7 @@ from typing import Dict, List
 from jinja2 import Environment, FileSystemLoader
 
 from .action import Action
-from .data.mapping import Mapping
+from .model.mapping import MappingDetails as MappingDetailsModel
 
 CSS_CLASS = {
     Action.USE: "row-use",
@@ -36,7 +36,7 @@ def format_cardinality(value):
 
 
 def create_results_html(
-    structured_mapping: Dict[str, Mapping],
+    structured_mapping: Dict[str, MappingDetailsModel],
     results_folder: str | Path,
     show_remarks: bool,
     show_warnings: bool,
