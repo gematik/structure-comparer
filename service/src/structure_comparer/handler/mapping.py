@@ -137,28 +137,30 @@ class MappingHandler:
         self, project_key, mapping: MappingCreateModel
     ) -> MappingDetailsModel:
         proj = self.project_handler._get(project_key)  # Ensure project exists
-        if proj is not None:
-            # new_mapping = proj.mappings.append(mapping)
-            new_mappingConfig = MappingConfigModel(
-                id=str(uuid4()),
-                version="1.0",
-                last_updated=datetime.now().isoformat(),
-                status="active",
-                mappings=ComparisonProfilesConfigModel(
-                    sourceprofiles=[
-                        self._to_profiles_config(id) for id in mapping.source_ids
-                    ],
-                    targetprofile=self._to_profiles_config(mapping.target_id),
-                ),
-            )
-            new_mapping = MappingModel(new_mappingConfig, proj)
-            new_mapping.init_ext()
-            # new_mapping.fill_action_remark(proj.manual_entries)
-            proj.config.mappings.append(new_mappingConfig)
-            # proj.config.write()
-            proj.write_config()
-            proj.load_mappings()
-            return new_mapping.to_details_model()
+        if proj is None:
+            raise ProjectNotFound()
+            
+        # new_mapping = proj.mappings.append(mapping)
+        new_mappingConfig = MappingConfigModel(
+            id=str(uuid4()),
+            version="1.0",
+            last_updated=datetime.now().isoformat(),
+            status="active",
+            mappings=ComparisonProfilesConfigModel(
+                sourceprofiles=[
+                    self._to_profiles_config(id) for id in mapping.source_ids
+                ],
+                targetprofile=self._to_profiles_config(mapping.target_id),
+            ),
+        )
+        new_mapping = MappingModel(new_mappingConfig, proj)
+        new_mapping.init_ext()
+        # new_mapping.fill_action_remark(proj.manual_entries)
+        proj.config.mappings.append(new_mappingConfig)
+        # proj.config.write()
+        proj.write_config()
+        proj.load_mappings()
+        return new_mapping.to_details_model()
 
     def _to_profiles_config(self, url: str) -> ComparisonProfileConfigModel:
         url, version = url.split("|")

@@ -161,15 +161,16 @@ class ProfileField:
 
     @property
     def ref_types(self) -> list[str]:
-        if self.__data.type is None:
-            return []
-        result = []
-        for t in self.__data.type:
-            if t.code == "Reference":
-                if t.targetProfile is not None:
-                    for p in t.targetProfile:
-                        result.append(p)
-        return result
+        return (
+            [
+                p
+                for t in self.__data.type
+                if t.code == "Reference" and t.targetProfile is not None
+                for p in t.targetProfile
+            ]
+            if self.__data.type is not None
+            else []
+        )
 
     @property
     def is_default(self) -> bool:
