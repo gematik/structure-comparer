@@ -284,6 +284,27 @@ async def update_package(
 
     return pkg
 
+@app.delete(
+    "/project/{project_key}/package/{package_id}",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def delete_package(
+    project_key: str, package_id: str, response: Response
+) -> None | ErrorModel:
+    """
+    Delete a package
+    """
+    global package_handler
+    try:
+        package_handler.delete(project_key, package_id)
+
+    except (ProjectNotFound, PackageNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
 
 @app.get(
     "/project/{project_key}/profile",

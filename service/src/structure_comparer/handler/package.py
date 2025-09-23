@@ -97,3 +97,17 @@ class PackageHandler:
         proj.pkgs.append(pkg)
 
         return pkg.to_model()
+
+    def delete(self, proj_key: str, package_id: str) -> None:
+        proj = self.project_handler._get(proj_key)
+        pkg = proj.get_package(package_id)
+
+        if pkg is None:
+            raise PackageNotFound()
+
+        # Remove package from project's package list
+        proj.pkgs.remove(pkg)
+
+        # Remove package directory from filesystem
+        if pkg.pkg_dir.exists():
+            shutil.rmtree(pkg.pkg_dir)
