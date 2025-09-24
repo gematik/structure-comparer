@@ -54,6 +54,21 @@ class MappingHandler:
             raise FieldNotFound()
 
         return field.to_model()
+    
+    def delete(self, project_key: str, mapping_id: str) -> None:
+        proj = self.project_handler._get(project_key)
+        
+        # Check if mapping exists
+        if mapping_id not in proj.mappings:
+            raise MappingNotFound()
+        
+        # Remove mapping from project's mappings
+        del proj.mappings[mapping_id]
+        
+        # Clean up manual entries for this mapping if they exist
+        if mapping_id in proj.manual_entries:
+            del proj.manual_entries[mapping_id]
+            proj.manual_entries.write()
 
     def set_field(
         self,

@@ -628,6 +628,27 @@ async def get_mappings(
         response.status_code = 404
         return ErrorModel.from_except(e)
 
+@app.delete(
+    "/project/{project_key}/mapping/{mapping_id}",
+    tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def delete_mapping(
+    project_key: str, mapping_id: str, response: Response
+) -> None | ErrorModel:
+    """
+    Delete a mapping
+    """
+    global mapping_handler
+    try:
+        mapping_handler.delete(project_key, mapping_id)
+
+    except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)    
+
 
 @app.get(
     "/mapping/{id}", tags=["Mappings"], responses={404: {}, 412: {}}, deprecated=True
