@@ -284,6 +284,7 @@ async def update_package(
 
     return pkg
 
+
 @app.delete(
     "/project/{project_key}/package/{package_id}",
     tags=["Packages"],
@@ -628,6 +629,7 @@ async def get_mappings(
         response.status_code = 404
         return ErrorModel.from_except(e)
 
+
 @app.delete(
     "/project/{project_key}/mapping/{mapping_id}",
     tags=["Mappings"],
@@ -647,7 +649,7 @@ async def delete_mapping(
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
-        return ErrorModel.from_except(e)    
+        return ErrorModel.from_except(e)
 
 
 @app.get(
