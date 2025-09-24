@@ -290,6 +290,7 @@ async def update_package(
     tags=["Packages"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
+    status_code=200,
     responses={404: {"error": {}}},
 )
 async def delete_package(
@@ -301,7 +302,7 @@ async def delete_package(
     global package_handler
     try:
         package_handler.delete(project_key, package_id)
-
+    
     except (ProjectNotFound, PackageNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
@@ -635,6 +636,7 @@ async def get_mappings(
     tags=["Mappings"],
     response_model_exclude_unset=True,
     response_model_exclude_none=True,
+    status_code=200,
     responses={404: {}},
 )
 async def delete_mapping(

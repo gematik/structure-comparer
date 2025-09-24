@@ -99,15 +99,18 @@ class PackageHandler:
         return pkg.to_model()
 
     def delete(self, proj_key: str, package_id: str) -> None:
+        projects_dir = self.project_handler.projs_dir
         proj = self.project_handler._get(proj_key)
         pkg = proj.get_package(package_id)
-
+        
+        print(f"Project packages: {[p.id for p in proj.pkgs]}")
+        print(f"Package: {pkg.id if pkg else 'None'} (display: {pkg.display if pkg else 'N/A'})")
         if pkg is None:
             raise PackageNotFound()
-
+        # Build path to package directory
+        pkg_dir = Path(projects_dir) / proj_key / "data" / package_id
+        # Remove package directory
+        if pkg_dir.exists():
+            shutil.rmtree(pkg_dir)
         # Remove package from project's package list
         proj.pkgs.remove(pkg)
-
-        # Remove package directory from filesystem
-        if pkg.pkg_dir.exists():
-            shutil.rmtree(pkg.pkg_dir)
