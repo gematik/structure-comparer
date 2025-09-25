@@ -63,9 +63,7 @@ class MappingHandler:
             raise MappingNotFound()
 
         # delete mapping from config and write
-        proj.config.mappings = [
-            c for c in proj.config.mappings if c.id != mapping_id
-        ]
+        proj.config.mappings = [c for c in proj.config.mappings if c.id != mapping_id]
         proj.config.write()
         # Remove mapping from project's mappings
         del proj.mappings[mapping_id]

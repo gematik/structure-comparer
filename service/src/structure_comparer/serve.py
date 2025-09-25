@@ -302,7 +302,7 @@ async def delete_package(
     global package_handler
     try:
         package_handler.delete(project_key, package_id)
-    
+
     except (ProjectNotFound, PackageNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
