@@ -155,3 +155,7 @@ class PackageHandler:
             shutil.rmtree(pkg_dir)
         # Remove package from project's package list
         proj.pkgs.remove(pkg)
+
+        # Reload project to sync in-memory objects with config.json
+        self.project_handler.load()
+
