@@ -158,4 +158,3 @@ class PackageHandler:
 
         # Reload project to sync in-memory objects with config.json
         self.project_handler.load()
-
