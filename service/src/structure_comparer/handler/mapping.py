@@ -136,11 +136,10 @@ class MappingHandler:
     def create_new(
         self, project_key, mapping: MappingCreateModel
     ) -> MappingDetailsModel:
-        proj = self.project_handler._get(project_key)  # Ensure project exists
+        proj = self.project_handler._get(project_key)
         if proj is None:
             raise ProjectNotFound()
 
-        # new_mapping = proj.mappings.append(mapping)
         new_mappingConfig = MappingConfigModel(
             id=str(uuid4()),
             version="1.0",
@@ -154,13 +153,14 @@ class MappingHandler:
             ),
         )
         new_mapping = MappingModel(new_mappingConfig, proj)
-        new_mapping.init_ext()
-        # new_mapping.fill_action_remark(proj.manual_entries)
+        new_mapping.fill_action_remark(proj.manual_entries)
+
         proj.config.mappings.append(new_mappingConfig)
-        # proj.config.write()
         proj.write_config()
         proj.load_mappings()
-        return new_mapping.to_details_model()
+
+        mapping = proj.mappings.get(new_mapping.id)
+        return mapping.to_details_model()
 
     def _to_profiles_config(self, url: str) -> ComparisonProfileConfigModel:
         url, version = url.split("|")

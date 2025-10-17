@@ -118,7 +118,7 @@ class MappingField(ComparisonField):
                         parent_update.other + self.name[len(self.name_parent) :]
                     )
                 else:
-                    self.other = self.name[len(self.name_parent) :]
+                    raise ValueError("Error with the data: parent_update.other is None")
                 self.remark = REMARKS[self.action].format(self.other)
 
             # Else use the parent's remark
