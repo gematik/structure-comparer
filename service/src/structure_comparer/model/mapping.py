@@ -37,6 +37,11 @@ class MappingBase(BaseModel):
     target: Profile
 
 
+class MappingCreate(BaseModel):
+    source_ids: list[str]
+    target_id: str
+
+
 class MappingDetails(MappingBase):
     fields: list[MappingField]
 

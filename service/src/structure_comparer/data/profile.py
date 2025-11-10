@@ -165,7 +165,7 @@ class ProfileField:
             [
                 p
                 for t in self.__data.type
-                if t.code == "Reference"
+                if t.code == "Reference" and t.targetProfile is not None
                 for p in t.targetProfile
             ]
             if self.__data.type is not None
