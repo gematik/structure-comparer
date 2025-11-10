@@ -16,6 +16,17 @@ From `service/` build and start the image with
 docker compose up
 ```
 
+## CLI mode (WIP)
+The CLI mode is currently a work in progress. However, the following functionality is already available:
+
+### Generating a file containing a mapping 
+(Currently only HTML is supported, but JSON support is coming soon)
+```bash
+python -m structure_comparer output --project-dir {project directory} --format html --mapping_id {mapping id}
+```
+Both --format and --mapping_id are optional. 
+The default format is HTML. If --mapping_id is omitted, the tool will generate files for all the mappings contained in the project.
+
 ### Developers
 
 The project uses _Poetry_ for the project set-up but can also be installed with plain `pip`.

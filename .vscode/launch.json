@@ -13,7 +13,7 @@
             "justMyCode": true,
             "args": [
                 "--project-dir",
-                "../../projects/erp",
+                "../../../structure-comparer-projects/erp",
                 "--html",
                 "--json"
             ],

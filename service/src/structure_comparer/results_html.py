@@ -4,10 +4,9 @@ from pathlib import Path
 from typing import Dict, List
 
 from jinja2 import Environment, FileSystemLoader
-from structure_comparer.helpers import split_parent_child
 
 from .action import Action
-from .data.mapping import Mapping
+from .model.mapping import MappingDetails as MappingDetailsModel
 
 CSS_CLASS = {
     Action.USE: "row-use",
@@ -37,7 +36,7 @@ def format_cardinality(value):
 
 
 def create_results_html(
-    structured_mapping: Dict[str, Mapping],
+    structured_mapping: Dict[str, MappingDetailsModel],
     results_folder: str | Path,
     show_remarks: bool,
     show_warnings: bool,
@@ -64,21 +63,40 @@ def create_results_html(
         entries = {}
         number_of_warnings = 0  # Initialize the warning counter
 
-        for field, entry in comp.fields.items():
+        fields = {field.name: field for field in comp.fields}
+        for entry in comp.fields:
+            field = entry.name
             warnings = set()  # Use a set to collect unique warnings
-            target_min_card = entry.profiles[comp.target.key].min_cardinality
-            target_max_card = entry.profiles[comp.target.key].max_cardinality
+            if comp.target.key not in entry.profiles:
+                warnings.add(
+                    "The target profile does not contain this field, so it cannot be compared"
+                )
+                target_min_card = 0
+                target_max_card = 0
+            else:
+                target_min_card = entry.profiles[comp.target.key].min
+                target_max_card = entry.profiles[comp.target.key].max
             if target_max_card == "*":
                 target_max_card = float("inf")
             else:
                 target_max_card = int(target_max_card)
 
-            parent, _ = split_parent_child(field)
-            comparison_parent = comp.fields.get(parent)
+            match = re.search(r"[.:](?=[^.:]*$)", field)
+            if match:
+                parent = field[: match.start()]
+            else:
+                parent = field
+
+            comparison_parent = fields.get(parent)
 
             for profile in comp.sources:
-                source_min_card = entry.profiles[profile.key].min_cardinality
-                source_max_card = entry.profiles[profile.key].max_cardinality
+                if profile.key in entry.profiles:
+                    source_min_card = entry.profiles[profile.key].min
+                    source_max_card = entry.profiles[profile.key].max
+                else:
+                    source_min_card = 0
+                    source_max_card = 0
+
                 if source_max_card == "*":
                     source_max_card = float("inf")
                 else:
@@ -118,23 +136,28 @@ def create_results_html(
             entries[field] = {
                 "classification": entry.action,
                 "css_class": CSS_CLASS[entry.action],
-                "extension": entry.extension,
+                "extension": None,
                 "extra": entry.other,
                 "profiles": entry.profiles,
                 "remark": entry.remark,
                 "warning": list(warnings),  # Convert set back to list
             }
 
+        inline_css = (styles_file).read_text()
         data = {
-            "css_file": STYLE_FILE_NAME,
+            "inline_css": inline_css,
             "target_profile": {
                 "key": comp.target.key,
-                "url": comp.target.simplifier_url,
+                "url": comp.target.url,
+                "name": comp.target.name,
+                "version": comp.target.version,
             },
             "source_profiles": [
                 {
                     "key": profile.key,
-                    "url": profile.simplifier_url,
+                    "url": profile.url,
+                    "name": profile.name,
+                    "version": profile.version,
                 }
                 for profile in comp.sources
             ],
@@ -150,14 +173,13 @@ def create_results_html(
         content = template.render(**data)
 
         # HOTFIX: prevent filenames to contain '|' but use '#' instead
-        source_profiles_flat = flatten_profiles(
-            [profile["key"].replace("|", "#") for profile in data["source_profiles"]]
-        )
         html_file = (
             results_folder
-            / f"{source_profiles_flat}_to_{data['target_profile']['key'].replace("|", "#")}.html"
+            / f"{comp.name.replace("|", "#").replace(" -> ", "_to_")}.html"
         )
         html_file.write_text(content, encoding="utf-8")
+
+        return str(html_file)
 
 
 def format_links(text: str) -> str:
