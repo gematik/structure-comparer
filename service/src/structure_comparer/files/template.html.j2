@@ -2,16 +2,18 @@
 <html>
 
 <head>
-    <title>Mapping: {% for profile in source_profiles %}{{ profile['key'] }}{% if not loop.last %}, {% endif %}{% endfor %} in {{ target_profile['key'] }}</title>
-    <link rel='stylesheet' type='text/css' href='./{{ css_file }}'>
+    <title>Mapping: {% for profile in source_profiles %}{{ profile['key'] }}{% if not loop.last %}, {% endif %}{% endfor %} in {{ target_profile['key'] }}</title>       
     <link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+    <style>
+        {{ inline_css | safe }}
+    </style> 
     <script type='text/javascript' src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
     <script type='text/javascript' src='https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js'></script>
 </head>
 
 <body>
-    <h2>Mapping: {% for profile in source_profiles %}{{ profile['key'] }}{% if not loop.last %}, {% endif %}{% endfor %} in {{ target_profile['key'] }}</h2>
+    <h2>Mapping: {% for profile in source_profiles %}{{ profile['name'] ~ "|" ~ profile['version'] }}{% if not loop.last %}, {% endif %}{% endfor %} in {{ target_profile['name'] ~ "|" ~ target_profile['version'] }}</h2>
     
     <div style="display: flex; justify-content: space-between;">
         <div style="flex: 1;">
@@ -19,15 +21,15 @@
             <p>Source Profiles:</p>
             <ul>
                 {% for profile in source_profiles %}
-                <li><a href="{{ profile['url'] }}" target="_blank">{{ profile['key'] }}</a></li>
+                <li><a href="{{ profile['url'] }}" target="_blank">{{ profile['name'] ~ "|" ~ profile['version'] }}</a></li>
                 {% endfor %}
             </ul>
             {% else %}
             <p>Source Profile: 
-            <a href="{{ source_profiles[0]['url'] }}" target="_blank">{{ source_profiles[0]['key'] }}</a></p>
+            <a href="{{ source_profiles[0]['url'] }}" target="_blank">{{ source_profiles[0]['name'] ~ "|" ~ source_profiles[0]['version'] }}</a></p>
             {% endif %}
             
-            <p>Target Profile: <a href="{{ target_profile['url'] }}" target="_blank">{{ target_profile['key'] }}</a></p>
+            <p>Target Profile: <a href="{{ target_profile['url'] }}" target="_blank">{{ target_profile['name'] ~ "|" ~ target_profile['version'] }}</a></p>
             <p>Version: {{version}}, Status: {{status}}</p>
             <p>Last updated on: {{last_updated}}</p>
         </div>
@@ -60,9 +62,9 @@
             </tr>
             <tr>
                 {% for profile in source_profiles %}
-                <th style="text-align: center;">{{ profile['key'] }}</th>
+                <th style="text-align: center;">{{ profile['name'] ~ "|" ~ profile['version'] }}</th>
                 {% endfor %}
-                <th style="text-align: center;">{{ target_profile['key'] }}</th>
+                <th style="text-align: center;">{{ target_profile['name'] ~ "|" ~ target_profile['version'] }}</th>
             </tr>
         </thead>
         <tbody>
@@ -73,8 +75,8 @@
                 </td>
                 {% for profile in source_profiles + [target_profile] %}
                 <td style="text-align: center;">
-                    {% if entry.profiles[profile['key']].present %}
-                        {{ entry.profiles[profile['key']].min_cardinality }}..{{ entry.profiles[profile['key']].max_cardinality | format_cardinality }}
+                    {% if entry.profiles[profile['key']] %}
+                        {{ entry.profiles[profile['key']].min }}..{{ entry.profiles[profile['key']].max | format_cardinality }}
                     {% endif %}
                 </td>
                 {% endfor %}
