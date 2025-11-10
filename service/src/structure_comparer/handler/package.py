@@ -97,3 +97,64 @@ class PackageHandler:
         proj.pkgs.append(pkg)
 
         return pkg.to_model()
+
+    def delete(self, proj_key: str, package_id: str) -> None:
+        projects_dir = self.project_handler.projs_dir
+        proj = self.project_handler._get(proj_key)
+        pkg = proj.get_package(package_id)
+
+        if pkg is None:
+            raise PackageNotFound()
+        # Need to delete the package from the config json
+        proj.config.packages = [
+            p
+            for p in proj.config.packages
+            if not (p.name == pkg.name and p.version == pkg.version)
+        ]
+        # Need to delete all mappings and comparisons from config json
+        for profile in pkg.profiles:
+            # Remove mappings where this profile is used as source or target
+            proj.config.mappings = [
+                m
+                for m in proj.config.mappings
+                if not (
+                    # Check if profile is in sourceprofiles
+                    any(
+                        sp.id == profile.id and sp.version == profile.version
+                        for sp in m.mappings.sourceprofiles
+                    )
+                    or
+                    # Check if profile is the targetprofile
+                    m.mappings.targetprofile.id == profile.id
+                    and m.mappings.targetprofile.version == profile.version
+                )
+            ]
+
+            # Remove comparisons where this profile is used as source or target
+            proj.config.comparisons = [
+                c
+                for c in proj.config.comparisons
+                if not (
+                    # Check if profile is in sourceprofiles
+                    any(
+                        sp.url == profile.url and sp.version == profile.version
+                        for sp in c.comparison.sourceprofiles
+                    )
+                    or
+                    # Check if profile is the targetprofile
+                    c.comparison.targetprofile.url == profile.url
+                    and c.comparison.targetprofile.version == profile.version
+                )
+            ]
+
+        proj.config.write()
+        # Build path to package directory
+        pkg_dir = Path(projects_dir) / proj_key / "data" / package_id
+        # Remove package directory
+        if pkg_dir.exists():
+            shutil.rmtree(pkg_dir)
+        # Remove package from project's package list
+        proj.pkgs.remove(pkg)
+
+        # Reload project to sync in-memory objects with config.json
+        self.project_handler.load()
