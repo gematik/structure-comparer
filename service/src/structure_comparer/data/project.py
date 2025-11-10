@@ -26,7 +26,7 @@ class Project:
 
         self.__load_packages()
         self.load_comparisons()
-        self.__load_mappings()
+        self.load_mappings()
         self.__read_manual_entries()
 
     def _ensure_structure(self) -> None:
@@ -81,7 +81,7 @@ class Project:
             c.id: Comparison(c, self).init_ext() for c in self.config.comparisons
         }
 
-    def __load_mappings(self):
+    def load_mappings(self):
         self.mappings = {
             m.id: Mapping(m, self).init_ext() for m in self.config.mappings
         }

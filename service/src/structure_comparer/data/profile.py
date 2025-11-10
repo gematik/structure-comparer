@@ -174,7 +174,7 @@ class ProfileField:
                     refs.append(p)
 
         return refs
-
+    
     @property
     def is_default(self) -> bool:
         return self == self.__data.base
