@@ -49,7 +49,7 @@ from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
 
-origins = ["http://localhost:4200"]
+origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
 package_handler: PackageHandler
 comparison_handler: ComparisonHandler
@@ -79,7 +79,6 @@ async def lifespan(app: FastAPI):
 
     # Tear down
     pass
-
 
 app = FastAPI(title="Structure Comparer", lifespan=lifespan)
 app.add_middleware(

@@ -32,10 +32,25 @@ class ManualEntries:
         self._file = Path(file)
         content = self._file.read_text(encoding="utf-8")
 
-        if self._file.suffix == ".json":
-            self._data = ManualEntriesModel.model_validate_json(content)
-        elif self._file.suffix == ".yaml":
-            self._data = ManualEntriesModel.model_validate(yaml.safe_load(content))
+        suffix = self._file.suffix.lower()
+        if suffix == ".json":
+            # leere Datei -> leeres Objekt
+            if not content.strip():
+                self._data = ManualEntriesModel(entries=[])
+            else:
+                self._data = ManualEntriesModel.model_validate_json(content)
+        elif suffix in (".yaml", ".yml"):
+            data = yaml.safe_load(content)  # kann None sein
+            if not isinstance(data, dict):
+                data = {}
+            # Mindestschema sicherstellen
+            if "entries" not in data or data["entries"] is None:
+                data["entries"] = []
+            self._data = ManualEntriesModel.model_validate(data)
+        else:
+            # unbekanntes Format – defensiv: leeres Modell
+            logger.warning("Unsupported manual entries file suffix '%s', defaulting to empty model", suffix)
+            self._data = ManualEntriesModel(entries=[])
 
     def write(self):
         if self._file is None:

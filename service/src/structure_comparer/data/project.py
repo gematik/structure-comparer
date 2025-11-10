@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional, Tuple
 
 from ..manual_entries import ManualEntries
 from ..model.project import Project as ProjectModel
@@ -21,32 +21,60 @@ class Project:
 
         self.pkgs: list[Package]
 
+        # Sicherstellen, dass die benötigte Struktur vorhanden ist
+        self._ensure_structure()
+
         self.__load_packages()
         self.load_comparisons()
         self.__load_mappings()
         self.__read_manual_entries()
 
+    def _ensure_structure(self) -> None:
+        """
+        Stellt sicher, dass das Projektverzeichnis und der data-Ordner existieren.
+        """
+        self.dir.mkdir(parents=True, exist_ok=True)
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+
+    def __safe_parse_pkg_dirname(self, dirname: str) -> Optional[Tuple[str, str]]:
+        """
+        Erwartet <name>#<version>. Gibt (name, version) zurück oder None, wenn das Format nicht passt.
+        """
+        if "#" not in dirname:
+            return None
+        parts = dirname.split("#", 1)
+        if len(parts) != 2 or not parts[0] or not parts[1]:
+            return None
+        return parts[0], parts[1]
+
     def __load_packages(self) -> None:
         # Load packages from config
         self.pkgs = [Package(self.data_dir, self, p) for p in self.config.packages]
 
+        # Defensiv: falls data_dir nicht existierte, wurde es in _ensure_structure() erstellt
         # Check for local packages not in config
         for dir in self.data_dir.iterdir():
-            if dir.is_dir():
-                name, version = dir.name.split("#")
-                if not self.__has_pkg(name, version):
-                    # FHIR package brings own information with it
-                    if (dir / "package/package.json").exists():
-                        self.pkgs.append(Package(dir, self))
+            if not dir.is_dir():
+                continue
 
-                    # Create new config entry for package
-                    else:
-                        cfg = PackageConfig(name=name, version=version)
-                        self.config.packages.append(cfg)
-                        self.config.write()
+            parsed = self.__safe_parse_pkg_dirname(dir.name)
+            if parsed is None:
+                # Unbekanntes Verzeichnisformat im data-Ordner -> überspringen
+                continue
 
-                        # Create and append package
-                        self.pkgs.append(Package(dir, self, cfg))
+            name, version = parsed
+            if not self.__has_pkg(name, version):
+                # FHIR package bringt eigene Infos mit
+                if (dir / "package" / "package.json").exists():
+                    self.pkgs.append(Package(dir, self))
+                else:
+                    # neuen Config-Eintrag erzeugen
+                    cfg = PackageConfig(name=name, version=version)
+                    self.config.packages.append(cfg)
+                    self.config.write()
+
+                    # Package anlegen/anhängen
+                    self.pkgs.append(Package(dir, self, cfg))
 
     def load_comparisons(self):
         self.comparisons = {
@@ -72,12 +100,18 @@ class Project:
     def create(path: Path, project_name: str) -> "Project":
         path.mkdir(parents=True, exist_ok=True)
 
-        # Create empty manual_entries.yaml file
-        manual_entries_file = path / "manual_entries.yaml"
+        # Default-Konfiguration vorbereiten (liefert u. a. data_dir-Name)
+        config_data = ProjectConfig(name=project_name)
+
+        # data-Verzeichnis gemäß Config sicherstellen
+        data_dir = path / config_data.data_dir
+        data_dir.mkdir(parents=True, exist_ok=True)
+
+        # Leere manual_entries.yaml anlegen
+        manual_entries_file = path / config_data.manual_entries_file
         manual_entries_file.touch()
 
-        # Create default config.json file
-        config_data = ProjectConfig(name=project_name)
+        # config.json schreiben
         config_data._file_path = path / "config.json"
         config_data.write()
 
@@ -111,7 +145,6 @@ class Project:
         for pkg in self.pkgs:
             if pkg.id == id:
                 return pkg
-
         return None
 
     def get_profile(self, id: str, url: str, version: str):
@@ -121,7 +154,6 @@ class Project:
                     profile.id == id or profile.url == url
                 ) and profile.version == version:
                     return profile
-
         return None
 
     def __has_pkg(self, name: str, version: str) -> bool:

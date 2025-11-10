@@ -161,16 +161,19 @@ class ProfileField:
 
     @property
     def ref_types(self) -> list[str]:
-        return (
-            [
-                p
-                for t in self.__data.type
-                if t.code == "Reference"
-                for p in t.targetProfile
-            ]
-            if self.__data.type is not None
-            else []
-        )
+        """Gibt die in den Element-Typen erlaubten targetProfile (References) zurück."""
+        refs: list[str] = []
+        types = getattr(self.__data, "type", None) or []
+
+        for t in types:
+            if getattr(t, "code", None) != "Reference":
+                continue
+            target_profiles = getattr(t, "targetProfile", None) or []
+            for p in target_profiles:
+                if p and p not in refs:
+                    refs.append(p)
+
+        return refs
 
     @property
     def is_default(self) -> bool:

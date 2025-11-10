@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 class ProjectsHandler:
     def __init__(self, projects_dir: Path):
         self.projs_dir = projects_dir
+        # Sicherstellen, dass das Basisverzeichnis existiert
+        self.projs_dir.mkdir(parents=True, exist_ok=True)
         self.__projs: Dict[str, Project]
 
     @property
@@ -25,7 +27,7 @@ class ProjectsHandler:
 
     def load(self) -> None:
         self.__projs = {}
-
+        # Falls das Verzeichnis noch nicht existierte, wurde es im __init__ erzeugt.
         for path in self.projs_dir.iterdir():
             # Only handle directories
             if path.is_dir() and (path / "config.json").exists():
