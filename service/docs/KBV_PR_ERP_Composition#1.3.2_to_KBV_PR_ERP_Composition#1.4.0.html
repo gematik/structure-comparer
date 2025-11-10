@@ -1,0 +1,6955 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mapping: https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition|1.3.2 in https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition|1.4.0</title>       
+    <link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+}
+
+table.dataTable.display tbody tr.row-use.even> .sorting_1,
+table.dataTable.display tbody tr.row-use.even> .sorting_2,
+table.dataTable.display tbody tr.row-use.even> .sorting_3,
+table.dataTable.display tbody tr.row-use {
+    background-color: #E3FCEF;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-use.odd> .sorting_1,
+table.dataTable.display tbody tr.row-use.odd> .sorting_2,
+table.dataTable.display tbody tr.row-use.odd> .sorting_3,
+table.dataTable.display tbody tr.row-use.odd {
+    background-color: #DCF6E9;
+}
+
+table.dataTable.display tbody tr.row-not-use.even> .sorting_1,
+table.dataTable.display tbody tr.row-not-use.even> .sorting_2,
+table.dataTable.display tbody tr.row-not-use.even> .sorting_3,
+table.dataTable.display tbody tr.row-not-use {
+    background-color: #FFEBE6;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-not-use.odd> .sorting_1,
+table.dataTable.display tbody tr.row-not-use.odd> .sorting_2,
+table.dataTable.display tbody tr.row-not-use.odd> .sorting_3,
+table.dataTable.display tbody tr.row-not-use.odd {
+    background-color: #F9E5E0;
+}
+
+table.dataTable.display tbody tr.row-extension.even> .sorting_1,
+table.dataTable.display tbody tr.row-extension.even> .sorting_2,
+table.dataTable.display tbody tr.row-extension.even> .sorting_3,
+table.dataTable.display tbody tr.row-extension {
+    background-color: #FFFAE6;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-extension.odd> .sorting_1,
+table.dataTable.display tbody tr.row-extension.odd> .sorting_2,
+table.dataTable.display tbody tr.row-extension.odd> .sorting_3,
+table.dataTable.display tbody tr.row-extension.odd {
+    background-color: #F9F4E0;
+}
+
+table.dataTable.display tbody tr.row-manual.even> .sorting_1,
+table.dataTable.display tbody tr.row-manual.even> .sorting_2,
+table.dataTable.display tbody tr.row-manual.even> .sorting_3,
+table.dataTable.display tbody tr.row-manual {
+    background-color: #FFFAE6;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-manual.odd> .sorting_1,
+table.dataTable.display tbody tr.row-manual.odd> .sorting_2,
+table.dataTable.display tbody tr.row-manual.odd> .sorting_3,
+table.dataTable.display tbody tr.row-manual.odd {
+    background-color: #F9F4E0;
+}
+
+.dataTables_wrapper {
+    margin: 20px 0;
+}
+
+    </style> 
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+    <script type='text/javascript' src='https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js'></script>
+</head>
+
+<body>
+    <h2>Mapping: KBV_PR_ERP_Composition|1.3.2 in KBV_PR_ERP_Composition|1.4.0</h2>
+    
+    <div style="display: flex; justify-content: space-between;">
+        <div style="flex: 1;">
+            
+            <p>Source Profile: 
+            <a href="https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition" target="_blank">KBV_PR_ERP_Composition|1.3.2</a></p>
+            
+            
+            <p>Target Profile: <a href="https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition" target="_blank">KBV_PR_ERP_Composition|1.4.0</a></p>
+            <p>Version: 1.0, Status: active</p>
+            <p>Last updated on: 2025-11-10T11:37:21.432175</p>
+        </div>
+        <div style="flex: 1; display: flex; justify-content: flex-end;">
+            <div>
+                <h3>Color Legend:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><span style="background-color: #DCF6E9;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Information present in the source will be retained in the target mapping</li>
+                    <li><span style="background-color: #FFEBE6;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Information will be removed or left empty in the target mapping</li>
+                    <li><span style="background-color: #FFFAE6;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Special action is required for this mapping</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <table id='resultsTable' class='display' style='width:100%'>
+        <thead>
+            <tr>
+                <th rowspan="2">Property</th>
+                
+                <th style="text-align: center;">Source Profile</th>
+                
+                <th style="text-align: center;">Target Profile</th>
+                <th rowspan="2" class="warning-column">Warning</th>
+                
+                    <th rowspan="2">Remarks</th>
+                
+            </tr>
+            <tr>
+                
+                <th style="text-align: center;">KBV_PR_ERP_Composition|1.3.2</th>
+                
+                <th style="text-align: center;">KBV_PR_ERP_Composition|1.4.0</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr class="row-use">
+                <td>Composition.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.versionId
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.lastUpdated
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.source
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.profile
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.profile:erpProfile
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.security
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.meta.tag
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.implicitRules
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.language
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.contained
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..2
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..2
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]:valueCoding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]:valueCoding.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]:valueCoding.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]:valueCoding.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]:valueCoding.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]:valueCoding.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]:valueCoding.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:Rechtsgrundlage.value[x]:valueCoding.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]:valueCoding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]:valueCoding.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]:valueCoding.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]:valueCoding.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]:valueCoding.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]:valueCoding.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]:valueCoding.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.extension:PKV-Tarif.value[x]:valueCoding.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier.use
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier.value
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier.period
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.identifier.assigner
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.status
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.coding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.coding.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.coding.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.coding.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.coding.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.coding.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.coding.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.coding.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.type.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.category
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.subject
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.subject.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.subject.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.subject.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.subject.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.subject.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.subject.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.encounter
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.date
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..2
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..2
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Arzt
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Arzt.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Arzt.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Arzt.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Arzt.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Arzt.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Arzt.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier.use
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier.value
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier.period
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.identifier.assigner
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.author:Pruefnummer.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.title
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.confidentiality
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.mode
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.time
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.party
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.party.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.party.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.party.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.party.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.party.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.attester.party.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.custodian
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.custodian.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.custodian.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.custodian.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.custodian.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.custodian.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.custodian.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.relatesTo
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.relatesTo.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.relatesTo.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.relatesTo.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.relatesTo.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.relatesTo.target[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.event
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.event.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.event.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.event.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.event.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.event.period
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.event.detail
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..3
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..3
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.title
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.author
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.focus
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.mode
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.orderedBy
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.entry
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.emptyReason
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section.section
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.title
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.coding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.coding.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.coding.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.coding.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.coding.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.coding.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.coding.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.coding.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.code.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.author
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.focus
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.mode
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.orderedBy
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.entry
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.entry.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.entry.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.entry.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.entry.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.entry.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.entry.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.emptyReason
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Arzneimittel.section
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.title
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.coding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.coding.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.coding.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.coding.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.coding.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.coding.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.coding.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.coding.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.code.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.author
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.focus
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.mode
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.orderedBy
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.entry
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.entry.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.entry.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.entry.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.entry.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.entry.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.entry.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.emptyReason
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Verordnung_Sprechstundenbedarf.section
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.title
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.coding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.coding.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.coding.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.coding.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.coding.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.coding.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.coding.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.coding.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.code.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.author
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.focus
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.mode
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.orderedBy
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.entry
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.entry.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.entry.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.entry.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.entry.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.entry.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.entry.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.emptyReason
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:Krankenversicherungsverhaeltnis.section
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.title
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.coding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.coding.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.coding.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.coding.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.coding.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.coding.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.coding.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.coding.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.code.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.author
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.focus
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.mode
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.orderedBy
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.entry
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.entry.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.entry.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.entry.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.entry.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.entry.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.entry.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.emptyReason
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Composition.section:ASV-Ausuebung.section
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+        </tbody>
+    </table>
+    <script>
+        $(document).ready(function () {
+            var warningsVisible = false;
+            var numberOfWarnings = 0;
+            
+            $('#resultsTable').DataTable({
+                'pageLength': -1,
+                'lengthMenu': [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, 'All']],
+                'dom': '<"top"f>rt<"bottom"ilp><"clear">',
+                'initComplete': function() {
+                    var buttonHtml = '<button id="toggleWarnings"><i class="fas fa-exclamation-triangle"></i> show warnings (' + numberOfWarnings + ')</button>';
+                    $('#resultsTable_filter').prepend(buttonHtml);
+                    
+                    $('.warning-column').hide(); // Hide warnings by default
+                    
+                    $('#toggleWarnings').click(function () {
+                        $('.warning-column').toggle();
+                        warningsVisible = !warningsVisible;
+                        $(this).html('<i class="fas fa-exclamation-triangle"></i> ' + (warningsVisible ? 'hide warnings (' + numberOfWarnings + ')' : 'show warnings (' + numberOfWarnings + ')'));
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

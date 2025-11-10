@@ -1,0 +1,6427 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mapping: https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pharmaceutical-product|1.0.6-2 in https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pharmaceutical-product|1.2.0</title>       
+    <link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+}
+
+table.dataTable.display tbody tr.row-use.even> .sorting_1,
+table.dataTable.display tbody tr.row-use.even> .sorting_2,
+table.dataTable.display tbody tr.row-use.even> .sorting_3,
+table.dataTable.display tbody tr.row-use {
+    background-color: #E3FCEF;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-use.odd> .sorting_1,
+table.dataTable.display tbody tr.row-use.odd> .sorting_2,
+table.dataTable.display tbody tr.row-use.odd> .sorting_3,
+table.dataTable.display tbody tr.row-use.odd {
+    background-color: #DCF6E9;
+}
+
+table.dataTable.display tbody tr.row-not-use.even> .sorting_1,
+table.dataTable.display tbody tr.row-not-use.even> .sorting_2,
+table.dataTable.display tbody tr.row-not-use.even> .sorting_3,
+table.dataTable.display tbody tr.row-not-use {
+    background-color: #FFEBE6;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-not-use.odd> .sorting_1,
+table.dataTable.display tbody tr.row-not-use.odd> .sorting_2,
+table.dataTable.display tbody tr.row-not-use.odd> .sorting_3,
+table.dataTable.display tbody tr.row-not-use.odd {
+    background-color: #F9E5E0;
+}
+
+table.dataTable.display tbody tr.row-extension.even> .sorting_1,
+table.dataTable.display tbody tr.row-extension.even> .sorting_2,
+table.dataTable.display tbody tr.row-extension.even> .sorting_3,
+table.dataTable.display tbody tr.row-extension {
+    background-color: #FFFAE6;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-extension.odd> .sorting_1,
+table.dataTable.display tbody tr.row-extension.odd> .sorting_2,
+table.dataTable.display tbody tr.row-extension.odd> .sorting_3,
+table.dataTable.display tbody tr.row-extension.odd {
+    background-color: #F9F4E0;
+}
+
+table.dataTable.display tbody tr.row-manual.even> .sorting_1,
+table.dataTable.display tbody tr.row-manual.even> .sorting_2,
+table.dataTable.display tbody tr.row-manual.even> .sorting_3,
+table.dataTable.display tbody tr.row-manual {
+    background-color: #FFFAE6;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-manual.odd> .sorting_1,
+table.dataTable.display tbody tr.row-manual.odd> .sorting_2,
+table.dataTable.display tbody tr.row-manual.odd> .sorting_3,
+table.dataTable.display tbody tr.row-manual.odd {
+    background-color: #F9F4E0;
+}
+
+.dataTables_wrapper {
+    margin: 20px 0;
+}
+
+    </style> 
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+    <script type='text/javascript' src='https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js'></script>
+</head>
+
+<body>
+    <h2>Mapping: EPAMedicationPharmaceuticalProduct|1.0.6-2 in EPAMedicationPharmaceuticalProduct|1.2.0</h2>
+    
+    <div style="display: flex; justify-content: space-between;">
+        <div style="flex: 1;">
+            
+            <p>Source Profile: 
+            <a href="https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pharmaceutical-product" target="_blank">EPAMedicationPharmaceuticalProduct|1.0.6-2</a></p>
+            
+            
+            <p>Target Profile: <a href="https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pharmaceutical-product" target="_blank">EPAMedicationPharmaceuticalProduct|1.2.0</a></p>
+            <p>Version: 1.0, Status: active</p>
+            <p>Last updated on: 2025-11-10T14:07:45.533712+00:00</p>
+        </div>
+        <div style="flex: 1; display: flex; justify-content: flex-end;">
+            <div>
+                <h3>Color Legend:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><span style="background-color: #DCF6E9;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Information present in the source will be retained in the target mapping</li>
+                    <li><span style="background-color: #FFEBE6;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Information will be removed or left empty in the target mapping</li>
+                    <li><span style="background-color: #FFFAE6;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Special action is required for this mapping</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <table id='resultsTable' class='display' style='width:100%'>
+        <thead>
+            <tr>
+                <th rowspan="2">Property</th>
+                
+                <th style="text-align: center;">Source Profile</th>
+                
+                <th style="text-align: center;">Target Profile</th>
+                <th rowspan="2" class="warning-column">Warning</th>
+                
+                    <th rowspan="2">Remarks</th>
+                
+            </tr>
+            <tr>
+                
+                <th style="text-align: center;">EPAMedicationPharmaceuticalProduct|1.0.6-2</th>
+                
+                <th style="text-align: center;">EPAMedicationPharmaceuticalProduct|1.2.0</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr class="row-use">
+                <td>Medication.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta.versionId
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta.lastUpdated
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta.source
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta.profile
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta.security
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.meta.tag
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.implicitRules
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.language
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.contained
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:rxPrescriptionProcessIdentifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:isVaccine
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:isVaccine.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:isVaccine.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:isVaccine.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:isVaccine.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.value[x].id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.value[x].extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.value[x].system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.value[x].version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.value[x].code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.value[x].display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:drugCategory.value[x].userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:normSizeCode
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:normSizeCode.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:normSizeCode.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:normSizeCode.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:normSizeCode.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:packaging
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:packaging.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:packaging.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:packaging.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:packaging.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:manufacturingInstructions
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:manufacturingInstructions.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:manufacturingInstructions.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:manufacturingInstructions.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:manufacturingInstructions.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:type.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:type.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:type.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.extension:type.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.identifier:EPAMedicationUniqueIdentifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.identifier:RxOriginatorProcessIdentifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:pzn
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:pzn.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:pzn.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:pzn.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:pzn.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:pzn.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:pzn.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:pzn.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:atc-de
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:atc-de.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:atc-de.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:atc-de.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:atc-de.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The minimum cardinality of one of the source profiles is less than the minimum cardinality of the target profile</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:atc-de.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:atc-de.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:atc-de.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:ask
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:ask.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:ask.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:ask.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:ask.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:ask.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:ask.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:ask.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.status
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.manufacturer
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.manufacturer.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.manufacturer.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.manufacturer.reference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.manufacturer.type
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.manufacturer.identifier
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.manufacturer.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:kbvDarreichungsform
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:kbvDarreichungsform.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:kbvDarreichungsform.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:kbvDarreichungsform.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:kbvDarreichungsform.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:kbvDarreichungsform.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:kbvDarreichungsform.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:kbvDarreichungsform.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:packagingSize
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:packagingSize.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:packagingSize.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:packagingSize.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:packagingSize.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:totalQuantity
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:totalQuantity.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:totalQuantity.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:totalQuantity.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.extension:totalQuantity.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.value
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.comparator
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.unit
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.numerator.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.denominator
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.denominator.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.denominator.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.denominator.value
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.denominator.comparator
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.denominator.unit
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.denominator.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.amount.denominator.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.extension:darreichungsform
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:ask
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The minimum cardinality of one of the source profiles is less than the minimum cardinality of the target profile</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.text
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemReference
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.isActive
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.extension:amountText
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.extension:amountText.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.extension:amountText.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..0
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.extension:amountText.url
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.extension:amountText.value[x]
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.numerator
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.numerator.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.numerator.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.numerator.value
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.numerator.comparator
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.numerator.unit
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.numerator.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.numerator.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.denominator
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.denominator.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.denominator.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.denominator.value
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.denominator.comparator
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.denominator.unit
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.denominator.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.strength.denominator.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.batch
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.batch.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.batch.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.batch.modifierExtension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.batch.lotNumber
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.batch.expirationDate
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:snomed
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:snomed.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:snomed.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:snomed.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:snomed.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:snomed.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:snomed.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:snomed.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:product-key
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:product-key.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:product-key.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:product-key.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:product-key.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:product-key.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:product-key.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.code.coding:product-key.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:edqm
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:edqm.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:edqm.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:edqm.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:edqm.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:edqm.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:edqm.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:edqm.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:snomed
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:snomed.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:snomed.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:snomed.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:snomed.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:snomed.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:snomed.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.form.coding:snomed.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed.id
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed.extension
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..*
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed.system
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed.version
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed.code
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        1..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed.display
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+            <tr class="row-use">
+                <td>Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed.userSelected
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                        0..1
+                    
+                </td>
+                
+                <td style="text-align: center;">
+                    
+                </td>
+                
+                <td class="warning-column">
+                    
+                    <ul>
+                        
+                        <li>The target profile does not contain this field, so it cannot be compared</li>
+                        
+                    </ul>
+                    
+                </td>
+                
+                    <td>None</td>
+                
+            </tr>
+            
+        </tbody>
+    </table>
+    <script>
+        $(document).ready(function () {
+            var warningsVisible = false;
+            var numberOfWarnings = 42;
+            
+            $('#resultsTable').DataTable({
+                'pageLength': -1,
+                'lengthMenu': [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, 'All']],
+                'dom': '<"top"f>rt<"bottom"ilp><"clear">',
+                'initComplete': function() {
+                    var buttonHtml = '<button id="toggleWarnings"><i class="fas fa-exclamation-triangle"></i> show warnings (' + numberOfWarnings + ')</button>';
+                    $('#resultsTable_filter').prepend(buttonHtml);
+                    
+                    $('.warning-column').hide(); // Hide warnings by default
+                    
+                    $('#toggleWarnings').click(function () {
+                        $('.warning-column').toggle();
+                        warningsVisible = !warningsVisible;
+                        $(this).html('<i class="fas fa-exclamation-triangle"></i> ' + (warningsVisible ? 'hide warnings (' + numberOfWarnings + ')' : 'show warnings (' + numberOfWarnings + ')'));
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

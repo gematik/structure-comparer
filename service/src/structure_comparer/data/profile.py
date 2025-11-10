@@ -1,7 +1,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, Any, Optional
 from uuid import uuid4
 
 from fhir.resources.R4B.elementdefinition import ElementDefinition
@@ -18,9 +18,53 @@ logger = logging.getLogger(__name__)
 class Profile:
     def __init__(self, data: dict, package=None) -> None:
         self.__data = StructureDefinition.model_validate(data)
-        self.__fields: List[str, ProfileField] = None
+        self.__fields: Dict[str, "ProfileField"] = None
         self.__init_fields()
         self.__package = package
+
+    @staticmethod
+    def _sanitize_structure_definition(sd: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Ergänzt fehlende 'base.min'/'base.max'/'base.path' in snapshot.element[*].
+        Fallback-Reihenfolge:
+          1) base.min/base.max aus Elementfeldern 'min'/'max' übernehmen (falls vorhanden)
+          2) andernfalls Defaults setzen: min=0, max="*"
+        'base.path' wird aus 'element.path' oder ersatzweise aus 'element.id' (bis ':') abgeleitet.
+        """
+        try:
+            elements = sd.get("snapshot", {}).get("element", [])
+            for el in elements:
+                base = el.get("base")
+                # Pfad ableiten: bevorzugt 'path', notfalls aus 'id' bis zum ersten ':' bzw. ganz
+                path_val: Optional[str] = el.get("path")
+                if not path_val:
+                    el_id = el.get("id")
+                    if isinstance(el_id, str):
+                        path_val = el_id.split(":", 1)[0]
+
+                # Sicherstellen, dass base existiert
+                if base is None:
+                    base = {}
+                    el["base"] = base
+
+                # min aus Element übernehmen oder Default 0
+                if base.get("min") is None:
+                    el_min = el.get("min")
+                    base["min"] = int(el_min) if el_min is not None else 0
+
+                # max aus Element übernehmen oder Default "*"
+                if base.get("max") is None:
+                    el_max = el.get("max")
+                    # Im SD ist 'max' ein String (z. B. "1" oder "*")
+                    base["max"] = str(el_max) if el_max is not None else "*"
+ 
+                # path setzen, falls fehlt
+                if base.get("path") is None and path_val is not None:
+                    base["path"] = path_val
+        except Exception:
+            # Im Fehlerfall nichts kaputtvalidieren; lieber unverändert zurückgeben
+            logger.exception("Failed to sanitize StructureDefinition")
+        return sd
 
     def __str__(self) -> str:
         return f"(name={self.name}, version={self.version}, fields={self.fields})"
@@ -43,9 +87,10 @@ class Profile:
             )
 
         try:
-            return Profile(
-                data=json.loads(path.read_text(encoding="utf-8")), package=package
-            )
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            # VOR der Validierung sanitizen
+            sanitized = Profile._sanitize_structure_definition(raw)
+            return Profile(data=sanitized, package=package)
 
         except Exception as e:
             logger.error("failed to read file '%s'", str(path))
@@ -177,7 +222,16 @@ class ProfileField:
     
     @property
     def is_default(self) -> bool:
-        return self == self.__data.base
+        # defensiv prüfen, da manche SDs unvollständige base liefern können
+        base = getattr(self.__data, "base", None)
+        if not base:
+            return False
+        try:
+            base_min = getattr(base, "min", None)
+            base_max = getattr(base, "max", None)
+            return (base_min is not None) and (base_max is not None) and (self.min == base_min) and (self.max == base_max)
+        except Exception:
+            return False
 
     def to_model(self) -> ProfileFieldModel:
         return ProfileFieldModel(

@@ -1,0 +1,1 @@
+{"resourceType":"Medication","id":"Technical-Exp-NachtragEmpMedicationEml","meta":{"profile":["https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication"]},"code":{"coding":[{"system":"http://fhir.de/CodeSystem/ifa/pzn","code":"0123456789"}]}}

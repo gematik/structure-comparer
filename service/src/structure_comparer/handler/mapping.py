@@ -177,8 +177,16 @@ class MappingHandler:
         new_mapping = MappingModel(new_mappingConfig, proj)
         new_mapping.fill_action_remark(proj.manual_entries)
 
+        # --- FIX 1: Liste initialisieren, falls None/leer (analog zu Comparisons) ---
+        if not proj.config.mappings:
+            proj.config.mappings = []
+
         proj.config.mappings.append(new_mappingConfig)
-        proj.write_config()
+
+        # --- FIX 2: Konsistent die Config selbst schreiben lassen ---
+        proj.config.write()
+
+        # Neu laden, damit proj.mappings den frischen Eintrag enthält
         proj.load_mappings()
 
         mapping = proj.mappings.get(new_mapping.id)
