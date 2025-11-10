@@ -21,6 +21,19 @@ class ComparisonField:
         self.profiles: OrderedDict[str, ProfileField | None] = OrderedDict()
         self._classification: ComparisonClassification = ComparisonClassification.COMPAT
         self.issues: list[ComparisonIssue] = []
+    @staticmethod    
+    def _is_optional_absent(self, pf: ProfileField | None) -> bool:
+        """
+        'optional-absent' = Feld ist im Source effektiv deaktiviert:
+        min == 0, max == 0, mustSupport == False
+        """
+        if pf is None:
+            return False
+        return (
+            pf.min == 0
+            and pf.max_num == 0
+            and (getattr(pf, "must_support", False) is False)
+        )
 
     @property
     def classification(self) -> ComparisonClassification:
@@ -34,15 +47,31 @@ class ComparisonField:
     def classify(self, sources: list[Profile], target: Profile) -> None:
         sp = [self.profiles[p.key] for p in sources]
         tp = self.profiles[target.key]
-        al = sp + [tp]
 
         self.classification = ComparisonClassification.COMPAT
 
-        # If target is not set, but the others are not all either 'None' or the default value, its incompatible
-        if tp is None and any([not p.is_default for p in sp if p is not None]):
-            self.classification = ComparisonClassification.INCOMPAT
-
-        if tp is not None:
+        if tp is None:
+            # PROBLEM: Target-Feld existiert nicht.
+            # INKOMPATIBEL, sobald irgendein Source das Feld potentiell tragen KANN:
+            # - min > 0  (muss vorkommen)  -> INCOMPAT
+            # - max_num != 0 (kann Werte enthalten; inkl. unbounded) -> INCOMPAT
+            # - mustSupport == True (impliziert Relevanz) -> INCOMPAT
+            if any(
+                p is not None
+                and (
+                    p.min > 0
+                    or p.max_num != 0  # Achtung: None/unbounded zählt als != 0 -> INCOMPAT
+                    or getattr(p, "must_support", False) is True
+                )
+                for p in sp
+            ):
+                self.classification = ComparisonClassification.INCOMPAT
+            else:
+                # Nur COMPAT, wenn alle vorhandenen Source-Felder 'optional-absent' sind
+                # (oder gar nicht vorkommen).
+                # Beispiel: min=0,max=0,mustSupport=False -> erlaubt Target-None.
+                pass
+            return
 
             # If any source is absent and target is required
             if any([p is None for p in sp]) and tp.min > 0:
