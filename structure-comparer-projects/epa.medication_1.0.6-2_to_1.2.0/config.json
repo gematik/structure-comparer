@@ -1,492 +1,492 @@
 {
-  "name": "ePA Changes: epa.medication|1.0.6-2 -> epa.medication|1.2.0",
-  "comparisons": [],
-  "mappings": [
-    {
-      "id": "a2d13465-9e01-4cdb-9aba-ce7060433e82",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
-          "version": "1.2.0"
+    "name": "ePA Changes: epa.medication|1.0.6-2 -> epa.medication|1.2.0",
+    "comparisons": [],
+    "mappings": [
+        {
+            "id": "a2d13465-9e01-4cdb-9aba-ce7060433e82",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "c9fdc5ae-2083-4a01-bdd6-fffcc0d8c9d6",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "a20eaa1c-aa6d-4eed-9589-4c70fbd09901",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-dispense",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-dispense",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "57666d99-1bdf-48e2-b3fb-bb5dc1ef29e0",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pharmaceutical-product",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pharmaceutical-product",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "9d35d99e-1d2b-42b0-9c92-81c865e2813a",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pzn-ingredient",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pzn-ingredient",
+                    "version": "1.0.5-1"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "3d41373b-c5bd-40ee-a716-7a7585bccfd8",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "ecf0fb58-6fab-4d71-930e-e74f4e1b44d4",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-type-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-type-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "0c6e2461-a04b-4c49-be28-38d387f75727",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-unique-identifier",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-unique-identifier",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "5a67f4bc-e4b6-46f1-9d32-602245e843ef",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-ms-operation-outcome",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-ms-operation-outcome",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "acda4124-8f1c-44d6-a94e-1695e7e762ef",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-cancel-dispensation-erp-input-parameters",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-cancel-dispensation-erp-input-parameters",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "f384c601-0d21-4809-b241-2771d7123d74",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-cancel-prescription-erp-input-parameters",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-cancel-prescription-erp-input-parameters",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "e1d6f15b-8b13-40c2-80f6-106b783533c0",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-dispensation-erp-input-parameters",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-dispensation-erp-input-parameters",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "1c261a0f-3d01-4101-896a-555563653551",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "f018735f-b2c4-40f6-b079-63fb5458706b",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-rx-dispensation-erp-output-parameters",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-rx-dispensation-erp-output-parameters",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "b6775e4c-0044-4f27-81d1-095989c32fd0",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-rx-prescription-erp-output-parameters",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-rx-prescription-erp-output-parameters",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "d8cdf9cf-61a6-448d-8e75-c000570ba8cb",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/indicator-bvg-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/indicator-bvg-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "051b77ca-7f94-461a-ba31-4823fa6e4b48",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "31121c25-5fe8-4b8d-ad26-8956afabcc57",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "5ccb2e28-fa76-495e-a1f3-77ee6adc0ece",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "84b08048-f832-476f-88db-b7361bf3eb7a",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "dd51d3e7-7c5b-4652-80ad-1dd40b807be1",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "b511c1f1-f146-444c-9784-7bfe84f4eae0",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-packaging-size-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-packaging-size-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "a0fd1fee-0d67-46b5-90dd-b171fe077268",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-total-quantity-formulation-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-total-quantity-formulation-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "ec0d8aa4-4131-42ef-b6ca-595d34d1c4dd",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/multiple-prescription-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/multiple-prescription-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "ce5afcaa-af7e-4798-a0f3-16651fa2a8ba",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-originator-process-identifier",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-originator-process-identifier",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "3e86e879-d490-4e6b-af5d-2b4d061ba40f",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
+        },
+        {
+            "id": "864b340e-cc87-44ed-b585-3afe285a4501",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier-extension",
+                        "version": "1.0.6-2"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier-extension",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-10T14:07:45.533712+00:00"
         }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "c9fdc5ae-2083-4a01-bdd6-fffcc0d8c9d6",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "a20eaa1c-aa6d-4eed-9589-4c70fbd09901",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-dispense",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-dispense",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "57666d99-1bdf-48e2-b3fb-bb5dc1ef29e0",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pharmaceutical-product",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pharmaceutical-product",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "9d35d99e-1d2b-42b0-9c92-81c865e2813a",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pzn-ingredient",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-pzn-ingredient",
-          "version": "1.0.5-1"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "3d41373b-c5bd-40ee-a716-7a7585bccfd8",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "ecf0fb58-6fab-4d71-930e-e74f4e1b44d4",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-type-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-type-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "0c6e2461-a04b-4c49-be28-38d387f75727",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-unique-identifier",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-unique-identifier",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "5a67f4bc-e4b6-46f1-9d32-602245e843ef",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-ms-operation-outcome",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-ms-operation-outcome",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "acda4124-8f1c-44d6-a94e-1695e7e762ef",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-cancel-dispensation-erp-input-parameters",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-cancel-dispensation-erp-input-parameters",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "f384c601-0d21-4809-b241-2771d7123d74",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-cancel-prescription-erp-input-parameters",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-cancel-prescription-erp-input-parameters",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "e1d6f15b-8b13-40c2-80f6-106b783533c0",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-dispensation-erp-input-parameters",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-dispensation-erp-input-parameters",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "1c261a0f-3d01-4101-896a-555563653551",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "f018735f-b2c4-40f6-b079-63fb5458706b",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-rx-dispensation-erp-output-parameters",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-rx-dispensation-erp-output-parameters",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "b6775e4c-0044-4f27-81d1-095989c32fd0",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-rx-prescription-erp-output-parameters",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-rx-prescription-erp-output-parameters",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "d8cdf9cf-61a6-448d-8e75-c000570ba8cb",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/indicator-bvg-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/indicator-bvg-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "051b77ca-7f94-461a-ba31-4823fa6e4b48",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "31121c25-5fe8-4b8d-ad26-8956afabcc57",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "5ccb2e28-fa76-495e-a1f3-77ee6adc0ece",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "84b08048-f832-476f-88db-b7361bf3eb7a",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "dd51d3e7-7c5b-4652-80ad-1dd40b807be1",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "b511c1f1-f146-444c-9784-7bfe84f4eae0",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-packaging-size-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-packaging-size-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "a0fd1fee-0d67-46b5-90dd-b171fe077268",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-total-quantity-formulation-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-total-quantity-formulation-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "ec0d8aa4-4131-42ef-b6ca-595d34d1c4dd",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/multiple-prescription-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/multiple-prescription-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "ce5afcaa-af7e-4798-a0f3-16651fa2a8ba",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-originator-process-identifier",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-originator-process-identifier",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "3e86e879-d490-4e6b-af5d-2b4d061ba40f",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    },
-    {
-      "id": "864b340e-cc87-44ed-b585-3afe285a4501",
-      "version": "1.0",
-      "status": "active",
-      "mappings": {
-        "sourceprofiles": [
-          {
-            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier-extension",
-            "version": "1.0.6-2"
-          }
-        ],
-        "targetprofile": {
-          "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier-extension",
-          "version": "1.2.0"
-        }
-      },
-      "last_updated": "2025-11-10T14:07:45.533712+00:00"
-    }
-  ]
+    ]
 }
