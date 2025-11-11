@@ -1,697 +1,366 @@
 {
-    "name": "KBV Changes: kbv.ita.erp|1.3.2 -> kbv.ita.erp|1.4.0",
-    "comparisons": [
-        {
-            "id": "fec323b7-e950-4547-8a8d-7c1d93ab3c14",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "55e9b4f0-67c9-4cb3-9e59-4b9f9852c8be",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "1f44b360-c120-43f4-a28c-5340f4fcef2c",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "2a3a8f2e-7c7e-4d2e-a6e3-1bca0c1d9b10",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_DosageFlag",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_DosageFlag",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "3b5c9f12-5f0f-4a39-9f3e-5a9e2b8d7e21",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_EmergencyServicesFee",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_EmergencyServicesFee",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "4c7d1a23-8a1e-4f7c-9b6d-2f1c3e5a7b32",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_CompoundingInstruction",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_CompoundingInstruction",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "5d8e2b34-9c2f-4d8a-a0b1-3c4d5e6f7a43",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "6e9f3c45-0d3a-4e1b-b2c3-4d5e6f7a8b54",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Packaging",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Packaging",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "7fa01d56-1e4b-4f2c-c3d4-5e6f7a8b9c65",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_PackagingSize",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_PackagingSize",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "80b12e67-2f5c-4a3d-d4e5-6f7a8b9c0d76",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "91c23f78-3a6d-4b4e-e5f6-7a8b9c0d1e87",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "a2d34e89-4b7e-4c5f-f607-8b9c0d1e2f98",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_PracticeSupply_Payor",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_PracticeSupply_Payor",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "b3e45f9a-5c8f-4d60-0718-9c0d1e2f3a09",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Prescriber_ID",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Prescriber_ID",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "c4f56a0b-6d91-4e71-1829-0d1e2f3a4b10",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "d5077b1c-7ea2-4f82-293a-1e2f3a4b5c21",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "e6188c2d-8fb3-4f93-3a4b-2f3a4b5c6d32",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "f7299d3e-90c4-4fa4-4b5c-3a4b5c6d7e43",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "0a3ab04f-a1d5-4fb5-5c6d-4b5c6d7e8f54",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "1b4bc160-b2e6-4fc6-6d7e-5c6d7e8f9065",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "2c5cd271-c3f7-40d7-7e8f-6d7e8f901176",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_PracticeSupply",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_PracticeSupply",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "3ca8e0fa-4af3-41a1-9b0c-3f72c7979f01",
-            "comparison": {
-                "sourceprofiles": [],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Narcotic",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "6dbe7acb-f4b8-44a9-9db9-b6eb16f6c3af",
-            "comparison": {
-                "sourceprofiles": [],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Patient_ID",
-                    "version": "1.4.0"
-                }
-            }
-        },
-        {
-            "id": "995f5225-c602-4965-95ce-fdc4519a1527",
-            "comparison": {
-                "sourceprofiles": [],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Teratogenic",
-                    "version": "1.4.0"
-                }
-            }
+  "name": "KBV Changes: kbv.ita.erp|1.3.2 -> kbv.ita.erp|1.4.0",
+  "comparisons": [],
+  "mappings": [
+    {
+      "id": "0b1a4cf6-8d60-4b71-bc47-77a8f0b48701",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category",
+          "version": "1.4.0"
         }
-    ],
-    "mappings": [
-        {
-            "id": "0b1a4cf6-8d60-4b71-bc47-77a8f0b48701",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "f3d4c84a-6e2b-4b2f-8cb9-c8c729524cf7",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "d4c7b98e-1c29-41b1-a2ca-2de12e63db68",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "4bc6f611-c4cf-4df8-9412-25af4802dfb6",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_DosageFlag",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_DosageFlag",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "ea0c8611-d73d-4c5d-91e5-3a3f3eb93f3c",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_EmergencyServicesFee",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_EmergencyServicesFee",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "8a0d6d83-e0d4-4e6f-af9c-6cdb40ff32d4",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_CompoundingInstruction",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_CompoundingInstruction",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "28b0e0ff-6361-4ca3-b2e0-5feaa22a3b2c",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "02d77e04-546c-4f9b-9edb-46f563c3d4c2",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Packaging",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Packaging",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "cd9f598e-1729-4f51-bda3-92a0d2a2bd92",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_PackagingSize",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_PackagingSize",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "481ec083-4d79-47f9-9d19-24bd81d8e25e",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "1ffde0cd-d75a-4420-9343-1bab59bb4054",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "8dc30df1-3d72-4219-9a20-0bbd1898f7ef",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_PracticeSupply_Payor",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_PracticeSupply_Payor",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "0a6d7366-1446-4e8f-bd1f-f3fd6dc25360",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Prescriber_ID",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Prescriber_ID",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "a6101c42-5919-4968-b57b-7c3bbd3d01b3",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "9a5d99fd-a69e-4c00-9ea4-a936f927235b",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "1de9de11-b676-4925-bcbb-5807ac49d65d",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "f16eb769-7d97-4fb9-aa6b-10ce6c3b1709",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "a3eb97f0-6108-4650-90fe-ac8d9f41a82c",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "2f564f69-208a-4c64-a8f6-f5f770eb0ce3",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
-        },
-        {
-            "id": "d3d57f0c-083c-4523-bef7-2c8ff60d8d8b",
-            "version": "1.0",
-            "status": "active",
-            "mappings": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_PracticeSupply",
-                        "version": "1.3.2"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_PracticeSupply",
-                    "version": "1.4.0"
-                }
-            },
-            "last_updated": "2025-11-10T11:37:21.432175"
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "f3d4c84a-6e2b-4b2f-8cb9-c8c729524cf7",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form",
+          "version": "1.4.0"
         }
-    ]
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "d4c7b98e-1c29-41b1-a2ca-2de12e63db68",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "4bc6f611-c4cf-4df8-9412-25af4802dfb6",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_DosageFlag",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_DosageFlag",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "ea0c8611-d73d-4c5d-91e5-3a3f3eb93f3c",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_EmergencyServicesFee",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_EmergencyServicesFee",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "8a0d6d83-e0d4-4e6f-af9c-6cdb40ff32d4",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_CompoundingInstruction",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_CompoundingInstruction",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "28b0e0ff-6361-4ca3-b2e0-5feaa22a3b2c",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "02d77e04-546c-4f9b-9edb-46f563c3d4c2",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Packaging",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Packaging",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "cd9f598e-1729-4f51-bda3-92a0d2a2bd92",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_PackagingSize",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_PackagingSize",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "481ec083-4d79-47f9-9d19-24bd81d8e25e",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "1ffde0cd-d75a-4420-9343-1bab59bb4054",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "8dc30df1-3d72-4219-9a20-0bbd1898f7ef",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_PracticeSupply_Payor",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_PracticeSupply_Payor",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "0a6d7366-1446-4e8f-bd1f-f3fd6dc25360",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Prescriber_ID",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Prescriber_ID",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "a6101c42-5919-4968-b57b-7c3bbd3d01b3",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "9a5d99fd-a69e-4c00-9ea4-a936f927235b",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Composition",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "1de9de11-b676-4925-bcbb-5807ac49d65d",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "f16eb769-7d97-4fb9-aa6b-10ce6c3b1709",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "a3eb97f0-6108-4650-90fe-ac8d9f41a82c",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "2f564f69-208a-4c64-a8f6-f5f770eb0ce3",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    },
+    {
+      "id": "d3d57f0c-083c-4523-bef7-2c8ff60d8d8b",
+      "version": "1.0",
+      "status": "active",
+      "mappings": {
+        "sourceprofiles": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_PracticeSupply",
+            "version": "1.3.2"
+          }
+        ],
+        "targetprofile": {
+          "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_PracticeSupply",
+          "version": "1.4.0"
+        }
+      },
+      "last_updated": "2025-11-10T11:37:21.432175"
+    }
+  ]
 }
