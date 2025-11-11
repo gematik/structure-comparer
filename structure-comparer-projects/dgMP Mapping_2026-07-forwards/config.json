@@ -1,94 +1,6 @@
 {
     "name": "dgMP Mapping_2026-07-forwards",
-    "comparisons": [
-        {
-            "id": "a1e4f8c2-2c3d-4f8a-9a1e-5c6d7e8f9010",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding",
-                        "version": "1.4.0"
-                    },
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText",
-                        "version": "1.4.0"
-                    },
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient",
-                        "version": "1.4.0"
-                    },
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN",
-                        "version": "1.4.0"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication",
-                    "version": "1.2.0"
-                }
-            }
-        },
-        {
-            "id": "b2f5a9d3-3d4e-5a9b-0b2f-6d7e8f9011a2",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
-                        "version": "1.4.0"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request",
-                    "version": "1.2.0"
-                }
-            }
-        },
-        {
-            "id": "c3a6bad4-4e5f-6bac-1c30-7e8f9012ab34",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_FOR_Practitioner",
-                        "version": "1.3.0"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://gematik.de/fhir/directory/StructureDefinition/PractitionerDirectory",
-                    "version": "1.0.0"
-                }
-            }
-        },
-        {
-            "id": "d4b7cbe5-5f60-7cbd-2d41-8f9012ab34c5",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_FOR_Organization",
-                        "version": "1.3.0"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory",
-                    "version": "1.0.0"
-                }
-            }
-        },
-        {
-            "id": "abde870b-8ce4-46fe-be4c-55dd963c633d",
-            "comparison": {
-                "sourceprofiles": [
-                    {
-                        "url": "https://gematik.de/fhir/erp/StructureDefinition/GEM_ERP_PR_MedicationDispense",
-                        "version": "1.6.0"
-                    }
-                ],
-                "targetprofile": {
-                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-dispense",
-                    "version": "1.2.0"
-                }
-            }
-        }
-    ],
+    "comparisons": [],
     "mappings": [
         {
             "id": "e5c8dcf6-6071-8dce-3e52-9f012ab34c56",
@@ -191,6 +103,24 @@
                 }
             },
             "last_updated": "2025-11-10T22:28:53.858009"
+        },
+        {
+            "id": "45d6f0d8-1dc8-438f-849b-6cb935e0f6fe",
+            "version": "1.0",
+            "status": "active",
+            "mappings": {
+                "sourceprofiles": [
+                    {
+                        "url": "https://gematik.de/fhir/erp/StructureDefinition/GEM_ERP_PR_Medication",
+                        "version": "1.6.0"
+                    }
+                ],
+                "targetprofile": {
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication",
+                    "version": "1.2.0"
+                }
+            },
+            "last_updated": "2025-11-11T13:51:37.545268"
         }
     ]
 }
