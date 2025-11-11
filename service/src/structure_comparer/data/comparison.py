@@ -1,6 +1,6 @@
 import logging
 from collections import OrderedDict
-from math import isinf
+
 from pydantic import ValidationError
 
 from ..errors import NotInitialized
@@ -16,97 +16,46 @@ logger = logging.getLogger(__name__)
 
 
 class ComparisonField:
-    # Fehlende Eltern als optional annehmen (FHIR-Default min=0)
-    _ASSUME_OPTIONAL_IF_ABSENT = True
-
     def __init__(self, name: str) -> None:
         self.name = name
         self.profiles: OrderedDict[str, ProfileField | None] = OrderedDict()
         self._classification: ComparisonClassification = ComparisonClassification.COMPAT
         self.issues: list[ComparisonIssue] = []
-        self.explanations: list[str] = []
 
-    # ----------------- Ahnen-/Elternprüfung -----------------
+    # --- NEW: Eltern-Optionalität prüfen ------------------------------------
     def _parent_path(self, path: str) -> str | None:
         if "." not in path:
             return None
         return path.rsplit(".", 1)[0]
 
-    def _exists_optional_ancestor_in_source(self, source_profile: Profile) -> bool:
+    def _is_parent_optional_in_source(self, source_profile: Profile) -> bool:
         """
-        True, wenn IRGENDEIN Ahnenknoten nicht verpflichtend ist:
-          - explizit min == 0  ODER
-          - fehlt im Profil (wir nehmen optional an, wenn _ASSUME_OPTIONAL_IF_ABSENT=True)
+        True, wenn entlang der Elternkette ein Elternknoten existiert, der optional ist:
+        - min == 0 und kein mustSupport == True
+        Sobald ein Elternknoten min>0 oder mustSupport==True ist, ist das Feld effektiv „aktivierbar“ -> False.
+        Falls kein Elternknoten gefunden wird, gilt: False.
         """
         parent = self._parent_path(self.name)
         while parent:
             pf = source_profile.fields.get(parent)
-            if pf is None:
-                if self._ASSUME_OPTIONAL_IF_ABSENT:
-                    return True
-            else:
-                if getattr(pf, "min", 0) == 0:
+            if pf is not None:
+                # Harte Aktivierung -> Eltern ist nicht optional
+                if pf.min > 0 or getattr(pf, "must_support", False) is True:
+                    return False
+                # Optionaler Elternknoten gefunden
+                if pf.min == 0 and getattr(pf, "must_support", False) is False:
                     return True
             parent = self._parent_path(parent)
         return False
 
-    def _all_sources_have_optional_ancestor(self, sources: list[Profile]) -> bool:
-        # Nur die Sources betrachten, in denen das Feld existiert
+    def _all_sources_have_optional_parent(self, sources: list[Profile]) -> bool:
+        # nur Profile betrachten, in denen das aktuelle Feld überhaupt existiert
         candidates = [s for s in sources if self.profiles.get(s.key) is not None]
         if not candidates:
             return False
-        return all(self._exists_optional_ancestor_in_source(s) for s in candidates)
+        return all(self._is_parent_optional_in_source(s) for s in candidates)
+    # ------------------------------------------------------------------------
 
-    # ----------------- Utils -----------------
-    @staticmethod
-    def _norm_max(x) -> tuple[bool, int | None]:
-        """
-        Normalisiert max:
-          - (True, None)  -> unbounded (∞)
-          - (False, n)    -> endlich mit Wert n
-        Akzeptiert: None, int, float(∞), Strings wie "*", "inf", "infinity", "unbounded".
-        """
-        if x is None:
-            return True, None
-        if isinstance(x, int):
-            return False, x
-        if isinstance(x, float):
-            if isinf(x):
-                return True, None
-            return False, int(x)
-        if isinstance(x, str):
-            s = x.strip().lower()
-            if s in {"*", "inf", "infinity", "unbounded"}:
-                return True, None
-            if s.isdigit():
-                return False, int(s)
-            return True, None
-        return True, None
-
-    @staticmethod
-    def _fmt_max(x) -> str:
-        unb, val = ComparisonField._norm_max(x)
-        return "∞" if unb else str(val if val is not None else 0)
-
-    def _add_issue(self, issue: ComparisonIssue, explanation: str | None = None) -> None:
-        if issue not in self.issues:
-            self.issues.append(issue)
-        if explanation:
-            self.explanations.append(explanation)
-
-    @classmethod
-    def _max_gt(cls, source_max, target_max) -> bool:
-        s_unb, s_val = cls._norm_max(source_max)
-        t_unb, t_val = cls._norm_max(target_max)
-        if s_unb and t_unb:
-            return False
-        if s_unb and not t_unb:
-            return True
-        if not s_unb and t_unb:
-            return False
-        return (s_val or 0) > (t_val or 0)
-
-    # ----------------- Klassifikation -----------------
     @property
     def classification(self) -> ComparisonClassification:
         return self._classification
@@ -121,76 +70,59 @@ class ComparisonField:
         tp = self.profiles[target.key]
 
         self.classification = ComparisonClassification.COMPAT
-        self.explanations = []  # pro Lauf neu füllen
 
-        # Target-Feld fehlt komplett
         if tp is None:
+            # Target-Feld existiert nicht.
+            # Bisher: INCOMPAT, sobald irgendein Source das Feld potentiell tragen kann.
+            # Neu: Wenn alle Sources für dieses Feld einen OPTIONALEN Elternknoten haben,
+            #      dann nur WARN (nicht INCOMPAT).
             any_source_carries_potential_value = any(
-                p is not None and (
+                p is not None
+                and (
                     p.min > 0
-                    or p.max_num != 0  # None/∞ zählen als != 0 -> potenziell werthaltig
+                    or p.max_num != 0  # None (=unbounded) zählt als != 0
                     or getattr(p, "must_support", False) is True
                 )
                 for p in sp
             )
 
             if any_source_carries_potential_value:
-                if self._all_sources_have_optional_ancestor(sources):
+                if self._all_sources_have_optional_parent(sources):
+                    # Downgrade auf WARN, da das Feld nur dann „fehlt“,
+                    # wenn der optionale Elternknoten überhaupt instanziiert wird.
                     self.classification = ComparisonClassification.WARN
-                    self._add_issue(
-                        ComparisonIssue.MIN,
-                        f"{self.name}: Ziel-Feld fehlt. Quellen könnten Werte liefern; "
-                        f"weiche Warnung, da in allen Quellen ein optionaler Vorfahr die Auslassung zulässt."
-                    )
+                    # Issue-Typ beibehalten: MIN zeigt „Anforderung im Source“ an.
+                    if ComparisonIssue.MIN not in self.issues:
+                        self.issues.append(ComparisonIssue.MIN)
                 else:
                     self.classification = ComparisonClassification.INCOMPAT
-                    self._add_issue(
-                        ComparisonIssue.MIN,
-                        f"{self.name}: Ziel-Feld fehlt, obwohl Quellen Werte verlangen/liefern können; "
-                        f"keine optionalen Vorfahren → nicht kompatibel."
-                    )
+                    if ComparisonIssue.MIN not in self.issues:
+                        self.issues.append(ComparisonIssue.MIN)
+            # Falls kein Source das Feld tragen kann, bleibt COMPAT.
             return
 
-        # Target-Feld existiert: Detailprüfungen
-        if any((p is None) for p in sp) and tp.min > 0:
+        # (Restliche bestehende Prüfungen, wenn tp vorhanden ist)
+        if any([p is None for p in sp]) and tp.min > 0:
             self.classification = ComparisonClassification.INCOMPAT
-            self._add_issue(
-                ComparisonIssue.MIN,
-                f"{self.name}: In mindestens einer Quelle fehlt das Feld, Ziel verlangt min={tp.min} > 0 → nicht kompatibel."
-            )
+            self.issues.append(ComparisonIssue.MIN)
 
-        if any((p and p.min < tp.min) for p in sp):
-            if self._all_sources_have_optional_ancestor(sources):
+        if any([p and p.min < tp.min for p in sp]):
+            # Optionaler Elternknoten in allen Sources? -> Downgrade auf WARN
+            if self._all_sources_have_optional_parent(sources):
                 self.classification = max(self.classification, ComparisonClassification.WARN)
-                self._add_issue(
-                    ComparisonIssue.MIN,
-                    f"{self.name}: min-Anforderung der Quelle ist geringer als im Ziel (Quelle < Ziel). "
-                    f"Optionaler Vorfahr erlaubt Auslassung → Warnung."
-                )
+                self.issues.append(ComparisonIssue.MIN)
             else:
                 self.classification = ComparisonClassification.INCOMPAT
-                self._add_issue(
-                    ComparisonIssue.MIN,
-                    f"{self.name}: min-Anforderung der Quelle ist geringer als im Ziel (Quelle < Ziel) "
-                    f"ohne optionalen Vorfahr → nicht kompatibel."
-                )
+                self.issues.append(ComparisonIssue.MIN)
 
-        if any((p and self._max_gt(p.max_num, tp.max_num)) for p in sp):
+        if any([p and p.max_num > tp.max_num for p in sp]):
             self.classification = ComparisonClassification.INCOMPAT
-            self._add_issue(
-                ComparisonIssue.MAX,
-                f"{self.name}: max der Quelle ({self._fmt_max(next(p.max_num for p in sp if p and self._max_gt(p.max_num, tp.max_num)))}) "
-                f"überschreitet max des Ziels ({self._fmt_max(tp.max_num)}) → nicht kompatibel."
-            )
+            self.issues.append(ComparisonIssue.MAX)
 
-        if any((p and p.ref_types != tp.ref_types) for p in sp):
+        if any([p and p.ref_types != tp.ref_types for p in sp]):
             self.classification = max(self.classification, ComparisonClassification.WARN)
-            self._add_issue(
-                ComparisonIssue.REF,
-                f"{self.name}: Referenztypen in Quelle(n) und Ziel unterscheiden sich → Warnung."
-            )
+            self.issues.append(ComparisonIssue.REF)
 
-    # ----------------- Mapping ins API-Modell -----------------
     def to_model(self) -> ComparisonFieldModel:
         profiles = {k: p.to_model() if p else None for k, p in self.profiles.items()}
         return ComparisonFieldModel(
@@ -198,7 +130,6 @@ class ComparisonField:
             profiles=profiles,
             classification=self.classification,
             issues=self.issues if self.issues else None,
-            explanations=self.explanations if self.explanations else None,
         )
 
 
