@@ -1,0 +1,103 @@
+project_info:
+  name: "Structure Comparer Backend"
+  description: "FastAPI-based backend service for comparing FHIR profiles and generating mappings. Processes FHIR packages, analyzes profile structures, and provides comparison results with HTML and JSON output capabilities."
+
+technologies:
+  frameworks:
+    - FastAPI (with standard extras)
+    - Poetry (dependency management)
+  languages:
+    - Python 3.12+
+  libraries:
+    - fhir-resources: "FHIR data structure handling"
+    - jinja2: "HTML template rendering"
+    - pyyaml: "YAML configuration processing"
+  tools:
+    - Black (code formatting)
+    - Docker (containerization)
+    - Docker Compose (orchestration)
+
+architecture:
+  type: REST API Service
+  structure: |
+    - FastAPI web service with structured comparison engine
+    - Modular design with separate mapper and server components
+    - Configuration-driven profile comparison
+    - Template-based HTML report generation
+    - Project-based organization of comparison tasks
+
+key_modules:
+  core:
+    - main.py: "CLI entry point for profile comparison"
+    - server.py: "FastAPI service entry point"
+    - mapper.py: "Core mapping and comparison logic"
+  
+  structure_comparer:
+    - "Core comparison engine and algorithms"
+    - "FHIR profile analysis and processing"
+    - "Mapping generation and validation"
+    - "Configuration management"
+
+functionality:
+  comparison_engine:
+    - "Compares FHIR profiles between different versions"
+    - "Identifies structural differences and similarities"
+    - "Generates mapping suggestions between profiles"
+    - "Supports manual mapping entries and overrides"
+  
+  output_formats:
+    - HTML: "Rich visual comparison reports with styling"
+    - JSON: "Machine-readable mapping data"
+    - YAML: "Configuration and manual entries"
+
+configuration:
+  project_structure: |
+    Each comparison project contains:
+    - config.json: Project configuration and mapping definitions
+    - manual_entries.yaml: User-defined mapping overrides
+    - data/: FHIR profile files and packages
+  
+  example_projects:
+    - "dgMP Mapping (pharmaceutical products)"
+    - "ePA Medication profile migrations"
+    - "KBV ERP profile version comparisons"
+
+development:
+  commands:
+    serve: "python -m uvicorn server:app (starts FastAPI service)"
+    compare: "python main.py --project-dir <path> (CLI comparison)"
+    install: "poetry install (install dependencies)"
+    format: "black . (code formatting)"
+  
+  testing:
+    - test_compare.py: "Core comparison logic tests"
+    - test_config.py: "Configuration handling tests"  
+    - test_serve.py: "API service tests"
+
+deployment:
+  containerization:
+    - Dockerfile for service containerization
+    - docker-compose.yaml for full stack deployment
+    - Multi-stage build optimization
+  
+  configuration:
+    - Environment-based configuration
+    - Volume mounts for project data
+    - Health check endpoints
+
+integration:
+  frontend_api: "Provides REST endpoints for Angular frontend"
+  data_flow: |
+    - Receives FHIR packages from frontend uploads
+    - Processes and stores profile data
+    - Executes comparison algorithms
+    - Returns structured comparison results
+    - Serves generated HTML reports
+
+domain_knowledge:
+  - FHIR R4/R5 profile specifications and constraints
+  - German healthcare standards (gematik, KBV, ePA)
+  - Pharmaceutical data models (dgMP)
+  - Healthcare interoperability patterns
+  - Profile versioning and migration strategies
+  - Mapping methodologies for healthcare data transformation
