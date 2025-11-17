@@ -125,6 +125,10 @@ class MappingHandler:
                 new_entry.fixed = fixed
             else:
                 raise MappingValueMissing()
+        
+        # Handle remark field for actions that support it (manual, extension)
+        if input.remark and new_entry.action in [Action.MANUAL, Action.EXTENSION]:
+            new_entry.remark = input.remark
 
         # Clean up possible manual entry this was copied from before
         manual_entries = proj.manual_entries.get(mapping_id)

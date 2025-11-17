@@ -1,1 +1,18 @@
-entries: []
+entries:
+- fields:
+  - action: manual
+    fixed: null
+    name: MedicationDispense.partOf
+    other: null
+    remark: Test Remark from Robert
+  - action: copy_to
+    fixed: null
+    name: MedicationDispense.statusReason[x]
+    other: MedicationDispense.meta
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationDispense.meta
+    other: MedicationDispense.statusReason[x]
+    remark: null
+  id: 3a1c8837-fb39-429f-a35f-08746e9c0bfb

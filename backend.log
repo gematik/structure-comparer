@@ -1,0 +1,82 @@
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.11/site-packages/cleo/application.py", line 327, in run
+    exit_code = self._run(io)
+                ^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/console/application.py", line 188, in _run
+    self._load_plugins(io)
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/console/application.py", line 354, in _load_plugins
+    manager.load_plugins()
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/plugins/plugin_manager.py", line 38, in load_plugins
+    self._load_plugin_entry_point(ep)
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/plugins/plugin_manager.py", line 76, in _load_plugin_entry_point
+    plugin = ep.load()  # type: ignore[no-untyped-call]
+             ^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.10/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/metadata/__init__.py", line 202, in load
+    module = import_module(match.group('module'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.10/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry_plugin_export/plugins.py", line 7, in <module>
+    from poetry_plugin_export.command import ExportCommand
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry_plugin_export/command.py", line 12, in <module>
+    from poetry_plugin_export.exporter import Exporter
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry_plugin_export/exporter.py", line 11, in <module>
+    from poetry.repositories.http_repository import HTTPRepository
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/repositories/__init__.py", line 4, in <module>
+    from poetry.repositories.repository_pool import RepositoryPool
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/repositories/repository_pool.py", line 11, in <module>
+    from poetry.config.config import Config
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/config/config.py", line 18, in <module>
+    from poetry.locations import CONFIG_DIR
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/locations.py", line 9, in <module>
+    from platformdirs import user_cache_path
+ModuleNotFoundError: No module named 'platformdirs'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/bin/poetry", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/console/application.py", line 411, in main
+    exit_code: int = Application().run()
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.11/site-packages/cleo/application.py", line 338, in run
+    self.render_error(e, io)
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/console/application.py", line 180, in render_error
+    self.set_solution_provider_repository(self._get_solution_provider_repository())
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/console/application.py", line 400, in _get_solution_provider_repository
+    from poetry.mixology.solutions.providers.python_requirement_solution_provider import (
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/mixology/solutions/providers/__init__.py", line 3, in <module>
+    from poetry.mixology.solutions.providers.python_requirement_solution_provider import (
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/mixology/solutions/providers/python_requirement_solution_provider.py", line 9, in <module>
+    from poetry.puzzle.exceptions import SolverProblemError
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/puzzle/__init__.py", line 3, in <module>
+    from poetry.puzzle.solver import Solver
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/puzzle/solver.py", line 16, in <module>
+    from poetry.puzzle.provider import Indicator
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/puzzle/provider.py", line 27, in <module>
+    from poetry.packages.direct_origin import DirectOrigin
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/packages/direct_origin.py", line 10, in <module>
+    from poetry.inspection.info import PackageInfo
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/inspection/info.py", line 26, in <module>
+    from poetry.utils.env import EnvCommandError
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/utils/env/__init__.py", line 9, in <module>
+    from poetry.utils.env.base_env import Env
+  File "/opt/homebrew/lib/python3.11/site-packages/poetry/utils/env/base_env.py", line 15, in <module>
+    from virtualenv.seed.wheels.embed import get_embed_wheel
+  File "/opt/homebrew/lib/python3.11/site-packages/virtualenv/__init__.py", line 3, in <module>
+    from .run import cli_run, session_via_cli
+  File "/opt/homebrew/lib/python3.11/site-packages/virtualenv/run/__init__.py", line 7, in <module>
+    from virtualenv.app_data import make_app_data
+  File "/opt/homebrew/lib/python3.11/site-packages/virtualenv/app_data/__init__.py", line 8, in <module>
+    from platformdirs import user_data_dir
+ModuleNotFoundError: No module named 'platformdirs'
