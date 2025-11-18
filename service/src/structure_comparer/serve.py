@@ -202,6 +202,22 @@ async def update_or_create_project(
     return project_handler.update_or_create(project_key, project)
 
 
+@app.delete(
+    "/project/{project_key}",
+    tags=["Projects"],
+    status_code=204,
+    responses={404: {"model": ErrorModel}},
+)
+async def delete_project(project_key: str, response: Response) -> None:
+    """Delete a project and all its data"""
+    global project_handler
+    try:
+        project_handler.delete(project_key)
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
 @app.get(
     "/project/{project_key}/package",
     tags=["Packages"],

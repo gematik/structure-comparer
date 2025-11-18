@@ -77,6 +77,21 @@ class ProjectsHandler:
 
         return proj.to_model()
 
+    def delete(self, proj_key: str) -> None:
+        """Delete a project and all its data"""
+        if proj_key not in self.__projs:
+            raise ProjectNotFound()
+        
+        proj = self.__projs[proj_key]
+        
+        # Remove project directory and all contents
+        import shutil
+        if proj.dir.exists():
+            shutil.rmtree(proj.dir)
+        
+        # Remove from in-memory cache
+        del self.__projs[proj_key]
+
     @staticmethod
     def get_action_options() -> ActionOutputModel:
         return ActionOutputModel.from_enum()
