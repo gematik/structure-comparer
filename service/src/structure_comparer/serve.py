@@ -1346,7 +1346,7 @@ async def get_mapping_evaluation(
     "/project/{project_key}/mapping/{mapping_id}/evaluation/summary",
     tags=["Mappings", "Evaluation"],
     response_model=MappingEvaluationSummaryModel,
-    responses={404: {}, 412: {}},
+    responses={404: {"model": ErrorModel}, 412: {"model": ErrorModel}},
 )
 async def get_mapping_evaluation_summary(
     project_key: str, mapping_id: str, response: Response
@@ -1357,18 +1357,11 @@ async def get_mapping_evaluation_summary(
     Returns a concise summary of mapping evaluation results
     including counts for different evaluation outcomes.
     """
-    global mapping_handler, mapping_evaluator, project_handler
+    global mapping_handler, mapping_evaluator
     try:
-        # Get the mapping details
-        mapping_details = mapping_handler.get(project_key, mapping_id)
-        
-        # Get the actual mapping object from handler for evaluation
-        project = project_handler.get(project_key)
-        mapping = project.get_mapping(mapping_id)
-        
-        if not mapping:
-            response.status_code = 404
-            return ErrorModel(error="Mapping not found")
+        # Get the actual mapping object for evaluation
+        # Use the internal __get method to get the Mapping object directly
+        mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
             
         # Evaluate the mapping and get summary
         field_evaluations = mapping_evaluator.evaluate_mapping(mapping)
@@ -1376,7 +1369,7 @@ async def get_mapping_evaluation_summary(
         
         return MappingEvaluationSummaryModel(
             mapping_id=mapping_id,
-            mapping_name=mapping_details.name,
+            mapping_name=mapping.name,
             **summary
         )
 
