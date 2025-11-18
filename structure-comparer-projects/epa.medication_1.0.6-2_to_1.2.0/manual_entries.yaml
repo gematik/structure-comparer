@@ -1,1 +1,23 @@
-entries: []
+entries:
+- fields:
+  - action: empty
+    fixed: null
+    name: Medication.code.coding:snomed
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.form.coding:edqm
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.form.coding:snomed
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed
+    other: null
+    remark: null
+  id: c9fdc5ae-2083-4a01-bdd6-fffcc0d8c9d6
