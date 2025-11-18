@@ -87,9 +87,19 @@ entries:
     name: MedicationRequest.subject.reference
     other: null
     remark: null
-  - action: use
+  - action: empty
     fixed: null
     name: MedicationRequest.substitution.allowed[x]:allowedBoolean
+    other: null
+    remark: null
+  - action: fixed
+    fixed: TEst
+    name: MedicationRequest.dispenseRequest.quantity.code
+    other: null
+    remark: null
+  - action: fixed
+    fixed: Tesdt
+    name: MedicationRequest.dispenseRequest.quantity.system
     other: null
     remark: null
   id: 3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702
@@ -351,6 +361,12 @@ entries:
     name: Medication.meta.profile
     other: null
     remark: null
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.denominator.value
+    other: null
+    remark: Es wird eine Extension gesetzt, die darauf hinweist, das diese Eigenschaft
+      fehlt
   id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
 - fields:
   - action: manual

@@ -1367,9 +1367,32 @@ async def get_mapping_evaluation_summary(
         field_evaluations = mapping_evaluator.evaluate_mapping(mapping)
         summary = mapping_evaluator.get_mapping_summary(field_evaluations)
         
+        # Calculate simplified categories based on original classification and actions
+        # New logic: Non-overlapping categories that sum to total
+        simplified_compatible = 0  # Originally compatible fields (includes warnings that are treated as compatible)
+        simplified_resolved = 0    # Originally incompatible but with mapping action
+        simplified_needs_action = 0  # Originally incompatible and still needs action (USE action)
+        
+        for field_evaluation in field_evaluations.values():
+            original_classification = field_evaluation.original_classification
+            action = field_evaluation.action
+            
+            # Kompatibel: Felder die vom Comparison-Algorithmus als kompatibel oder warning eingestuft wurden
+            if original_classification.value in ['compatible', 'warning']:
+                simplified_compatible += 1
+            # Gelöst: Ursprünglich inkompatible Felder, die inzwischen ein manuelles Mapping erhalten haben
+            elif original_classification.value == 'incompatible' and action.value != 'use':
+                simplified_resolved += 1
+            # Aktion erforderlich: Inkompatible Felder minus der bereits gelösten Felder
+            elif original_classification.value == 'incompatible' and action.value == 'use':
+                simplified_needs_action += 1
+        
         return MappingEvaluationSummaryModel(
             mapping_id=mapping_id,
             mapping_name=mapping.name,
+            simplified_compatible=simplified_compatible,
+            simplified_resolved=simplified_resolved,
+            simplified_needs_action=simplified_needs_action,
             **summary
         )
 

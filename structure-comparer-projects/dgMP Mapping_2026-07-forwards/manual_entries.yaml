@@ -22,4 +22,19 @@ entries:
     name: Medication.manufacturer
     other: null
     remark: null
+  - action: use
+    fixed: null
+    name: Medication.meta.profile
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.manufacturer.reference
+    other: null
+    remark: null
+  - action: extension
+    fixed: null
+    name: Medication.meta.profile:workflowProfile
+    other: null
+    remark: Extension and value(s) will be retained
   id: 45d6f0d8-1dc8-438f-849b-6cb935e0f6fe

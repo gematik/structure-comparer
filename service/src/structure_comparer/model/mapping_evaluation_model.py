@@ -47,3 +47,8 @@ class MappingEvaluationSummaryModel(BaseModel):
     action_resolved: int
     action_mitigated: int
     needs_attention: int
+    
+    # Simplified categories for frontend
+    simplified_compatible: int  # Same as compatible
+    simplified_resolved: int  # action_resolved + action_mitigated
+    simplified_needs_action: int  # total_fields - compatible - (action_resolved + action_mitigated)
