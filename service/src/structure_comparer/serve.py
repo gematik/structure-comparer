@@ -28,6 +28,7 @@ from .handler.comparison import ComparisonHandler
 from .handler.mapping import MappingHandler
 from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
+from .mapping_evaluator import MappingEvaluator
 from .model.action import ActionOutput as ActionOutputModel
 from .model.comparison import ComparisonCreate as ComparisonCreateModel
 from .model.comparison import ComparisonDetail as ComparisonDetailModel
@@ -43,6 +44,12 @@ from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
+from .model.mapping_evaluation_model import (
+    MappingEvaluationModel,
+    MappingEvaluationSummaryModel,
+    FieldEvaluationModel,
+    EvaluationIssueModel,
+)
 from .model.package import Package as PackageModel
 from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
@@ -1268,6 +1275,173 @@ async def post_mapping_field(
         MappingValueMissing,
     ) as e:
         response.status_code = 400
+        return ErrorModel.from_except(e)
+
+
+# Initialize the mapping evaluator globally
+mapping_evaluator = MappingEvaluator()
+
+
+@app.get(
+    "/project/{project_key}/mapping/{mapping_id}/evaluation",
+    tags=["Mappings", "Evaluation"],
+    response_model=MappingEvaluationModel,
+    responses={404: {}, 412: {}},
+)
+async def get_mapping_evaluation(
+    project_key: str, mapping_id: str, response: Response
+) -> MappingEvaluationModel | ErrorModel:
+    """
+    Get enhanced evaluation for a specific mapping
+    
+    Returns detailed evaluation of mapping fields considering their actions
+    and providing enhanced compatibility assessment, warnings, and recommendations.
+    """
+    global mapping_handler, mapping_evaluator
+    try:
+        # Get the actual mapping object for evaluation
+        # Use the internal __get method to get the Mapping object directly
+        mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
+            
+        # Evaluate the mapping
+        field_evaluations = mapping_evaluator.evaluate_mapping(mapping)
+        summary = mapping_evaluator.get_mapping_summary(field_evaluations)
+        
+        # Convert to model format
+        field_evaluation_models = {}
+        for field_name, evaluation in field_evaluations.items():
+            issue_models = []
+            for issue in evaluation.issues:
+                issue_models.append(EvaluationIssueModel(
+                    issue_type=issue.issue_type,
+                    severity=issue.severity.value,
+                    message=issue.message,
+                    resolved_by_action=issue.resolved_by_action,
+                    requires_attention=issue.requires_attention
+                ))
+            
+            field_evaluation_models[field_name] = FieldEvaluationModel(
+                field_name=evaluation.field_name,
+                original_classification=evaluation.original_classification,
+                enhanced_classification=evaluation.enhanced_classification.value,
+                action=evaluation.action,
+                issues=issue_models,
+                warnings=evaluation.warnings,
+                recommendations=evaluation.recommendations
+            )
+        
+        return MappingEvaluationModel(
+            mapping_id=mapping_id,
+            mapping_name=mapping.name,
+            field_evaluations=field_evaluation_models,
+            summary=summary
+        )
+
+    except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/mapping/{mapping_id}/evaluation/summary",
+    tags=["Mappings", "Evaluation"],
+    response_model=MappingEvaluationSummaryModel,
+    responses={404: {}, 412: {}},
+)
+async def get_mapping_evaluation_summary(
+    project_key: str, mapping_id: str, response: Response
+) -> MappingEvaluationSummaryModel | ErrorModel:
+    """
+    Get evaluation summary for a specific mapping
+    
+    Returns a concise summary of mapping evaluation results
+    including counts for different evaluation outcomes.
+    """
+    global mapping_handler, mapping_evaluator, project_handler
+    try:
+        # Get the mapping details
+        mapping_details = mapping_handler.get(project_key, mapping_id)
+        
+        # Get the actual mapping object from handler for evaluation
+        project = project_handler.get(project_key)
+        mapping = project.get_mapping(mapping_id)
+        
+        if not mapping:
+            response.status_code = 404
+            return ErrorModel(error="Mapping not found")
+            
+        # Evaluate the mapping and get summary
+        field_evaluations = mapping_evaluator.evaluate_mapping(mapping)
+        summary = mapping_evaluator.get_mapping_summary(field_evaluations)
+        
+        return MappingEvaluationSummaryModel(
+            mapping_id=mapping_id,
+            mapping_name=mapping_details.name,
+            **summary
+        )
+
+    except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/evaluation",
+    tags=["Fields", "Evaluation"],
+    response_model=FieldEvaluationModel,
+    responses={404: {}, 412: {}},
+)
+async def get_field_evaluation(
+    project_key: str, mapping_id: str, field_name: str, response: Response
+) -> FieldEvaluationModel | ErrorModel:
+    """
+    Get enhanced evaluation for a specific field in a mapping
+    
+    Returns detailed evaluation of a single field considering its action
+    and providing enhanced compatibility assessment, warnings, and recommendations.
+    """
+    global mapping_handler, mapping_evaluator, project_handler
+    try:
+        # Get the actual mapping object from handler for evaluation
+        project = project_handler.get(project_key)
+        mapping = project.get_mapping(mapping_id)
+        
+        if not mapping:
+            response.status_code = 404
+            return ErrorModel(error="Mapping not found")
+            
+        # Check if field exists
+        if field_name not in mapping.fields:
+            response.status_code = 404
+            return ErrorModel(error="Field not found")
+            
+        # Evaluate the specific field
+        field = mapping.fields[field_name]
+        evaluation = mapping_evaluator.evaluate_field(field, mapping)
+        
+        # Convert issues to models
+        issue_models = []
+        for issue in evaluation.issues:
+            issue_models.append(EvaluationIssueModel(
+                issue_type=issue.issue_type,
+                severity=issue.severity.value,
+                message=issue.message,
+                resolved_by_action=issue.resolved_by_action,
+                requires_attention=issue.requires_attention
+            ))
+        
+        return FieldEvaluationModel(
+            field_name=evaluation.field_name,
+            original_classification=evaluation.original_classification,
+            enhanced_classification=evaluation.enhanced_classification.value,
+            action=evaluation.action,
+            issues=issue_models,
+            warnings=evaluation.warnings,
+            recommendations=evaluation.recommendations
+        )
+
+    except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
+        response.status_code = 404
         return ErrorModel.from_except(e)
 
 
