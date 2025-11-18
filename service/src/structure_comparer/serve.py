@@ -1,9 +1,11 @@
 import os
+import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+import yaml
 import uvicorn
-from fastapi import FastAPI, Response, UploadFile
+from fastapi import FastAPI, Response, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -57,6 +59,9 @@ from .model.profile import ProfileList as ProfileListModel
 from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
+from .manual_entries_migration import migrate_manual_entries
+from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
+from .manual_entries import ManualEntries
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -1475,6 +1480,146 @@ async def get_field_evaluation(
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/manual-entries/import",
+    tags=["Manual Entries"],
+    responses={400: {"model": ErrorModel}, 404: {"model": ErrorModel}, 500: {"model": ErrorModel}},
+)
+async def import_manual_entries(
+    project_key: str,
+    file: UploadFile,
+    response: Response,
+) -> dict:
+    """
+    Import legacy manual_entries.yaml file into the project.
+    
+    Uploads and migrates an old manual_entries.yaml file to the current format.
+    The migrated data will replace the current manual_entries.yaml in the project.
+    
+    Args:
+        project_key: The project identifier
+        file: The legacy manual_entries.yaml file to import
+        
+    Returns:
+        Dictionary with import status and statistics
+        
+    Raises:
+        404: Project not found
+        400: No file uploaded, empty file, or invalid YAML format
+        500: Import or migration failed
+    """
+    logger = logging.getLogger(__name__)
+    
+    try:
+        # Get the project
+        global project_handler
+        project = project_handler._get(project_key)
+        
+    except ProjectNotFound:
+        response.status_code = 404
+        return {"error": "Project not found"}
+    
+    try:
+        # Check if file was uploaded
+        if not file or not file.filename:
+            response.status_code = 400
+            return {"error": "No file uploaded or file is empty"}
+        
+        # Read the uploaded file
+        file_content = await file.read()
+        
+        if not file_content:
+            response.status_code = 400
+            return {"error": "No file uploaded or file is empty"}
+        
+        # Parse YAML content
+        try:
+            legacy_data = yaml.safe_load(file_content.decode('utf-8'))
+            if legacy_data is None:
+                response.status_code = 400
+                return {"error": "Invalid YAML format in uploaded file"}
+                
+        except yaml.YAMLError as e:
+            logger.error(f"YAML parsing error: {str(e)}")
+            response.status_code = 400
+            return {"error": "Invalid YAML format in uploaded file"}
+        except UnicodeDecodeError as e:
+            logger.error(f"File encoding error: {str(e)}")
+            response.status_code = 400
+            return {"error": "Invalid file encoding, expected UTF-8"}
+        
+        # Migrate the legacy data to current format
+        try:
+            migrated_data = migrate_manual_entries(legacy_data)
+            logger.info(f"Migration completed, {len(migrated_data.get('entries', []))} entries")
+        except ValueError as e:
+            logger.error(f"Migration failed: {str(e)}")
+            response.status_code = 400
+            return {"error": f"Migration failed: {str(e)}"}
+        
+        # Map legacy IDs to current mapping IDs based on FHIR context
+        try:
+            migrated_data, id_mapping_stats = rewrite_manual_entries_ids_by_fhir_context(
+                project, legacy_data, migrated_data
+            )
+            logger.info(f"ID mapping completed: {id_mapping_stats['mapped_entries']} mapped, "
+                        f"{id_mapping_stats['unmapped_entries']} unmapped")
+            
+            if id_mapping_stats['warnings']:
+                for warning in id_mapping_stats['warnings']:
+                    logger.warning(warning)
+        except Exception as e:
+            logger.error(f"ID mapping failed: {str(e)}")
+            response.status_code = 500
+            return {"error": f"ID mapping failed: {str(e)}"}
+        
+        # Calculate statistics before writing
+        imported_entries = len(migrated_data.get("entries", []))
+        total_fields = sum(len(entry.get("fields", [])) for entry in migrated_data.get("entries", []))
+        logger.info(f"About to write {imported_entries} entries with {total_fields} total fields")
+        logger.info(f"Migrated data sample: {str(migrated_data)[:500]}...")
+        
+        # Create new ManualEntries object and write to project
+        manual_entries_file = project.dir / project.config.manual_entries_file
+        
+        # Create ManualEntries object from migrated data
+        from .model.manual_entries import ManualEntries as ManualEntriesModel
+        manual_entries = ManualEntries()
+        manual_entries._data = ManualEntriesModel.model_validate(migrated_data)
+        manual_entries._file = manual_entries_file
+        
+        # Write the new manual_entries.yaml
+        manual_entries.write()
+        logger.info(f"Successfully wrote manual_entries.yaml to {manual_entries_file}")
+        
+        # Reload the project's manual entries to reflect changes
+        project._Project__read_manual_entries()
+        logger.info(f"Reloaded project manual entries, now has {len(project.manual_entries.entries)} entries")
+        
+        logger.info(f"Successfully imported manual_entries for project {project_key}: "
+                    f"{imported_entries} mappings, {total_fields} fields")
+        
+        return {
+            "status": "ok",
+            "message": "Import completed successfully",
+            "project_key": project_key,
+            "imported_entries": imported_entries,
+            "imported_fields": total_fields,
+            "filename": file.filename,
+            "id_mapping": {
+                "mapped_entries": id_mapping_stats['mapped_entries'],
+                "unmapped_entries": id_mapping_stats['unmapped_entries'],
+                "warnings_count": len(id_mapping_stats['warnings']),
+                "mappings": id_mapping_stats['mappings']
+            }
+        }
+        
+    except Exception as e:
+        logger.exception(f"Unexpected error during import: {str(e)}")
+        response.status_code = 500
+        return {"error": f"Import failed: {str(e)}"}
 
 
 def serve():
