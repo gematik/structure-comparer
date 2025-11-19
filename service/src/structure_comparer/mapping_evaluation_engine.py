@@ -61,15 +61,15 @@ def derive_mapping_status(field_evaluation: EvaluationResult, action_info: Optio
     """Derive the unified mapping status from evaluation data and optional manual action.
 
     Rules:
-    - Manual actions (`ActionSource.MANUAL`) that resolve a conflict (`EvaluationStatus.RESOLVED`)
-      yield `MappingStatus.SOLVED`.
+    - Manual or inherited actions (`ActionSource.MANUAL` or `ActionSource.INHERITED`) that resolve
+      a conflict (`EvaluationStatus.RESOLVED`) yield `MappingStatus.SOLVED`.
     - Any remaining errors or failed evaluations keep the field `INCOMPATIBLE`.
     - Pure warnings without errors map to `WARNING`.
-    - Manual adjustments on already compatible fields remain `COMPATIBLE`.
+    - Manual/inherited adjustments on already compatible fields remain `COMPATIBLE`.
     - Everything else defaults to `COMPATIBLE` because no action is required.
     """
 
-    if action_info is not None and action_info.source == ActionSource.MANUAL:
+    if action_info is not None and action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED):
         if field_evaluation.status == EvaluationStatus.EVALUATION_FAILED:
             return MappingStatus.INCOMPATIBLE
 

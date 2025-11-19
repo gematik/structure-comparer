@@ -6,7 +6,7 @@ from pathlib import Path
 import yaml
 import uvicorn
 from fastapi import FastAPI, Response, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from .action import Action
@@ -47,7 +47,7 @@ from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
-from .model.mapping_action_models import EvaluationResult, EvaluationStatus
+from .model.mapping_action_models import EvaluationResult, EvaluationStatus, MappingStatus
 from .model.mapping_evaluation_model import (
   MappingEvaluationModel,
   MappingEvaluationSummaryModel,
@@ -83,19 +83,26 @@ def _build_evaluation_summary(evaluations: dict[str, EvaluationResult]) -> dict[
     }
 
     for result in evaluations.values():
-        if result.status == EvaluationStatus.OK:
-            summary["compatible"] += 1
-        if result.status == EvaluationStatus.RESOLVED:
+        resolved_by_action = (
+            result.mapping_status == MappingStatus.SOLVED
+            or result.status == EvaluationStatus.RESOLVED
+        )
+
+        if resolved_by_action:
             summary["action_resolved"] += 1
-        if result.status == EvaluationStatus.ACTION_REQUIRED:
-            summary["needs_attention"] += 1
-        if result.status == EvaluationStatus.UNKNOWN:
-            summary["action_mitigated"] += 1
-        if result.status == EvaluationStatus.INCOMPATIBLE:
-            summary["incompatible"] += 1
-        if result.status == EvaluationStatus.EVALUATION_FAILED:
-            summary["incompatible"] += 1
-            summary["needs_attention"] += 1
+        else:
+            if result.status == EvaluationStatus.OK:
+                summary["compatible"] += 1
+            elif result.status == EvaluationStatus.ACTION_REQUIRED:
+                summary["needs_attention"] += 1
+            elif result.status == EvaluationStatus.UNKNOWN:
+                summary["action_mitigated"] += 1
+            elif result.status == EvaluationStatus.INCOMPATIBLE:
+                summary["incompatible"] += 1
+            elif result.status == EvaluationStatus.EVALUATION_FAILED:
+                summary["incompatible"] += 1
+                summary["needs_attention"] += 1
+
         if result.has_warnings:
             summary["warnings"] += 1
 
@@ -936,6 +943,84 @@ async def get_mapping_results(
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/mapping/{mapping_id}/structuremap.fsh",
+    tags=["Mappings", "FSH Export"],
+    responses={404: {"model": ErrorModel}},
+)
+async def download_structuremap_fsh(
+    project_key: str,
+    mapping_id: str,
+    response: Response,
+):
+    """
+    Download FHIR StructureMap in FSH format for a mapping.
+    
+    Returns a FSH (FHIR Shorthand) file containing a StructureMap RuleSet
+    generated from the mapping's actions.
+    
+    Args:
+        project_key: The project identifier
+        mapping_id: The mapping identifier
+        
+    Returns:
+        FSH file as text/plain with Content-Disposition header for download
+        
+    Raises:
+        404: Project or mapping not found
+    """
+    from .mapping_fsh_export import build_structuremap_fsh
+    
+    global mapping_handler
+    try:
+        # Get the mapping with actions
+        mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
+        actions = mapping.get_action_info_map()
+        
+        # Determine aliases from profile names
+        source_alias = "source"
+        target_alias = "target"
+        
+        if mapping.sources and len(mapping.sources) > 0:
+            source_name = mapping.sources[0].name
+            # Create a simple alias from the profile name
+            source_alias = source_name.replace(" ", "").replace("-", "")
+        
+        if mapping.target:
+            target_name = mapping.target.name
+            target_alias = target_name.replace(" ", "").replace("-", "")
+        
+        # Create a ruleset name from mapping ID
+        ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
+        
+        # Generate FSH content
+        fsh_content = build_structuremap_fsh(
+            mapping=mapping,
+            actions=actions,
+            source_alias=source_alias,
+            target_alias=target_alias,
+            ruleset_name=ruleset_name,
+        )
+        
+        # Return as downloadable file
+        filename = f"{mapping_id}_structuremap.fsh"
+        return PlainTextResponse(
+            content=fsh_content,
+            media_type="text/fsh",
+            headers={
+                "Content-Disposition": f'attachment; filename="{filename}"'
+            },
+        )
+        
+    except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except Exception as e:
+        logging.exception(f"Error generating FSH export: {str(e)}")
+        response.status_code = 500
+        return ErrorModel(error=f"FSH export failed: {str(e)}")
 
 
 @app.get(

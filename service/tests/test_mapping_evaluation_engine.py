@@ -182,3 +182,44 @@ def test_manual_action_on_compatible_field_stays_compatible():
     assert evaluation.status == EvaluationStatus.OK
     assert evaluation.has_warnings is False
     assert evaluation.has_errors is False
+
+
+def test_incompatible_field_with_inherited_action_is_solved():
+    mapping = EvalMapping([
+        EvalField("Medication.extension:isVaccine.url", is_target_required=False, classification="incompatible"),
+    ])
+    actions = {
+        "Medication.extension:isVaccine.url": ActionInfo(
+            action=ActionType.COPY_FROM,
+            source=ActionSource.INHERITED,
+            inherited_from="Medication.extension:isVaccine"
+        )
+    }
+
+    result = evaluate_mapping(mapping, actions)
+    evaluation = result["Medication.extension:isVaccine.url"]
+
+    assert evaluation.mapping_status == MappingStatus.SOLVED
+    assert evaluation.status == EvaluationStatus.ACTION_REQUIRED
+    assert evaluation.has_errors is True
+
+
+def test_warning_field_with_inherited_action_is_solved():
+    mapping = EvalMapping([
+        EvalField("Observation.interpretation", classification="warning"),
+    ])
+    actions = {
+        "Observation.interpretation": ActionInfo(
+            action=ActionType.OTHER,
+            source=ActionSource.INHERITED,
+            inherited_from="Observation"
+        )
+    }
+
+    result = evaluate_mapping(mapping, actions)
+    evaluation = result["Observation.interpretation"]
+
+    assert evaluation.mapping_status == MappingStatus.SOLVED
+    assert evaluation.status == EvaluationStatus.ACTION_REQUIRED
+    assert evaluation.has_warnings is True
+    assert evaluation.has_errors is False
