@@ -1348,7 +1348,8 @@ async def get_mapping_evaluation(
                 action=evaluation.action,
                 issues=issue_models,
                 warnings=evaluation.warnings,
-                recommendations=evaluation.recommendations
+                recommendations=evaluation.recommendations,
+                processing_status=evaluation.processing_status
             )
         
         return MappingEvaluationModel(

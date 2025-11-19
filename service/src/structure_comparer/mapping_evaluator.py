@@ -46,6 +46,7 @@ class FieldEvaluation:
     issues: List[EvaluationIssue]
     warnings: List[str]
     recommendations: List[str]
+    processing_status: Optional[str] = None
 
 
 class MappingEvaluator:
@@ -148,6 +149,9 @@ class MappingEvaluator:
         field_recommendations = self._generate_recommendations(field, enhanced_classification, issues)
         recommendations.extend(field_recommendations)
         
+        # Calculate processing status
+        processing_status = self._calculate_processing_status(original_classification, field.action)
+        
         return FieldEvaluation(
             field_name=field.name,
             original_classification=original_classification,
@@ -155,7 +159,8 @@ class MappingEvaluator:
             action=field.action,
             issues=issues,
             warnings=warnings,
-            recommendations=recommendations
+            recommendations=recommendations,
+            processing_status=processing_status
         )
     
     def _evaluate_use_action(self, field: MappingField, mapping: Mapping) -> Tuple[EvaluationResult, List[EvaluationIssue]]:
@@ -446,6 +451,18 @@ class MappingEvaluator:
             ComparisonClassification.INCOMPAT: EvaluationResult.INCOMPATIBLE
         }
         return mapping.get(classification, EvaluationResult.WARNING)
+    
+    def _calculate_processing_status(self, original_classification: ComparisonClassification, action: Action) -> str:
+        """Calculate processing status based on original classification and action"""
+        # Central status logic that matches frontend expectations
+        if original_classification in [ComparisonClassification.COMPAT, ComparisonClassification.WARN]:
+            return 'completed'
+        elif original_classification == ComparisonClassification.INCOMPAT and action != Action.USE:
+            return 'resolved'
+        elif original_classification == ComparisonClassification.INCOMPAT and action == Action.USE:
+            return 'needs_action'
+        else:
+            return 'needs_action'  # fallback
     
     def get_mapping_summary(self, evaluations: Dict[str, FieldEvaluation]) -> Dict[str, int]:
         """Get summary statistics for mapping evaluations"""

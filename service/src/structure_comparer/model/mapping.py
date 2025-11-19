@@ -24,6 +24,7 @@ class MappingField(MappingFieldBase, ComparisonField):
     """Representation for when getting a field"""
 
     actions_allowed: list[Action]
+    show_mapping_content: bool | None = None
 
 
 class MappingBase(BaseModel):

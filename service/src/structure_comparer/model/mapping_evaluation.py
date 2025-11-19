@@ -26,6 +26,7 @@ class FieldEvaluationModel(BaseModel):
     issues: List[EvaluationIssueModel]
     warnings: List[str]
     recommendations: List[str]
+    processing_status: Optional[str] = None  # "completed" | "resolved" | "needs_action"
 
 
 class MappingEvaluationModel(BaseModel):

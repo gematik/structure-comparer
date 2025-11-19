@@ -14,6 +14,7 @@ from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
 from .comparison import Comparison, ComparisonField
 from .config import MappingConfig
+from ..model.comparison import ComparisonClassification
 
 MANUAL_SUFFIXES = ["reference", "profile"]
 
@@ -142,6 +143,13 @@ class MappingField(ComparisonField):
     def to_model(self) -> MappingFieldModel:
         profiles = {k: p.to_model() for k, p in self.profiles.items() if p}
 
+        # Calculate show_mapping_content based on processing status logic
+        # If the field has needs_action status (incompatible + use action), hide mapping content
+        show_mapping_content = True
+        if (self.classification == ComparisonClassification.INCOMPAT and
+                self.action == Action.USE):
+            show_mapping_content = False
+
         return MappingFieldModel(
             name=self.name,
             action=self.action,
@@ -152,6 +160,7 @@ class MappingField(ComparisonField):
             actions_allowed=self.actions_allowed,
             classification=self.classification,
             issues=self.issues if self.issues else None,
+            show_mapping_content=show_mapping_content,
         )
 
 
