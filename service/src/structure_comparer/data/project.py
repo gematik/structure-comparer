@@ -147,6 +147,10 @@ class Project:
                 return pkg
         return None
 
+    def get_mapping(self, mapping_id: str) -> 'Mapping':
+        """Get mapping by ID from loaded mappings"""
+        return self.mappings.get(mapping_id)
+
     def get_profile(self, id: str, url: str, version: str):
         for pkg in self.pkgs:
             for profile in pkg.profiles:

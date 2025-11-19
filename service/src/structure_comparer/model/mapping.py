@@ -18,6 +18,8 @@ class MappingFieldBase(MappingFieldMinimal):
     """Base model that is e.g. written as manual entry"""
 
     name: str
+    auto_generated: bool = False
+    inherited_from: str | None = None
 
 
 class MappingField(MappingFieldBase, ComparisonField):

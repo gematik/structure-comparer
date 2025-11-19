@@ -93,12 +93,16 @@ class MappingField(ComparisonField):
             if self.action == Action.FIXED:
                 self.fixed = manual_entry.fixed
                 self.other = None
-                self.remark = REMARKS[self.action].format(self.fixed)
+                # Only set default remark if no custom remark exists
+                if not self.remark:
+                    self.remark = REMARKS[self.action].format(self.fixed)
 
             elif self.action == Action.COPY_FROM or self.action == Action.COPY_TO:
                 self.fixed = None
                 self.other = manual_entry.other
-                self.remark = REMARKS[self.action].format(self.other)
+                # Only set default remark if no custom remark exists
+                if not self.remark:
+                    self.remark = REMARKS[self.action].format(self.other)
 
         # If the last element from the property is in the manual list, use the manual action
         elif self.name_child in MANUAL_SUFFIXES:
@@ -116,11 +120,13 @@ class MappingField(ComparisonField):
                 # Cut away the common part with the parent and add the remainder to the parent's extra
                 if parent_update.other is not None:
                     self.other = (
-                        parent_update.other + self.name[len(self.name_parent) :]
+                        parent_update.other + self.name[len(self.name_parent):]
                     )
                 else:
                     raise ValueError("Error with the data: parent_update.other is None")
-                self.remark = REMARKS[self.action].format(self.other)
+                # Only set default remark if no custom remark exists
+                if not self.remark:
+                    self.remark = REMARKS[self.action].format(self.other)
 
             # Else use the parent's remark
             else:

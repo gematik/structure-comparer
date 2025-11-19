@@ -91,6 +91,10 @@ class MappingHandler:
         field_name: str,
         input: MappingFieldMinimalModel,
     ) -> MappingFieldBaseModel:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(f"Step7: set_field() entered for mapping_id={mapping_id}, field_name={field_name}, action={input.action}")
+        
         proj = self.project_handler._get(project_key)
 
         # Easiest way to get the fields is from mapping
@@ -103,8 +107,7 @@ class MappingHandler:
         # Check if action is allowed for this field
         if input.action not in field.actions_allowed:
             raise MappingNotFound(
-                f"action '{input.action.value}' not allowed for this field, allowed: {
-                    ', '.join([field.value for field in field.actions_allowed])}"
+                f"action '{input.action.value}' not allowed for this field, allowed: {', '.join([field.value for field in field.actions_allowed])}"
             )
 
         # Build the entry that should be created/updated
@@ -156,6 +159,28 @@ class MappingHandler:
             )
         # Save the changes
         proj.manual_entries.write()
+
+        # NEW: Integrate child action propagation after field update
+        from ..child_action_propagation import propagate_parent_actions_to_children
+        
+        try:
+            logger.warning(f"Step7: Before propagation for mapping {mapping_id}, field {field.name}")
+            manual_entries_dict = proj.manual_entries._data.model_dump()
+            logger.warning(f"Step7: manual_entries before propagation: {manual_entries_dict}")
+            
+            updated_entries = propagate_parent_actions_to_children(
+                manual_entries_dict,
+                proj,
+                mapping_id
+            )
+            logger.warning(f"Step7: manual_entries after propagation: {updated_entries}")
+            
+            proj.manual_entries._data = proj.manual_entries._data.model_validate(updated_entries)
+            proj.manual_entries.write()
+            logger.warning("Step7: Propagation completed and saved")
+        except Exception as e:
+            # Log the error but don't fail the field update
+            logger.error(f"Step7: Child action propagation failed: {e}", exc_info=True)
 
         return new_entry
 
