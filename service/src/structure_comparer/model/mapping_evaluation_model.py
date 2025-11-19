@@ -1,43 +1,19 @@
-"""
-Pydantic models for enhanced mapping evaluation
-"""
-from typing import Dict, List, Optional
+"""Legacy-compatible Pydantic models used by FastAPI responses."""
+from typing import Dict
+
 from pydantic import BaseModel
 
-from ..action import Action
-from ..model.comparison import ComparisonClassification, ComparisonIssue
-
-
-class EvaluationIssueModel(BaseModel):
-    """Model for evaluation issue"""
-    issue_type: ComparisonIssue
-    severity: str  # EvaluationResult as string
-    message: str
-    resolved_by_action: Optional[Action] = None
-    requires_attention: bool = True
-
-
-class FieldEvaluationModel(BaseModel):
-    """Model for field evaluation result"""
-    field_name: str
-    original_classification: ComparisonClassification
-    enhanced_classification: str  # EvaluationResult as string
-    action: Action
-    issues: List[EvaluationIssueModel]
-    warnings: List[str]
-    recommendations: List[str]
+from ..model.mapping_action_models import EvaluationResult
 
 
 class MappingEvaluationModel(BaseModel):
-    """Model for complete mapping evaluation"""
     mapping_id: str
     mapping_name: str
-    field_evaluations: Dict[str, FieldEvaluationModel]
+    field_evaluations: Dict[str, EvaluationResult]
     summary: Dict[str, int]
 
 
 class MappingEvaluationSummaryModel(BaseModel):
-    """Model for mapping evaluation summary"""
     mapping_id: str
     mapping_name: str
     total_fields: int
@@ -47,8 +23,6 @@ class MappingEvaluationSummaryModel(BaseModel):
     action_resolved: int
     action_mitigated: int
     needs_attention: int
-    
-    # Simplified categories for frontend
-    simplified_compatible: int  # Same as compatible
-    simplified_resolved: int  # action_resolved + action_mitigated
-    simplified_needs_action: int  # total_fields - compatible - (action_resolved + action_mitigated)
+    simplified_compatible: int | None = None
+    simplified_resolved: int | None = None
+    simplified_needs_action: int | None = None

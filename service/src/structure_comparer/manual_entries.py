@@ -59,6 +59,17 @@ class ManualEntries:
         if self._data is None:
             raise NotInitialized("ManualEntries data was not initialized")
 
+        # Drop auto-generated child entries – only persist manual decisions.
+        for entry in self._data.entries:
+            filtered_fields = []
+            for field in entry.fields:
+                if getattr(field, "auto_generated", False):
+                    continue
+                field.auto_generated = False
+                field.inherited_from = None
+                filtered_fields.append(field)
+            entry.fields = filtered_fields
+
         content = None
         if self._file.suffix == ".json":
             content = self._data.model_dump_json(indent=4)

@@ -1,48 +1,49 @@
 import logging
 from collections import OrderedDict
-from typing import List
+from typing import Dict, List
 
 from pydantic import ValidationError
 
 from ..action import Action
-from ..consts import REMARKS
 from ..errors import NotInitialized
 from ..manual_entries import ManualEntries
-from ..model.manual_entries import ManualEntriesMapping as ManualEntriesMappingModel
+from ..mapping_actions_engine import compute_mapping_actions
+from ..mapping_evaluation_engine import evaluate_mapping
 from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
+from ..model.mapping_action_models import ActionInfo, ActionSource, ActionType, EvaluationResult
 from .comparison import Comparison, ComparisonField
 from .config import MappingConfig
 from ..model.comparison import ComparisonClassification
 
-MANUAL_SUFFIXES = ["reference", "profile"]
-
-# These actions generate a remark with extra information
-EXTRA_ACTIONS = [
-    Action.COPY_FROM,
-    Action.COPY_TO,
-    Action.FIXED,
-]
-
-# These actions can be derived from their parents
-DERIVED_ACTIONS = [
-    Action.EMPTY,
-    Action.NOT_USE,
-] + EXTRA_ACTIONS
-
 logger = logging.getLogger(__name__)
+
+
+_ACTIONTYPE_TO_LEGACY: dict[ActionType, Action] = {
+    ActionType.USE: Action.USE,
+    ActionType.NOT_USE: Action.NOT_USE,
+    ActionType.EMPTY: Action.EMPTY,
+    ActionType.EXTENSION: Action.EXTENSION,
+    ActionType.COPY_FROM: Action.COPY_FROM,
+    ActionType.COPY_TO: Action.COPY_TO,
+    ActionType.FIXED: Action.FIXED,
+    ActionType.OTHER: Action.MANUAL,
+}
 
 
 class MappingField(ComparisonField):
     def __init__(self, name: str) -> None:
         super().__init__(name)
         self.action: Action = Action.USE
-        self.extension: str | None = None
         self.other: str | None = None
         self.fixed: str | None = None
-        self.remark = None
+        self.remark: str | None = None
         self.actions_allowed: List[Action] = []
+        self.auto_generated: bool = False
+        self.inherited_from: str | None = None
+        self.action_info: ActionInfo | None = None
+        self.evaluation = None
 
     @property
     def name_child(self) -> str:
@@ -69,82 +70,16 @@ class MappingField(ComparisonField):
 
         self.actions_allowed = list(allowed)
 
-    def classify_remark_field(
-        self, mapping: "Mapping", manual_entries: ManualEntriesMappingModel
-    ) -> None:
-        """
-        Classify and get the remark for the property
+    def apply_action_info(self, info: ActionInfo) -> None:
+        self.action_info = info
+        self.action = _ACTIONTYPE_TO_LEGACY.get(info.action, Action.MANUAL)
+        self.auto_generated = bool(info.auto_generated)
+        self.inherited_from = info.inherited_from
 
-        First, the manual entries and manual suffixes are checked. If neither is the case, it classifies the property
-        based on the presence of the property in the KBV and ePA profiles.
-        """
+        self.other = info.other_value if isinstance(info.other_value, str) else None
+        self.fixed = info.fixed_value if isinstance(info.fixed_value, str) else None
 
-        # If there is a manual entry for this property, use it
-        if manual_entries is not None and (
-            manual_entry := manual_entries.get(self.name)
-        ):
-            self.action = manual_entry.action if manual_entry.action else Action.MANUAL
-
-            # If there is a remark in the manual entry, use it else use the default remark
-            if manual_entry.remark:
-                self.remark = manual_entry.remark
-
-            # If the action needs extra information, generate the remark with the extra information
-            if self.action == Action.FIXED:
-                self.fixed = manual_entry.fixed
-                self.other = None
-                # Only set default remark if no custom remark exists
-                if not self.remark:
-                    self.remark = REMARKS[self.action].format(self.fixed)
-
-            elif self.action == Action.COPY_FROM or self.action == Action.COPY_TO:
-                self.fixed = None
-                self.other = manual_entry.other
-                # Only set default remark if no custom remark exists
-                if not self.remark:
-                    self.remark = REMARKS[self.action].format(self.other)
-
-        # If the last element from the property is in the manual list, use the manual action
-        elif self.name_child in MANUAL_SUFFIXES:
-            self.action = Action.MANUAL
-
-        # If the parent has an action that can be derived use the parent's action
-        elif (
-            parent_update := mapping.fields.get(self.name_parent)
-        ) and parent_update.action in DERIVED_ACTIONS:
-            self.action = parent_update.action
-
-            # If the action needs extra information derived that information from the parent
-            if self.action in EXTRA_ACTIONS:
-
-                # Cut away the common part with the parent and add the remainder to the parent's extra
-                if parent_update.other is not None:
-                    self.other = (
-                        parent_update.other + self.name[len(self.name_parent):]
-                    )
-                else:
-                    raise ValueError("Error with the data: parent_update.other is None")
-                # Only set default remark if no custom remark exists
-                if not self.remark:
-                    self.remark = REMARKS[self.action].format(self.other)
-
-            # Else use the parent's remark
-            else:
-                self.remark = parent_update.remark
-
-        # If present in any of the source profiles
-        elif any(
-            [self.profiles[profile.key] is not None for profile in mapping.sources]
-        ):
-            if self.profiles[mapping.target.key] is not None:
-                self.action = Action.USE
-            else:
-                self.action = Action.EXTENSION
-        else:
-            self.action = Action.EMPTY
-
-        if not self.remark:
-            self.remark = REMARKS[self.action]
+        self.remark = info.user_remark or info.system_remark
 
     def to_model(self) -> MappingFieldModel:
         profiles = {k: p.to_model() for k, p in self.profiles.items() if p}
@@ -167,6 +102,10 @@ class MappingField(ComparisonField):
             classification=self.classification,
             issues=self.issues if self.issues else None,
             show_mapping_content=show_mapping_content,
+            auto_generated=self.auto_generated,
+            inherited_from=self.inherited_from,
+            action_info=self.action_info,
+            evaluation=self.evaluation,
         )
 
 
@@ -175,6 +114,8 @@ class Mapping(Comparison):
         super().__init__(config, project)
 
         self.fields: OrderedDict[str, MappingField] = OrderedDict()
+        self._action_info_map: Dict[str, ActionInfo] = {}
+        self._evaluation_map: Dict[str, EvaluationResult] = {}
 
     def init_ext(self) -> "Mapping":
         self._get_sources(self._config.mappings.sourceprofiles)
@@ -204,11 +145,28 @@ class Mapping(Comparison):
         return self._project.manual_entries
 
     def fill_action_remark(self, manual_entries: ManualEntries):
-        manual_mappings = manual_entries.get(self.id)
+        manual_mappings = manual_entries.get(self.id) if manual_entries else None
 
-        if manual_mappings is not None:
-            for field in self.fields.values():
-                field.classify_remark_field(self, manual_mappings)
+        action_info_map = compute_mapping_actions(self, manual_mappings)
+        self._action_info_map = action_info_map
+        evaluation_map = evaluate_mapping(self, action_info_map)
+        self._evaluation_map = evaluation_map
+
+        for field_name, field in self.fields.items():
+            info = action_info_map.get(field_name)
+            if info is not None:
+                field.apply_action_info(info)
+            else:
+                fallback = ActionInfo(action=ActionType.USE, source=ActionSource.SYSTEM_DEFAULT)
+                field.apply_action_info(fallback)
+
+            field.evaluation = evaluation_map.get(field_name)
+
+    def get_action_info_map(self) -> Dict[str, ActionInfo]:
+        return self._action_info_map
+
+    def get_evaluation_map(self) -> Dict[str, EvaluationResult]:
+        return self._evaluation_map
 
     def _gen_fields(self) -> None:
         super()._gen_fields(MappingField)

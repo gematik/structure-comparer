@@ -5,10 +5,11 @@ from pathlib import Path
 
 import yaml
 import uvicorn
-from fastapi import FastAPI, Response, UploadFile, File, HTTPException
+from fastapi import FastAPI, Response, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from .action import Action
 from .errors import (
     ComparisonNotFound,
     FieldNotFound,
@@ -30,8 +31,8 @@ from .handler.comparison import ComparisonHandler
 from .handler.mapping import MappingHandler
 from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
-from .mapping_evaluator import MappingEvaluator
 from .model.action import ActionOutput as ActionOutputModel
+from .model.comparison import ComparisonClassification
 from .model.comparison import ComparisonCreate as ComparisonCreateModel
 from .model.comparison import ComparisonDetail as ComparisonDetailModel
 from .model.comparison import ComparisonList as ComparisonListModel
@@ -46,11 +47,10 @@ from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
+from .model.mapping_action_models import EvaluationResult, EvaluationStatus
 from .model.mapping_evaluation_model import (
-    MappingEvaluationModel,
-    MappingEvaluationSummaryModel,
-    FieldEvaluationModel,
-    EvaluationIssueModel,
+  MappingEvaluationModel,
+  MappingEvaluationSummaryModel,
 )
 from .model.package import Package as PackageModel
 from .model.package import PackageInput as PackageInputModel
@@ -69,6 +69,68 @@ package_handler: PackageHandler
 comparison_handler: ComparisonHandler
 mapping_handler: MappingHandler
 cur_proj: str
+
+
+def _build_evaluation_summary(evaluations: dict[str, EvaluationResult]) -> dict[str, int]:
+    summary = {
+        "total_fields": len(evaluations),
+        "compatible": 0,
+        "warnings": 0,
+        "incompatible": 0,
+        "action_resolved": 0,
+        "action_mitigated": 0,
+        "needs_attention": 0,
+    }
+
+    for result in evaluations.values():
+        if result.status == EvaluationStatus.OK:
+            summary["compatible"] += 1
+        if result.status == EvaluationStatus.RESOLVED:
+            summary["action_resolved"] += 1
+        if result.status == EvaluationStatus.ACTION_REQUIRED:
+            summary["needs_attention"] += 1
+        if result.status == EvaluationStatus.UNKNOWN:
+            summary["action_mitigated"] += 1
+        if result.status == EvaluationStatus.INCOMPATIBLE:
+            summary["incompatible"] += 1
+        if result.status == EvaluationStatus.EVALUATION_FAILED:
+            summary["incompatible"] += 1
+            summary["needs_attention"] += 1
+        if result.has_warnings:
+            summary["warnings"] += 1
+
+    return summary
+
+
+def _build_simplified_summary(mapping) -> dict[str, int]:
+    simplified = {
+        "simplified_compatible": 0,
+        "simplified_resolved": 0,
+        "simplified_needs_action": 0,
+    }
+
+    for field in mapping.fields.values():
+        classification = getattr(field, "classification", None)
+        action = getattr(field, "action", None)
+
+        if classification in {
+            ComparisonClassification.COMPAT,
+            ComparisonClassification.WARN,
+        }:
+            simplified["simplified_compatible"] += 1
+        elif (
+            classification == ComparisonClassification.INCOMPAT
+            and action is not None
+            and action != Action.USE
+        ):
+            simplified["simplified_resolved"] += 1
+        elif (
+            classification == ComparisonClassification.INCOMPAT
+            and action == Action.USE
+        ):
+            simplified["simplified_needs_action"] += 1
+
+    return simplified
 
 
 @asynccontextmanager
@@ -1139,7 +1201,10 @@ async def post_mapping_field_classification_old(
 ):
     """
     Post a manual classification for a field
-    Overrides the async default action of a field. `action` that should set for the field, `target` is the target of copy action and `value` may be a fixed value.
+    Overrides the default action of a field.
+
+    `action` selects the new action. `target` applies to copy actions. `value`
+    transports fixed values when required.
     ---
     consumes:
       - application/json
@@ -1227,7 +1292,10 @@ async def post_mapping_field(
 ) -> MappingFieldModel | ErrorModel:
     """
     Post a manual classification for a field
-    Overrides the async default action of a field. `action` that should set for the field, `target` is the target of copy action and `value` may be a fixed value.
+    Overrides the default action of a field.
+
+    `action` selects the new action. `target` applies to copy actions. `value`
+    transports fixed values when required.
     ---
     consumes:
       - application/json
@@ -1299,10 +1367,6 @@ async def post_mapping_field(
         return ErrorModel.from_except(e)
 
 
-# Initialize the mapping evaluator globally
-mapping_evaluator = MappingEvaluator()
-
-
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}/evaluation",
     tags=["Mappings", "Evaluation"],
@@ -1312,51 +1376,18 @@ mapping_evaluator = MappingEvaluator()
 async def get_mapping_evaluation(
     project_key: str, mapping_id: str, response: Response
 ) -> MappingEvaluationModel | ErrorModel:
-    """
-    Get enhanced evaluation for a specific mapping
-    
-    Returns detailed evaluation of mapping fields considering their actions
-    and providing enhanced compatibility assessment, warnings, and recommendations.
-    """
-    global mapping_handler, mapping_evaluator
+    """Return evaluation data for each field within the mapping."""
+    global mapping_handler
     try:
-        # Get the actual mapping object for evaluation
-        # Use the internal __get method to get the Mapping object directly
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
-            
-        # Evaluate the mapping
-        field_evaluations = mapping_evaluator.evaluate_mapping(mapping)
-        summary = mapping_evaluator.get_mapping_summary(field_evaluations)
-        
-        # Convert to model format
-        field_evaluation_models = {}
-        for field_name, evaluation in field_evaluations.items():
-            issue_models = []
-            for issue in evaluation.issues:
-                issue_models.append(EvaluationIssueModel(
-                    issue_type=issue.issue_type,
-                    severity=issue.severity.value,
-                    message=issue.message,
-                    resolved_by_action=issue.resolved_by_action,
-                    requires_attention=issue.requires_attention
-                ))
-            
-            field_evaluation_models[field_name] = FieldEvaluationModel(
-                field_name=evaluation.field_name,
-                original_classification=evaluation.original_classification,
-                enhanced_classification=evaluation.enhanced_classification.value,
-                action=evaluation.action,
-                issues=issue_models,
-                warnings=evaluation.warnings,
-                recommendations=evaluation.recommendations,
-                processing_status=evaluation.processing_status
-            )
-        
+        evaluations = mapping.get_evaluation_map()
+        summary = _build_evaluation_summary(evaluations)
+
         return MappingEvaluationModel(
             mapping_id=mapping_id,
             mapping_name=mapping.name,
-            field_evaluations=field_evaluation_models,
-            summary=summary
+            field_evaluations=evaluations,
+            summary=summary,
         )
 
     except (ProjectNotFound, MappingNotFound) as e:
@@ -1373,49 +1404,19 @@ async def get_mapping_evaluation(
 async def get_mapping_evaluation_summary(
     project_key: str, mapping_id: str, response: Response
 ) -> MappingEvaluationSummaryModel | ErrorModel:
-    """
-    Get evaluation summary for a specific mapping
-    
-    Returns a concise summary of mapping evaluation results
-    including counts for different evaluation outcomes.
-    """
-    global mapping_handler, mapping_evaluator
+    """Return aggregated counters for the mapping evaluation."""
+    global mapping_handler
     try:
-        # Get the actual mapping object for evaluation
-        # Use the internal __get method to get the Mapping object directly
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
-            
-        # Evaluate the mapping and get summary
-        field_evaluations = mapping_evaluator.evaluate_mapping(mapping)
-        summary = mapping_evaluator.get_mapping_summary(field_evaluations)
-        
-        # Calculate simplified categories based on original classification and actions
-        # New logic: Non-overlapping categories that sum to total
-        simplified_compatible = 0  # Originally compatible fields (includes warnings that are treated as compatible)
-        simplified_resolved = 0    # Originally incompatible but with mapping action
-        simplified_needs_action = 0  # Originally incompatible and still needs action (USE action)
-        
-        for field_evaluation in field_evaluations.values():
-            original_classification = field_evaluation.original_classification
-            action = field_evaluation.action
-            
-            # Kompatibel: Felder die vom Comparison-Algorithmus als kompatibel oder warning eingestuft wurden
-            if original_classification.value in ['compatible', 'warning']:
-                simplified_compatible += 1
-            # Gelöst: Ursprünglich inkompatible Felder, die inzwischen ein manuelles Mapping erhalten haben
-            elif original_classification.value == 'incompatible' and action.value != 'use':
-                simplified_resolved += 1
-            # Aktion erforderlich: Inkompatible Felder minus der bereits gelösten Felder
-            elif original_classification.value == 'incompatible' and action.value == 'use':
-                simplified_needs_action += 1
-        
+        evaluations = mapping.get_evaluation_map()
+        summary = _build_evaluation_summary(evaluations)
+        simplified = _build_simplified_summary(mapping)
+
         return MappingEvaluationSummaryModel(
             mapping_id=mapping_id,
             mapping_name=mapping.name,
-            simplified_compatible=simplified_compatible,
-            simplified_resolved=simplified_resolved,
-            simplified_needs_action=simplified_needs_action,
-            **summary
+            **summary,
+            **simplified,
         )
 
     except (ProjectNotFound, MappingNotFound) as e:
@@ -1426,59 +1427,31 @@ async def get_mapping_evaluation_summary(
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/evaluation",
     tags=["Fields", "Evaluation"],
-    response_model=FieldEvaluationModel,
+    response_model=EvaluationResult,
     responses={404: {}, 412: {}},
 )
 async def get_field_evaluation(
     project_key: str, mapping_id: str, field_name: str, response: Response
-) -> FieldEvaluationModel | ErrorModel:
-    """
-    Get enhanced evaluation for a specific field in a mapping
-    
-    Returns detailed evaluation of a single field considering its action
-    and providing enhanced compatibility assessment, warnings, and recommendations.
-    """
-    global mapping_handler, mapping_evaluator, project_handler
+) -> EvaluationResult | ErrorModel:
+    """Return evaluation data for a single field."""
+    global mapping_handler
     try:
-        # Get the actual mapping object from handler for evaluation
-        project = project_handler.get(project_key)
-        mapping = project.get_mapping(mapping_id)
-        
-        if not mapping:
-            response.status_code = 404
-            return ErrorModel(error="Mapping not found")
-            
-        # Check if field exists
+        mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
+
         if field_name not in mapping.fields:
             response.status_code = 404
             return ErrorModel(error="Field not found")
-            
-        # Evaluate the specific field
-        field = mapping.fields[field_name]
-        evaluation = mapping_evaluator.evaluate_field(field, mapping)
-        
-        # Convert issues to models
-        issue_models = []
-        for issue in evaluation.issues:
-            issue_models.append(EvaluationIssueModel(
-                issue_type=issue.issue_type,
-                severity=issue.severity.value,
-                message=issue.message,
-                resolved_by_action=issue.resolved_by_action,
-                requires_attention=issue.requires_attention
-            ))
-        
-        return FieldEvaluationModel(
-            field_name=evaluation.field_name,
-            original_classification=evaluation.original_classification,
-            enhanced_classification=evaluation.enhanced_classification.value,
-            action=evaluation.action,
-            issues=issue_models,
-            warnings=evaluation.warnings,
-            recommendations=evaluation.recommendations
-        )
 
-    except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
+        evaluations = mapping.get_evaluation_map()
+        evaluation = evaluations.get(field_name)
+
+        if evaluation is None:
+            response.status_code = 404
+            return ErrorModel(error="Evaluation not available")
+
+        return evaluation
+
+    except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
 

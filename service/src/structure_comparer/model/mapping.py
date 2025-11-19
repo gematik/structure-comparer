@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from ..action import Action
+from .mapping_action_models import ActionInfo, EvaluationResult
 from .comparison import ComparisonField
 from .profile import Profile
 
@@ -27,6 +28,8 @@ class MappingField(MappingFieldBase, ComparisonField):
 
     actions_allowed: list[Action]
     show_mapping_content: bool | None = None
+    action_info: ActionInfo | None = None
+    evaluation: EvaluationResult | None = None
 
 
 class MappingBase(BaseModel):

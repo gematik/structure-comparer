@@ -1,22 +1,30 @@
 entries:
 - fields:
   - action: empty
+    auto_generated: false
     fixed: null
+    inherited_from: null
     name: Medication.code.coding:snomed
     other: null
     remark: null
   - action: empty
+    auto_generated: false
     fixed: null
+    inherited_from: null
     name: Medication.form.coding:edqm
     other: null
     remark: null
   - action: empty
+    auto_generated: false
     fixed: null
+    inherited_from: null
     name: Medication.form.coding:snomed
     other: null
     remark: null
   - action: empty
+    auto_generated: false
     fixed: null
+    inherited_from: null
     name: Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed
     other: null
     remark: null
