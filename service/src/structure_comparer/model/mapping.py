@@ -7,7 +7,7 @@ from .profile import Profile
 
 
 class MappingFieldMinimal(BaseModel):
-    """Minimal model that is used to update a field"""
+    """Minimal payload accepted when updating a field"""
 
     action: Action
     other: str | None = None
@@ -16,16 +16,17 @@ class MappingFieldMinimal(BaseModel):
 
 
 class MappingFieldBase(MappingFieldMinimal):
-    """Base model that is e.g. written as manual entry"""
+    """Manual-entry representation of a field (persisted in YAML/JSON)."""
 
     name: str
-    auto_generated: bool = False
-    inherited_from: str | None = None
 
 
-class MappingField(MappingFieldBase, ComparisonField):
-    """Representation for when getting a field"""
+class MappingField(ComparisonField):
+    """Representation returned to clients when requesting mapping details."""
 
+    action: Action
+    other: str | None = None
+    fixed: str | None = None
     actions_allowed: list[Action]
     show_mapping_content: bool | None = None
     action_info: ActionInfo | None = None

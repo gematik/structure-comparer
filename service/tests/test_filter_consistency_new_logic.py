@@ -3,8 +3,9 @@
 Test der Filter-Konsistenz mit der neuen vereinfachten Logik
 """
 
-import requests
-from typing import Dict, Any
+import pytest
+
+requests = pytest.importorskip("requests")
 
 
 def get_all_projects_and_mappings():

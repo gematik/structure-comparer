@@ -2,7 +2,6 @@ import logging
 from typing import Dict
 
 from .action import Action
-from .consts import REMARKS
 from .data.mapping import Mapping
 from .helpers import split_parent_child
 
@@ -36,7 +35,7 @@ def gen_mapping_dict(structured_mapping: Dict[str, Mapping]):
                 parent, _ = split_parent_child(field)
                 comparison_parent = mappings.fields.get(parent)
                 if (
-                    not comparison_parent is None
+                    comparison_parent is not None
                     and presences.action == comparison_parent.action
                 ):
                     continue
@@ -48,9 +47,11 @@ def gen_mapping_dict(structured_mapping: Dict[str, Mapping]):
                 # Otherwise only if value is present
                 elif presences.profiles[source_profile.key].present:
                     # If field should be used and remark was not changed
+                    action_info = presences.action_info
+                    user_remark = action_info.user_remark if action_info else None
                     if (
                         presences.action in [Action.USE, Action.EXTENSION]
-                        and presences.remark == REMARKS[presences.action]
+                        and not user_remark
                     ):
                         # Put value in the same field
                         profile_handling[DICT_MAPPINGS][field] = field
@@ -73,13 +74,16 @@ def gen_mapping_dict(structured_mapping: Dict[str, Mapping]):
 
                     else:
                         # Log fall-through
+                        remark_for_log = ""
+                        if action_info:
+                            remark_for_log = action_info.user_remark or action_info.system_remark or ""
                         logger.warning(
                             "gen_mapping_dict: did not handle %s:%s:%s:%s %s",
                             source_profile.key,
                             mappings.target.key,
                             field,
                             presences.action,
-                            presences.remark,
+                            remark_for_log,
                         )
 
             if source_profile.key not in result:

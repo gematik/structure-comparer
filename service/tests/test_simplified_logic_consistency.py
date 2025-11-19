@@ -9,8 +9,11 @@ Verifiziert, dass:
 """
 
 import json
-import requests
-from typing import Dict, Any
+from typing import Any, Dict
+
+import pytest
+
+requests = pytest.importorskip("requests")
 
 
 def get_all_projects_and_mappings():
@@ -67,7 +70,7 @@ def test_backend_consistency():
             summary_data = summary_resp.json()
             
             compatible = summary_data.get('simplified_compatible', 0)
-            resolved = summary_data.get('simplified_resolved', 0) 
+            resolved = summary_data.get('simplified_resolved', 0)
             needs_action = summary_data.get('simplified_needs_action', 0)
             total = summary_data.get('total_fields', 0)
             

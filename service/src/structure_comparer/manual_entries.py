@@ -63,11 +63,12 @@ class ManualEntries:
         for entry in self._data.entries:
             filtered_fields = []
             for field in entry.fields:
-                if getattr(field, "auto_generated", False):
+                field_payload = field.model_dump()
+                if field_payload.pop("auto_generated", False):
+                    # Skip auto-generated helper entries entirely
                     continue
-                field.auto_generated = False
-                field.inherited_from = None
-                filtered_fields.append(field)
+                field_payload.pop("inherited_from", None)
+                filtered_fields.append(field.__class__.model_validate(field_payload))
             entry.fields = filtered_fields
 
         content = None

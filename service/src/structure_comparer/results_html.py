@@ -113,7 +113,8 @@ def create_results_html(
                     Action.EXTENSION,
                 ]:
                     warnings.add(
-                        "The maximum cardinality of one of the source profiles exceeds the maximum cardinality of the target profile"
+                        "The maximum cardinality of one of the source profiles exceeds "
+                        "the maximum cardinality of the target profile"
                     )
 
                 # Check if source_max_card is not 0 before considering source_min_card
@@ -128,10 +129,16 @@ def create_results_html(
                     ]
                 ):
                     warnings.add(
-                        "The minimum cardinality of one of the source profiles is less than the minimum cardinality of the target profile"
+                        "The minimum cardinality of one of the source profiles is less than "
+                        "the minimum cardinality of the target profile"
                     )
 
             number_of_warnings += len(warnings)  # Increment the warning counter
+
+            action_info = entry.action_info
+            remark_text = ""
+            if action_info:
+                remark_text = action_info.user_remark or action_info.system_remark or ""
 
             entries[field] = {
                 "classification": entry.action,
@@ -139,7 +146,7 @@ def create_results_html(
                 "extension": None,
                 "extra": entry.other,
                 "profiles": entry.profiles,
-                "remark": entry.remark,
+                "remark": remark_text,
                 "warning": list(warnings),  # Convert set back to list
             }
 

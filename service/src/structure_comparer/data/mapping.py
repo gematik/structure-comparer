@@ -38,10 +38,7 @@ class MappingField(ComparisonField):
         self.action: Action = Action.USE
         self.other: str | None = None
         self.fixed: str | None = None
-        self.remark: str | None = None
         self.actions_allowed: List[Action] = []
-        self.auto_generated: bool = False
-        self.inherited_from: str | None = None
         self.action_info: ActionInfo | None = None
         self.evaluation = None
 
@@ -73,13 +70,9 @@ class MappingField(ComparisonField):
     def apply_action_info(self, info: ActionInfo) -> None:
         self.action_info = info
         self.action = _ACTIONTYPE_TO_LEGACY.get(info.action, Action.MANUAL)
-        self.auto_generated = bool(info.auto_generated)
-        self.inherited_from = info.inherited_from
 
         self.other = info.other_value if isinstance(info.other_value, str) else None
         self.fixed = info.fixed_value if isinstance(info.fixed_value, str) else None
-
-        self.remark = info.user_remark or info.system_remark
 
     def to_model(self) -> MappingFieldModel:
         profiles = {k: p.to_model() for k, p in self.profiles.items() if p}
@@ -97,13 +90,10 @@ class MappingField(ComparisonField):
             other=self.other,
             fixed=self.fixed,
             profiles=profiles,
-            remark=self.remark,
             actions_allowed=self.actions_allowed,
             classification=self.classification,
             issues=self.issues if self.issues else None,
             show_mapping_content=show_mapping_content,
-            auto_generated=self.auto_generated,
-            inherited_from=self.inherited_from,
             action_info=self.action_info,
             evaluation=self.evaluation,
         )

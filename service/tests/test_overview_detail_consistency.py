@@ -6,12 +6,15 @@ calculated by the backend are consistent between the mapping evaluation summary 
 (used by overview page) and the full evaluation endpoint (used by detail page).
 """
 
-import requests
 from pathlib import Path
 import subprocess
 import time
 import os
 from typing import Dict, Any, Tuple
+
+import pytest
+
+requests = pytest.importorskip("requests")
 
 # Test configuration
 BACKEND_URL = "http://127.0.0.1:8000"

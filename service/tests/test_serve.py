@@ -1,8 +1,6 @@
 from pathlib import Path
 
 from structure_comparer.data.config import ProjectConfig
-from structure_comparer.manual_entries import MANUAL_ENTRIES
-
 from structure_comparer import handler
 
 
@@ -25,4 +23,4 @@ def test_init_project():
     assert project.comparisons is not None
     assert len(project.comparisons) == len(project.mappings_list)
 
-    assert MANUAL_ENTRIES._data is not None
+    assert project.manual_entries is not None
