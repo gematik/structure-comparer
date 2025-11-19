@@ -52,6 +52,15 @@ class EvaluationStatus(str, Enum):
     EVALUATION_FAILED = "evaluation_failed"
 
 
+class MappingStatus(str, Enum):
+    """Unified mapping status surfaced to clients."""
+
+    INCOMPATIBLE = "incompatible"
+    WARNING = "warning"
+    SOLVED = "solved"
+    COMPATIBLE = "compatible"
+
+
 class ActionInfo(BaseModel):
     """Effective mapping action for a single field."""
 
@@ -90,3 +99,4 @@ class EvaluationResult(BaseModel):
     has_errors: bool = False
 
     summary_key: Optional[str] = None
+    mapping_status: MappingStatus

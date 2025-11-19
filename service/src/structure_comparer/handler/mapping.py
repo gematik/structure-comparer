@@ -30,6 +30,18 @@ from .project import ProjectsHandler
 from ..results_html import create_results_html
 
 
+_PERSISTABLE_ACTIONS: set[Action] = {
+    Action.NOT_USE,
+    Action.EMPTY,
+    Action.EXTENSION,
+    Action.MANUAL,
+    Action.COPY_FROM,
+    Action.COPY_TO,
+    Action.FIXED,
+    Action.MEDICATION_SERVICE,
+}
+
+
 class MappingHandler:
     def __init__(self, project_handler: ProjectsHandler):
         self.project_handler: ProjectsHandler = project_handler
@@ -126,8 +138,7 @@ class MappingHandler:
             else:
                 raise MappingValueMissing()
         
-        # Handle remark field for actions that support it (manual, extension)
-        if input.remark and new_entry.action in [Action.MANUAL, Action.EXTENSION]:
+        if input.remark:
             new_entry.remark = input.remark
 
         # Clean up possible manual entry this was copied from before
@@ -140,20 +151,25 @@ class MappingHandler:
         if (manual_entry := manual_entries.get(field.name)) and (
             manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
         ):
-            del manual_entries[manual_entry.other]
+            other_name = manual_entry.other
+            if other_name:
+                try:
+                    existing_partner = manual_entries[other_name]
+                    if existing_partner.other == field.name:
+                        del manual_entries[other_name]
+                except (KeyError, AttributeError):
+                    pass
+            del manual_entries[field.name]
+
+        if new_entry.action not in _PERSISTABLE_ACTIONS:
+            if manual_entries.get(field.name):
+                del manual_entries[field.name]
+            proj.manual_entries.write()
+            return new_entry
 
         # Apply the manual entry
         manual_entries[field.name] = new_entry
 
-        # Handle the partner entry for copy actions
-        if new_entry.action == Action.COPY_FROM:
-            manual_entries[target.name] = MappingFieldBaseModel(
-                name=target.name, action=Action.COPY_TO, other=field.name
-            )
-        elif new_entry.action == Action.COPY_TO:
-            manual_entries[target.name] = MappingFieldBaseModel(
-                name=target.name, action=Action.COPY_FROM, other=field.name
-            )
         # Save the changes
         proj.manual_entries.write()
 

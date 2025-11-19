@@ -32,17 +32,19 @@ def compute_mapping_actions(mapping, manual_entries: Optional[Mapping[str, dict]
 
     fields = getattr(mapping, "fields", {}) or {}
     manual_map = _normalise_manual_entries(manual_entries)
+    manual_map_for_compute = _augment_copy_links(manual_map)
 
     # Process parents before children so inheritance works deterministically.
     ordered_field_names = sorted(fields.keys(), key=_field_depth)
     result: Dict[str, ActionInfo] = {}
 
     for field_name in ordered_field_names:
-        manual_entry = manual_map.get(field_name)
+        manual_entry = manual_map_for_compute.get(field_name)
+        field = fields.get(field_name)
         if manual_entry is not None:
             info = _action_from_manual(field_name, manual_entry)
         else:
-            info = _inherit_or_default(field_name, result)
+            info = _inherit_or_default(field_name, field, result)
 
         result[field_name] = info
 
@@ -68,6 +70,10 @@ def _normalise_manual_entries(manual_entries: Optional[Mapping[str, dict]]) -> D
             name = payload.get("name")
             if not name:
                 continue
+            _ensure_other_key(payload)
+            action_value = payload.get("action")
+            if _is_default_use(action_value):
+                continue
             if payload.get("auto_generated"):
                 continue
             payload.pop("auto_generated", None)
@@ -78,6 +84,10 @@ def _normalise_manual_entries(manual_entries: Optional[Mapping[str, dict]]) -> D
     cleaned: Dict[str, dict] = {}
     for name, data in manual_entries.items():
         payload = dict(data) if isinstance(data, Mapping) else data
+        _ensure_other_key(payload)
+        action_value = payload.get("action")
+        if _is_default_use(action_value):
+            continue
         if payload.get("auto_generated"):
             continue
         payload.pop("auto_generated", None)
@@ -87,11 +97,13 @@ def _normalise_manual_entries(manual_entries: Optional[Mapping[str, dict]]) -> D
 
 
 def _action_from_manual(field_name: str, manual_entry: Mapping[str, object]) -> ActionInfo:
-    action_value = manual_entry.get("action")
+    entry = dict(manual_entry)
+    entry.pop("_derived", None)
+    action_value = entry.get("action")
     action = _parse_action(action_value)
 
-    inherited_from = manual_entry.get("inherited_from")
-    auto_generated = bool(manual_entry.get("auto_generated"))
+    inherited_from = entry.get("inherited_from")
+    auto_generated = bool(entry.get("auto_generated"))
 
     if auto_generated and inherited_from:
         source = ActionSource.INHERITED
@@ -105,16 +117,20 @@ def _action_from_manual(field_name: str, manual_entry: Mapping[str, object]) -> 
         source=source,
         inherited_from=inherited_from,
         auto_generated=auto_generated,
-        user_remark=manual_entry.get("remark"),
-        fixed_value=manual_entry.get("fixed"),
-        other_value=manual_entry.get("other"),
-        raw_manual_entry=dict(manual_entry),
+        user_remark=entry.get("remark"),
+        fixed_value=entry.get("fixed"),
+        other_value=entry.get("other"),
+        raw_manual_entry=entry,
     )
 
     return info
 
 
-def _inherit_or_default(field_name: str, result: Dict[str, ActionInfo]) -> ActionInfo:
+def _inherit_or_default(
+    field_name: str,
+    field,
+    result: Dict[str, ActionInfo],
+) -> ActionInfo:
     parent_name = _parent_name(field_name)
     if parent_name:
         parent_info = result.get(parent_name)
@@ -129,11 +145,21 @@ def _inherit_or_default(field_name: str, result: Dict[str, ActionInfo]) -> Actio
                 other_value=parent_info.other_value,
             )
 
+    classification = getattr(field, "classification", "unknown") if field is not None else "unknown"
+
+    if str(classification).lower() == "compatible":
+        return ActionInfo(
+            action=ActionType.USE,
+            source=ActionSource.SYSTEM_DEFAULT,
+            auto_generated=True,
+            system_remark="Default action applied",
+        )
+
     return ActionInfo(
-        action=ActionType.USE,
+        action=ActionType.OTHER,
         source=ActionSource.SYSTEM_DEFAULT,
         auto_generated=True,
-        system_remark="Default action applied",
+        system_remark="No default action available",
     )
 
 
@@ -159,3 +185,39 @@ def _parent_name(name: str) -> Optional[str]:
     if split_index == -1:
         return None
     return name[:split_index]
+
+
+def _is_default_use(value: object) -> bool:
+    if isinstance(value, ActionType):
+        return value == ActionType.USE
+    if isinstance(value, str):
+        return value == ActionType.USE.value
+    return False
+
+
+def _ensure_other_key(payload: dict) -> None:
+    if "other" in payload and payload["other"]:
+        return
+    extra = payload.pop("extra", None)
+    if extra:
+        payload["other"] = extra
+
+
+def _augment_copy_links(manual_map: Dict[str, dict]) -> Dict[str, dict]:
+    if not manual_map:
+        return {}
+
+    augmented: Dict[str, dict] = {name: dict(entry) for name, entry in manual_map.items()}
+
+    for name, entry in manual_map.items():
+        action = _parse_action(entry.get("action"))
+        other = entry.get("other")
+        if not other:
+            continue
+
+        if action == ActionType.COPY_FROM:
+            augmented.setdefault(other, {"action": ActionType.COPY_TO.value, "other": name, "_derived": True})
+        elif action == ActionType.COPY_TO:
+            augmented.setdefault(other, {"action": ActionType.COPY_FROM.value, "other": name, "_derived": True})
+
+    return augmented
