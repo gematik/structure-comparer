@@ -1682,7 +1682,12 @@ async def import_manual_entries(
 
 
 def serve():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Configure logging to show our application logs
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(levelname)s:%(name)s: %(message)s'
+    )
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
 
 
 if __name__ == "__main__":

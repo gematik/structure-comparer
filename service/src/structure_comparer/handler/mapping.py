@@ -30,17 +30,6 @@ from .project import ProjectsHandler
 from ..results_html import create_results_html
 
 
-_PERSISTABLE_ACTIONS: set[Action] = {
-    Action.NOT_USE,
-    Action.EMPTY,
-    Action.EXTENSION,
-    Action.MANUAL,
-    Action.COPY_FROM,
-    Action.COPY_TO,
-    Action.FIXED,
-    Action.MEDICATION_SERVICE,
-}
-
 
 class MappingHandler:
     def __init__(self, project_handler: ProjectsHandler):
@@ -103,6 +92,18 @@ class MappingHandler:
         field_name: str,
         input: MappingFieldMinimalModel,
     ) -> MappingFieldBaseModel:
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        logger.info("MappingHandler.set_field called:")
+        logger.info(f"  project_key: {project_key}")
+        logger.info(f"  mapping_id: {mapping_id}")
+        logger.info(f"  field_name: {field_name}")
+        logger.info(f"  input.action: {input.action}")
+        logger.info(f"  input.other: {input.other}")
+        logger.info(f"  input.fixed: {input.fixed}")
+        logger.info(f"  input.remark: {input.remark}")
+        
         proj = self.project_handler._get(project_key)
 
         # Easiest way to get the fields is from mapping
@@ -119,6 +120,7 @@ class MappingHandler:
                 f"action '{input.action.value}' not allowed for this field, allowed: {allowed_actions}"
             )
 
+        logger.info(f"Creating new_entry with action: {input.action}")
         # Build the entry that should be created/updated
         new_entry = MappingFieldBaseModel(name=field.name, action=input.action)
         target: MappingField | None = None
@@ -157,21 +159,37 @@ class MappingHandler:
                     existing_partner = manual_entries[other_name]
                     if existing_partner.other == field.name:
                         del manual_entries[other_name]
-                except (KeyError, AttributeError):
+                except (KeyError, AttributeError, StopIteration):
                     pass
             del manual_entries[field.name]
 
-        if new_entry.action not in _PERSISTABLE_ACTIONS:
-            if manual_entries.get(field.name):
-                del manual_entries[field.name]
-            proj.manual_entries.write()
-            return new_entry
+   
 
+        logger.info(
+            f"Action {new_entry.action} IS persistable, adding to manual_entries"
+        )
+        logger.info(
+            f"new_entry before adding: name={new_entry.name}, "
+            f"action={new_entry.action}, other={new_entry.other}, "
+            f"fixed={new_entry.fixed}, remark={new_entry.remark}"
+        )
+        
         # Apply the manual entry
         manual_entries[field.name] = new_entry
+        
+        logger.info("After adding to manual_entries, checking what was stored:")
+        stored_entry = manual_entries.get(field.name)
+        if stored_entry:
+            logger.info(
+                f"Stored entry: name={stored_entry.name}, "
+                f"action={stored_entry.action}, other={stored_entry.other}, "
+                f"fixed={stored_entry.fixed}, remark={stored_entry.remark}"
+            )
 
         # Save the changes
+        logger.info("About to write manual_entries.yaml...")
         proj.manual_entries.write()
+        logger.info("Successfully wrote manual_entries.yaml")
 
         return new_entry
 
