@@ -67,6 +67,22 @@ class MappingCreate(BaseModel):
     target_id: str
 
 
+class ProfileUpdate(BaseModel):
+    """Profile metadata for updates."""
+    url: str | None = None  # Canonical URL
+    version: str | None = None
+    webUrl: str | None = None  # Documentation/Simplifier URL
+    package: str | None = None
+
+
+class MappingUpdate(BaseModel):
+    """Payload for updating mapping metadata."""
+    status: str | None = None
+    version: str | None = None
+    sources: list[ProfileUpdate] | None = None
+    target: ProfileUpdate | None = None
+
+
 class MappingDetails(MappingBase):
     fields: list[MappingField]
 

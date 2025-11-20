@@ -13,6 +13,7 @@ from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
 from ..model.mapping_action_models import ActionInfo, ActionSource, ActionType, EvaluationResult
+from ..model.profile import Profile as ProfileModel
 from .comparison import Comparison, ComparisonField
 from .config import MappingConfig
 from ..model.comparison import ComparisonClassification
@@ -189,8 +190,33 @@ class Mapping(Comparison):
         if self.sources is None or self.target is None:
             raise NotInitialized()
 
-        sources = [p.to_model() for p in self.sources]
-        target = self.target.to_model()
+        # Create source models with metadata from configs
+        sources = []
+        for i, source_profile in enumerate(self.sources):
+            metadata = self.get_profile_metadata(source_profile)
+            source_dict = {
+                "id": source_profile.id,
+                "url": source_profile.url,
+                "key": source_profile.key,
+                "name": source_profile.name,
+                "version": source_profile.version,
+                "webUrl": metadata.get("webUrl"),
+                "package": metadata.get("package"),
+            }
+            sources.append(ProfileModel(**source_dict))
+        
+        # Create target model with metadata from config
+        target_metadata = self.get_profile_metadata(self.target)
+        target_dict = {
+            "id": self.target.id,
+            "url": self.target.url,
+            "key": self.target.key,
+            "name": self.target.name,
+            "version": self.target.version,
+            "webUrl": target_metadata.get("webUrl"),
+            "package": target_metadata.get("package"),
+        }
+        target = ProfileModel(**target_dict)
 
         # Calculate status counts based on evaluation results
         evaluations = self.get_evaluation_map()
@@ -231,8 +257,33 @@ class Mapping(Comparison):
         if self.sources is None or self.target is None:
             raise NotInitialized()
 
-        sources = [p.to_model() for p in self.sources]
-        target = self.target.to_model()
+        # Create source models with metadata from configs
+        sources = []
+        for i, source_profile in enumerate(self.sources):
+            metadata = self.get_profile_metadata(source_profile)
+            source_dict = {
+                "id": source_profile.id,
+                "url": source_profile.url,
+                "key": source_profile.key,
+                "name": source_profile.name,
+                "version": source_profile.version,
+                "webUrl": metadata.get("webUrl"),
+                "package": metadata.get("package"),
+            }
+            sources.append(ProfileModel(**source_dict))
+        
+        # Create target model with metadata from config
+        target_metadata = self.get_profile_metadata(self.target)
+        target_dict = {
+            "id": self.target.id,
+            "url": self.target.url,
+            "key": self.target.key,
+            "name": self.target.name,
+            "version": self.target.version,
+            "webUrl": target_metadata.get("webUrl"),
+            "package": target_metadata.get("package"),
+        }
+        target = ProfileModel(**target_dict)
 
         fields = [f.to_model() for f in self.fields.values()]
 

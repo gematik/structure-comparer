@@ -71,24 +71,28 @@ def build_structuremap(
     
     # Collect source profile information
     if mapping.sources and len(mapping.sources) > 0:
-        for source in mapping.sources:
+        for i, source in enumerate(mapping.sources):
+            # Get metadata from config
+            metadata = mapping.get_profile_metadata(source)
             source_info = {
                 "name": source.name,
-                "url": source.url if hasattr(source, 'url') else None,
-                "version": source.version if hasattr(source, 'version') else None,
-                "profile_key": source.profile_key if hasattr(source, 'profile_key') else None,
-                "package": source.package if hasattr(source, 'package') else None,
+                "url": source.url,
+                "version": source.version,
+                "webUrl": metadata.get("webUrl"),
+                "package": metadata.get("package"),
             }
             structuremap_data["metadata"]["source_profiles"].append(source_info)
     
     # Collect target profile information
     if mapping.target:
+        # Get metadata from config
+        metadata = mapping.get_profile_metadata(mapping.target)
         structuremap_data["metadata"]["target_profile"] = {
             "name": mapping.target.name,
-            "url": mapping.target.url if hasattr(mapping.target, 'url') else None,
-            "version": mapping.target.version if hasattr(mapping.target, 'version') else None,
-            "profile_key": mapping.target.profile_key if hasattr(mapping.target, 'profile_key') else None,
-            "package": mapping.target.package if hasattr(mapping.target, 'package') else None,
+            "url": mapping.target.url,
+            "version": mapping.target.version,
+            "webUrl": metadata.get("webUrl"),
+            "package": metadata.get("package"),
         }
     
     # Collect all field mappings with their actions and metadata

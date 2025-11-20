@@ -41,6 +41,7 @@ from .model.init_project_input import InitProjectInput
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingCreate as MappingCreateModel
 from .model.mapping import MappingDetails as MappingDetailsModel
+from .model.mapping import MappingUpdate as MappingUpdateModel
 from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
@@ -1233,6 +1234,45 @@ async def post_mapping(
         MappingValueMissing,
     ) as e:
         response.status_code = 400
+        return ErrorModel.from_except(e)
+
+
+@app.patch(
+    "/project/{project_key}/mapping/{mapping_id}",
+    tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def patch_mapping(
+    project_key: str,
+    mapping_id: str,
+    update_data: MappingUpdateModel,
+    response: Response,
+) -> MappingDetailsModel | ErrorModel:
+    """
+    Update mapping metadata (status, version)
+    
+    Updates the metadata of an existing mapping such as status and version.
+    The last_updated timestamp is automatically updated.
+    
+    Args:
+        project_key: The unique identifier of the project
+        mapping_id: The unique identifier of the mapping
+        update_data: The fields to update
+        
+    Returns:
+        The updated mapping details
+        
+    Raises:
+        404: Project or mapping not found
+    """
+    global mapping_handler
+    try:
+        return mapping_handler.update(project_key, mapping_id, update_data)
+
+    except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
         return ErrorModel.from_except(e)
 
 

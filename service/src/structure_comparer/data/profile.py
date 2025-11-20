@@ -120,17 +120,40 @@ class Profile:
     def url(self) -> str:
         return self.__data.url
 
+    @property
+    def webUrl(self) -> str | None:
+        """Get the web URL (Simplifier/documentation link) if set."""
+        return getattr(self, '_web_url', None)
+
+    @property
+    def package(self) -> str | None:
+        """Get the package name if set."""
+        return getattr(self, '_package_name', None)
+
+    def set_metadata(self, web_url: str | None = None, package_name: str | None = None) -> None:
+        """Set additional metadata like webUrl and package name."""
+        if web_url:
+            self._web_url = web_url
+        if package_name:
+            self._package_name = package_name
+
     def __lt__(self, other: "Profile") -> bool:
         return self.key < other.key
 
     def __to_dict(self) -> dict:
-        return {
+        result = {
             "id": self.id,
             "url": self.url,
             "key": self.key,
             "name": self.name,
             "version": self.version,
         }
+        # Add optional fields if they exist
+        if hasattr(self, '_web_url') and self._web_url:
+            result["webUrl"] = self._web_url
+        if hasattr(self, '_package_name') and self._package_name:
+            result["package"] = self._package_name
+        return result
 
     def __to_pkg_dict(self) -> dict:
         dict_ = self.__to_dict()
