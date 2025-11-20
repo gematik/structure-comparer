@@ -60,7 +60,7 @@ from .model.project import ProjectList as ProjectListModel
 from .manual_entries_migration import migrate_manual_entries
 from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
 from .manual_entries import ManualEntries
-from .fshMappingGenerator.fsh_mapping_main import build_structuremap
+from .structureMap_generator.structureMap_generator_main import build_structuremap
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -907,7 +907,7 @@ async def get_mapping_results(
 
 
 @app.get(
-    "/project/{project_key}/mapping/{mapping_id}/structuremap.fsh",
+    "/project/{project_key}/mapping/{mapping_id}/structuremap",
     tags=["Mappings", "StructureMap Export"],
     responses={404: {"model": ErrorModel}},
 )
@@ -927,7 +927,7 @@ async def download_structuremap(
         mapping_id: The mapping identifier
         
     Returns:
-        FSH file as text/plain with Content-Disposition header for download
+        StructureMap file as text/plain with Content-Disposition header for download
         
     Raises:
         404: Project or mapping not found
@@ -956,7 +956,7 @@ async def download_structuremap(
         ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
         
         # Generate StructureMap content
-        fsh_content = build_structuremap(
+        structuremap_content = build_structuremap(
             mapping=mapping,
             actions=actions,
             source_alias=source_alias,
@@ -965,10 +965,10 @@ async def download_structuremap(
         )
         
         # Return as downloadable file
-        filename = f"{mapping_id}_structuremap.fsh"
+        filename = f"{mapping_id}_structuremap.json"
         return PlainTextResponse(
-            content=fsh_content,
-            media_type="text/fsh",
+            content=structuremap_content,
+            media_type="text/json",
             headers={
                 "Content-Disposition": f'attachment; filename="{filename}"'
             },
@@ -978,9 +978,9 @@ async def download_structuremap(
         response.status_code = 404
         return ErrorModel.from_except(e)
     except Exception as e:
-        logging.exception(f"Error generating FSH export: {str(e)}")
+        logging.exception(f"Error generating StructureMap export: {str(e)}")
         response.status_code = 500
-        return ErrorModel(error=f"FSH export failed: {str(e)}")
+        return ErrorModel(error=f"StructureMap export failed: {str(e)}")
 
 
 @app.get(
