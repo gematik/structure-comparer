@@ -4,8 +4,9 @@ from __future__ import annotations
 from unittest.mock import Mock
 from collections import OrderedDict
 
-from structure_comparer.mapping_fsh_export import build_structuremap_fsh
-from structure_comparer.model.mapping_action_models import (
+
+from service.src.structure_comparer.fshMappingGenerator.fsh_mapping_main import build_structuremap_fsh
+from service.src.structure_comparer.model.mapping_action_models import (
     ActionInfo,
     ActionSource,
     ActionType,
