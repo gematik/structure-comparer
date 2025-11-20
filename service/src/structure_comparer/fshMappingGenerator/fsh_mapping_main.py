@@ -88,6 +88,8 @@ class _StructureMapBuilder:
         self._source_alias = source_alias or "source"
         self._target_alias = target_alias or "target"
         self._ruleset_name = ruleset_name or "structuremap"
+        self._target_profile_key = mapping.target.key if mapping.target else None
+        self._source_profile_keys = [p.key for p in mapping.sources or []]
 
         self._root = _FieldNode(segment="", path="")
         self._nodes_to_emit: list[_FieldNode] = []
@@ -161,6 +163,14 @@ class _StructureMapBuilder:
             current.fixed_value = fixed_val
             current.remark = info.user_remark or info.system_remark
 
+        # Special handling for extension mapping when source/target canonical URLs differ
+        if (
+            current.action == ActionType.COPY_FROM
+            and self._is_extension_path(path)
+            and not path.endswith(".url")
+        ):
+            self._ensure_extension_url_fix(current)
+
         return current
 
     def _annotate_tree(self, node: _FieldNode) -> None:
@@ -189,6 +199,9 @@ class _StructureMapBuilder:
 
     def _determine_intent(self, node: _FieldNode) -> str:
         action = node.action
+        if action is None and self._is_extension_path(node.path):
+            return "skip"
+
         if action is None:
             return "copy"
 
@@ -331,13 +344,36 @@ class _StructureMapBuilder:
         return aliases
 
     def _slug(self, text: str, *, suffix: str) -> str:
-        cleaned = re.sub(r"[^A-Za-z0-9]+", "_", text).strip("_") or "field"
+        base = self._camelize(text)
         if suffix:
-            return f"{cleaned}_{suffix}"
-        return cleaned
+            max_base_len = max(1, 64 - len(suffix))
+            base = base[:max_base_len]
+            candidate = f"{base}{suffix}"
+        else:
+            candidate = base[:64]
+
+        if candidate[0].isdigit():
+            candidate = f"F{candidate[:-1]}" if len(candidate) == 64 else f"F{candidate}"
+        return candidate
 
     def _var_name(self, prefix: str, path: str) -> str:
-        return f"{prefix}_{self._slug(path, suffix=self._stable_id(path))}"
+        slug = self._slug(path, suffix=self._stable_id(path))
+        candidate = f"{prefix}{slug[0].upper()}{slug[1:]}" if slug else prefix
+        return candidate[:64]
+
+    def _camelize(self, text: str) -> str:
+        parts = re.split(r"[^A-Za-z0-9]+", text)
+        parts = [part for part in parts if part]
+        if not parts:
+            return "Field"
+
+        first = parts[0]
+        camel = first[0].upper() + first[1:]
+        for part in parts[1:]:
+            camel += part.capitalize()
+        if not camel:
+            camel = "Field"
+        return camel
 
     def _stable_id(self, text: str, length: int = 8) -> str:
         return hashlib.sha1(text.encode("utf-8")).hexdigest()[:length]
@@ -361,4 +397,49 @@ class _StructureMapBuilder:
         if node.remark:
             details.append(node.remark)
         return " | ".join(details) if details else None
+
+    def _is_extension_path(self, path: str | None) -> bool:
+        if not path:
+            return False
+        return ".extension" in path
+
+    def _ensure_extension_url_fix(self, node: _FieldNode) -> None:
+        target_url = self._get_extension_url(node.path, self._target_profile_key)
+        source_url = self._get_extension_url(node.other_path, self._source_profile_keys)
+        if not target_url or not source_url or target_url == source_url:
+            return
+
+        url_node = self._ensure_node(f"{node.path}.url")
+        url_node.action = ActionType.FIXED
+        url_node.fixed_value = target_url
+        if not url_node.remark:
+            url_node.remark = "Set canonical URL for extension"
+
+    def _get_extension_url(self, path: str | None, profile_keys) -> str | None:
+        if not path:
+            return None
+
+        field = self._mapping.fields.get(path)
+        if field is None:
+            return None
+
+        keys = profile_keys
+        if isinstance(profile_keys, str) or profile_keys is None:
+            keys = [profile_keys]
+
+        for key in keys or []:
+            if not key:
+                continue
+            profile_field = field.profiles.get(key)
+            if profile_field is None:
+                continue
+            data = getattr(profile_field, "_ProfileField__data", None)
+            if data is None:
+                continue
+            type_list = getattr(data, "type", None) or []
+            for item in type_list:
+                profiles = getattr(item, "profile", None) or []
+                if profiles:
+                    return profiles[0]
+        return None
 
