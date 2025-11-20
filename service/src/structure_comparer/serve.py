@@ -62,6 +62,7 @@ from .model.project import ProjectList as ProjectListModel
 from .manual_entries_migration import migrate_manual_entries
 from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
 from .manual_entries import ManualEntries
+from .fshMappingGenerator.fsh_mapping_main import build_structuremap_fsh
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -971,7 +972,6 @@ async def download_structuremap_fsh(
     Raises:
         404: Project or mapping not found
     """
-    from .mapping_fsh_export import build_structuremap_fsh
     
     global mapping_handler
     try:
