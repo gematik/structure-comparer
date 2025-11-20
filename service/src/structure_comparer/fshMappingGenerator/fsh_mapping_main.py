@@ -93,7 +93,8 @@ class _StructureMapBuilder:
 
         self._root = _FieldNode(segment="", path="")
         self._nodes_to_emit: list[_FieldNode] = []
-        self._source_aliases = self._compute_source_aliases()
+        self._source_inputs = self._compute_source_inputs()
+        self._target_input = self._compute_target_input()
 
     # ------------------------------------------------------------------
     # Public API
@@ -141,7 +142,82 @@ class _StructureMapBuilder:
     # ------------------------------------------------------------------
     def _build_tree(self) -> None:
         for field_name in self._mapping.fields.keys():
+            if not self._should_include_field(field_name):
+                continue
             self._ensure_node(field_name)
+
+    def _should_include_field(self, path: str) -> bool:
+        if self._is_problematic_field(path):
+            return False
+
+        field = self._mapping.fields.get(path)
+        if field is None:
+            return True
+
+        if not self._target_profile_key:
+            return True
+
+        target_field = field.profiles.get(self._target_profile_key)
+        if not self._profile_supports_field(target_field):
+            return False
+
+        info = self._actions.get(path)
+        if info and info.action == ActionType.COPY_FROM:
+            return self._copy_from_source_supported(info)
+
+        if self._action_needs_source_value(info) and not self._any_source_supports(field):
+            return False
+
+        return True
+
+    def _is_problematic_field(self, path: str) -> bool:
+        relative = self._relative_path(path)
+        if not relative:
+            return False
+        if relative.startswith("meta"):
+            return True
+        if "[x]" in relative and ":" not in relative:
+            return True
+        return False
+
+    def _profile_supports_field(self, profile_field) -> bool:
+        if profile_field is None:
+            return False
+        max_num = getattr(profile_field, "max_num", None)
+        if max_num is None:
+            return True
+        return max_num != 0
+
+    def _any_source_supports(self, field) -> bool:
+        if not self._source_profile_keys:
+            return True
+        for key in self._source_profile_keys:
+            profile_field = field.profiles.get(key)
+            if self._profile_supports_field(profile_field):
+                return True
+        return False
+
+    def _action_needs_source_value(self, info: ActionInfo | None) -> bool:
+        if info is None:
+            return True
+        if info.action in _SKIP_ACTIONS:
+            return False
+        if info.action in {ActionType.FIXED, ActionType.EXTENSION}:
+            return False
+        if info.action == ActionType.OTHER and info.fixed_value:
+            return False
+        if info.action == ActionType.COPY_FROM:
+            return False
+        return True
+
+    def _copy_from_source_supported(self, info: ActionInfo) -> bool:
+        other_path = info.other_value if isinstance(info.other_value, str) else None
+        if not other_path:
+            return False
+        other_field = self._mapping.fields.get(other_path)
+        if other_field is None:
+            return False
+        return self._any_source_supports(other_field)
 
     def _ensure_node(self, path: str) -> _FieldNode:
         current = self._root
@@ -244,22 +320,24 @@ class _StructureMapBuilder:
     # ------------------------------------------------------------------
     def _build_structure_section(self) -> list[dict]:
         structures: list[dict] = []
-        for idx, profile in enumerate(self._mapping.sources or []):
-            alias = self._source_aliases[idx]
-            structures.append({"url": profile.url, "mode": "source", "alias": alias})
+        for item in self._source_inputs:
+            profile = item["profile"]
+            if profile is None:
+                continue
+            structures.append({"url": profile.url, "mode": "source", "alias": item["alias"]})
 
-        target = self._mapping.target
-        if target is not None:
-            structures.append({"url": target.url, "mode": "target", "alias": self._target_alias})
+        target_profile = self._target_input["profile"]
+        if target_profile is not None:
+            structures.append({"url": target_profile.url, "mode": "target", "alias": self._target_input["alias"]})
 
         return structures
 
     def _build_inputs_section(self) -> list[dict]:
         inputs: list[dict] = []
-        for alias in self._source_aliases:
-            inputs.append({"name": alias, "type": alias, "mode": "source"})
+        for item in self._source_inputs:
+            inputs.append({"name": item["alias"], "type": item["type"], "mode": "source"})
 
-        inputs.append({"name": self._target_alias, "type": self._target_alias, "mode": "target"})
+        inputs.append({"name": self._target_input["alias"], "type": self._target_input["type"], "mode": "target"})
         return inputs
 
     def _build_rule(self, node: _FieldNode) -> dict | None:
@@ -278,14 +356,13 @@ class _StructureMapBuilder:
                     **({"variable": src_var} if node.intent in {"copy", "copy_other"} else {}),
                 }
             ],
-            "target": [],
         }
 
         documentation = self._build_documentation(node)
         if documentation:
             rule["documentation"] = documentation
 
-        target_entry: dict
+        target_entries: list[dict] = []
         if node.intent in {"copy", "copy_other"}:
             target_entry = {
                 "context": self._target_alias,
@@ -294,7 +371,7 @@ class _StructureMapBuilder:
                 "transform": "copy",
                 "parameter": [{"valueId": src_var}],
             }
-            rule["target"].append(target_entry)
+            target_entries.append(target_entry)
 
         elif node.intent == "fixed":
             target_entry = {
@@ -304,11 +381,10 @@ class _StructureMapBuilder:
                 "transform": "copy",
                 "parameter": [{"valueString": node.fixed_value or ""}],
             }
-            rule["target"].append(target_entry)
+            target_entries.append(target_entry)
 
-        else:  # manual fallback
-            # Keep target empty – documentation points to manual work
-            pass
+        if target_entries:
+            rule["target"] = target_entries
 
         return rule
 
@@ -331,17 +407,36 @@ class _StructureMapBuilder:
     def _alias_from_name(self, name: str) -> str:
         return self._slug(name or "source", suffix="")
 
-    def _compute_source_aliases(self) -> list[str]:
-        aliases: list[str] = []
+    def _compute_source_inputs(self) -> list[dict]:
+        inputs: list[dict] = []
         sources = self._mapping.sources or []
         for idx, profile in enumerate(sources):
-            if idx == 0:
-                aliases.append(self._source_alias)
-            else:
-                aliases.append(self._alias_from_name(profile.name or f"source{idx}"))
-        if not aliases:
-            aliases.append(self._source_alias)
-        return aliases
+            alias = self._source_alias if idx == 0 else self._alias_from_name(profile.name or f"source{idx}")
+            inputs.append({
+                "alias": alias,
+                "profile": profile,
+                "type": self._input_type_for_profile(profile),
+            })
+        if not inputs:
+            inputs.append({"alias": self._source_alias, "profile": None, "type": "Resource"})
+        return inputs
+
+    def _compute_target_input(self) -> dict:
+        profile = self._mapping.target
+        return {
+            "alias": self._target_alias,
+            "profile": profile,
+            "type": self._input_type_for_profile(profile),
+        }
+
+    def _input_type_for_profile(self, profile) -> str:
+        if profile is None:
+            return "Resource"
+        if getattr(profile, "url", None):
+            return profile.url
+        if getattr(profile, "name", None):
+            return profile.name
+        return "Resource"
 
     def _slug(self, text: str, *, suffix: str) -> str:
         base = self._camelize(text)

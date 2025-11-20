@@ -38,6 +38,13 @@ from structure_comparer.fshMappingGenerator.fsh_mapping_main import build_struct
 from structure_comparer.handler.mapping import MappingHandler  # type: ignore[import]
 from structure_comparer.handler.project import ProjectsHandler  # type: ignore[import]
 
+_STEP_COLOR = "\033[95m"
+_RESET_COLOR = "\033[0m"
+
+
+def _print_step(message: str) -> None:
+    print(f"{_STEP_COLOR}{message}{_RESET_COLOR}")
+
 
 def _default_alias(text: str, fallback: str) -> str:
     cleaned = "".join(ch for ch in (text or "") if ch.isalnum())
@@ -97,7 +104,7 @@ def main() -> None:
             mapping_dir.mkdir(parents=True, exist_ok=True)
             structure_map_path = mapping_dir / f"{ruleset_name}.json"
             structure_map_path.write_text(structure_map_json, encoding="utf-8")
-            print(f"[{project_key}/{mapping_id}] StructureMap saved to {_as_repo_relative(structure_map_path)}")
+            _print_step(f"[{project_key}/{mapping_id}] StructureMap saved to {_as_repo_relative(structure_map_path)}")
             structure_maps_for_validation.append(structure_map_path.resolve())
 
             if not RUN_TRANSFORMATIONS:
@@ -155,13 +162,13 @@ def _run_transformations(*, mapping_dir: Path, structure_map_url: str, project_k
         cmd.extend(ig_args)
         cmd.extend(ADDITIONAL_TRANSFORM_ARGS)
 
-        print(f"[{project_key}/{mapping_id}] Running validator for {example_file.name}")
+        _print_step(f"[{project_key}/{mapping_id}] Running validator for {example_file.name}")
         try:
             subprocess.run(cmd, cwd=REPO_ROOT, check=True)
         except subprocess.CalledProcessError as exc:  # noqa: PERF203 - want explicit feedback
             print(f"[{project_key}/{mapping_id}] Validator failed for {example_file.name}: {exc}")
         else:
-            print(f"[{project_key}/{mapping_id}] Output written to {_as_repo_relative(output_file)}")
+            _print_step(f"[{project_key}/{mapping_id}] Output written to {_as_repo_relative(output_file)}")
 
 
 def _validate_structuremaps(structure_map_paths: list[Path], project_key: str) -> None:
@@ -180,18 +187,20 @@ def _validate_structuremaps(structure_map_paths: list[Path], project_key: str) -
         "n/a",
         "-level",
         "error",
-        "-ig",
-        "hl7.fhir.r4.core#4.0.1",
     ]
+    ig_args = ["hl7.fhir.r4.core#4.0.1", *_project_ig_sources(project_key)]
+    ig_args.extend(str(ig) for ig in EXTRA_IG_SOURCES)
+    for ig in ig_args:
+        cmd.extend(["-ig", ig])
     cmd.extend(str(path) for path in structure_map_paths)
 
-    print(f"[{project_key}] Validating {len(structure_map_paths)} StructureMap(s)")
+    _print_step(f"[{project_key}] Validating {len(structure_map_paths)} StructureMap(s)")
     try:
         subprocess.run(cmd, cwd=REPO_ROOT, check=True)
     except subprocess.CalledProcessError as exc:  # noqa: PERF203 - want explicit feedback
         print(f"[{project_key}] StructureMap validation failed: {exc}")
     else:
-        print(f"[{project_key}] StructureMap validation finished successfully")
+        _print_step(f"[{project_key}] StructureMap validation finished successfully")
 
 
 def _project_ig_sources(project_key: str) -> list[str]:
