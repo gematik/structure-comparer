@@ -60,11 +60,11 @@ class MappingField(ComparisonField):
         target_present = self.profiles[target_profile] is not None
 
         if not any_source_present:
-            allowed -= set([Action.USE, Action.NOT_USE, Action.COPY_TO])
+            allowed -= set([Action.USE, Action.NOT_USE, Action.COPY_FROM])
         else:
             allowed -= set([Action.EMPTY])
         if not target_present:
-            allowed -= set([Action.USE, Action.EMPTY, Action.COPY_FROM])
+            allowed -= set([Action.USE, Action.EMPTY, Action.COPY_TO])
 
         self.actions_allowed = list(allowed)
 
