@@ -704,4 +704,256 @@ entries:
     name: Practitioner.address:Postfach
     other: null
     remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.gender.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.gender.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.gender.value
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.qualification:Typ
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix
+    other: null
+    remark: Property will be used in Practitioner.name.text and mapped to Practitioner.name.prefix
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.given
+    other: null
+    remark: Property will be used in Practitioner.name.text and mapped to Practitioner.name.given
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz.url
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz.value[x]
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname.url
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname.value[x]
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort.url
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort.value[x]
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.prefix.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.prefix.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier.url
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier.value[x]
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.prefix.value
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.qualification:Berufsbezeichnung
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.qualification:ASV-Fachgruppennummer
+    other: null
+    remark: null
   id: e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31
+- fields:
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen
+    other: Organization.identifier:IKNR
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer
+    other: Organization.identifier:BSNR
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer
+    other: Organization.identifier:KZVA
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID
+    other: Organization.identifier:TelematikID
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.meta.tag
+    other: null
+    remark: "Fix auf\n <meta>\n      <profile value=\"https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory\"\
+      />\n      <tag>\n         <system value=\"https://gematik.de/fhir/directory/CodeSystem/Origin\"\
+      />\n         <code value=\"ldap\"/>\n      </tag>\n   </meta>"
+  - action: manual
+    fixed: null
+    name: Organization.meta.tag:Origin
+    other: null
+    remark: "Fix auf\n <meta>\n      <profile value=\"https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory\"\
+      />\n      <tag>\n         <system value=\"https://gematik.de/fhir/directory/CodeSystem/Origin\"\
+      />\n         <code value=\"ldap\"/>\n      </tag>\n   </meta>"
+  - action: fixed
+    fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
+    name: Organization.meta.tag:Origin.system
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.identifier
+    other: null
+    remark: Muss mindestens die TelematikID der Organisation enthalten, die auch im
+      ACCESS_TOKEN der Anfrage angegeben ist.
+  - action: manual
+    fixed: null
+    name: Organization.name
+    other: null
+    remark: Sollte den Namen der Organisation enthalten, wie er auch im ACCESS_TOKEN
+      der Anfrage angegeben ist.
+  - action: empty
+    fixed: null
+    name: Organization.meta.profile:forProfile
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.meta.profile
+    other: null
+    remark: null
+  id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
+- fields:
+  - action: empty
+    fixed: null
+    name: Medication.meta.profile:workflowProfile
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
+  id: 1d770fac-529d-4579-8ee4-f1fa3fa6f4ed
+- fields:
+  - action: empty
+    fixed: null
+    name: MedicationDispense.meta.profile:workflowProfile
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationDispense.identifier:prescriptionID
+    other: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.type
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.identifier
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.display
+    other: null
+    remark: null
+  id: 7d370a3d-3366-436d-8121-6d0fd50ec0f0
