@@ -42,6 +42,12 @@ class MappingBase(BaseModel):
     status: str
     sources: list[Profile]
     target: Profile
+    # Status counts calculated by backend
+    total: int | None = None
+    incompatible: int | None = None
+    warning: int | None = None
+    solved: int | None = None
+    compatible: int | None = None
 
 
 class MappingCreate(BaseModel):

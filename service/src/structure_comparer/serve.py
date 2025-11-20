@@ -9,7 +9,6 @@ from fastapi import FastAPI, Response, UploadFile
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from .action import Action
 from .errors import (
     ComparisonNotFound,
     FieldNotFound,
@@ -32,7 +31,6 @@ from .handler.mapping import MappingHandler
 from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
-from .model.comparison import ComparisonClassification
 from .model.comparison import ComparisonCreate as ComparisonCreateModel
 from .model.comparison import ComparisonDetail as ComparisonDetailModel
 from .model.comparison import ComparisonList as ComparisonListModel
@@ -47,7 +45,7 @@ from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
-from .model.mapping_action_models import EvaluationResult, EvaluationStatus, MappingStatus
+from .model.mapping_action_models import EvaluationResult, MappingStatus
 from .model.mapping_evaluation_model import (
   MappingEvaluationModel,
   MappingEvaluationSummaryModel,
@@ -72,73 +70,35 @@ mapping_handler: MappingHandler
 cur_proj: str
 
 
-def _build_evaluation_summary(evaluations: dict[str, EvaluationResult]) -> dict[str, int]:
+def _build_status_summary(evaluations: dict[str, EvaluationResult]) -> dict[str, int]:
+    """
+    Calculate status summary matching frontend logic.
+    
+    This mirrors the logic in SummaryHelper.calculateStatusSummary() and
+    StatusHelper.getFieldStatus() from the frontend.
+    """
     summary = {
-        "total_fields": len(evaluations),
-        "compatible": 0,
-        "warnings": 0,
+        "total": len(evaluations),
         "incompatible": 0,
-        "action_resolved": 0,
-        "action_mitigated": 0,
-        "needs_attention": 0,
+        "warning": 0,
+        "solved": 0,
+        "compatible": 0,
     }
 
     for result in evaluations.values():
-        resolved_by_action = (
-            result.mapping_status == MappingStatus.SOLVED
-            or result.status == EvaluationStatus.RESOLVED
-        )
-
-        if resolved_by_action:
-            summary["action_resolved"] += 1
-        else:
-            if result.status == EvaluationStatus.OK:
-                summary["compatible"] += 1
-            elif result.status == EvaluationStatus.ACTION_REQUIRED:
-                summary["needs_attention"] += 1
-            elif result.status == EvaluationStatus.UNKNOWN:
-                summary["action_mitigated"] += 1
-            elif result.status == EvaluationStatus.INCOMPATIBLE:
-                summary["incompatible"] += 1
-            elif result.status == EvaluationStatus.EVALUATION_FAILED:
-                summary["incompatible"] += 1
-                summary["needs_attention"] += 1
-
-        if result.has_warnings:
-            summary["warnings"] += 1
+        # Use mapping_status directly (which is computed by the evaluation engine)
+        status = result.mapping_status
+        
+        if status == MappingStatus.INCOMPATIBLE:
+            summary["incompatible"] += 1
+        elif status == MappingStatus.WARNING:
+            summary["warning"] += 1
+        elif status == MappingStatus.SOLVED:
+            summary["solved"] += 1
+        elif status == MappingStatus.COMPATIBLE:
+            summary["compatible"] += 1
 
     return summary
-
-
-def _build_simplified_summary(mapping) -> dict[str, int]:
-    simplified = {
-        "simplified_compatible": 0,
-        "simplified_resolved": 0,
-        "simplified_needs_action": 0,
-    }
-
-    for field in mapping.fields.values():
-        classification = getattr(field, "classification", None)
-        action = getattr(field, "action", None)
-
-        if classification in {
-            ComparisonClassification.COMPAT,
-            ComparisonClassification.WARN,
-        }:
-            simplified["simplified_compatible"] += 1
-        elif (
-            classification == ComparisonClassification.INCOMPAT
-            and action is not None
-            and action != Action.USE
-        ):
-            simplified["simplified_resolved"] += 1
-        elif (
-            classification == ComparisonClassification.INCOMPAT
-            and action == Action.USE
-        ):
-            simplified["simplified_needs_action"] += 1
-
-    return simplified
 
 
 @asynccontextmanager
@@ -1466,7 +1426,7 @@ async def get_mapping_evaluation(
     try:
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
         evaluations = mapping.get_evaluation_map()
-        summary = _build_evaluation_summary(evaluations)
+        summary = _build_status_summary(evaluations)
 
         return MappingEvaluationModel(
             mapping_id=mapping_id,
@@ -1494,14 +1454,12 @@ async def get_mapping_evaluation_summary(
     try:
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
         evaluations = mapping.get_evaluation_map()
-        summary = _build_evaluation_summary(evaluations)
-        simplified = _build_simplified_summary(mapping)
+        summary = _build_status_summary(evaluations)
 
         return MappingEvaluationSummaryModel(
             mapping_id=mapping_id,
             mapping_name=mapping.name,
             **summary,
-            **simplified,
         )
 
     except (ProjectNotFound, MappingNotFound) as e:

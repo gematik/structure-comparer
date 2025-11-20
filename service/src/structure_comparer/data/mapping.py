@@ -177,6 +177,21 @@ class Mapping(Comparison):
         sources = [p.to_model() for p in self.sources]
         target = self.target.to_model()
 
+        # Calculate status counts based on evaluation results
+        evaluations = self.get_evaluation_map()
+        status_counts = {
+            "total": len(evaluations),
+            "incompatible": 0,
+            "warning": 0,
+            "solved": 0,
+            "compatible": 0,
+        }
+
+        for result in evaluations.values():
+            status = result.mapping_status
+            if status.value in status_counts:
+                status_counts[status.value] += 1
+
         try:
             model = MappingBaseModel(
                 id=self.id,
@@ -187,6 +202,7 @@ class Mapping(Comparison):
                 sources=sources,
                 target=target,
                 url=self.url,
+                **status_counts,
             )
 
         except ValidationError as e:
@@ -205,6 +221,21 @@ class Mapping(Comparison):
 
         fields = [f.to_model() for f in self.fields.values()]
 
+        # Calculate status counts based on evaluation results (same as to_base_model)
+        evaluations = self.get_evaluation_map()
+        status_counts = {
+            "total": len(evaluations),
+            "incompatible": 0,
+            "warning": 0,
+            "solved": 0,
+            "compatible": 0,
+        }
+
+        for result in evaluations.values():
+            status = result.mapping_status
+            if status.value in status_counts:
+                status_counts[status.value] += 1
+
         try:
             model = MappingDetailsModel(
                 id=self.id,
@@ -216,6 +247,7 @@ class Mapping(Comparison):
                 target=target,
                 url=self.url,
                 fields=fields,
+                **status_counts,
             )
 
         except ValidationError as e:
