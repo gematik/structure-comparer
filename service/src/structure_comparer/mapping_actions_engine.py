@@ -44,7 +44,7 @@ def compute_mapping_actions(mapping, manual_entries: Optional[Mapping[str, dict]
         if manual_entry is not None:
             info = _action_from_manual(field_name, manual_entry)
         else:
-            info = _inherit_or_default(field_name, field, result)
+            info = _inherit_or_default(field_name, field, result, fields)
 
         result[field_name] = info
 
@@ -128,20 +128,91 @@ def _inherit_or_default(
     field_name: str,
     field,
     result: Dict[str, ActionInfo],
+    all_fields: Dict[str, object],
 ) -> ActionInfo:
+    import logging
+    logger = logging.getLogger(__name__)
+    
     parent_name = _parent_name(field_name)
     if parent_name:
         parent_info = result.get(parent_name)
         if parent_info and parent_info.action in _INHERITABLE_ACTIONS:
-            return ActionInfo(
-                action=parent_info.action,
-                source=ActionSource.INHERITED,
-                inherited_from=parent_name,
-                auto_generated=True,
-                system_remark=f"Inherited from {parent_name}",
-                fixed_value=parent_info.fixed_value,
-                other_value=parent_info.other_value,
-            )
+            # Adjust other_value for child fields when inheriting copy_from/copy_to
+            inherited_other_value = parent_info.other_value
+            if inherited_other_value and parent_info.action in {ActionType.COPY_FROM, ActionType.COPY_TO}:
+                # Extract the child suffix from the current field
+                child_suffix = field_name[len(parent_name):]  # e.g., ".system" or ".code"
+                
+                # Don't inherit for polymorphic type choices (e.g., :valueBoolean)
+                # These are concrete type implementations, not structural children
+                if child_suffix.startswith(':value'):
+                    logger.info(f"[INHERIT] Skipping inheritance for polymorphic type: {field_name}")
+                    logger.info(f"[INHERIT]   Suffix '{child_suffix}' is a type choice, not a structural child")
+                    # Fall through to default logic
+                else:
+                    # Append the same suffix to the parent's other_value
+                    candidate_other_value = inherited_other_value + child_suffix
+                    
+                    logger.info(f"[INHERIT] Checking inheritance for field: {field_name}")
+                    logger.info(f"[INHERIT]   Parent: {parent_name}")
+                    logger.info(f"[INHERIT]   Parent action: {parent_info.action}")
+                    logger.info(f"[INHERIT]   Parent other_value: {inherited_other_value}")
+                    logger.info(f"[INHERIT]   Child suffix: {child_suffix}")
+                    logger.info(f"[INHERIT]   Candidate target: {candidate_other_value}")
+                    
+                    # Check if target field exists
+                    target_exists = candidate_other_value in all_fields
+                    logger.info(f"[INHERIT]   Target exists in all_fields: {target_exists}")
+                    
+                    # If direct target doesn't exist and parent is polymorphic value[x],
+                    # try to find matching type choice
+                    if not target_exists and '.value[x]' in inherited_other_value:
+                        # Look for type choices (e.g., :valueCoding, :valueString)
+                        type_choices = [
+                            f for f in all_fields.keys()
+                            if f.startswith(inherited_other_value + ':')
+                            and f.count(':') == inherited_other_value.count(':') + 1
+                        ]
+                        
+                        if type_choices:
+                            # Try each type choice with the child suffix
+                            for type_choice in type_choices:
+                                alternative_target = type_choice + child_suffix
+                                if alternative_target in all_fields:
+                                    candidate_other_value = alternative_target
+                                    target_exists = True
+                                    logger.info(f"[INHERIT]   ✓ Found via type choice: {candidate_other_value}")
+                                    break
+                    
+                    # Validate that the target field actually exists
+                    if target_exists:
+                        inherited_other_value = candidate_other_value
+                        logger.info(f"[INHERIT]   ✓ Using validated target: {inherited_other_value}")
+                    else:
+                        # Target field doesn't exist, don't inherit the action
+                        # Fall through to default logic below
+                        logger.warning(f"[INHERIT]   ✗ Target field does not exist: {candidate_other_value}")
+                        logger.info("[INHERIT]   Available fields starting with parent target base:")
+                        if '.' in inherited_other_value:
+                            base = inherited_other_value.rsplit('.', 1)[0]
+                        else:
+                            base = inherited_other_value
+                        matching = [f for f in all_fields.keys() if f.startswith(base)][:10]
+                        for match in matching:
+                            logger.info(f"[INHERIT]     - {match}")
+                        inherited_other_value = None
+            
+            is_copy_action = parent_info.action in {ActionType.COPY_FROM, ActionType.COPY_TO}
+            if inherited_other_value is not None or not is_copy_action:
+                return ActionInfo(
+                    action=parent_info.action,
+                    source=ActionSource.INHERITED,
+                    inherited_from=parent_name,
+                    auto_generated=True,
+                    system_remark=f"Inherited from {parent_name}",
+                    fixed_value=parent_info.fixed_value,
+                    other_value=inherited_other_value,
+                )
 
     classification = getattr(field, "classification", "unknown") if field is not None else "unknown"
 
