@@ -221,6 +221,14 @@ class ProfileField:
         return refs
     
     @property
+    def pattern_coding_system(self) -> str | None:
+        """Extrahiert das system aus patternCoding, falls vorhanden."""
+        pattern_coding = getattr(self.__data, "patternCoding", None)
+        if pattern_coding is None:
+            return None
+        return getattr(pattern_coding, "system", None)
+    
+    @property
     def is_default(self) -> bool:
         # defensiv prüfen, da manche SDs unvollständige base liefern können
         base = getattr(self.__data, "base", None)
@@ -229,7 +237,12 @@ class ProfileField:
         try:
             base_min = getattr(base, "min", None)
             base_max = getattr(base, "max", None)
-            return (base_min is not None) and (base_max is not None) and (self.min == base_min) and (self.max == base_max)
+            return (
+                (base_min is not None)
+                and (base_max is not None)
+                and (self.min == base_min)
+                and (self.max == base_max)
+            )
         except Exception:
             return False
 

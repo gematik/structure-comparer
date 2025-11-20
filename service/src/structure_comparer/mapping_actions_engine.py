@@ -34,6 +34,10 @@ def compute_mapping_actions(mapping, manual_entries: Optional[Mapping[str, dict]
     manual_map = _normalise_manual_entries(manual_entries)
     manual_map_for_compute = _augment_copy_links(manual_map)
 
+    # Get target profile key for pattern detection
+    target = getattr(mapping, "target", None)
+    target_key = target.key if target else None
+
     # Process parents before children so inheritance works deterministically.
     ordered_field_names = sorted(fields.keys(), key=_field_depth)
     result: Dict[str, ActionInfo] = {}
@@ -44,7 +48,7 @@ def compute_mapping_actions(mapping, manual_entries: Optional[Mapping[str, dict]
         if manual_entry is not None:
             info = _action_from_manual(field_name, manual_entry)
         else:
-            info = _inherit_or_default(field_name, field, result, fields)
+            info = _inherit_or_default(field_name, field, result, fields, target_key)
 
         result[field_name] = info
 
@@ -129,6 +133,7 @@ def _inherit_or_default(
     field,
     result: Dict[str, ActionInfo],
     all_fields: Dict[str, object],
+    target_key: Optional[str] = None,
 ) -> ActionInfo:
     import logging
     logger = logging.getLogger(__name__)
@@ -213,6 +218,18 @@ def _inherit_or_default(
                     fixed_value=parent_info.fixed_value,
                     other_value=inherited_other_value,
                 )
+
+    # Check for patternCoding.system in target field
+    pattern_system = _get_pattern_coding_system(field, target_key, all_fields)
+    if pattern_system:
+        logger.info(f"[PATTERN] Found patternCoding.system for {field_name}: {pattern_system}")
+        return ActionInfo(
+            action=ActionType.FIXED,
+            source=ActionSource.SYSTEM_DEFAULT,
+            auto_generated=True,
+            system_remark="Auto-detected from patternCoding.system in target profile",
+            fixed_value=pattern_system,
+        )
 
     classification = getattr(field, "classification", "unknown") if field is not None else "unknown"
 
@@ -301,3 +318,37 @@ def _augment_copy_links(manual_map: Dict[str, dict]) -> Dict[str, dict]:
             augmented.setdefault(other, {"action": ActionType.COPY_FROM.value, "other": name, "_derived": True})
 
     return augmented
+
+
+def _get_pattern_coding_system(
+    field, target_key: Optional[str], all_fields: Dict[str, object]
+) -> Optional[str]:
+    """Extract pattern_coding_system from target field's profile, if available.
+    
+    For a field like 'Medication.code.coding:atc-de.system', check if the parent
+    field 'Medication.code.coding:atc-de' has a patternCoding with a system value.
+    
+    Note: This function should ONLY return a value for .system fields, not for
+    the parent Coding field itself (which has the patternCoding).
+    """
+    if field is None or target_key is None:
+        return None
+    
+    # Only apply to .system fields - if this is a .system field, check the parent
+    field_name = getattr(field, "name", None)
+    if field_name and field_name.endswith(".system"):
+        # Get the parent field name (remove ".system")
+        parent_name = field_name.rsplit(".", 1)[0]
+        parent_field = all_fields.get(parent_name)
+        
+        if parent_field:
+            parent_profiles = getattr(parent_field, "profiles", {})
+            parent_target_field = parent_profiles.get(target_key)
+            if parent_target_field:
+                parent_pattern_system = getattr(
+                    parent_target_field, "pattern_coding_system", None
+                )
+                if parent_pattern_system:
+                    return parent_pattern_system
+    
+    return None
