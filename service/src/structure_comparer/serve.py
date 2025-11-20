@@ -940,13 +940,14 @@ async def download_structuremap(
         actions = mapping.get_action_info_map()
         
         # Determine aliases from profile names
-        source_alias = "source"
+        source_aliases = []
         target_alias = "target"
         
         if mapping.sources and len(mapping.sources) > 0:
-            source_name = mapping.sources[0].name
-            # Create a simple alias from the profile name
-            source_alias = source_name.replace(" ", "").replace("-", "")
+            for source in mapping.sources:
+                # Create a simple alias from the profile name
+                alias = source.name.replace(" ", "").replace("-", "")
+                source_aliases.append(alias)
         
         if mapping.target:
             target_name = mapping.target.name
@@ -959,7 +960,7 @@ async def download_structuremap(
         structuremap_content = build_structuremap(
             mapping=mapping,
             actions=actions,
-            source_alias=source_alias,
+            source_aliases=source_aliases,
             target_alias=target_alias,
             ruleset_name=ruleset_name,
         )
