@@ -63,13 +63,24 @@ def derive_mapping_status(field_evaluation: EvaluationResult, action_info: Optio
     Rules:
     - Manual or inherited actions (`ActionSource.MANUAL` or `ActionSource.INHERITED`) that resolve
       a conflict (`EvaluationStatus.RESOLVED`) yield `MappingStatus.SOLVED`.
+    - Auto-generated actions that resolve incompatible/warning fields also yield `MappingStatus.SOLVED`.
     - Any remaining errors or failed evaluations keep the field `INCOMPATIBLE`.
     - Pure warnings without errors map to `WARNING`.
-    - Manual/inherited adjustments on already compatible fields remain `COMPATIBLE`.
+    - Manual/inherited/auto-generated adjustments on already compatible fields remain `COMPATIBLE`.
     - Everything else defaults to `COMPATIBLE` because no action is required.
     """
 
-    if action_info is not None and action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED):
+    # Check if action was manually set, inherited, or auto-generated with a resolution
+    has_explicit_action = (
+        action_info is not None
+        and action_info.action is not None  # Must have an actual action, not just action_info
+        and (
+            action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED)
+            or (action_info.source == ActionSource.SYSTEM_DEFAULT and action_info.auto_generated)
+        )
+    )
+
+    if has_explicit_action:
         if field_evaluation.status == EvaluationStatus.EVALUATION_FAILED:
             return MappingStatus.INCOMPATIBLE
 
@@ -138,6 +149,31 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
         )
 
     if classification == "incompatible":
+        # Check if user has made an explicit decision (manual/inherited action)
+        has_user_action = (
+            action_info.action is not None
+            and action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED)
+        )
+        
+        # If the field is incompatible but user has selected an action, it's resolved
+        if has_user_action:
+            reason = EvaluationReason(
+                code="FIELD_INCOMPATIBLE_RESOLVED",
+                severity=EvaluationSeverity.INFO,
+                message_key="mapping.reason.field.incompatible.resolved",
+                details={"field": field.name, "classification": classification},
+                related_action=action_info.action,
+            )
+            return _build_result(
+                status=EvaluationStatus.RESOLVED,
+                reasons=[reason],
+                has_warnings=False,
+                has_errors=False,
+                summary_key=_SUMMARY_KEYS[EvaluationStatus.RESOLVED],
+                action_info=action_info,
+            )
+        
+        # No action selected yet - user decision required
         reason = EvaluationReason(
             code="FIELD_INCOMPATIBLE",
             severity=EvaluationSeverity.ERROR,
@@ -154,6 +190,31 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
         )
 
     if classification == "warning":
+        # Check if user has made an explicit decision (manual/inherited action)
+        has_user_action = (
+            action_info.action is not None
+            and action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED)
+        )
+        
+        # If the field is a warning but user has selected an action, it's resolved
+        if has_user_action:
+            reason = EvaluationReason(
+                code="FIELD_WARNING_RESOLVED",
+                severity=EvaluationSeverity.INFO,
+                message_key="mapping.reason.field.warning.resolved",
+                details={"field": field.name, "classification": classification},
+                related_action=action_info.action,
+            )
+            return _build_result(
+                status=EvaluationStatus.RESOLVED,
+                reasons=[reason],
+                has_warnings=False,
+                has_errors=False,
+                summary_key=_SUMMARY_KEYS[EvaluationStatus.RESOLVED],
+                action_info=action_info,
+            )
+        
+        # No action selected yet - user decision required
         reason = EvaluationReason(
             code="FIELD_WARNING",
             severity=EvaluationSeverity.WARNING,

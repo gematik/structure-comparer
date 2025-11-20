@@ -17,8 +17,10 @@ class PackageConfig(BaseModel):
 
 class ComparisonProfileConfig(BaseModel):
     id: str | None = None
-    url: str | None = None
+    url: str | None = None  # Canonical URL for profile lookup
     version: str
+    webUrl: str | None = None  # Documentation/Simplifier URL
+    package: str | None = None
 
 
 class ComparisonProfilesConfig(BaseModel):

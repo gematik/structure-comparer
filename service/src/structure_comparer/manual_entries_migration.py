@@ -19,7 +19,8 @@ CLASSIFICATION_TO_ACTION = {
     "copy_from": "copy_from",
     "copy_to": "copy_to",
     "manual": "manual",
-    "medication_service": "medication_service",
+    # medication_service is deprecated - migrate to manual
+    "medication_service": "manual",
 }
 
 
@@ -85,6 +86,9 @@ def _migrate_field(field_name: str, field_config: Dict[str, Any]) -> Dict[str, A
     # Handle remark field - direct copy if present
     if "remark" in field_config:
         new_field["remark"] = field_config["remark"]
+    # If medication_service was migrated to manual, add default remark if none exists
+    elif classification == "medication_service":
+        new_field["remark"] = "Property will be set by medication_service"
     
     return new_field
 

@@ -16,13 +16,9 @@ class MappingEvaluationModel(BaseModel):
 class MappingEvaluationSummaryModel(BaseModel):
     mapping_id: str
     mapping_name: str
-    total_fields: int
-    compatible: int
-    warnings: int
+    # New status counts matching frontend logic
+    total: int
     incompatible: int
-    action_resolved: int
-    action_mitigated: int
-    needs_attention: int
-    simplified_compatible: int | None = None
-    simplified_resolved: int | None = None
-    simplified_needs_action: int | None = None
+    warning: int
+    solved: int
+    compatible: int

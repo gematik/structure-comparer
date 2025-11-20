@@ -22,24 +22,13 @@ from ..model.mapping import MappingField as MappingFieldModel
 from ..model.mapping import MappingFieldBase as MappingFieldBaseModel
 from ..model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from ..model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
+from ..model.mapping import MappingUpdate as MappingUpdateModel
 from ..data.config import MappingConfig as MappingConfigModel
 from ..data.config import ComparisonProfilesConfig as ComparisonProfilesConfigModel
 from ..data.config import ComparisonProfileConfig as ComparisonProfileConfigModel
 from ..data.mapping import Mapping as MappingModel
 from .project import ProjectsHandler
 from ..results_html import create_results_html
-
-
-_PERSISTABLE_ACTIONS: set[Action] = {
-    Action.NOT_USE,
-    Action.EMPTY,
-    Action.EXTENSION,
-    Action.MANUAL,
-    Action.COPY_FROM,
-    Action.COPY_TO,
-    Action.FIXED,
-    Action.MEDICATION_SERVICE,
-}
 
 
 class MappingHandler:
@@ -157,23 +146,92 @@ class MappingHandler:
                     existing_partner = manual_entries[other_name]
                     if existing_partner.other == field.name:
                         del manual_entries[other_name]
-                except (KeyError, AttributeError):
+                except (KeyError, AttributeError, StopIteration):
                     pass
             del manual_entries[field.name]
 
-        if new_entry.action not in _PERSISTABLE_ACTIONS:
-            if manual_entries.get(field.name):
-                del manual_entries[field.name]
-            proj.manual_entries.write()
-            return new_entry
-
         # Apply the manual entry
         manual_entries[field.name] = new_entry
-
-        # Save the changes
         proj.manual_entries.write()
 
         return new_entry
+
+    def update(
+        self, project_key: str, mapping_id: str, update_data: MappingUpdateModel
+    ) -> MappingDetailsModel:
+        """Update mapping metadata (status, version, profile information)."""
+        proj = self.project_handler._get(project_key)
+        if proj is None:
+            raise ProjectNotFound()
+
+        # Find the mapping config
+        mapping_config = None
+        for config in proj.config.mappings:
+            if config.id == mapping_id:
+                mapping_config = config
+                break
+
+        if mapping_config is None:
+            raise MappingNotFound()
+
+        # Update basic fields if provided
+        if update_data.status is not None:
+            mapping_config.status = update_data.status
+        if update_data.version is not None:
+            mapping_config.version = update_data.version
+
+        # Update source profiles if provided
+        if update_data.sources is not None:
+            for i, source_update in enumerate(update_data.sources):
+                if i < len(mapping_config.mappings.sourceprofiles):
+                    source_config = mapping_config.mappings.sourceprofiles[i]
+                    if source_update.url is not None:
+                        source_config.url = source_update.url
+                    if source_update.version is not None:
+                        source_config.version = source_update.version
+                    if source_update.webUrl is not None:
+                        source_config.webUrl = source_update.webUrl
+                    if source_update.package is not None:
+                        source_config.package = source_update.package
+
+        # Update target profile if provided
+        if update_data.target is not None:
+            target_config = mapping_config.mappings.targetprofile
+            if update_data.target.url is not None:
+                target_config.url = update_data.target.url
+            if update_data.target.version is not None:
+                target_config.version = update_data.target.version
+            if update_data.target.webUrl is not None:
+                target_config.webUrl = update_data.target.webUrl
+            if update_data.target.package is not None:
+                target_config.package = update_data.target.package
+
+        # Update last_updated timestamp
+        mapping_config.last_updated = datetime.now().isoformat()
+
+        # Save config
+        proj.config.write()
+
+        # Get the current mapping before reload to preserve its state
+        current_mapping = proj.mappings.get(mapping_id)
+        
+        # Reload only the config, not all mappings
+        # This avoids re-initializing all mappings
+        from ..data.config import ProjectConfig
+        proj.config = ProjectConfig.from_json(proj.dir / "config.json")
+        
+        # Update just this mapping's metadata without full reload
+        if current_mapping:
+            # Update the config reference
+            for config in proj.config.mappings:
+                if config.id == mapping_id:
+                    current_mapping._config = config
+                    break
+            
+            return current_mapping.to_details_model()
+        
+        # Fallback: return the mapping data directly from config
+        return self.get(project_key, mapping_id)
 
     def create_new(
         self, project_key, mapping: MappingCreateModel

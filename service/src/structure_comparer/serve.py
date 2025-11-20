@@ -9,7 +9,6 @@ from fastapi import FastAPI, Response, UploadFile
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from .action import Action
 from .errors import (
     ComparisonNotFound,
     FieldNotFound,
@@ -32,7 +31,6 @@ from .handler.mapping import MappingHandler
 from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
-from .model.comparison import ComparisonClassification
 from .model.comparison import ComparisonCreate as ComparisonCreateModel
 from .model.comparison import ComparisonDetail as ComparisonDetailModel
 from .model.comparison import ComparisonList as ComparisonListModel
@@ -43,11 +41,12 @@ from .model.init_project_input import InitProjectInput
 from .model.mapping import MappingBase as MappingBaseModel
 from .model.mapping import MappingCreate as MappingCreateModel
 from .model.mapping import MappingDetails as MappingDetailsModel
+from .model.mapping import MappingUpdate as MappingUpdateModel
 from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
-from .model.mapping_action_models import EvaluationResult, EvaluationStatus, MappingStatus
+from .model.mapping_action_models import EvaluationResult, MappingStatus
 from .model.mapping_evaluation_model import (
   MappingEvaluationModel,
   MappingEvaluationSummaryModel,
@@ -62,7 +61,7 @@ from .model.project import ProjectList as ProjectListModel
 from .manual_entries_migration import migrate_manual_entries
 from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
 from .manual_entries import ManualEntries
-from .fshMappingGenerator.fsh_mapping_main import build_structuremap_fsh
+from .structureMap_generator.structureMap_generator_main import build_structuremap
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -72,73 +71,35 @@ mapping_handler: MappingHandler
 cur_proj: str
 
 
-def _build_evaluation_summary(evaluations: dict[str, EvaluationResult]) -> dict[str, int]:
+def _build_status_summary(evaluations: dict[str, EvaluationResult]) -> dict[str, int]:
+    """
+    Calculate status summary matching frontend logic.
+    
+    This mirrors the logic in SummaryHelper.calculateStatusSummary() and
+    StatusHelper.getFieldStatus() from the frontend.
+    """
     summary = {
-        "total_fields": len(evaluations),
-        "compatible": 0,
-        "warnings": 0,
+        "total": len(evaluations),
         "incompatible": 0,
-        "action_resolved": 0,
-        "action_mitigated": 0,
-        "needs_attention": 0,
+        "warning": 0,
+        "solved": 0,
+        "compatible": 0,
     }
 
     for result in evaluations.values():
-        resolved_by_action = (
-            result.mapping_status == MappingStatus.SOLVED
-            or result.status == EvaluationStatus.RESOLVED
-        )
-
-        if resolved_by_action:
-            summary["action_resolved"] += 1
-        else:
-            if result.status == EvaluationStatus.OK:
-                summary["compatible"] += 1
-            elif result.status == EvaluationStatus.ACTION_REQUIRED:
-                summary["needs_attention"] += 1
-            elif result.status == EvaluationStatus.UNKNOWN:
-                summary["action_mitigated"] += 1
-            elif result.status == EvaluationStatus.INCOMPATIBLE:
-                summary["incompatible"] += 1
-            elif result.status == EvaluationStatus.EVALUATION_FAILED:
-                summary["incompatible"] += 1
-                summary["needs_attention"] += 1
-
-        if result.has_warnings:
-            summary["warnings"] += 1
+        # Use mapping_status directly (which is computed by the evaluation engine)
+        status = result.mapping_status
+        
+        if status == MappingStatus.INCOMPATIBLE:
+            summary["incompatible"] += 1
+        elif status == MappingStatus.WARNING:
+            summary["warning"] += 1
+        elif status == MappingStatus.SOLVED:
+            summary["solved"] += 1
+        elif status == MappingStatus.COMPATIBLE:
+            summary["compatible"] += 1
 
     return summary
-
-
-def _build_simplified_summary(mapping) -> dict[str, int]:
-    simplified = {
-        "simplified_compatible": 0,
-        "simplified_resolved": 0,
-        "simplified_needs_action": 0,
-    }
-
-    for field in mapping.fields.values():
-        classification = getattr(field, "classification", None)
-        action = getattr(field, "action", None)
-
-        if classification in {
-            ComparisonClassification.COMPAT,
-            ComparisonClassification.WARN,
-        }:
-            simplified["simplified_compatible"] += 1
-        elif (
-            classification == ComparisonClassification.INCOMPAT
-            and action is not None
-            and action != Action.USE
-        ):
-            simplified["simplified_resolved"] += 1
-        elif (
-            classification == ComparisonClassification.INCOMPAT
-            and action == Action.USE
-        ):
-            simplified["simplified_needs_action"] += 1
-
-    return simplified
 
 
 @asynccontextmanager
@@ -947,19 +908,19 @@ async def get_mapping_results(
 
 
 @app.get(
-    "/project/{project_key}/mapping/{mapping_id}/structuremap.fsh",
-    tags=["Mappings", "FSH Export"],
-    responses={404: {"model": ErrorModel}},
+    "/project/{project_key}/mapping/{mapping_id}/structuremap",
+    tags=["Mappings", "StructureMap Export"],
+    responses={404: {"model": ErrorModel}, 400: {"model": ErrorModel}},
 )
-async def download_structuremap_fsh(
+async def download_structuremap(
     project_key: str,
     mapping_id: str,
     response: Response,
 ):
     """
-    Download FHIR StructureMap in FSH format for a mapping.
+    Download FHIR StructureMap for a mapping.
     
-    Returns a FSH (FHIR Shorthand) file containing a StructureMap RuleSet
+    Returns a file containing a StructureMap RuleSet
     generated from the mapping's actions.
     
     Args:
@@ -967,26 +928,46 @@ async def download_structuremap_fsh(
         mapping_id: The mapping identifier
         
     Returns:
-        FSH file as text/plain with Content-Disposition header for download
+        StructureMap file as text/plain with Content-Disposition header for download
         
     Raises:
         404: Project or mapping not found
+        400: Mapping has incompatible fields that must be resolved first
     """
     
     global mapping_handler
     try:
         # Get the mapping with actions
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
+        
+        # Check if there are any incompatible fields
+        incompatible_count = 0
+        if hasattr(mapping, 'incompatible') and mapping.incompatible is not None:
+            incompatible_count = mapping.incompatible
+        else:
+            # Fallback: count incompatible fields manually
+            for field in mapping.fields:
+                if hasattr(field, 'evaluation') and field.evaluation:
+                    if hasattr(field.evaluation, 'status') and field.evaluation.status == 'incompatible':
+                        incompatible_count += 1
+        
+        if incompatible_count > 0:
+            response.status_code = 400
+            return ErrorModel(
+                error=f"Cannot export StructureMap: {incompatible_count} incompatible field(s) must be resolved first"
+            )
+        
         actions = mapping.get_action_info_map()
         
         # Determine aliases from profile names
-        source_alias = "source"
+        source_aliases = []
         target_alias = "target"
         
         if mapping.sources and len(mapping.sources) > 0:
-            source_name = mapping.sources[0].name
-            # Create a simple alias from the profile name
-            source_alias = source_name.replace(" ", "").replace("-", "")
+            for source in mapping.sources:
+                # Create a simple alias from the profile name
+                alias = source.name.replace(" ", "").replace("-", "")
+                source_aliases.append(alias)
         
         if mapping.target:
             target_name = mapping.target.name
@@ -995,20 +976,20 @@ async def download_structuremap_fsh(
         # Create a ruleset name from mapping ID
         ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
         
-        # Generate FSH content
-        fsh_content = build_structuremap_fsh(
+        # Generate StructureMap content
+        structuremap_content = build_structuremap(
             mapping=mapping,
             actions=actions,
-            source_alias=source_alias,
+            source_aliases=source_aliases,
             target_alias=target_alias,
             ruleset_name=ruleset_name,
         )
         
         # Return as downloadable file
-        filename = f"{mapping_id}_structuremap.fsh"
+        filename = f"{mapping_id}_structuremap.json"
         return PlainTextResponse(
-            content=fsh_content,
-            media_type="text/fsh",
+            content=structuremap_content,
+            media_type="text/json",
             headers={
                 "Content-Disposition": f'attachment; filename="{filename}"'
             },
@@ -1018,9 +999,9 @@ async def download_structuremap_fsh(
         response.status_code = 404
         return ErrorModel.from_except(e)
     except Exception as e:
-        logging.exception(f"Error generating FSH export: {str(e)}")
+        logging.exception(f"Error generating StructureMap export: {str(e)}")
         response.status_code = 500
-        return ErrorModel(error=f"FSH export failed: {str(e)}")
+        return ErrorModel(error=f"StructureMap export failed: {str(e)}")
 
 
 @app.get(
@@ -1275,6 +1256,45 @@ async def post_mapping(
         return ErrorModel.from_except(e)
 
 
+@app.patch(
+    "/project/{project_key}/mapping/{mapping_id}",
+    tags=["Mappings"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def patch_mapping(
+    project_key: str,
+    mapping_id: str,
+    update_data: MappingUpdateModel,
+    response: Response,
+) -> MappingDetailsModel | ErrorModel:
+    """
+    Update mapping metadata (status, version)
+    
+    Updates the metadata of an existing mapping such as status and version.
+    The last_updated timestamp is automatically updated.
+    
+    Args:
+        project_key: The unique identifier of the project
+        mapping_id: The unique identifier of the mapping
+        update_data: The fields to update
+        
+    Returns:
+        The updated mapping details
+        
+    Raises:
+        404: Project or mapping not found
+    """
+    global mapping_handler
+    try:
+        return mapping_handler.update(project_key, mapping_id, update_data)
+
+    except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
 @app.post(
     "/mapping/{mapping_id}/field/{field_id}/classification",
     tags=["Fields"],
@@ -1466,7 +1486,7 @@ async def get_mapping_evaluation(
     try:
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
         evaluations = mapping.get_evaluation_map()
-        summary = _build_evaluation_summary(evaluations)
+        summary = _build_status_summary(evaluations)
 
         return MappingEvaluationModel(
             mapping_id=mapping_id,
@@ -1494,14 +1514,12 @@ async def get_mapping_evaluation_summary(
     try:
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
         evaluations = mapping.get_evaluation_map()
-        summary = _build_evaluation_summary(evaluations)
-        simplified = _build_simplified_summary(mapping)
+        summary = _build_status_summary(evaluations)
 
         return MappingEvaluationSummaryModel(
             mapping_id=mapping_id,
             mapping_name=mapping.name,
             **summary,
-            **simplified,
         )
 
     except (ProjectNotFound, MappingNotFound) as e:
@@ -1682,7 +1700,12 @@ async def import_manual_entries(
 
 
 def serve():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Configure logging to show our application logs
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(levelname)s:%(name)s: %(message)s'
+    )
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
 
 
 if __name__ == "__main__":

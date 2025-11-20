@@ -22,7 +22,7 @@ class ActionType(str, Enum):
     COPY_FROM = "copy_from"
     COPY_TO = "copy_to"
     FIXED = "fixed"
-    OTHER = "other"
+    MANUAL = "manual"  # User provides free-text implementation instructions in remark field
 
 
 class ActionSource(str, Enum):
@@ -62,9 +62,19 @@ class MappingStatus(str, Enum):
 
 
 class ActionInfo(BaseModel):
-    """Effective mapping action for a single field."""
+    """Effective mapping action for a single field.
 
-    action: ActionType
+    Convention:
+    - action = None: No action has been selected yet. User must make a decision.
+                     This is typically the case for fields with 'warning' or 'incompatible'
+                     classification where no default action can be automatically determined.
+    - action = ActionType value: An action has been determined (either manually set,
+                                  inherited from parent, or auto-determined as system default).
+    - action = 'manual' (in legacy system): User has set a manual action with a remark field
+                                             containing implementation instructions.
+    """
+
+    action: ActionType | None
     source: ActionSource
 
     inherited_from: Optional[str] = None
