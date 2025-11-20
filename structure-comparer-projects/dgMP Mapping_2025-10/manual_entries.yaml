@@ -232,11 +232,11 @@ entries:
     name: MedicationRequest.subject
     other: null
     remark: null
-  - action: use
+  - action: manual
     fixed: null
     name: MedicationRequest.requester
     other: null
-    remark: null
+    remark: Refernziert auf ein Profil des PractitionerDirectory|0.11.25
   - action: use
     fixed: null
     name: MedicationRequest.insurance
@@ -282,4 +282,426 @@ entries:
     name: MedicationRequest.extension:multiplePrescription.extension:id.value[x]
     other: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]
     remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.url
+    other: MedicationRequest.extension:Mehrfachverordnung.url
+    remark: null
+  - action: fixed
+    fixed: https://gematik.de/fhir/epa-medication/StructureDefinition/indicator-bvg-extension
+    name: MedicationRequest.extension:isBvg.url
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.extension:isBvg
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationRequest.subject.identifier
+    other: null
+    remark: Property will be set by MedicationService
+  - action: fixed
+    fixed: http://unitsofmeasure.org
+    name: MedicationRequest.dispenseRequest.quantity.system
+    other: null
+    remark: null
+  - action: fixed
+    fixed: '{Package}'
+    name: MedicationRequest.dispenseRequest.quantity.code
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:Zuzahlungsstatus
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:Notdienstgebuehr
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:SER
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:Unfallinformationen
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung
+    other: MedicationRequest.extension:multiplePrescription
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen
+    other: MedicationRequest.extension:multiplePrescription.extension:indicator
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung
+    other: MedicationRequest.extension:multiplePrescription.extension:counter
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum
+    other: MedicationRequest.extension:multiplePrescription.extension:period
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID
+    other: MedicationRequest.extension:multiplePrescription.extension:id
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:VerschreiberID
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference
+    other: null
+    remark: Die Referenz der KBV-Medikation wird durch eine Referenz auf eine EPA-Medikation
+      ersetzt.
+  - action: empty
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.requester.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.requester.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.requester.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.insurance.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.insurance.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.insurance.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.note.author[x]:authorString
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.note.author[x]:authorReference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.dosageInstruction.extension:Dosierungskennzeichen
+    other: null
+    remark: null
   id: 3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702
+- fields:
+  - action: fixed
+    fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
+    name: Practitioner.meta.tag:Origin.system
+    other: null
+    remark: null
+  - action: fixed
+    fixed: system value="https://gematik.de/fhir/directory/CodeSystem/Origin"/>          <code
+      value="ldap"/>
+    name: Practitioner.meta.tag
+    other: null
+    remark: null
+  - action: fixed
+    fixed: <system value="https://gematik.de/fhir/directory/CodeSystem/Origin"/>          <code
+      value="ldap"/>
+    name: Practitioner.meta.tag:Origin
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.identifier
+    other: null
+    remark: Muss mindestens die TelematikID des Arztes enthalten, die auch im Signaturzertifikat
+      der QES angegeben ist.
+  - action: copy_from
+    fixed: null
+    name: Practitioner.identifier:TelematikID
+    other: Practitioner.identifier:Telematik-ID
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.name.text
+    other: null
+    remark: Property is concatinated from values of {prefix-qualifier} {name.prefix}
+      {name.given} {vorsatzwort} {nachname} {namenszusatz}
+  - action: copy_from
+    fixed: null
+    name: Practitioner.name.family
+    other: Practitioner.name:name.family
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Practitioner.name.given
+    other: Practitioner.name:name.given
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Practitioner.meta.profile
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR
+    other: Practitioner.identifier:LANR
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.use
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.type
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.system
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.value
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.type
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:EFN.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:EFN.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:EFN.use
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:EFN.type
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:EFN.system
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:EFN.value
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:EFN.period
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:EFN.assigner
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:ZANR
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:Telematik-ID.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:Telematik-ID.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:Telematik-ID.use
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:Telematik-ID.type
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:Telematik-ID.system
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.identifier:Telematik-ID.value
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:name.family.value
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.use
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.text
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.family
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.prefix.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.prefix.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.prefix.value
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.suffix
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.name:geburtsname.period
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.address:Strassenanschrift
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Practitioner.address:Postfach
+    other: null
+    remark: null
+  id: e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31
