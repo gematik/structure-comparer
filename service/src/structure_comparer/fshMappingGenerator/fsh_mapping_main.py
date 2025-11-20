@@ -1,7 +1,7 @@
-"""FSH (FHIR Shorthand) export for StructureMap generation.
+"""FHIR StructureMap generation.
 
 This module provides functionality to export mapping actions as FHIR StructureMap
-definitions in FSH format, suitable for FHIR implementation guides.
+definitions, suitable for FHIR implementation guides.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from structure_comparer.data.mapping import Mapping
 
     
-def build_structuremap_fsh(
+def build_structuremap(
     mapping: Mapping,
     actions: dict[str, ActionInfo],
     *,
@@ -22,7 +22,7 @@ def build_structuremap_fsh(
     target_alias: str,
     ruleset_name: str,
 ) -> str:
-    """Build a FHIR StructureMap in FSH format from mapping actions.
+    """Build a FHIR StructureMap from mapping actions.
 
     Args:
         mapping: The mapping object containing field structure
@@ -32,7 +32,7 @@ def build_structuremap_fsh(
         ruleset_name: Name of the RuleSet to generate
 
     Returns:
-        FSH-formatted string representing a StructureMap RuleSet
+        String representing a FHIR StructureMap RuleSet
     """
     lines = []
     lines.append("Test")

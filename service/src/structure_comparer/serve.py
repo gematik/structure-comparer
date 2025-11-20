@@ -60,7 +60,7 @@ from .model.project import ProjectList as ProjectListModel
 from .manual_entries_migration import migrate_manual_entries
 from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
 from .manual_entries import ManualEntries
-from .fshMappingGenerator.fsh_mapping_main import build_structuremap_fsh
+from .fshMappingGenerator.fsh_mapping_main import build_structuremap
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -908,18 +908,18 @@ async def get_mapping_results(
 
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}/structuremap.fsh",
-    tags=["Mappings", "FSH Export"],
+    tags=["Mappings", "StructureMap Export"],
     responses={404: {"model": ErrorModel}},
 )
-async def download_structuremap_fsh(
+async def download_structuremap(
     project_key: str,
     mapping_id: str,
     response: Response,
 ):
     """
-    Download FHIR StructureMap in FSH format for a mapping.
+    Download FHIR StructureMap for a mapping.
     
-    Returns a FSH (FHIR Shorthand) file containing a StructureMap RuleSet
+    Returns a file containing a StructureMap RuleSet
     generated from the mapping's actions.
     
     Args:
@@ -955,8 +955,8 @@ async def download_structuremap_fsh(
         # Create a ruleset name from mapping ID
         ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
         
-        # Generate FSH content
-        fsh_content = build_structuremap_fsh(
+        # Generate StructureMap content
+        fsh_content = build_structuremap(
             mapping=mapping,
             actions=actions,
             source_alias=source_alias,
