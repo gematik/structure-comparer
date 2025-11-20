@@ -73,6 +73,7 @@ def derive_mapping_status(field_evaluation: EvaluationResult, action_info: Optio
     # Check if action was manually set, inherited, or auto-generated with a resolution
     has_explicit_action = (
         action_info is not None
+        and action_info.action is not None  # Must have an actual action, not just action_info
         and (
             action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED)
             or (action_info.source == ActionSource.SYSTEM_DEFAULT and action_info.auto_generated)
@@ -148,8 +149,14 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
         )
 
     if classification == "incompatible":
-        # If the field is incompatible but has a valid action selected, it's resolved
-        if action_info.action is not None:
+        # Check if user has made an explicit decision (manual/inherited action)
+        has_user_action = (
+            action_info.action is not None
+            and action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED)
+        )
+        
+        # If the field is incompatible but user has selected an action, it's resolved
+        if has_user_action:
             reason = EvaluationReason(
                 code="FIELD_INCOMPATIBLE_RESOLVED",
                 severity=EvaluationSeverity.INFO,
@@ -183,8 +190,14 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
         )
 
     if classification == "warning":
-        # If the field is a warning but has a valid action selected, it's resolved
-        if action_info.action is not None:
+        # Check if user has made an explicit decision (manual/inherited action)
+        has_user_action = (
+            action_info.action is not None
+            and action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED)
+        )
+        
+        # If the field is a warning but user has selected an action, it's resolved
+        if has_user_action:
             reason = EvaluationReason(
                 code="FIELD_WARNING_RESOLVED",
                 severity=EvaluationSeverity.INFO,
