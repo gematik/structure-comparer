@@ -77,11 +77,11 @@ entries:
     name: MedicationRequest.requester.reference
     other: null
     remark: null
-  - action: medication_service
+  - action: manual
     fixed: null
     name: MedicationRequest.subject.identifier
     other: null
-    remark: null
+    remark: Property will be set by medication_service
   - action: not_use
     fixed: null
     name: MedicationRequest.subject.reference
@@ -184,11 +184,11 @@ entries:
     name: Medication.extension:Normgroesse
     other: Medication.extension:normSizeCode
     remark: null
-  - action: medication_service
+  - action: manual
     fixed: null
     name: Medication.extension:RxPrescriptionProcessIdentifier
     other: null
-    remark: null
+    remark: Property will be set by medication_service
   - action: copy_to
     fixed: null
     name: Medication.extension:Verpackung
@@ -239,11 +239,11 @@ entries:
     name: Medication.form.coding:kbvDarreichungsform
     other: Medication.form.coding:KBVDarreichungsform
     remark: null
-  - action: medication_service
+  - action: manual
     fixed: null
     name: Medication.identifier:ePAMedicationUniqueIdentifier
     other: null
-    remark: null
+    remark: Property will be set by medication_service
   - action: copy_to
     fixed: null
     name: Medication.ingredient.extension:Darreichungsform
@@ -453,11 +453,11 @@ entries:
     name: Medication.extension:Normgroesse
     other: Medication.extension:normSizeCode
     remark: null
-  - action: medication_service
+  - action: manual
     fixed: null
     name: Medication.extension:RxPrescriptionProcessIdentifier
     other: null
-    remark: null
+    remark: Property will be set by medication_service
   - action: copy_from
     fixed: null
     name: Medication.extension:drugCategory
@@ -498,11 +498,11 @@ entries:
     name: Medication.form.coding:kbvDarreichungsform
     other: Medication.form.coding:KBVDarreichungsform
     remark: null
-  - action: medication_service
+  - action: manual
     fixed: null
     name: Medication.identifier:ePAMedicationUniqueIdentifier
     other: null
-    remark: null
+    remark: Property will be set by medication_service
   - action: copy_to
     fixed: null
     name: Medication.ingredient.extension:Darreichungsform
