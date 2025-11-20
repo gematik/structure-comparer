@@ -92,36 +92,6 @@ entries:
     name: MedicationRequest.substitution.allowed[x]:allowedBoolean
     other: null
     remark: null
-  - action: use
-    fixed: null
-    name: MedicationRequest.medication[x]
-    other: null
-    remark: null
-  - action: use
-    fixed: null
-    name: MedicationRequest.subject
-    other: null
-    remark: null
-  - action: use
-    fixed: null
-    name: MedicationRequest.requester
-    other: null
-    remark: null
-  - action: use
-    fixed: null
-    name: MedicationRequest.insurance
-    other: null
-    remark: null
-  - action: copy_to
-    fixed: null
-    name: MedicationRequest.extension:isBvg.url
-    other: MedicationRequest.extension:isBvg.url
-    remark: null
-  - action: copy_to
-    fixed: null
-    name: MedicationRequest.extension:isBvg.value[x]
-    other: MedicationRequest.extension:isBvg.value[x]
-    remark: null
   id: 3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702
 - fields:
   - action: copy_to
@@ -882,13 +852,12 @@ entries:
     fixed: null
     name: Organization.meta.tag
     other: null
-    remark: "Will be set by the mapping system to \n <system value=\"https://gematik.de/fhir/directory/CodeSystem/Origin\"\
-      />\n         <code value=\"ldap\"/>"
+    remark: Will be set by the mapping system
   - action: manual
     fixed: null
     name: Organization.meta.tag:Origin
     other: null
-    remark: Wird vom Mapping System gesetzt
+    remark: Will be set by the mapping system
   - action: fixed
     fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
     name: Organization.meta.tag:Origin.system
@@ -897,11 +866,6 @@ entries:
   - action: fixed
     fixed: ldap
     name: Organization.meta.tag:Origin.code
-    other: null
-    remark: null
-  - action: empty
-    fixed: null
-    name: Organization.meta.profile:forProfile
     other: null
     remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
