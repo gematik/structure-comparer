@@ -153,23 +153,34 @@ def _inherit_or_default(
             system_remark="Default action applied",
         )
 
+    # No default action available for warning/incompatible fields
+    # User must explicitly select an action
     return ActionInfo(
-        action=ActionType.OTHER,
+        action=None,
         source=ActionSource.SYSTEM_DEFAULT,
         auto_generated=True,
-        system_remark="No default action available",
+        system_remark="No action selected - user decision required",
     )
 
 
-def _parse_action(value: object) -> ActionType:
+def _parse_action(value: object) -> ActionType | None:
+    """Parse action value from manual entries or other sources.
+    
+    Returns:
+        - ActionType: if value is a valid action type
+        - None: if value is None, invalid, or cannot be parsed
+    """
+    if value is None:
+        return None
     if isinstance(value, ActionType):
         return value
     if isinstance(value, str):
         try:
             return ActionType(value)
         except ValueError:
-            return ActionType.OTHER
-    return ActionType.OTHER
+            # Invalid action string -> treat as "no action selected"
+            return None
+    return None
 
 
 def _field_depth(name: str) -> int:

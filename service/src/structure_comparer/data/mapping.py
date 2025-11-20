@@ -28,14 +28,15 @@ _ACTIONTYPE_TO_LEGACY: dict[ActionType, Action] = {
     ActionType.COPY_FROM: Action.COPY_FROM,
     ActionType.COPY_TO: Action.COPY_TO,
     ActionType.FIXED: Action.FIXED,
-    ActionType.OTHER: Action.MANUAL,
+    ActionType.MANUAL: Action.MANUAL,
+    # Note: action=None indicates no action has been selected yet (user must decide)
 }
 
 
 class MappingField(ComparisonField):
     def __init__(self, name: str) -> None:
         super().__init__(name)
-        self.action: Action = Action.USE
+        self.action: Action | None = None  # None until action is determined
         self.other: str | None = None
         self.fixed: str | None = None
         self.actions_allowed: List[Action] = []
@@ -68,8 +69,22 @@ class MappingField(ComparisonField):
         self.actions_allowed = list(allowed)
 
     def apply_action_info(self, info: ActionInfo) -> None:
+        """Apply action info from the mapping actions engine.
+
+        Convention:
+        - If info.action is None: Field has no action selected yet -> set self.action to None
+        - If info.action is an ActionType: Map to legacy Action enum
+        - Legacy Action.MANUAL is only used when explicitly set in manual_entries.yaml
+          (which is parsed before this method is called)
+        """
         self.action_info = info
-        self.action = _ACTIONTYPE_TO_LEGACY.get(info.action, Action.MANUAL)
+
+        if info.action is None:
+            # No action selected yet - user must make a decision
+            self.action = None
+        else:
+            # Map ActionType to legacy Action enum
+            self.action = _ACTIONTYPE_TO_LEGACY.get(info.action, Action.MANUAL)
 
         self.other = info.other_value if isinstance(info.other_value, str) else None
         self.fixed = info.fixed_value if isinstance(info.fixed_value, str) else None
