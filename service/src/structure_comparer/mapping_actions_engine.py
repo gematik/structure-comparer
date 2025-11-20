@@ -71,9 +71,8 @@ def _normalise_manual_entries(manual_entries: Optional[Mapping[str, dict]]) -> D
             if not name:
                 continue
             _ensure_other_key(payload)
-            action_value = payload.get("action")
-            if _is_default_use(action_value):
-                continue
+            # Allow explicit 'use' actions to be treated as manual decisions
+            # This enables users to resolve warnings by explicitly setting an action
             if payload.get("auto_generated"):
                 continue
             payload.pop("auto_generated", None)
@@ -85,9 +84,8 @@ def _normalise_manual_entries(manual_entries: Optional[Mapping[str, dict]]) -> D
     for name, data in manual_entries.items():
         payload = dict(data) if isinstance(data, Mapping) else data
         _ensure_other_key(payload)
-        action_value = payload.get("action")
-        if _is_default_use(action_value):
-            continue
+        # Allow explicit 'use' actions to be treated as manual decisions
+        # This enables users to resolve warnings by explicitly setting an action
         if payload.get("auto_generated"):
             continue
         payload.pop("auto_generated", None)
