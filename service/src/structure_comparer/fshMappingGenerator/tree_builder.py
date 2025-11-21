@@ -100,9 +100,24 @@ class FieldTreeBuilder:
             return False
         if relative.startswith("meta"):
             return True
-        if "[x]" in relative and ":" not in relative:
+        if "[x]" in relative and ":" not in relative and not self._can_resolve_choice_field(path):
             return True
         return False
+
+    def _can_resolve_choice_field(self, path: str) -> bool:
+        if not self._target_profile_key:
+            return False
+        field = self._mapping.fields.get(path)
+        if not field:
+            return False
+        profile_field = field.profiles.get(self._target_profile_key)
+        if not profile_field:
+            return False
+        data = getattr(profile_field, "_ProfileField__data", None)
+        if not data:
+            return False
+        type_entries = getattr(data, "type", None)
+        return bool(type_entries) and len(type_entries) == 1 and bool(type_entries[0].code)
 
     def _relative_path(self, path: str | None) -> str:
         if not path:

@@ -3,31 +3,15 @@
   "id" : "000abe24-f690-481e-9a9f-1cd0eb434e2f",
   "extension" : [{
     "extension" : [{
-      "url" : "Kennzeichen",
+      "url" : "indicator",
       "valueBoolean" : false
-    },
-    {
-      "url" : "Kennzeichen"
-    },
-    {
-      "url" : "Kennzeichen",
-      "valueIdentifier" : {
-        "value" : "false"
-      }
-    },
-    {
-      "url" : "Kennzeichen",
-      "valueBoolean" : false
-    },
-    {
-      "url" : "Kennzeichen"
     }],
-    "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription"
+    "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/multiple-prescription-extension"
   }],
   "status" : "active",
   "intent" : "order",
-  "subject" : {
-    "reference" : "urn:uuid:93866fdc-3e50-4902-a7e9-891b54737b5e"
+  "medicationReference" : {
+    "reference" : "urn:uuid:47076fb4-dc5c-4f75-85f6-b200033b3280"
   },
   "authoredOn" : "2024-05-20",
   "insurance" : [{
@@ -40,6 +24,9 @@
       "system" : "http://unitsofmeasure.org",
       "code" : "{Package}"
     }
+  },
+  "subject" : {
+    "reference" : "urn:uuid:93866fdc-3e50-4902-a7e9-891b54737b5e"
   },
   "substitution" : {
     "allowedBoolean" : true

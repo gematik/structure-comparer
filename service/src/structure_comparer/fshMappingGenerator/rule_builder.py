@@ -41,6 +41,9 @@ class StructureMapRuleBuilder:
     # Relative rule building (child recursion)
     # ------------------------------------------------------------------
     def _build_relative_rule(self, node: FieldNode, parent_src: dict, parent_tgt: dict) -> dict | None:
+        if node.segment == "url" and node.parent and self._should_skip_extension_url(node):
+            return None
+
         rule_name = slug(node.path, suffix=stable_id(node.path))
 
         src_element = node.segment.split(":")[0]
@@ -94,9 +97,20 @@ class StructureMapRuleBuilder:
             self._target_profile_key,
             SKIP_ACTIONS,
         )
+        source_conditions: list[str] = []
+        source_extension_url = None
+        if source_path and is_extension_path(source_path):
+            source_extension_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
+            if source_extension_url:
+                source_conditions.append(f"url = '{source_extension_url}'")
         if skipped_urls:
-            conditions = [f"url != '{url}'" for url in skipped_urls]
-            source_entry["condition"] = " and ".join(conditions)
+            source_conditions.extend([f"url != '{url}'" for url in skipped_urls])
+        if source_conditions:
+            condition_str = " and ".join(source_conditions)
+            if "condition" in source_entry:
+                source_entry["condition"] += f" and {condition_str}"
+            else:
+                source_entry["condition"] = condition_str
 
         target_entry: dict[str, Any] = {
             "context": parent_tgt["variable"],
@@ -490,6 +504,25 @@ class StructureMapRuleBuilder:
             return None
         entry = type_entries[0]
         return entry.code or None
+
+    def _should_skip_extension_url(self, node: FieldNode) -> bool:
+        parent = node.parent
+        if not parent:
+            return False
+        target_parent_path = parent.other_path if (parent.intent == "copy_to" and parent.other_path) else parent.path
+        if not target_parent_path or not is_extension_path(target_parent_path):
+            return False
+        target_url = get_extension_url(self._mapping, target_parent_path, self._target_profile_key)
+        if not target_url:
+            return False
+        source_parent_path = self._source_path_for_node(parent)
+        source_url = (
+            get_extension_url(self._mapping, source_parent_path, self._source_profile_keys)
+            if source_parent_path
+            else None
+        )
+        parent_use_create = bool(parent.children) and is_extension_path(target_parent_path)
+        return parent_use_create or (source_url and target_url != source_url)
 
     def _wrap_with_chain(self, rule: dict, chain: list[dict], *, direction: str) -> dict:
         if not chain:
