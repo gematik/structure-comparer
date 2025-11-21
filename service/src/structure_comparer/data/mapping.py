@@ -43,7 +43,7 @@ class MappingField(ComparisonField):
         self.actions_allowed: List[Action] = []
         self.action_info: ActionInfo | None = None
         self.evaluation = None
-        self.recommendation: ActionInfo | None = None  # Suggested action, not yet applied
+        self.recommendations: List[ActionInfo] = []  # List of suggested actions, not yet applied
 
     @property
     def name_child(self) -> str:
@@ -113,7 +113,7 @@ class MappingField(ComparisonField):
             show_mapping_content=show_mapping_content,
             action_info=self.action_info,
             evaluation=self.evaluation,
-            recommendation=self.recommendation,
+            recommendations=self.recommendations,
         )
 
 
@@ -158,8 +158,8 @@ class Mapping(Comparison):
         action_info_map = compute_mapping_actions(self, manual_mappings)
         self._action_info_map = action_info_map
         
-        # Compute recommendations separately
-        recommendation_map = compute_recommendations(self, manual_mappings)
+        # Compute recommendations separately - returns dict[field_name, list[ActionInfo]]
+        recommendations_map = compute_recommendations(self, manual_mappings)
         
         evaluation_map = evaluate_mapping(self, action_info_map)
         self._evaluation_map = evaluation_map
@@ -175,10 +175,9 @@ class Mapping(Comparison):
 
             field.evaluation = evaluation_map.get(field_name)
             
-            # Set recommendation if available
-            recommendation = recommendation_map.get(field_name)
-            if recommendation:
-                field.recommendation = recommendation
+            # Set recommendations list if available
+            recommendations = recommendations_map.get(field_name, [])
+            field.recommendations = recommendations
 
     def get_action_info_map(self) -> Dict[str, ActionInfo]:
         return self._action_info_map

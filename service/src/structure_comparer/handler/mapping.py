@@ -186,15 +186,22 @@ class MappingHandler:
         project_key: str,
         mapping_id: str,
         field_name: str,
+        index: int = 0,
     ) -> MappingFieldModel:
         """Apply a recommendation to convert it into an active action.
         
         This method:
-        1. Gets the current recommendation for the field
+        1. Gets the recommendation at the specified index for the field
         2. Converts it to a manual action
         3. Persists it in manual_entries.yaml
         4. Re-evaluates the mapping
         5. Returns the updated field
+        
+        Args:
+            project_key: The project key
+            mapping_id: The mapping ID
+            field_name: The field name
+            index: Index of the recommendation to apply (default: 0)
         """
         proj = self.project_handler._get(project_key)
         if proj is None:
@@ -207,9 +214,21 @@ class MappingHandler:
         if field is None:
             raise FieldNotFound()
 
-        # Check if field has a recommendation
-        if not field.recommendation or field.recommendation.action is None:
-            raise MappingNotFound(f"No recommendation available for field '{field_name}'")
+        # Check if field has recommendations
+        if not field.recommendations or len(field.recommendations) == 0:
+            raise MappingNotFound(f"No recommendations available for field '{field_name}'")
+
+        # Validate index
+        if index < 0 or index >= len(field.recommendations):
+            raise MappingNotFound(
+                f"Invalid recommendation index {index}. Field has {len(field.recommendations)} recommendation(s)."
+            )
+
+        # Get the recommendation at the specified index
+        recommendation = field.recommendations[index]
+        
+        if recommendation.action is None:
+            raise MappingNotFound(f"Recommendation at index {index} has no action")
 
         # Get manual entries
         manual_entries = proj.manual_entries.get(mapping_id)
@@ -218,7 +237,6 @@ class MappingHandler:
             proj.manual_entries[mapping_id] = manual_entries
 
         # Convert recommendation to manual action
-        recommendation = field.recommendation
         new_entry = MappingFieldBaseModel(
             name=field.name,
             action=Action(recommendation.action.value) if recommendation.action else None,

@@ -1467,13 +1467,14 @@ async def apply_recommendation(
     project_key: str,
     mapping_id: str,
     field_name: str,
-    response: Response,
+    index: int = 0,
+    response: Response = None,
 ) -> MappingFieldModel | ErrorModel:
     """
     Apply a recommendation to convert it into an active action.
     
     This endpoint:
-    - Takes the current recommendation for a field
+    - Takes the recommendation at the specified index for a field
     - Converts it to a manual action
     - Persists it in manual_entries.yaml
     - Re-evaluates the mapping
@@ -1496,17 +1497,22 @@ async def apply_recommendation(
         type: string
         required: true
         description: The name of the field
+      - in: query
+        name: index
+        type: integer
+        default: 0
+        description: Index of the recommendation to apply (0-based)
     responses:
       200:
         description: Recommendation was successfully applied
       404:
         description: Project, mapping, field, or recommendation not found
       400:
-        description: Invalid request
+        description: Invalid request (e.g., invalid index)
     """
     global mapping_handler
     try:
-        return mapping_handler.apply_recommendation(project_key, mapping_id, field_name)
+        return mapping_handler.apply_recommendation(project_key, mapping_id, field_name, index)
 
     except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
         response.status_code = 404
