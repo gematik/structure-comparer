@@ -66,6 +66,10 @@ def main() -> None:
 
             downloaded_path = mapping_dir / "downloaded_structuremap.json"
             structure_map = _download_structuremap(project_key, mapping_id, downloaded_path)
+            
+            mapping_json_path = mapping_dir / "mapping.json"
+            _download_mapping(project_key, mapping_id, mapping_json_path)
+
             if structure_map is None:
                 structure_map_path = _find_structuremap_file(mapping_dir)
                 if structure_map_path is None:
@@ -304,6 +308,25 @@ def _download_structuremap(project_key: str, mapping_id: str, destination: Path)
     except json.JSONDecodeError as exc:
         print(f"[{project_key}/{mapping_id}] Downloaded StructureMap is not valid JSON: {exc}")
         return None
+
+
+def _download_mapping(project_key: str, mapping_id: str, destination: Path) -> None:
+    encoded_project = quote(project_key, safe="")
+    encoded_mapping = quote(mapping_id, safe="")
+    url = f"{SERVER_BASE_URL}/project/{encoded_project}/mapping/{encoded_mapping}"
+    _print_step(f"[{project_key}/{mapping_id}] Downloading Mapping from {url}")
+    try:
+        with urlopen(url) as response:
+            content_bytes = response.read()
+    except HTTPError as exc:
+        print(f"[{project_key}/{mapping_id}] Failed to download Mapping: HTTP {exc.code} {exc.reason}")
+        return
+    except URLError as exc:
+        print(f"[{project_key}/{mapping_id}] Failed to reach Mapping endpoint: {exc}")
+        return
+
+    content = content_bytes.decode("utf-8")
+    destination.write_text(content, encoding="utf-8")
 
 
 def _find_structuremap_file(mapping_dir: Path) -> Path | None:
