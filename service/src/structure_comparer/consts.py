@@ -9,7 +9,6 @@ REMARKS = {
     Action.COPY_FROM: "Mapped from '{}'",
     Action.COPY_TO: "Mapped to '{}'",
     Action.FIXED: "Set to '{}' fixed value",
-    Action.MEDICATION_SERVICE: "Set by the Medication Service",
 }
 
 DESCRIPTIONS = {
@@ -21,5 +20,4 @@ DESCRIPTIONS = {
     Action.COPY_FROM: "Value(s) will be MAPPED FROM another field",
     Action.COPY_TO: "Value(s) will be MAPPED TO another field",
     Action.FIXED: "Value will be FIXED",
-    Action.MEDICATION_SERVICE: "Value set by the MEDICATION SERVICE",
 }

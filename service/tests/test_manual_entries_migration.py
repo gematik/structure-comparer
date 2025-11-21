@@ -64,21 +64,21 @@ def test_migrate_legacy_format():
     
     # Test not_use classification
     not_use_field = fields_by_name["MedicationRequest.dosageInstruction.extension:Dosierungskennzeichen"]
-    assert not_use_field["action"] == "NOT_USE"
+    assert not_use_field["action"] == "not_use"
     
     # Test copy_from with extra -> other
     copy_from_field = fields_by_name["MedicationRequest.extension:Mehrfachverordnung"]
-    assert copy_from_field["action"] == "COPY_FROM"
+    assert copy_from_field["action"] == "copy_from"
     assert copy_from_field["other"] == "MedicationRequest.extension:multiplePrescription"
     
     # Test fixed with extra -> fixed
     fixed_field = fields_by_name["MedicationRequest.intent"]
-    assert fixed_field["action"] == "FIXED"
+    assert fixed_field["action"] == "fixed"
     assert fixed_field["fixed"] == "filler-order"
     
     # Test empty with remark
     empty_field = fields_by_name["MedicationRequest.identifier:rxPrescriptionProcessIdentifier"]
-    assert empty_field["action"] == "EMPTY"
+    assert empty_field["action"] == "empty"
     assert empty_field["remark"] == "Dieser Identifier wird vom Medication Service vergeben."
 
 
@@ -102,17 +102,19 @@ def test_migrate_all_classifications():
     entry = result["entries"][0]
     fields_by_name = {f["name"]: f for f in entry["fields"]}
     
-    assert fields_by_name["field1"]["action"] == "USE"
-    assert fields_by_name["field2"]["action"] == "NOT_USE"
-    assert fields_by_name["field3"]["action"] == "EMPTY"
-    assert fields_by_name["field4"]["action"] == "FIXED"
+    assert fields_by_name["field1"]["action"] == "use"
+    assert fields_by_name["field2"]["action"] == "not_use"
+    assert fields_by_name["field3"]["action"] == "empty"
+    assert fields_by_name["field4"]["action"] == "fixed"
     assert fields_by_name["field4"]["fixed"] == "fixed-value"
-    assert fields_by_name["field5"]["action"] == "COPY_FROM"
+    assert fields_by_name["field5"]["action"] == "copy_from"
     assert fields_by_name["field5"]["other"] == "source.field"
-    assert fields_by_name["field6"]["action"] == "COPY_TO"
+    assert fields_by_name["field6"]["action"] == "copy_to"
     assert fields_by_name["field6"]["other"] == "target.field"
-    assert fields_by_name["field7"]["action"] == "MANUAL"
-    assert fields_by_name["field8"]["action"] == "MEDICATION_SERVICE"
+    assert fields_by_name["field7"]["action"] == "manual"
+    # medication_service is now migrated to manual with default remark
+    assert fields_by_name["field8"]["action"] == "manual"
+    assert fields_by_name["field8"]["remark"] == "Property will be set by medication_service"
 
 
 def test_migrate_empty_legacy_data():
@@ -127,14 +129,15 @@ def test_migrate_invalid_data():
     with pytest.raises(ValueError, match="Legacy data must be a dictionary"):
         migrate_manual_entries("not a dict")
     
-    # Test unknown classification
+    # Test unknown classification - should be skipped, not raise error
     invalid_data = {
         "test-mapping": {
             "field1": {"classification": "unknown_action"}
         }
     }
-    with pytest.raises(ValueError, match="Unknown classification 'unknown_action'"):
-        migrate_manual_entries(invalid_data)
+    result = migrate_manual_entries(invalid_data)
+    # Mapping with only invalid fields should be skipped
+    assert result == {"entries": []}
     
     # Test missing classification
     missing_classification = {
@@ -142,8 +145,9 @@ def test_migrate_invalid_data():
             "field1": {"remark": "test"}
         }
     }
-    with pytest.raises(ValueError, match="missing required 'classification'"):
-        migrate_manual_entries(missing_classification)
+    result = migrate_manual_entries(missing_classification)
+    # Mapping with only invalid fields should be skipped
+    assert result == {"entries": []}
 
 
 def test_migrate_partial_invalid_fields():

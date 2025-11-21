@@ -11,7 +11,10 @@ class ManualEntriesMapping(BaseModel):
         return next((f for f in self.fields if f.name == key), default)
 
     def __getitem__(self, key) -> MappingFieldBase:
-        return next((f for f in self.fields if f.name == key))
+        field = next((f for f in self.fields if f.name == key), None)
+        if field is None:
+            raise KeyError(key)
+        return field
 
     def __setitem__(self, key, value) -> None:
         # Try to find the index of the field

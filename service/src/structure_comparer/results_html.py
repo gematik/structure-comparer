@@ -17,7 +17,6 @@ CSS_CLASS = {
     Action.COPY_FROM: "row-manual",
     Action.COPY_TO: "row-manual",
     Action.FIXED: "row-manual",
-    Action.MEDICATION_SERVICE: "row-not-use",
 }
 
 STYLE_FILE_NAME = "style.css"

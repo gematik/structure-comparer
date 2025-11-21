@@ -13,6 +13,7 @@ from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
 from ..model.mapping import MappingField as MappingFieldModel
 from ..model.mapping_action_models import ActionInfo, ActionSource, ActionType, EvaluationResult
+from ..model.profile import Profile as ProfileModel
 from .comparison import Comparison, ComparisonField
 from .config import MappingConfig
 from ..model.comparison import ComparisonClassification
@@ -28,14 +29,15 @@ _ACTIONTYPE_TO_LEGACY: dict[ActionType, Action] = {
     ActionType.COPY_FROM: Action.COPY_FROM,
     ActionType.COPY_TO: Action.COPY_TO,
     ActionType.FIXED: Action.FIXED,
-    ActionType.OTHER: Action.MANUAL,
+    ActionType.MANUAL: Action.MANUAL,
+    # Note: action=None indicates no action has been selected yet (user must decide)
 }
 
 
 class MappingField(ComparisonField):
     def __init__(self, name: str) -> None:
         super().__init__(name)
-        self.action: Action = Action.USE
+        self.action: Action | None = None  # None until action is determined
         self.other: str | None = None
         self.fixed: str | None = None
         self.actions_allowed: List[Action] = []
@@ -59,17 +61,31 @@ class MappingField(ComparisonField):
         target_present = self.profiles[target_profile] is not None
 
         if not any_source_present:
-            allowed -= set([Action.USE, Action.NOT_USE, Action.COPY_TO])
+            allowed -= set([Action.USE, Action.NOT_USE, Action.COPY_FROM])
         else:
             allowed -= set([Action.EMPTY])
         if not target_present:
-            allowed -= set([Action.USE, Action.EMPTY, Action.COPY_FROM])
+            allowed -= set([Action.USE, Action.EMPTY, Action.COPY_TO])
 
         self.actions_allowed = list(allowed)
 
     def apply_action_info(self, info: ActionInfo) -> None:
+        """Apply action info from the mapping actions engine.
+
+        Convention:
+        - If info.action is None: Field has no action selected yet -> set self.action to None
+        - If info.action is an ActionType: Map to legacy Action enum
+        - Legacy Action.MANUAL is only used when explicitly set in manual_entries.yaml
+          (which is parsed before this method is called)
+        """
         self.action_info = info
-        self.action = _ACTIONTYPE_TO_LEGACY.get(info.action, Action.MANUAL)
+
+        if info.action is None:
+            # No action selected yet - user must make a decision
+            self.action = None
+        else:
+            # Map ActionType to legacy Action enum
+            self.action = _ACTIONTYPE_TO_LEGACY.get(info.action, Action.MANUAL)
 
         self.other = info.other_value if isinstance(info.other_value, str) else None
         self.fixed = info.fixed_value if isinstance(info.fixed_value, str) else None
@@ -174,8 +190,48 @@ class Mapping(Comparison):
         if self.sources is None or self.target is None:
             raise NotInitialized()
 
-        sources = [p.to_model() for p in self.sources]
-        target = self.target.to_model()
+        # Create source models with metadata from configs
+        sources = []
+        for i, source_profile in enumerate(self.sources):
+            metadata = self.get_profile_metadata(source_profile)
+            source_dict = {
+                "id": source_profile.id,
+                "url": source_profile.url,
+                "key": source_profile.key,
+                "name": source_profile.name,
+                "version": source_profile.version,
+                "webUrl": metadata.get("webUrl"),
+                "package": metadata.get("package"),
+            }
+            sources.append(ProfileModel(**source_dict))
+        
+        # Create target model with metadata from config
+        target_metadata = self.get_profile_metadata(self.target)
+        target_dict = {
+            "id": self.target.id,
+            "url": self.target.url,
+            "key": self.target.key,
+            "name": self.target.name,
+            "version": self.target.version,
+            "webUrl": target_metadata.get("webUrl"),
+            "package": target_metadata.get("package"),
+        }
+        target = ProfileModel(**target_dict)
+
+        # Calculate status counts based on evaluation results
+        evaluations = self.get_evaluation_map()
+        status_counts = {
+            "total": len(evaluations),
+            "incompatible": 0,
+            "warning": 0,
+            "solved": 0,
+            "compatible": 0,
+        }
+
+        for result in evaluations.values():
+            status = result.mapping_status
+            if status.value in status_counts:
+                status_counts[status.value] += 1
 
         try:
             model = MappingBaseModel(
@@ -187,6 +243,7 @@ class Mapping(Comparison):
                 sources=sources,
                 target=target,
                 url=self.url,
+                **status_counts,
             )
 
         except ValidationError as e:
@@ -200,10 +257,50 @@ class Mapping(Comparison):
         if self.sources is None or self.target is None:
             raise NotInitialized()
 
-        sources = [p.to_model() for p in self.sources]
-        target = self.target.to_model()
+        # Create source models with metadata from configs
+        sources = []
+        for i, source_profile in enumerate(self.sources):
+            metadata = self.get_profile_metadata(source_profile)
+            source_dict = {
+                "id": source_profile.id,
+                "url": source_profile.url,
+                "key": source_profile.key,
+                "name": source_profile.name,
+                "version": source_profile.version,
+                "webUrl": metadata.get("webUrl"),
+                "package": metadata.get("package"),
+            }
+            sources.append(ProfileModel(**source_dict))
+        
+        # Create target model with metadata from config
+        target_metadata = self.get_profile_metadata(self.target)
+        target_dict = {
+            "id": self.target.id,
+            "url": self.target.url,
+            "key": self.target.key,
+            "name": self.target.name,
+            "version": self.target.version,
+            "webUrl": target_metadata.get("webUrl"),
+            "package": target_metadata.get("package"),
+        }
+        target = ProfileModel(**target_dict)
 
         fields = [f.to_model() for f in self.fields.values()]
+
+        # Calculate status counts based on evaluation results (same as to_base_model)
+        evaluations = self.get_evaluation_map()
+        status_counts = {
+            "total": len(evaluations),
+            "incompatible": 0,
+            "warning": 0,
+            "solved": 0,
+            "compatible": 0,
+        }
+
+        for result in evaluations.values():
+            status = result.mapping_status
+            if status.value in status_counts:
+                status_counts[status.value] += 1
 
         try:
             model = MappingDetailsModel(
@@ -216,6 +313,7 @@ class Mapping(Comparison):
                 target=target,
                 url=self.url,
                 fields=fields,
+                **status_counts,
             )
 
         except ValidationError as e:

@@ -140,6 +140,9 @@ class Comparison:
         self.sources: list[Profile] | None = None
         self.target: Profile | None = None
         self.fields: OrderedDict[str, ComparisonField] = OrderedDict()
+        # Store profile configs for metadata access
+        self._source_configs: list[ComparisonProfileConfig] = []
+        self._target_config: ComparisonProfileConfig | None = None
 
     def init_ext(self) -> "Comparison":
         self._get_sources(self._config.comparison.sourceprofiles)
@@ -164,16 +167,48 @@ class Comparison:
         return f"{source_profiles} -> {target_profile}"
 
     def _get_sources(self, profile_configs: list[ComparisonProfileConfig]) -> None:
-        self.sources = [p for c in profile_configs if (p := self._get_profile(c))]
+        self._source_configs = profile_configs
+        self.sources = []
+        for c in profile_configs:
+            p = self._get_profile(c)
+            if p:
+                self.sources.append(p)
 
     def _get_target(self, profile_config: ComparisonProfileConfig) -> None:
-        self.target = p if (p := self._get_profile(profile_config)) else None
+        self._target_config = profile_config
+        self.target = self._get_profile(profile_config)
 
     def _get_profile(self, c: ComparisonProfileConfig) -> Profile:
-        if profile := self._project.get_profile(c.id, c.url, c.version):
-            return profile
-        else:
-            logger.error("source %s %s#%s not found", c.id, c.url, c.version)
+        # Use url (canonical URL) for profile lookup
+        profile = None
+        
+        if c.url:
+            profile = self._project.get_profile(c.id, c.url, c.version)
+        
+        if not profile:
+            logger.error("source %s url=%s version %s not found", c.id, c.url, c.version)
+        
+        return profile
+    
+    def get_profile_metadata(self, profile: Profile) -> dict:
+        """Get metadata (webUrl, package) for a profile from its config."""
+        # Check if this is a source profile
+        for i, src_profile in enumerate(self.sources or []):
+            if src_profile is profile and i < len(self._source_configs):
+                config = self._source_configs[i]
+                return {
+                    "webUrl": config.webUrl,
+                    "package": config.package
+                }
+        
+        # Check if this is the target profile
+        if self.target is profile and self._target_config:
+            return {
+                "webUrl": self._target_config.webUrl,
+                "package": self._target_config.package
+            }
+        
+        return {"webUrl": None, "package": None}
 
     def _gen_fields(self, FieldType: type) -> None:
         if self.sources is None or self.target is None:

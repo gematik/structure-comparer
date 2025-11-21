@@ -10,6 +10,8 @@ class Profile(ProfileMin):
     id: str
     key: str
     name: str
+    webUrl: str | None = None
+    package: str | None = None
 
 
 class PackageProfile(Profile):

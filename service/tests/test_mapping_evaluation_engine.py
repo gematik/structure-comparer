@@ -106,7 +106,7 @@ def test_incompatible_field_without_manual_action_is_incompatible():
         EvalField("Observation.value", is_target_required=True, classification="incompatible"),
     ])
     actions = {
-        "Observation.value": ActionInfo(action=ActionType.OTHER, source=ActionSource.SYSTEM_DEFAULT)
+        "Observation.value": ActionInfo(action=None, source=ActionSource.SYSTEM_DEFAULT)
     }
 
     result = evaluate_mapping(mapping, actions)
@@ -122,15 +122,15 @@ def test_incompatible_field_with_manual_action_is_solved():
         EvalField("Observation.value", is_target_required=False, classification="incompatible"),
     ])
     actions = {
-        "Observation.value": ActionInfo(action=ActionType.OTHER, source=ActionSource.MANUAL)
+        "Observation.value": ActionInfo(action=ActionType.FIXED, source=ActionSource.MANUAL)
     }
 
     result = evaluate_mapping(mapping, actions)
     evaluation = result["Observation.value"]
 
     assert evaluation.mapping_status == MappingStatus.SOLVED
-    assert evaluation.status == EvaluationStatus.ACTION_REQUIRED
-    assert evaluation.has_errors is True
+    assert evaluation.status == EvaluationStatus.RESOLVED
+    assert evaluation.has_errors is False
 
 
 def test_warning_field_without_manual_action_is_warning():
@@ -138,7 +138,7 @@ def test_warning_field_without_manual_action_is_warning():
         EvalField("Observation.interpretation", classification="warning"),
     ])
     actions = {
-        "Observation.interpretation": ActionInfo(action=ActionType.OTHER, source=ActionSource.SYSTEM_DEFAULT)
+        "Observation.interpretation": ActionInfo(action=None, source=ActionSource.SYSTEM_DEFAULT)
     }
 
     result = evaluate_mapping(mapping, actions)
@@ -155,15 +155,15 @@ def test_warning_field_with_manual_action_is_solved():
         EvalField("Observation.interpretation", classification="warning"),
     ])
     actions = {
-        "Observation.interpretation": ActionInfo(action=ActionType.OTHER, source=ActionSource.MANUAL)
+        "Observation.interpretation": ActionInfo(action=ActionType.EMPTY, source=ActionSource.MANUAL)
     }
 
     result = evaluate_mapping(mapping, actions)
     evaluation = result["Observation.interpretation"]
 
     assert evaluation.mapping_status == MappingStatus.SOLVED
-    assert evaluation.status == EvaluationStatus.ACTION_REQUIRED
-    assert evaluation.has_warnings is True
+    assert evaluation.status == EvaluationStatus.RESOLVED
+    assert evaluation.has_warnings is False
     assert evaluation.has_errors is False
 
 
@@ -200,8 +200,8 @@ def test_incompatible_field_with_inherited_action_is_solved():
     evaluation = result["Medication.extension:isVaccine.url"]
 
     assert evaluation.mapping_status == MappingStatus.SOLVED
-    assert evaluation.status == EvaluationStatus.ACTION_REQUIRED
-    assert evaluation.has_errors is True
+    assert evaluation.status == EvaluationStatus.RESOLVED
+    assert evaluation.has_errors is False
 
 
 def test_warning_field_with_inherited_action_is_solved():
@@ -210,7 +210,7 @@ def test_warning_field_with_inherited_action_is_solved():
     ])
     actions = {
         "Observation.interpretation": ActionInfo(
-            action=ActionType.OTHER,
+            action=ActionType.NOT_USE,
             source=ActionSource.INHERITED,
             inherited_from="Observation"
         )
@@ -220,6 +220,6 @@ def test_warning_field_with_inherited_action_is_solved():
     evaluation = result["Observation.interpretation"]
 
     assert evaluation.mapping_status == MappingStatus.SOLVED
-    assert evaluation.status == EvaluationStatus.ACTION_REQUIRED
-    assert evaluation.has_warnings is True
+    assert evaluation.status == EvaluationStatus.RESOLVED
+    assert evaluation.has_warnings is False
     assert evaluation.has_errors is False
