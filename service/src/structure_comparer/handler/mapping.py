@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import List, Optional
 from uuid import uuid4
@@ -92,6 +93,12 @@ class MappingHandler:
         field_name: str,
         input: MappingFieldMinimalModel,
     ) -> MappingFieldBaseModel:
+        logger = logging.getLogger(__name__)
+        logger.debug(
+            f"set_field: project={project_key}, mapping={mapping_id}, "
+            f"field={field_name}, action={input.action}"
+        )
+        
         proj = self.project_handler._get(project_key)
 
         # Easiest way to get the fields is from mapping
@@ -110,31 +117,101 @@ class MappingHandler:
 
         # Clean up possible manual entry this was copied from before
         manual_entries = proj.manual_entries.get(mapping_id)
+        logger.debug(f"Got manual_entries for mapping {mapping_id}: {manual_entries is not None}")
 
         if manual_entries is None:
             manual_entries = ManualEntriesMapping(id=mapping_id)
             proj.manual_entries[mapping_id] = manual_entries
+            logger.debug(f"Created new ManualEntriesMapping for {mapping_id}")
 
         # If action is None, remove the entry completely
         if input.action is None:
-            # Clean up existing manual entry and partners
-            if (manual_entry := manual_entries.get(field.name)) and (
-                manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
-            ):
-                other_name = manual_entry.other
-                if other_name:
-                    try:
-                        existing_partner = manual_entries[other_name]
-                        if existing_partner.other == field.name:
-                            del manual_entries[other_name]
-                    except (KeyError, AttributeError, StopIteration):
-                        pass
+            logger.debug(f"Action is None - removing field {field.name} from manual_entries")
+            logger.debug(f"Field exists in manual_entries before delete: {field.name in manual_entries}")
             
-            # Delete the entry completely
+            # Try to find the field or its parent in manual_entries
+            field_to_delete = None
             if field.name in manual_entries:
-                del manual_entries[field.name]
+                field_to_delete = field.name
+            else:
+                # Check if a parent field exists (e.g., if field is "x.y.z", check "x.y", "x")
+                parts = field.name.split('.')
+                for i in range(len(parts) - 1, 0, -1):
+                    parent_name = '.'.join(parts[:i])
+                    if parent_name in manual_entries:
+                        logger.debug(f"Found parent field {parent_name} in manual_entries")
+                        field_to_delete = parent_name
+                        break
             
+            # Also check if any field has this field (or parent) as "other"
+            fields_to_delete = set()
+            if field_to_delete:
+                fields_to_delete.add(field_to_delete)
+            
+            # Search for all fields that reference this field or any parent
+            search_names = [field.name]
+            parts = field.name.split('.')
+            for i in range(len(parts) - 1, 0, -1):
+                search_names.append('.'.join(parts[:i]))
+            
+            logger.debug(f"Searching for references to: {search_names}")
+            
+            for manual_field in manual_entries.fields:
+                if manual_field.other:
+                    # Check if the "other" field matches our field or any parent
+                    for search_name in search_names:
+                        if manual_field.other == search_name:
+                            logger.debug(
+                                f"Found field {manual_field.name} that references "
+                                f"{search_name} via 'other'"
+                            )
+                            fields_to_delete.add(manual_field.name)
+                            break
+                        # Also check if our field is a child of the "other" field
+                        if search_name.startswith(manual_field.other + '.'):
+                            logger.debug(
+                                f"Found field {manual_field.name} whose 'other' "
+                                f"({manual_field.other}) is parent of {search_name}"
+                            )
+                            fields_to_delete.add(manual_field.name)
+                            break
+            
+            logger.debug(f"Fields to delete: {fields_to_delete}")
+            
+            # Delete all found fields
+            for field_name in fields_to_delete:
+                if field_name in manual_entries:
+                    # Clean up partners before deleting
+                    if (manual_entry := manual_entries.get(field_name)) and (
+                        manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
+                    ):
+                        logger.debug(
+                            f"Cleaning up partner for {field_name}: "
+                            f"{manual_entry.other}"
+                        )
+                        other_name = manual_entry.other
+                        if other_name and other_name not in fields_to_delete:
+                            try:
+                                existing_partner = manual_entries[other_name]
+                                if existing_partner.other == field_name:
+                                    fields_to_delete.add(other_name)
+                                    logger.debug(f"Added partner {other_name} to delete list")
+                            except (KeyError, AttributeError, StopIteration):
+                                pass
+                    
+                    logger.debug(f"Deleting field {field_name} from manual_entries")
+                    del manual_entries[field_name]
+            
+            if not fields_to_delete:
+                logger.debug(
+                    f"Neither field {field.name} nor any parent/reference "
+                    f"was found in manual_entries"
+                )
+            
+            logger.debug(f"About to write manual_entries to file: {proj.manual_entries._file}")
+            logger.debug(f"Number of entries in manual_entries before write: {len(proj.manual_entries.entries)}")
             proj.manual_entries.write()
+            logger.debug("Finished writing manual_entries")
             
             # Return a response indicating removal
             return MappingFieldBaseModel(name=field.name, action=None)

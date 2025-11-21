@@ -1,13 +1,19 @@
-import os
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-import yaml
 import uvicorn
+import yaml
 from fastapi import FastAPI, Response, UploadFile
-from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, PlainTextResponse
+
+# Configure logging at module level so it works with uvicorn --reload
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(levelname)s:%(name)s: %(message)s'
+)
 
 from .errors import (
     ComparisonNotFound,
@@ -1753,10 +1759,10 @@ async def import_manual_entries(
 def serve():
     # Configure logging to show our application logs
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG,
         format='%(levelname)s:%(name)s: %(message)s'
     )
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="debug")
 
 
 if __name__ == "__main__":
