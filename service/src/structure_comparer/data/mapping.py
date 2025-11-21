@@ -163,7 +163,8 @@ class Mapping(Comparison):
             if info is not None:
                 field.apply_action_info(info)
             else:
-                fallback = ActionInfo(action=ActionType.USE, source=ActionSource.SYSTEM_DEFAULT)
+                # No manual entry and no automatic action - leave as None (user must decide)
+                fallback = ActionInfo(action=None, source=ActionSource.SYSTEM_DEFAULT)
                 field.apply_action_info(fallback)
 
             field.evaluation = evaluation_map.get(field_name)

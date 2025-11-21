@@ -101,12 +101,43 @@ class MappingHandler:
         if field is None:
             raise FieldNotFound()
 
-        # Check if action is allowed for this field
-        if input.action not in field.actions_allowed:
+        # Check if action is allowed for this field (allow None to remove action)
+        if input.action is not None and input.action not in field.actions_allowed:
             allowed_actions = ", ".join(action.value for action in field.actions_allowed)
             raise MappingNotFound(
                 f"action '{input.action.value}' not allowed for this field, allowed: {allowed_actions}"
             )
+
+        # Clean up possible manual entry this was copied from before
+        manual_entries = proj.manual_entries.get(mapping_id)
+
+        if manual_entries is None:
+            manual_entries = ManualEntriesMapping(id=mapping_id)
+            proj.manual_entries[mapping_id] = manual_entries
+
+        # If action is None, remove the entry completely
+        if input.action is None:
+            # Clean up existing manual entry and partners
+            if (manual_entry := manual_entries.get(field.name)) and (
+                manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
+            ):
+                other_name = manual_entry.other
+                if other_name:
+                    try:
+                        existing_partner = manual_entries[other_name]
+                        if existing_partner.other == field.name:
+                            del manual_entries[other_name]
+                    except (KeyError, AttributeError, StopIteration):
+                        pass
+            
+            # Delete the entry completely
+            if field.name in manual_entries:
+                del manual_entries[field.name]
+            
+            proj.manual_entries.write()
+            
+            # Return a response indicating removal
+            return MappingFieldBaseModel(name=field.name, action=None)
 
         # Build the entry that should be created/updated
         new_entry = MappingFieldBaseModel(name=field.name, action=input.action)
@@ -130,13 +161,7 @@ class MappingHandler:
         if input.remark:
             new_entry.remark = input.remark
 
-        # Clean up possible manual entry this was copied from before
-        manual_entries = proj.manual_entries.get(mapping_id)
-
-        if manual_entries is None:
-            manual_entries = ManualEntriesMapping(id=mapping_id)
-            proj.manual_entries[mapping_id] = manual_entries
-
+        # Clean up existing COPY_FROM/COPY_TO partners when changing action
         if (manual_entry := manual_entries.get(field.name)) and (
             manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
         ):
@@ -148,10 +173,10 @@ class MappingHandler:
                         del manual_entries[other_name]
                 except (KeyError, AttributeError, StopIteration):
                     pass
-            del manual_entries[field.name]
 
         # Apply the manual entry
         manual_entries[field.name] = new_entry
+        
         proj.manual_entries.write()
 
         return new_entry
