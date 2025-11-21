@@ -87,7 +87,7 @@ class _StructureMapBuilder:
         self._actions = actions
         self._source_alias = source_alias or "source"
         self._target_alias = target_alias or "target"
-        self._ruleset_name = ruleset_name or "structuremap"
+        self._ruleset_name = self._normalize_name(ruleset_name or "structuremap")
         self._target_profile_key = mapping.target.key if mapping.target else None
         self._source_profile_keys = [p.key for p in mapping.sources or []]
 
@@ -95,6 +95,8 @@ class _StructureMapBuilder:
         self._nodes_to_emit: list[_FieldNode] = []
         self._source_inputs = self._compute_source_inputs()
         self._target_input = self._compute_target_input()
+        self._blocked_prefixes: set[str] = set()
+        self._field_source_support: dict[str, bool] = {}
 
     # ------------------------------------------------------------------
     # Public API
@@ -129,7 +131,7 @@ class _StructureMapBuilder:
             "group": [
                 {
                     "name": self._ruleset_name,
-                    "typeMode": "none",
+                    "typeMode": self._group_type_mode(),
                     "documentation": f"Mapping generated for {self._mapping.name}",
                     "input": self._build_inputs_section(),
                     "rule": rules,
@@ -147,10 +149,17 @@ class _StructureMapBuilder:
             self._ensure_node(field_name)
 
     def _should_include_field(self, path: str) -> bool:
+        if self._is_blocked_path(path):
+            return False
+
         if self._is_problematic_field(path):
             return False
 
         field = self._mapping.fields.get(path)
+        supports_source = True
+        if field is not None:
+            supports_source = self._any_source_supports(field)
+        self._field_source_support[path] = supports_source
         if field is None:
             return True
 
@@ -159,13 +168,15 @@ class _StructureMapBuilder:
 
         target_field = field.profiles.get(self._target_profile_key)
         if not self._profile_supports_field(target_field):
+            self._blocked_prefixes.add(path)
             return False
 
         info = self._actions.get(path)
         if info and info.action == ActionType.COPY_FROM:
             return self._copy_from_source_supported(info)
 
-        if self._action_needs_source_value(info) and not self._any_source_supports(field):
+        if self._action_needs_source_value(info) and not supports_source:
+            self._blocked_prefixes.add(path)
             return False
 
         return True
@@ -178,6 +189,12 @@ class _StructureMapBuilder:
             return True
         if "[x]" in relative and ":" not in relative:
             return True
+        return False
+
+    def _is_blocked_path(self, path: str) -> bool:
+        for blocked in self._blocked_prefixes:
+            if path == blocked or path.startswith(f"{blocked}."):
+                return True
         return False
 
     def _profile_supports_field(self, profile_field) -> bool:
@@ -204,7 +221,7 @@ class _StructureMapBuilder:
             return False
         if info.action in {ActionType.FIXED, ActionType.EXTENSION}:
             return False
-        if info.action == ActionType.OTHER and info.fixed_value:
+        if info.action == ActionType.MANUAL and info.fixed_value:
             return False
         if info.action == ActionType.COPY_FROM:
             return False
@@ -290,7 +307,7 @@ class _StructureMapBuilder:
         if action == ActionType.FIXED:
             return "fixed"
 
-        if action == ActionType.OTHER:
+        if action == ActionType.MANUAL:
             # Manual entries default to "manual" unless a fixed value exists
             return "fixed" if node.fixed_value else "manual"
 
@@ -340,51 +357,79 @@ class _StructureMapBuilder:
         inputs.append({"name": self._target_input["alias"], "type": self._target_input["type"], "mode": "target"})
         return inputs
 
+    def _group_type_mode(self) -> str:
+        inputs = [*self._source_inputs, self._target_input]
+        if all(input_info.get("type") for input_info in inputs):
+            return "types"
+        return "none"
+
     def _build_rule(self, node: _FieldNode) -> dict | None:
         relative_target = self._relative_path(node.path)
         if not relative_target:
             return None
 
-        source_element = self._source_element(node)
-        src_var = self._var_name("src", node.path)
-        rule: dict = {
-            "name": self._slug(node.path, suffix=self._stable_id(node.path)),
-            "source": [
-                {
-                    "context": self._source_alias,
-                    "element": source_element,
-                    **({"variable": src_var} if node.intent in {"copy", "copy_other"} else {}),
-                }
-            ],
-        }
-
+        rule_name = self._slug(node.path, suffix=self._stable_id(node.path))
         documentation = self._build_documentation(node)
+
+        source_chain: list[dict] = []
+        target_chain: list[dict] = []
+
+        if node.intent in {"copy", "copy_other"}:
+            source_chain = self._build_path_chain(self._source_path_for_node(node), alias=self._source_alias, prefix="src")
+            if not source_chain:
+                return None
+            target_chain = self._build_path_chain(node.path, alias=self._target_alias, prefix="tgt")
+            if not target_chain:
+                return None
+        elif node.intent == "fixed":
+            target_chain = self._build_path_chain(node.path, alias=self._target_alias, prefix="tgt")
+            if not target_chain:
+                return None
+            if self._field_source_support.get(node.path, True):
+                source_chain = self._build_path_chain(node.path, alias=self._source_alias, prefix="src")
+
+        rule: dict = {"name": rule_name}
         if documentation:
             rule["documentation"] = documentation
 
-        target_entries: list[dict] = []
+        if source_chain:
+            leaf_source = source_chain[-1]
+            rule["source"] = [
+                {
+                    "context": leaf_source["context"],
+                    "element": leaf_source["element"],
+                    "variable": leaf_source["variable"],
+                }
+            ]
+        else:
+            rule["source"] = [{"context": self._source_alias}]
+
         if node.intent in {"copy", "copy_other"}:
-            target_entry = {
-                "context": self._target_alias,
-                "contextType": "variable",
-                "element": relative_target,
-                "transform": "copy",
-                "parameter": [{"valueId": src_var}],
-            }
-            target_entries.append(target_entry)
-
+            leaf_source = source_chain[-1]
+            leaf_target = target_chain[-1]
+            rule["target"] = [
+                {
+                    "context": leaf_target["context"],
+                    "contextType": "variable",
+                    "element": leaf_target["element"],
+                    "transform": "copy",
+                    "parameter": [{"valueId": leaf_source["variable"]}],
+                }
+            ]
         elif node.intent == "fixed":
-            target_entry = {
-                "context": self._target_alias,
-                "contextType": "variable",
-                "element": relative_target,
-                "transform": "copy",
-                "parameter": [{"valueString": node.fixed_value or ""}],
-            }
-            target_entries.append(target_entry)
+            leaf_target = target_chain[-1]
+            rule["target"] = [
+                {
+                    "context": leaf_target["context"],
+                    "contextType": "variable",
+                    "element": leaf_target["element"],
+                    "transform": "copy",
+                    "parameter": [{"valueString": node.fixed_value or ""}],
+                }
+            ]
 
-        if target_entries:
-            rule["target"] = target_entries
+        rule = self._wrap_with_chain(rule, source_chain[:-1], direction="source") if source_chain else rule
+        rule = self._wrap_with_chain(rule, target_chain[:-1], direction="target") if target_chain else rule
 
         return rule
 
@@ -397,12 +442,108 @@ class _StructureMapBuilder:
         parts = path.split(".", 1)
         return parts[1] if len(parts) == 2 else ""
 
-    def _source_element(self, node: _FieldNode) -> str:
+    def _source_path_for_node(self, node: _FieldNode) -> str | None:
         if node.intent == "copy_other" and node.other_path:
-            other_rel = self._relative_path(node.other_path)
-            if other_rel:
-                return other_rel
-        return self._relative_path(node.path)
+            return node.other_path
+        return node.path
+
+    def _build_path_chain(self, path: str | None, *, alias: str, prefix: str) -> list[dict]:
+        relative = self._relative_path(path)
+        if not relative:
+            return []
+
+        segments = [segment for segment in relative.split(".") if segment]
+        chain: list[dict] = []
+        context = alias
+        
+        root = path.split(".")[0] if path else ""
+
+        for idx, segment in enumerate(segments):
+            partial = ".".join(segments[: idx + 1])
+            variable = self._var_name(prefix, f"{alias}.{partial}")
+            
+            # Strip slice name from element name for FHIR compliance
+            element_name = segment.split(":")[0]
+            
+            # Handle [x] suffix
+            resolved_type = None
+            if element_name.endswith("[x]"):
+                # Try to resolve type from target profile
+                current_full_path = f"{root}.{partial}"
+                
+                field = self._mapping.fields.get(current_full_path)
+                if field and self._target_profile_key:
+                    target_field = field.profiles.get(self._target_profile_key)
+                    if target_field:
+                        # Access underlying ElementDefinition
+                        ed = getattr(target_field, "_ProfileField__data", None)
+                        if ed and ed.type and len(ed.type) == 1:
+                            type_code = ed.type[0].code
+                            resolved_type = type_code
+                
+                # Always strip [x]
+                element_name = element_name[:-3]
+            
+            chain.append({"context": context, "element": element_name, "variable": variable, "type": resolved_type})
+            context = variable
+        return chain
+
+    def _wrap_with_chain(self, rule: dict, chain: list[dict], *, direction: str) -> dict:
+        if not chain:
+            return rule
+
+        wrapped_rule = rule
+        for entry in reversed(chain):
+            wrapper_entry = {
+                "context": entry["context"],
+                "element": entry["element"],
+                "variable": entry["variable"],
+            }
+            if direction == "target":
+                wrapper_entry["contextType"] = "variable"
+                if entry.get("type"):
+                    wrapper_entry["transform"] = "create"
+                    wrapper_entry["parameter"] = [{"valueString": entry["type"]}]
+
+            documentation = wrapped_rule.pop("documentation", None)
+            wrapped_rule = {
+                "name": wrapped_rule.get("name"),
+                direction: [wrapper_entry],
+                "rule": [wrapped_rule],
+            }
+            if direction == "target":
+                wrapped_rule["source"] = [{"context": self._source_alias}]
+
+            if documentation:
+                wrapped_rule["documentation"] = documentation
+
+        return wrapped_rule
+        if not chain:
+            return rule
+
+        wrapped_rule = rule
+        for entry in reversed(chain):
+            wrapper_entry = {
+                "context": entry["context"],
+                "element": entry["element"],
+                "variable": entry["variable"],
+            }
+            if direction == "target":
+                wrapper_entry["contextType"] = "variable"
+
+            documentation = wrapped_rule.pop("documentation", None)
+            wrapped_rule = {
+                "name": wrapped_rule.get("name"),
+                direction: [wrapper_entry],
+                "rule": [wrapped_rule],
+            }
+            if direction == "target":
+                wrapped_rule["source"] = [{"context": self._source_alias}]
+
+            if documentation:
+                wrapped_rule["documentation"] = documentation
+
+        return wrapped_rule
 
     def _alias_from_name(self, name: str) -> str:
         return self._slug(name or "source", suffix="")
@@ -432,15 +573,17 @@ class _StructureMapBuilder:
         }
 
     def _input_type_for_profile(self, profile, *, alias: str | None = None) -> str:
-        if profile is None:
-            return "Resource"
         if alias:
             return alias
+        if profile is None:
+            return "Resource"
         resource_type = getattr(profile, "resource_type", None)
         if resource_type:
             return resource_type
-        if getattr(profile, "url", None):
-            return profile.url
+        canonical = getattr(profile, "url", None)
+        version = getattr(profile, "version", None)
+        if canonical:
+            return f"{canonical}|{version}" if version else canonical
         if getattr(profile, "name", None):
             return profile.name
         return "Resource"
@@ -479,6 +622,10 @@ class _StructureMapBuilder:
 
     def _stable_id(self, text: str, length: int = 8) -> str:
         return hashlib.sha1(text.encode("utf-8")).hexdigest()[:length]
+
+    def _normalize_name(self, text: str) -> str:
+        slug = self._slug(text, suffix="")
+        return slug or "StructureMap"
 
     def _first_field_path(self) -> str | None:
         try:

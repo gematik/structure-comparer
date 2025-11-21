@@ -61,7 +61,7 @@ from .model.project import ProjectList as ProjectListModel
 from .manual_entries_migration import migrate_manual_entries
 from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
 from .manual_entries import ManualEntries
-from .structureMap_generator.structureMap_generator_main import build_structuremap
+from .fshMappingGenerator.fsh_mapping_main import build_structuremap_fsh
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -69,6 +69,14 @@ package_handler: PackageHandler
 comparison_handler: ComparisonHandler
 mapping_handler: MappingHandler
 cur_proj: str
+
+
+def _alias_from_profile(profile, fallback: str) -> str:
+  text = getattr(profile, "name", None)
+  if not text:
+    text = getattr(profile, "id", None) or getattr(profile, "url", None) or ""
+  cleaned = "".join(ch for ch in text if ch.isalnum())
+  return cleaned or fallback
 
 
 def _build_status_summary(evaluations: dict[str, EvaluationResult]) -> dict[str, int]:
@@ -958,38 +966,28 @@ async def download_structuremap(
             )
         
         actions = mapping.get_action_info_map()
-        
-        # Determine aliases from profile names
-        source_aliases = []
-        target_alias = "target"
-        
-        if mapping.sources and len(mapping.sources) > 0:
-            for source in mapping.sources:
-                # Create a simple alias from the profile name
-                alias = source.name.replace(" ", "").replace("-", "")
-                source_aliases.append(alias)
-        
-        if mapping.target:
-            target_name = mapping.target.name
-            target_alias = target_name.replace(" ", "").replace("-", "")
-        
+
+        primary_source = mapping.sources[0] if mapping.sources else None
+        source_alias = _alias_from_profile(primary_source, "source")
+        target_alias = _alias_from_profile(mapping.target, "target")
+
         # Create a ruleset name from mapping ID
         ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
-        
-        # Generate StructureMap content
-        structuremap_content = build_structuremap(
-            mapping=mapping,
-            actions=actions,
-            source_aliases=source_aliases,
-            target_alias=target_alias,
-            ruleset_name=ruleset_name,
+
+        # Generate StructureMap content (FHIR-compliant)
+        structuremap_content = build_structuremap_fsh(
+          mapping=mapping,
+          actions=actions,
+          source_alias=source_alias,
+          target_alias=target_alias,
+          ruleset_name=ruleset_name,
         )
         
         # Return as downloadable file
         filename = f"{mapping_id}_structuremap.json"
         return PlainTextResponse(
-            content=structuremap_content,
-            media_type="text/json",
+          content=structuremap_content,
+          media_type="application/fhir+json",
             headers={
                 "Content-Disposition": f'attachment; filename="{filename}"'
             },

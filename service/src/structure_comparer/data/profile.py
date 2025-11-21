@@ -105,6 +105,10 @@ class Profile:
         return self.__data.version
 
     @property
+    def resource_type(self) -> str | None:
+        return getattr(self.__data, "type", None)
+
+    @property
     def fields(self) -> Dict[str, "ProfileField"]:
         return self.__fields
 

@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
-"""Generate StructureMaps for test fixtures and optionally run the HAPI validator."""
+"""Validate StructureMaps and run the HAPI validator using server-generated maps."""
 
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
+from urllib.error import URLError, HTTPError
+from urllib.parse import quote
+from urllib.request import urlopen
 
 # ---------------------------------------------------------------------------
 # Edit the values in this block to control what the script processes.
 # ---------------------------------------------------------------------------
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PROJECTS_DIR = REPO_ROOT / "structure-comparer-projects"
-TEST_ROOT = REPO_ROOT / "test"
+STRUCTUREMAP_ROOT = Path(__file__).resolve().parent
 JAVA_VALIDATOR_JAR = Path("/Users/gematik/dev/validators/current_hapi_validator.jar")
 FHIR_VERSION = "4.0.1"
 VALIDATE_STRUCTUREMAPS = True
@@ -21,20 +25,15 @@ RUN_TRANSFORMATIONS = True  # Enable to run example transformations via validato
 PROJECT_FILTER: list[str] = ["dgMP Mapping_2025-10"]  # Leave empty to process every project that exists in the projects dir.
 MAPPING_FILTER: list[str] = ["3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702"]  # Optional list of mapping UUIDs to limit the run.
 EXAMPLE_FILTER: list[str] = []  # Optional list of resource-type suffixes from example_source_*.json.
-RULESET_OVERRIDES: dict[str, str] = {
-    # "3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702": "MedicationRequestMap",
-}
-SOURCE_ALIAS_OVERRIDES: dict[str, str] = {}
-TARGET_ALIAS_OVERRIDES: dict[str, str] = {}
 EXTRA_IG_SOURCES: list[str | Path] = []  # Additional -ig arguments besides the mapping test folder itself.
 ADDITIONAL_TRANSFORM_ARGS: list[str] = []
+SERVER_BASE_URL = os.environ.get("STRUCTUREMAP_SERVER_URL", "http://127.0.0.1:8000")
 # ---------------------------------------------------------------------------
 
 SERVICE_SRC = REPO_ROOT / "service" / "src"
 if str(SERVICE_SRC) not in sys.path:
     sys.path.insert(0, str(SERVICE_SRC))
 
-from structure_comparer.fshMappingGenerator.fsh_mapping_main import build_structuremap_fsh  # type: ignore[import]
 from structure_comparer.handler.mapping import MappingHandler  # type: ignore[import]
 from structure_comparer.handler.project import ProjectsHandler  # type: ignore[import]
 
@@ -46,72 +45,45 @@ def _print_step(message: str) -> None:
     print(f"{_STEP_COLOR}{message}{_RESET_COLOR}")
 
 
-def _default_alias(text: str, fallback: str) -> str:
-    cleaned = "".join(ch for ch in (text or "") if ch.isalnum())
-    return cleaned or fallback
-
-
 def main() -> None:
     projects_handler = ProjectsHandler(PROJECTS_DIR)
     projects_handler.load()
     mapping_handler = MappingHandler(projects_handler)
 
-    project_keys = PROJECT_FILTER or projects_handler.keys
+    project_keys = PROJECT_FILTER or _discover_projects()
     for project_key in project_keys:
-        try:
-            project = projects_handler._get(project_key)
-        except Exception as exc:  # noqa: BLE001 - propagate useful context later
-            print(f"Skipping project '{project_key}': {exc}")
+        mapping_dir_root = STRUCTUREMAP_ROOT / project_key
+        if not mapping_dir_root.is_dir():
+            print(f"Skipping project '{project_key}': structuremap folder {mapping_dir_root} not found")
             continue
-
-        mapping_dir_root = TEST_ROOT / project_key
-        mapping_dir_root.mkdir(parents=True, exist_ok=True)
         structure_maps_for_validation: list[Path] = []
         transform_jobs: list[tuple[Path, str, str, Path | None]] = []
 
-        for mapping_id in project.mappings.keys():
+        for mapping_dir in sorted(p for p in mapping_dir_root.iterdir() if p.is_dir()):
+            mapping_id = mapping_dir.name
             if MAPPING_FILTER and mapping_id not in MAPPING_FILTER:
                 continue
 
-            mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
-            actions = mapping.get_action_info_map()
-
-            source_profile = mapping.sources[0] if mapping.sources else None
-            target_profile = mapping.target
-
-            source_alias = SOURCE_ALIAS_OVERRIDES.get(mapping_id) or _default_alias(
-                getattr(source_profile, "name", ""),
-                "source",
-            )
-            target_alias = TARGET_ALIAS_OVERRIDES.get(mapping_id) or _default_alias(
-                getattr(target_profile, "name", ""),
-                "target",
-            )
-            ruleset_name = RULESET_OVERRIDES.get(mapping_id) or _default_alias(
-                mapping.name.replace(" ", "_"),
-                "structuremap",
-            )
-
-            structure_map_json = build_structuremap_fsh(
-                mapping=mapping,
-                actions=actions,
-                source_alias=source_alias,
-                target_alias=target_alias,
-                ruleset_name=ruleset_name,
-            )
-            structure_map = json.loads(structure_map_json)
-
-            mapping_dir = mapping_dir_root / mapping_id
-            mapping_dir.mkdir(parents=True, exist_ok=True)
-            structure_map_path = mapping_dir / f"{ruleset_name}.json"
-            structure_map_path.write_text(structure_map_json, encoding="utf-8")
-            _print_step(f"[{project_key}/{mapping_id}] StructureMap saved to {_as_repo_relative(structure_map_path)}")
+            downloaded_path = mapping_dir / "downloaded_structuremap.json"
+            structure_map = _download_structuremap(project_key, mapping_id, downloaded_path)
+            if structure_map is None:
+                structure_map_path = _find_structuremap_file(mapping_dir)
+                if structure_map_path is None:
+                    print(f"[{project_key}/{mapping_id}] No StructureMap *.json file found; skipping")
+                    continue
+                structure_map = json.loads(structure_map_path.read_text(encoding="utf-8"))
+            else:
+                structure_map_path = downloaded_path
             structure_maps_for_validation.append(structure_map_path.resolve())
+
+            structure_map_url = structure_map.get("url", "")
+            target_profile = _get_target_profile(mapping_handler, project_key, mapping_id)
+
             if RUN_TRANSFORMATIONS:
                 transform_jobs.append(
                     (
                         mapping_dir,
-                        structure_map.get("url", ""),
+                        structure_map_url,
                         mapping_id,
                         _profile_package_dir(target_profile),
                     )
@@ -308,6 +280,51 @@ def _validate_transformed_output(
         subprocess.run(cmd, cwd=REPO_ROOT, check=True)
     except subprocess.CalledProcessError as exc:  # noqa: PERF203 - want explicit feedback
         print(f"[{project_key}/{mapping_id}] Output validation failed for output-{resource_type}.json: {exc}")
+
+
+def _download_structuremap(project_key: str, mapping_id: str, destination: Path) -> dict | None:
+    encoded_project = quote(project_key, safe="")
+    encoded_mapping = quote(mapping_id, safe="")
+    url = f"{SERVER_BASE_URL}/project/{encoded_project}/mapping/{encoded_mapping}/structuremap"
+    _print_step(f"[{project_key}/{mapping_id}] Downloading StructureMap from {url}")
+    try:
+        with urlopen(url) as response:
+            content_bytes = response.read()
+    except HTTPError as exc:
+        print(f"[{project_key}/{mapping_id}] Failed to download StructureMap: HTTP {exc.code} {exc.reason}")
+        return None
+    except URLError as exc:
+        print(f"[{project_key}/{mapping_id}] Failed to reach StructureMap endpoint: {exc}")
+        return None
+
+    content = content_bytes.decode("utf-8")
+    destination.write_text(content, encoding="utf-8")
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError as exc:
+        print(f"[{project_key}/{mapping_id}] Downloaded StructureMap is not valid JSON: {exc}")
+        return None
+
+
+def _find_structuremap_file(mapping_dir: Path) -> Path | None:
+    candidates = sorted(
+        p for p in mapping_dir.glob("*.json") if "structuremap" in p.stem.lower() and not p.name.startswith("output")
+    )
+    if candidates:
+        return candidates[0]
+    return None
+
+
+def _discover_projects() -> list[str]:
+    return sorted(p.name for p in STRUCTUREMAP_ROOT.iterdir() if p.is_dir())
+
+
+def _get_target_profile(mapping_handler: MappingHandler, project_key: str, mapping_id: str):
+    try:
+        mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
+    except Exception:
+        return None
+    return mapping.target
 
 def _as_repo_relative(path: Path) -> str:
     try:
