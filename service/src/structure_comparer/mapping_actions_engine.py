@@ -58,6 +58,47 @@ def compute_mapping_actions(
     return result
 
 
+def compute_recommendations(
+    mapping, manual_entries: Optional[Mapping[str, dict]] = None
+) -> Dict[str, ActionInfo]:
+    """Compute recommendations for fields that have no active action.
+    
+    Recommendations are suggested actions that do NOT influence mapping status.
+    They must be explicitly applied by the user to become active actions.
+    
+    Returns:
+        Dict mapping field names to ActionInfo objects representing recommendations.
+        Only returns recommendations for fields that:
+        - Have classification='compatible'
+        - Do NOT have a manual action
+        - Are NOT inherited
+    """
+    fields = getattr(mapping, "fields", {}) or {}
+    manual_map = _normalise_manual_entries(manual_entries)
+    
+    recommendations: Dict[str, ActionInfo] = {}
+    
+    for field_name, field in fields.items():
+        # Skip if field has manual entry
+        if field_name in manual_map:
+            continue
+            
+        classification = (
+            getattr(field, "classification", "unknown") if field is not None else "unknown"
+        )
+        
+        # Only create recommendations for compatible fields
+        if str(classification).lower() == "compatible":
+            recommendations[field_name] = ActionInfo(
+                action=ActionType.USE,
+                source=ActionSource.SYSTEM_DEFAULT,
+                auto_generated=True,
+                system_remark="Recommendation: Field is compatible, suggest using it directly",
+            )
+    
+    return recommendations
+
+
 def _normalise_manual_entries(
     manual_entries: Optional[Mapping[str, dict]],
 ) -> Dict[str, dict]:
@@ -227,12 +268,15 @@ def _inherit_or_default(
         getattr(field, "classification", "unknown") if field is not None else "unknown"
     )
 
+    # For compatible fields: Do NOT set an active action anymore
+    # Instead, return None action (will be converted to recommendation later)
+    # This ensures compatible fields don't automatically get "solved" status
     if str(classification).lower() == "compatible":
         return ActionInfo(
-            action=ActionType.USE,
+            action=None,
             source=ActionSource.SYSTEM_DEFAULT,
             auto_generated=True,
-            system_remark="Default action applied",
+            system_remark="Default recommendation: USE (not yet applied)",
         )
 
     # No default action available for warning/incompatible fields

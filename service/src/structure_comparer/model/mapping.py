@@ -34,6 +34,11 @@ class MappingField(ComparisonField):
              Typically for warning/incompatible fields without a default action.
     - Action enum value: An action is set (manually, inherited, or system default).
              'manual' specifically means user provided implementation instructions in remark.
+    
+    Convention for recommendation field:
+    - Contains a suggested action that has NOT been applied yet
+    - Does NOT influence mapping_status
+    - User must explicitly apply it to convert to active action
     """
 
     action: Action | None
@@ -43,6 +48,7 @@ class MappingField(ComparisonField):
     show_mapping_content: bool | None = None
     action_info: ActionInfo | None = None
     evaluation: EvaluationResult | None = None
+    recommendation: ActionInfo | None = None
 
 
 class MappingBase(BaseModel):

@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from ..action import Action
 from ..errors import NotInitialized
 from ..manual_entries import ManualEntries
-from ..mapping_actions_engine import compute_mapping_actions
+from ..mapping_actions_engine import compute_mapping_actions, compute_recommendations
 from ..mapping_evaluation_engine import evaluate_mapping
 from ..model.mapping import MappingBase as MappingBaseModel
 from ..model.mapping import MappingDetails as MappingDetailsModel
@@ -43,6 +43,7 @@ class MappingField(ComparisonField):
         self.actions_allowed: List[Action] = []
         self.action_info: ActionInfo | None = None
         self.evaluation = None
+        self.recommendation: ActionInfo | None = None  # Suggested action, not yet applied
 
     @property
     def name_child(self) -> str:
@@ -112,6 +113,7 @@ class MappingField(ComparisonField):
             show_mapping_content=show_mapping_content,
             action_info=self.action_info,
             evaluation=self.evaluation,
+            recommendation=self.recommendation,
         )
 
 
@@ -155,6 +157,10 @@ class Mapping(Comparison):
 
         action_info_map = compute_mapping_actions(self, manual_mappings)
         self._action_info_map = action_info_map
+        
+        # Compute recommendations separately
+        recommendation_map = compute_recommendations(self, manual_mappings)
+        
         evaluation_map = evaluate_mapping(self, action_info_map)
         self._evaluation_map = evaluation_map
 
@@ -168,6 +174,11 @@ class Mapping(Comparison):
                 field.apply_action_info(fallback)
 
             field.evaluation = evaluation_map.get(field_name)
+            
+            # Set recommendation if available
+            recommendation = recommendation_map.get(field_name)
+            if recommendation:
+                field.recommendation = recommendation
 
     def get_action_info_map(self) -> Dict[str, ActionInfo]:
         return self._action_info_map
