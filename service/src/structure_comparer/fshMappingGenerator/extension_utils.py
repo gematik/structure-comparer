@@ -6,7 +6,11 @@ from .nodes import FieldNode
 
 
 def is_extension_path(path: str | None) -> bool:
-    return bool(path and ".extension" in path)
+    if not path:
+        return False
+    last_segment = path.split(".")[-1]
+    base_name = last_segment.split(":")[0]
+    return base_name in {"extension", "modifierExtension"}
 
 
 def get_extension_url(mapping, path: str, profile_keys: str | list[str] | None = None):
@@ -15,7 +19,10 @@ def get_extension_url(mapping, path: str, profile_keys: str | list[str] | None =
 
     field = mapping.fields.get(path)
     if not field:
-        return None
+        url_path = f"{path}.url"
+        field = mapping.fields.get(url_path)
+        if not field:
+            return None
 
     if profile_keys is None:
         keys = [p.key for p in mapping.sources or []]
@@ -28,21 +35,21 @@ def get_extension_url(mapping, path: str, profile_keys: str | list[str] | None =
         profile_field = field.profiles.get(alias)
         if profile_field:
             data = getattr(profile_field, "_ProfileField__data", None)
-            if data:
-                if data.type:
-                    for entry in data.type:
-                        if entry.code == "Extension" and entry.profile:
-                            return entry.profile[0]
+            if data and data.type:
+                for entry in data.type:
+                    if entry.code == "Extension" and entry.profile:
+                        return entry.profile[0]
 
-                url_path = f"{path}.url"
-                url_field = mapping.fields.get(url_path)
-                if url_field:
-                    url_profile_field = url_field.profiles.get(alias)
-                    if url_profile_field:
-                        url_data = getattr(url_profile_field, "_ProfileField__data", None)
-                        fixed_uri = getattr(url_data, "fixedUri", None) if url_data else None
-                        if fixed_uri:
-                            return fixed_uri
+        # Check for fixedUri on explicit url child if profile data not informative
+        url_path = f"{path}.url" if not path.endswith(".url") else path
+        url_field = mapping.fields.get(url_path)
+        if url_field:
+            url_profile_field = url_field.profiles.get(alias)
+            if url_profile_field:
+                url_data = getattr(url_profile_field, "_ProfileField__data", None)
+                fixed_uri = getattr(url_data, "fixedUri", None) if url_data else None
+                if fixed_uri:
+                    return fixed_uri
     return None
 
 

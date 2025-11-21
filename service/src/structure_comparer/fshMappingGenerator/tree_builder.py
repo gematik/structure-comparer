@@ -138,7 +138,7 @@ class FieldTreeBuilder:
             return True
         if info.action in SKIP_ACTIONS:
             return False
-        if info.action in {ActionType.FIXED, ActionType.EXTENSION}:
+        if info.action == ActionType.FIXED:
             return False
         if info.action == ActionType.MANUAL and info.fixed_value:
             return False
@@ -237,9 +237,6 @@ class FieldTreeBuilder:
 
         if action == ActionType.MANUAL:
             return "fixed" if node.fixed_value else "manual"
-
-        if action == ActionType.EXTENSION:
-            return "manual"
 
         return "copy"
 

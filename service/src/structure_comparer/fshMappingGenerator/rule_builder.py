@@ -51,7 +51,10 @@ class StructureMapRuleBuilder:
         parts = tgt_element.split(":")
         if parts[0].endswith("[x]"):
             parts[0] = parts[0][:-3]
-        tgt_element = ":".join(parts)
+        if parts[0] in {"extension", "modifierExtension"} and len(parts) > 1:
+            tgt_element = parts[0]
+        else:
+            tgt_element = ":".join(parts)
 
         if node.intent == "copy_to" and node.other_path:
             tgt_element = node.other_path.split(".")[-1]
@@ -59,6 +62,21 @@ class StructureMapRuleBuilder:
             if parts[0].endswith("[x]"):
                 parts[0] = parts[0][:-3]
             tgt_element = ":".join(parts)
+
+        target_path = node.other_path if (node.intent == "copy_to" and node.other_path) else node.path
+        source_path = self._source_path_for_node(node)
+        if node.intent == "copy_to":
+            source_path = node.path
+
+        is_extension = bool(target_path and is_extension_path(target_path))
+        target_type = self._resolve_target_type(target_path)
+        create_complex_type = bool(
+            target_type
+            and target_type not in {"Extension"}
+            and target_type[:1].isupper()
+            and node.children
+        )
+        use_create = is_extension and bool(node.children)
 
         src_var = var_name("src", node.path)
         tgt_var = var_name("tgt", node.path)
@@ -85,13 +103,20 @@ class StructureMapRuleBuilder:
             "contextType": "variable",
             "element": tgt_element,
             "variable": tgt_var,
-            "transform": "copy",
-            "parameter": [{"valueId": src_var}],
         }
 
         if node.intent == "fixed":
             target_entry["transform"] = "copy"
             target_entry["parameter"] = [{"valueString": node.fixed_value or ""}]
+        elif use_create:
+            target_entry["transform"] = "create"
+            target_entry["parameter"] = [{"valueString": "Extension"}]
+        elif create_complex_type:
+            target_entry["transform"] = "create"
+            target_entry["parameter"] = [{"valueString": target_type}]
+        else:
+            target_entry["transform"] = "copy"
+            target_entry["parameter"] = [{"valueId": src_var}]
 
         rule = {
             "name": rule_name,
@@ -99,13 +124,11 @@ class StructureMapRuleBuilder:
             "target": [target_entry],
         }
 
-        if is_extension_path(node.path) and node.intent in {"copy", "copy_other", "copy_to"}:
-            src_path = node.path
-            tgt_path = node.other_path if node.intent == "copy_to" else node.path
-            target_url = get_extension_url(self._mapping, tgt_path, self._target_profile_key)
-            source_url = get_extension_url(self._mapping, src_path, self._source_profile_keys)
+        if is_extension and node.intent in {"copy", "copy_other", "copy_to"}:
+            target_url = get_extension_url(self._mapping, target_path, self._target_profile_key)
+            source_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
 
-            if target_url and source_url and target_url != source_url:
+            if target_url and (use_create or (source_url and target_url != source_url)):
                 rule["target"].append(
                     {
                         "context": tgt_var,
@@ -143,6 +166,10 @@ class StructureMapRuleBuilder:
         source_chain: list[dict] = []
         target_chain: list[dict] = []
 
+        node_path_lower = node.path.lower() if node.path else ""
+        other_path_lower = node.other_path.lower() if node.other_path else ""
+        debug_paths = "mehrfach" in node_path_lower or "multiple" in other_path_lower
+
         if node.intent in {"copy", "copy_other", "copy_to"}:
             source_path = self._source_path_for_node(node)
             target_path = node.path
@@ -151,7 +178,24 @@ class StructureMapRuleBuilder:
                 source_path = node.path
                 target_path = node.other_path or node.path
 
-            source_chain = self._build_path_chain(source_path, alias=self._source_alias, prefix="src")
+            if debug_paths:
+                print(
+                    "DEBUG target path",
+                    {
+                        "node": node.path,
+                        "source_path": source_path,
+                        "target_path": target_path,
+                        "intent": node.intent,
+                    },
+                )
+
+            source_chain = self._build_path_chain(
+                source_path,
+                alias=self._source_alias,
+                prefix="src",
+                chain_kind="source",
+                profile_keys=self._source_profile_keys,
+            )
             if not source_chain:
                 return None
 
@@ -176,15 +220,33 @@ class StructureMapRuleBuilder:
                 else:
                     source_chain[-1]["condition"] = condition_str
 
-            target_chain = self._build_path_chain(target_path, alias=self._target_alias, prefix="tgt")
+            target_chain = self._build_path_chain(
+                target_path,
+                alias=self._target_alias,
+                prefix="tgt",
+                chain_kind="target",
+                profile_keys=self._target_profile_key,
+            )
             if not target_chain:
                 return None
         elif node.intent == "fixed":
-            target_chain = self._build_path_chain(node.path, alias=self._target_alias, prefix="tgt")
+            target_chain = self._build_path_chain(
+                node.path,
+                alias=self._target_alias,
+                prefix="tgt",
+                chain_kind="target",
+                profile_keys=self._target_profile_key,
+            )
             if not target_chain:
                 return None
             if self._field_source_support.get(node.path, True):
-                source_chain = self._build_path_chain(node.path, alias=self._source_alias, prefix="src")
+                source_chain = self._build_path_chain(
+                    node.path,
+                    alias=self._source_alias,
+                    prefix="src",
+                    chain_kind="source",
+                    profile_keys=self._source_profile_keys,
+                )
 
         rule: dict = {"name": rule_name}
         if documentation:
@@ -296,7 +358,15 @@ class StructureMapRuleBuilder:
             return node.other_path
         return node.path
 
-    def _build_path_chain(self, path: str | None, *, alias: str, prefix: str) -> list[dict]:
+    def _build_path_chain(
+        self,
+        path: str | None,
+        *,
+        alias: str,
+        prefix: str,
+        chain_kind: str,
+        profile_keys: str | list[str] | None,
+    ) -> list[dict]:
         relative = self._relative_path(path)
         if not relative:
             return []
@@ -311,12 +381,13 @@ class StructureMapRuleBuilder:
             partial = ".".join(segments[: idx + 1])
             variable = var_name(prefix, f"{alias}.{partial}")
 
-            element_name = segment.split(":")[0]
+            element_name = segment
             resolved_type = None
+            create_type = None
             current_full_path = f"{root}.{partial}"
 
             field = self._mapping.fields.get(current_full_path)
-            if field and self._target_profile_key:
+            if field and self._target_profile_key and chain_kind == "target":
                 target_field = field.profiles.get(self._target_profile_key)
                 if target_field:
                     data = getattr(target_field, "_ProfileField__data", None)
@@ -324,10 +395,11 @@ class StructureMapRuleBuilder:
                         for entry in data.type:
                             if entry.code == "Extension" and entry.profile:
                                 resolved_type = entry.profile[0]
+                                create_type = resolved_type
                                 break
                         if (
                             not resolved_type
-                            and segment.split(":")[0].endswith("[x]")
+                            and element_name.split(":")[0].endswith("[x]")
                             and len(data.type) == 1
                         ):
                             resolved_type = data.type[0].code
@@ -336,7 +408,7 @@ class StructureMapRuleBuilder:
 
             if base_name.endswith("[x]"):
                 current_field = self._mapping.fields.get(current_full_path)
-                if current_field and self._target_profile_key:
+                if current_field and self._target_profile_key and chain_kind == "target":
                     target_field = current_field.profiles.get(self._target_profile_key)
                     if target_field:
                         data = getattr(target_field, "_ProfileField__data", None)
@@ -352,14 +424,72 @@ class StructureMapRuleBuilder:
                 else:
                     element_name = base_name
 
-            chain.append({
+            slice_name = None
+            if ":" in segment:
+                slice_name = segment.split(":", 1)[1]
+
+            extension_url = None
+            if base_name in {"extension", "modifierExtension"}:
+                extension_url = get_extension_url(self._mapping, current_full_path, profile_keys)
+                if chain_kind == "target":
+                    create_type = extension_url or "Extension"
+                element_name = base_name
+
+            if chain_kind == "source" and extension_url:
+                condition = f"url = '{extension_url}'"
+            else:
+                condition = None
+
+            if base_name == "extension" and ("Mehrfach" in segment or "Multiple" in segment):
+                print(
+                    "DEBUG chain",
+                    {
+                        "path": path,
+                        "segment": segment,
+                        "element_name": element_name,
+                        "create_type": create_type,
+                        "resolved_type": resolved_type,
+                        "current_full_path": current_full_path,
+                    },
+                )
+
+            entry: dict[str, Any] = {
                 "context": context,
                 "element": element_name,
                 "variable": variable,
-                "type": resolved_type,
-            })
+            }
+            if resolved_type:
+                entry["type"] = resolved_type
+            if create_type:
+                entry["create_type"] = create_type
+            if condition:
+                entry["condition"] = condition
+            if extension_url:
+                entry["extension_url"] = extension_url
+            if slice_name:
+                entry["slice_name"] = slice_name
+
+            chain.append(entry)
             context = variable
         return chain
+
+    def _resolve_target_type(self, path: str | None) -> str | None:
+        if not path or not self._target_profile_key:
+            return None
+        field = self._mapping.fields.get(path)
+        if not field:
+            return None
+        target_field = field.profiles.get(self._target_profile_key)
+        if not target_field:
+            return None
+        data = getattr(target_field, "_ProfileField__data", None)
+        if not data or not getattr(data, "type", None):
+            return None
+        type_entries = data.type
+        if len(type_entries) != 1:
+            return None
+        entry = type_entries[0]
+        return entry.code or None
 
     def _wrap_with_chain(self, rule: dict, chain: list[dict], *, direction: str) -> dict:
         if not chain:
@@ -372,11 +502,14 @@ class StructureMapRuleBuilder:
                 "element": entry["element"],
                 "variable": entry["variable"],
             }
+            if direction == "source" and entry.get("condition"):
+                wrapper_entry["condition"] = entry["condition"]
             if direction == "target":
                 wrapper_entry["contextType"] = "variable"
-                if entry.get("type"):
+                create_type = entry.get("create_type") or entry.get("type")
+                if create_type:
                     wrapper_entry["transform"] = "create"
-                    wrapper_entry["parameter"] = [{"valueString": entry["type"]}]
+                    wrapper_entry["parameter"] = [{"valueString": create_type}]
 
             documentation = wrapped_rule.pop("documentation", None)
             wrapped_rule = {

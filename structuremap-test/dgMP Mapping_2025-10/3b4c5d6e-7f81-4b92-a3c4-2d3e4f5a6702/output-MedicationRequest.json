@@ -1,0 +1,47 @@
+{
+  "resourceType" : "MedicationRequest",
+  "id" : "000abe24-f690-481e-9a9f-1cd0eb434e2f",
+  "extension" : [{
+    "extension" : [{
+      "url" : "Kennzeichen",
+      "valueBoolean" : false
+    },
+    {
+      "url" : "Kennzeichen"
+    },
+    {
+      "url" : "Kennzeichen",
+      "valueIdentifier" : {
+        "value" : "false"
+      }
+    },
+    {
+      "url" : "Kennzeichen",
+      "valueBoolean" : false
+    },
+    {
+      "url" : "Kennzeichen"
+    }],
+    "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription"
+  }],
+  "status" : "active",
+  "intent" : "order",
+  "subject" : {
+    "reference" : "urn:uuid:93866fdc-3e50-4902-a7e9-891b54737b5e"
+  },
+  "authoredOn" : "2024-05-20",
+  "insurance" : [{
+    "reference" : "urn:uuid:1b89236c-ab14-4e92-937e-5af0b59d0cd4"
+  }],
+  "dispenseRequest" : {
+    "quantity" : {
+      "value" : 1,
+      "unit" : "Packung",
+      "system" : "http://unitsofmeasure.org",
+      "code" : "{Package}"
+    }
+  },
+  "substitution" : {
+    "allowedBoolean" : true
+  }
+}

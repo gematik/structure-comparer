@@ -816,7 +816,7 @@
               "context": "KBVPRERPPrescription",
               "element": "extension",
               "variable": "srcKBVPRERPPrescriptionExtensione3b6d5d3",
-              "condition": "url != 'Nummerierung' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Prescriber_ID' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_EmergencyServicesFee' and url != 'Unfallkennzeichen' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_FOR_StatusCoPayment' and url != 'Zeitraum' and url != 'Kennzeichen' and url != 'Unfallbetrieb' and url != 'ID' and url != 'Unfalltag' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_FOR_SER' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_FOR_Accident'"
+              "condition": "url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_FOR_SER' and url != 'Unfallbetrieb' and url != 'Kennzeichen' and url != 'Unfalltag' and url != 'ID' and url != 'Nummerierung' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_EmergencyServicesFee' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Prescriber_ID' and url != 'Unfallkennzeichen' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_FOR_StatusCoPayment' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_FOR_Accident' and url != 'Zeitraum'"
             }
           ],
           "target": [
@@ -842,7 +842,7 @@
               "context": "KBVPRERPPrescription",
               "element": "extension",
               "variable": "srcKBVPRERPPrescriptionExtensionMehrfachverordnungc7120a1c",
-              "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription'"
+              "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription' and url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription'"
             }
           ],
           "target": [
@@ -908,12 +908,23 @@
                 {
                   "context": "tgtEPAMedicationRequestExtensionMultipleprescriptionb8edbb86",
                   "contextType": "variable",
-                  "element": "extension:counter",
+                  "element": "extension",
                   "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionCfaa56",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Extension"
+                    }
+                  ]
+                },
+                {
+                  "context": "tgtMedicationRequestExtensionMultipleprescriptionExtensionCfaa56",
+                  "contextType": "variable",
+                  "element": "url",
                   "transform": "copy",
                   "parameter": [
                     {
-                      "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionCfaa56"
+                      "valueString": "counter"
                     }
                   ]
                 }
@@ -982,10 +993,10 @@
                       "contextType": "variable",
                       "element": "value",
                       "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionC871d2",
-                      "transform": "copy",
+                      "transform": "create",
                       "parameter": [
                         {
-                          "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionC871d2"
+                          "valueString": "Ratio"
                         }
                       ]
                     }
@@ -1006,10 +1017,10 @@
                           "contextType": "variable",
                           "element": "denominator",
                           "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionC7b748",
-                          "transform": "copy",
+                          "transform": "create",
                           "parameter": [
                             {
-                              "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionC7b748"
+                              "valueString": "Quantity"
                             }
                           ]
                         }
@@ -1152,10 +1163,10 @@
                           "contextType": "variable",
                           "element": "numerator",
                           "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionCb4aa6",
-                          "transform": "copy",
+                          "transform": "create",
                           "parameter": [
                             {
-                              "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionCb4aa6"
+                              "valueString": "Quantity"
                             }
                           ]
                         }
@@ -1252,12 +1263,23 @@
                 {
                   "context": "tgtEPAMedicationRequestExtensionMultipleprescriptionb8edbb86",
                   "contextType": "variable",
-                  "element": "extension:id",
+                  "element": "extension",
                   "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionI16b59",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Extension"
+                    }
+                  ]
+                },
+                {
+                  "context": "tgtMedicationRequestExtensionMultipleprescriptionExtensionI16b59",
+                  "contextType": "variable",
+                  "element": "url",
                   "transform": "copy",
                   "parameter": [
                     {
-                      "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionI16b59"
+                      "valueString": "id"
                     }
                   ]
                 }
@@ -1326,10 +1348,10 @@
                       "contextType": "variable",
                       "element": "value",
                       "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionIe062e",
-                      "transform": "copy",
+                      "transform": "create",
                       "parameter": [
                         {
-                          "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionIe062e"
+                          "valueString": "Identifier"
                         }
                       ]
                     }
@@ -1448,12 +1470,23 @@
                 {
                   "context": "tgtEPAMedicationRequestExtensionMultipleprescriptionb8edbb86",
                   "contextType": "variable",
-                  "element": "extension:indicator",
+                  "element": "extension",
                   "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionI4e3b3",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Extension"
+                    }
+                  ]
+                },
+                {
+                  "context": "tgtMedicationRequestExtensionMultipleprescriptionExtensionI4e3b3",
+                  "contextType": "variable",
+                  "element": "url",
                   "transform": "copy",
                   "parameter": [
                     {
-                      "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionI4e3b3"
+                      "valueString": "indicator"
                     }
                   ]
                 }
@@ -1546,12 +1579,23 @@
                 {
                   "context": "tgtEPAMedicationRequestExtensionMultipleprescriptionb8edbb86",
                   "contextType": "variable",
-                  "element": "extension:period",
+                  "element": "extension",
                   "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionP141be",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Extension"
+                    }
+                  ]
+                },
+                {
+                  "context": "tgtMedicationRequestExtensionMultipleprescriptionExtensionP141be",
+                  "contextType": "variable",
+                  "element": "url",
                   "transform": "copy",
                   "parameter": [
                     {
-                      "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionP141be"
+                      "valueString": "period"
                     }
                   ]
                 }
@@ -1620,10 +1664,10 @@
                       "contextType": "variable",
                       "element": "value",
                       "variable": "tgtMedicationRequestExtensionMultipleprescriptionExtensionP06a2b",
-                      "transform": "copy",
+                      "transform": "create",
                       "parameter": [
                         {
-                          "valueId": "srcMedicationRequestExtensionMultipleprescriptionExtensionP06a2b"
+                          "valueString": "Period"
                         }
                       ]
                     }
