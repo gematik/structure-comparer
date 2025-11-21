@@ -1453,6 +1453,74 @@ async def post_mapping_field(
         return ErrorModel.from_except(e)
 
 
+@app.post(
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/apply-recommendation",
+    tags=["mapping"],
+    response_model=MappingFieldModel,
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={400: {}, 404: {}},
+)
+async def apply_recommendation(
+    project_key: str,
+    mapping_id: str,
+    field_name: str,
+    index: int = 0,
+    response: Response = None,
+) -> MappingFieldModel | ErrorModel:
+    """
+    Apply a recommendation to convert it into an active action.
+    
+    This endpoint:
+    - Takes the recommendation at the specified index for a field
+    - Converts it to a manual action
+    - Persists it in manual_entries.yaml
+    - Re-evaluates the mapping
+    - Returns the updated field
+    
+    ---
+    parameters:
+      - in: path
+        name: project_key
+        type: string
+        required: true
+        description: The project key
+      - in: path
+        name: mapping_id
+        type: string
+        required: true
+        description: The id of the mapping
+      - in: path
+        name: field_name
+        type: string
+        required: true
+        description: The name of the field
+      - in: query
+        name: index
+        type: integer
+        default: 0
+        description: Index of the recommendation to apply (0-based)
+    responses:
+      200:
+        description: Recommendation was successfully applied
+      404:
+        description: Project, mapping, field, or recommendation not found
+      400:
+        description: Invalid request (e.g., invalid index)
+    """
+    global mapping_handler
+    try:
+        return mapping_handler.apply_recommendation(project_key, mapping_id, field_name, index)
+
+    except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except Exception as e:
+        response.status_code = 400
+        return ErrorModel.from_except(e)
+
+
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}/evaluation",
     tags=["Mappings", "Evaluation"],

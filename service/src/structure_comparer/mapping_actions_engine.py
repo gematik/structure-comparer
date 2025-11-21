@@ -9,11 +9,13 @@ from __future__ import annotations
 
 from typing import Dict, Mapping, Optional
 
+from .field_utils import field_depth, parent_name
 from .model.mapping_action_models import (
     ActionInfo,
     ActionSource,
     ActionType,
 )
+from .recommendation_engine import RecommendationEngine
 
 _INHERITABLE_ACTIONS = {
     ActionType.NOT_USE,
@@ -42,7 +44,7 @@ def compute_mapping_actions(
     target_key = target.key if target else None
 
     # Process parents before children so inheritance works deterministically.
-    ordered_field_names = sorted(fields.keys(), key=_field_depth)
+    ordered_field_names = sorted(fields.keys(), key=field_depth)
     result: Dict[str, ActionInfo] = {}
 
     for field_name in ordered_field_names:
@@ -56,6 +58,26 @@ def compute_mapping_actions(
         result[field_name] = info
 
     return result
+
+
+def compute_recommendations(
+    mapping, manual_entries: Optional[Mapping[str, dict]] = None
+) -> Dict[str, list[ActionInfo]]:
+    """Compute recommendations for fields that have no active action.
+    
+    Recommendations are suggested actions that do NOT influence mapping status.
+    They must be explicitly applied by the user to become active actions.
+    
+    Returns:
+        Dict mapping field names to lists of ActionInfo objects representing recommendations.
+        Each field can have 0..n recommendations.
+        
+        Includes:
+        1. Compatible fields -> USE recommendation
+        2. Inherited copy_from/copy_to -> inherited recommendation with adjusted other_value
+    """
+    engine = RecommendationEngine(mapping, manual_entries)
+    return engine.compute_all_recommendations()
 
 
 def _normalise_manual_entries(
@@ -142,74 +164,32 @@ def _inherit_or_default(
     all_fields: Dict[str, object],
     target_key: Optional[str] = None,
 ) -> ActionInfo:
-    parent_name = _parent_name(field_name)
-    if parent_name:
-        parent_info = result.get(parent_name)
+    field_parent_name = parent_name(field_name)
+    if field_parent_name:
+        parent_info = result.get(field_parent_name)
         if parent_info and parent_info.action in _INHERITABLE_ACTIONS:
-            # Adjust other_value for child fields when inheriting copy_from/copy_to
-            inherited_other_value = parent_info.other_value
-            if inherited_other_value and parent_info.action in {
-                ActionType.COPY_FROM,
-                ActionType.COPY_TO,
-            }:
-                # Extract the child suffix from the current field
-                child_suffix = field_name[
-                    len(parent_name) :
-                ]  # e.g., ".system" or ".code"
-
-                # Don't inherit for polymorphic type choices (e.g., :valueBoolean)
-                # These are concrete type implementations, not structural children
-                if child_suffix.startswith(":value"):
-                    # Fall through to default logic
-                    pass
-                else:
-                    # Append the same suffix to the parent's other_value
-                    candidate_other_value = inherited_other_value + child_suffix
-
-                    # Check if target field exists
-                    target_exists = candidate_other_value in all_fields
-
-                    # If direct target doesn't exist and parent is polymorphic value[x],
-                    # try to find matching type choice
-                    if not target_exists and ".value[x]" in inherited_other_value:
-                        # Look for type choices (e.g., :valueCoding, :valueString)
-                        type_choices = [
-                            f
-                            for f in all_fields.keys()
-                            if f.startswith(inherited_other_value + ":")
-                            and f.count(":") == inherited_other_value.count(":") + 1
-                        ]
-
-                        if type_choices:
-                            # Try each type choice with the child suffix
-                            for type_choice in type_choices:
-                                alternative_target = type_choice + child_suffix
-                                if alternative_target in all_fields:
-                                    candidate_other_value = alternative_target
-                                    target_exists = True
-                                    break
-
-                    # Validate that the target field actually exists
-                    if target_exists:
-                        inherited_other_value = candidate_other_value
-                    else:
-                        # Target field doesn't exist, don't inherit the action
-                        # Fall through to default logic below
-                        inherited_other_value = None
-
+            # For copy_from/copy_to: DON'T inherit as active action anymore
+            # These will be handled as recommendations instead
             is_copy_action = parent_info.action in {
                 ActionType.COPY_FROM,
                 ActionType.COPY_TO,
             }
-            if inherited_other_value is not None or not is_copy_action:
+            
+            if is_copy_action:
+                # Skip inheritance for copy actions, fall through to default
+                # These fields will get recommendations instead of active inherited actions
+                pass
+            else:
+                # Other inheritable actions (NOT_USE, EMPTY, USE_RECURSIVE)
+                # Continue with existing inheritance logic
                 return ActionInfo(
                     action=parent_info.action,
                     source=ActionSource.INHERITED,
-                    inherited_from=parent_name,
+                    inherited_from=field_parent_name,
                     auto_generated=True,
-                    system_remark=f"Inherited from {parent_name}",
+                    system_remark=f"Inherited from {field_parent_name}",
                     fixed_value=parent_info.fixed_value,
-                    other_value=inherited_other_value,
+                    other_value=parent_info.other_value,
                 )
 
     # Check for patternCoding.system in target field
@@ -227,12 +207,15 @@ def _inherit_or_default(
         getattr(field, "classification", "unknown") if field is not None else "unknown"
     )
 
+    # For compatible fields: Do NOT set an active action anymore
+    # Instead, return None action (will be converted to recommendation later)
+    # This ensures compatible fields don't automatically get "solved" status
     if str(classification).lower() == "compatible":
         return ActionInfo(
-            action=ActionType.USE,
+            action=None,
             source=ActionSource.SYSTEM_DEFAULT,
             auto_generated=True,
-            system_remark="Default action applied",
+            system_remark="Default recommendation: USE (not yet applied)",
         )
 
     # No default action available for warning/incompatible fields
@@ -265,17 +248,14 @@ def _parse_action(value: object) -> ActionType | None:
     return None
 
 
+# Legacy aliases for backwards compatibility
+# Use field_utils.field_depth and field_utils.parent_name instead
 def _field_depth(name: str) -> int:
-    return name.count(".") + name.count(":")
+    return field_depth(name)
 
 
 def _parent_name(name: str) -> Optional[str]:
-    dot_index = name.rfind(".")
-    colon_index = name.rfind(":")
-    split_index = max(dot_index, colon_index)
-    if split_index == -1:
-        return None
-    return name[:split_index]
+    return parent_name(name)
 
 
 def _is_default_use(value: object) -> bool:

@@ -1,0 +1,746 @@
+entries:
+- fields:
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine.url
+    other: Medication.extension:Impfstoff.url
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.amount.numerator.extension:Gesamtmenge
+    other: Medication.amount.numerator.extension:totalQuantity
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.amount.numerator.extension:Packungsgroesse
+    other: Medication.amount.numerator.extension:packagingSize
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.code.coding:verordnungskategorieCode
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.numerator.value
+    other: null
+    remark: 'If Property and value exists in the source profile, it will be retained
+      in the target profile. If it is missing please add a new extension with the
+      following content: "extension": [ { "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+      "valueCode": "unknown" } ]'
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:normSizeCode.url
+    other: Medication.extension:Normgroesse.url
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:packaging.url
+    other: Medication.extension:Verpackung.url
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.extension:Kategorie
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:packaging.value[x]
+    other: Medication.extension:Verpackung.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions.url
+    other: Medication.extension:Herstellungsanweisung.url
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions.value[x]
+    other: Medication.extension:Herstellungsanweisung.value[x]
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.code.coding:pzn.system
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.code.coding:pzn.code
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.system
+    other: null
+    remark: 'If Property and value exists in the source profile, it will be retained
+      in the target profile. If it is missing please add a new extension with the
+      following content: "extension": [ { "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+      "valueCode": "unknown" } ]'
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.code
+    other: null
+    remark: 'If Property and value exists in the source profile, it will be retained
+      in the target profile. If it is missing please add a new extension with the
+      following content: "extension": [ { "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+      "valueCode": "unknown" } ]'
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.system
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.code
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.strength.denominator.value
+    other: null
+    remark: 'If Property and value exists in the source profile, it will be retained
+      in the target profile. If it is missing please add a new extension with the
+      following content: "extension": [ { "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+      "valueCode": "unknown" } ]'
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Normgroesse
+    other: Medication.extension:normSizeCode
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Arzneimittelkategorie
+    other: Medication.extension:drugCategory
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff
+    other: Medication.extension:isVaccine
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions
+    other: Medication.extension:Herstellungsanweisung
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:Verpackung
+    other: Medication.extension:packaging
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.extension:Darreichungsform
+    other: Medication.ingredient.extension:darreichungsform
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.extension:Darreichungsform.id
+    other: Medication.ingredient.extension:Darreichungsform.id
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.extension:Darreichungsform.extension
+    other: Medication.ingredient.extension:Darreichungsform.extension
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.extension:Darreichungsform.url
+    other: Medication.ingredient.extension:Darreichungsform.url
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.extension:Darreichungsform.value[x]
+    other: Medication.ingredient.extension:Darreichungsform.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.ingredient.strength.extension:MengeFreitext
+    other: Medication.ingredient.strength.extension:amountText
+    remark: null
+  - action: manual
+    fixed: null
+    name: Medication.code.coding:ask.code
+    other: null
+    remark: Falls ein ATC-Code gesetzt wurde und das der atc-de.code unbekannt ist
+      muss eine <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+      <valueCode value="unknown"/> </extension> gesetzt werden.
+  - action: manual
+    fixed: null
+    name: Medication.code.coding:atc-de.code
+    other: null
+    remark: Falls ein ATC-Code gesetzt wurde und das der atc-de.code unbekannt ist
+      muss eine <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+      <valueCode value="unknown"/> </extension> gesetzt werden.
+  - action: manual
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.code
+    other: null
+    remark: Falls ein ATC-Code gesetzt wurde und das der atc-de.code unbekannt ist
+      muss eine <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+      <valueCode value="unknown"/> </extension> gesetzt werden.
+  - action: manual
+    fixed: null
+    name: Medication.manufacturer.display
+    other: null
+    remark: Es muss eine <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+      <valueCode value="unknown"/> </extension> gesetzt werden
+  - action: manual
+    fixed: null
+    name: Medication.code.coding:snomed.code
+    other: null
+    remark: "Es muss eine \n<extension url=\"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
+      > <valueCode value=\"unknown\"/> </extension> \ngesetzt werden."
+  id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+- fields:
+  - action: use
+    fixed: null
+    name: MedicationRequest.subject
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationRequest.requester
+    other: null
+    remark: Refernziert auf ein Profil des PractitionerDirectory|0.11.25
+  - action: use
+    fixed: null
+    name: MedicationRequest.insurance
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.extension:indicator.url
+    other: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen.url
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.extension:indicator.value[x]
+    other: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.extension:counter.url
+    other: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.url
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.extension:counter.value[x]
+    other: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.extension:period.url
+    other: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.url
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.extension:period.value[x]
+    other: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.extension:id.url
+    other: MedicationRequest.extension:Mehrfachverordnung.extension:ID.url
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.extension:id.value[x]
+    other: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: MedicationRequest.extension:multiplePrescription.url
+    other: MedicationRequest.extension:Mehrfachverordnung.url
+    remark: null
+  - action: fixed
+    fixed: https://gematik.de/fhir/epa-medication/StructureDefinition/indicator-bvg-extension
+    name: MedicationRequest.extension:isBvg.url
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.extension:isBvg
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationRequest.subject.identifier
+    other: null
+    remark: Property will be set by MedicationService
+  - action: fixed
+    fixed: http://unitsofmeasure.org
+    name: MedicationRequest.dispenseRequest.quantity.system
+    other: null
+    remark: null
+  - action: fixed
+    fixed: '{Package}'
+    name: MedicationRequest.dispenseRequest.quantity.code
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:Zuzahlungsstatus
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:Notdienstgebuehr
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:SER
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:Unfallinformationen
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung
+    other: MedicationRequest.extension:multiplePrescription
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen
+    other: MedicationRequest.extension:multiplePrescription.extension:indicator
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung
+    other: MedicationRequest.extension:multiplePrescription.extension:counter
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum
+    other: MedicationRequest.extension:multiplePrescription.extension:period
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID
+    other: MedicationRequest.extension:multiplePrescription.extension:id
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.extension:VerschreiberID
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference
+    other: null
+    remark: Die Referenz der KBV-Medikation wird durch eine Referenz auf eine EPA-Medikation
+      ersetzt.
+  - action: empty
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.medication[x]:medicationReference.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.requester.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.requester.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.requester.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.insurance.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.insurance.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.insurance.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.note.author[x]:authorString
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.note.author[x]:authorReference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationRequest.dosageInstruction.extension:Dosierungskennzeichen
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationRequest.medication[x]
+    other: null
+    remark: null
+  id: 3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702
+- fields:
+  - action: fixed
+    fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
+    name: Practitioner.meta.tag:Origin.system
+    other: null
+    remark: null
+  - action: fixed
+    fixed: system value="https://gematik.de/fhir/directory/CodeSystem/Origin"/>          <code
+      value="ldap"/>
+    name: Practitioner.meta.tag
+    other: null
+    remark: null
+  - action: fixed
+    fixed: <system value="https://gematik.de/fhir/directory/CodeSystem/Origin"/>          <code
+      value="ldap"/>
+    name: Practitioner.meta.tag:Origin
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.identifier
+    other: null
+    remark: Muss mindestens die TelematikID des Arztes enthalten, die auch im Signaturzertifikat
+      der QES angegeben ist.
+  - action: copy_from
+    fixed: null
+    name: Practitioner.identifier:TelematikID
+    other: Practitioner.identifier:Telematik-ID
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.name.text
+    other: null
+    remark: Property is concatinated from values of {prefix-qualifier} {name.prefix}
+      {name.given} {vorsatzwort} {nachname} {namenszusatz}
+  - action: copy_from
+    fixed: null
+    name: Practitioner.name.family
+    other: Practitioner.name:name.family
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Practitioner.name.given
+    other: Practitioner.name:name.given
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Practitioner.meta.profile
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix
+    other: null
+    remark: Property will be used in Practitioner.name.text and mapped to Practitioner.name.prefix
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.given
+    other: null
+    remark: Property will be used in Practitioner.name.text and mapped to Practitioner.name.given
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR
+    other: Practitioner.identifier:LANR
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ZANR
+    other: Practitioner.identifier:LANR
+    remark: null
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz.id
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz.url
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz.value[x]
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:namenszusatz.value[x]:valueString
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname.id
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname.url
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname.value[x]
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:nachname.value[x]:valueString
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort.id
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort.url
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort.value[x]
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.family.extension:vorsatzwort.value[x]:valueString
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.id
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.extension
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier.id
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier.url
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier.value[x]
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.extension:prefix-qualifier.value[x]:valueCode
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  - action: manual
+    fixed: null
+    name: Practitioner.name:name.prefix.value
+    other: null
+    remark: Property will be used in Practitioner.name.text
+  id: e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31
+- fields:
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen
+    other: Organization.identifier:IKNR
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer
+    other: Organization.identifier:BSNR
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer
+    other: Organization.identifier:KZVA
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID
+    other: Organization.identifier:TelematikID
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.meta.tag
+    other: null
+    remark: "Fix auf\n <meta>\n      <profile value=\"https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory\"\
+      />\n      <tag>\n         <system value=\"https://gematik.de/fhir/directory/CodeSystem/Origin\"\
+      />\n         <code value=\"ldap\"/>\n      </tag>\n   </meta>"
+  - action: manual
+    fixed: null
+    name: Organization.meta.tag:Origin
+    other: null
+    remark: "Fix auf\n <meta>\n      <profile value=\"https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory\"\
+      />\n      <tag>\n         <system value=\"https://gematik.de/fhir/directory/CodeSystem/Origin\"\
+      />\n         <code value=\"ldap\"/>\n      </tag>\n   </meta>"
+  - action: fixed
+    fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
+    name: Organization.meta.tag:Origin.system
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.identifier
+    other: null
+    remark: Muss mindestens die TelematikID der Organisation enthalten, die auch im
+      ACCESS_TOKEN der Anfrage angegeben ist.
+  - action: manual
+    fixed: null
+    name: Organization.name
+    other: null
+    remark: Sollte den Namen der Organisation enthalten, wie er auch im ACCESS_TOKEN
+      der Anfrage angegeben ist.
+  - action: empty
+    fixed: null
+    name: Organization.meta.profile:forProfile
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.meta.profile
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.type:profession
+    other: null
+    remark: "professionOID \u2192 aus dem ACCESS_TOKEN der Anfrage"
+  - action: manual
+    fixed: null
+    name: Organization.type
+    other: null
+    remark: "Please add a new extension:\n      following content: \"extension\":\
+      \ [ { \"url\": \"http://hl7.org/fhir/StructureDefinition/data-absent-reason\"\
+      ,\n      \"valueCode\": \"unknown\" } ]'"
+  - action: empty
+    fixed: null
+    name: Organization.identifier:Standortnummer
+    other: null
+    remark: null
+  id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
+- fields:
+  - action: empty
+    fixed: null
+    name: Medication.meta.profile:workflowProfile
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
+  id: 1d770fac-529d-4579-8ee4-f1fa3fa6f4ed
+- fields:
+  - action: empty
+    fixed: null
+    name: MedicationDispense.meta.profile:workflowProfile
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationDispense.identifier:prescriptionID
+    other: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.type
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.identifier
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.display
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.medication[x]
+    other: null
+    remark: null
+  id: 7d370a3d-3366-436d-8121-6d0fd50ec0f0
