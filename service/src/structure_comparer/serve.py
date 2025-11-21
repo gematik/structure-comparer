@@ -910,7 +910,7 @@ async def get_mapping_results(
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}/structuremap",
     tags=["Mappings", "StructureMap Export"],
-    responses={404: {"model": ErrorModel}, 400: {"model": ErrorModel}},
+    responses={404: {"model": ErrorModel}},
 )
 async def download_structuremap(
     project_key: str,
@@ -932,7 +932,6 @@ async def download_structuremap(
         
     Raises:
         404: Project or mapping not found
-        400: Mapping has incompatible fields that must be resolved first
     """
     
     global mapping_handler
@@ -940,23 +939,7 @@ async def download_structuremap(
         # Get the mapping with actions
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
         
-        # Check if there are any incompatible fields
-        incompatible_count = 0
-        if hasattr(mapping, 'incompatible') and mapping.incompatible is not None:
-            incompatible_count = mapping.incompatible
-        else:
-            # Fallback: count incompatible fields manually
-            for field in mapping.fields:
-                if hasattr(field, 'evaluation') and field.evaluation:
-                    if hasattr(field.evaluation, 'status') and field.evaluation.status == 'incompatible':
-                        incompatible_count += 1
-        
-        if incompatible_count > 0:
-            response.status_code = 400
-            return ErrorModel(
-                error=f"Cannot export StructureMap: {incompatible_count} incompatible field(s) must be resolved first"
-            )
-        
+        # Get actions
         actions = mapping.get_action_info_map()
         
         # Determine aliases from profile names
