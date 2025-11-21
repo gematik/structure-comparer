@@ -33,6 +33,9 @@ class ManualEntriesMapping(BaseModel):
         if del_i is not None:
             del self.fields[del_i]
 
+    def __contains__(self, key) -> bool:
+        return any(f.name == key for f in self.fields)
+
 
 class ManualEntries(BaseModel):
     entries: list[ManualEntriesMapping]
