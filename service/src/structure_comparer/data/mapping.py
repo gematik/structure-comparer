@@ -25,7 +25,6 @@ _ACTIONTYPE_TO_LEGACY: dict[ActionType, Action] = {
     ActionType.USE: Action.USE,
     ActionType.NOT_USE: Action.NOT_USE,
     ActionType.EMPTY: Action.EMPTY,
-    ActionType.EXTENSION: Action.EXTENSION,
     ActionType.COPY_FROM: Action.COPY_FROM,
     ActionType.COPY_TO: Action.COPY_TO,
     ActionType.FIXED: Action.FIXED,

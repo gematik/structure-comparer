@@ -54,21 +54,6 @@ table.dataTable.display tbody tr.row-not-use.odd {
     background-color: #F9E5E0;
 }
 
-table.dataTable.display tbody tr.row-extension.even> .sorting_1,
-table.dataTable.display tbody tr.row-extension.even> .sorting_2,
-table.dataTable.display tbody tr.row-extension.even> .sorting_3,
-table.dataTable.display tbody tr.row-extension {
-    background-color: #FFFAE6;
-    color: #000000;
-}
-
-table.dataTable.display tbody tr.row-extension.odd> .sorting_1,
-table.dataTable.display tbody tr.row-extension.odd> .sorting_2,
-table.dataTable.display tbody tr.row-extension.odd> .sorting_3,
-table.dataTable.display tbody tr.row-extension.odd {
-    background-color: #F9F4E0;
-}
-
 table.dataTable.display tbody tr.row-manual.even> .sorting_1,
 table.dataTable.display tbody tr.row-manual.even> .sorting_2,
 table.dataTable.display tbody tr.row-manual.even> .sorting_3,

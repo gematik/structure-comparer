@@ -131,23 +131,6 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
             action_info=action_info,
         )
 
-    if is_required and action_info.action == ActionType.EXTENSION:
-        reason = EvaluationReason(
-            code="TARGET_MIN_GT_SOURCE_MIN",
-            severity=EvaluationSeverity.INFO,
-            message_key="mapping.reason.target_required.resolved_by_extension",
-            details={"field": field.name},
-            related_action=action_info.action,
-        )
-        return _build_result(
-            status=EvaluationStatus.RESOLVED,
-            reasons=[reason],
-            has_warnings=False,
-            has_errors=False,
-            summary_key=_SUMMARY_KEYS[EvaluationStatus.RESOLVED],
-            action_info=action_info,
-        )
-
     if classification == "incompatible":
         # Check if user has made an explicit decision (manual/inherited action)
         has_user_action = (

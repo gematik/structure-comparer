@@ -12,7 +12,6 @@ CSS_CLASS = {
     Action.USE: "row-use",
     Action.NOT_USE: "row-not-use",
     Action.EMPTY: "row-not-use",
-    Action.EXTENSION: "row-extension",
     Action.MANUAL: "row-manual",
     Action.COPY_FROM: "row-manual",
     Action.COPY_TO: "row-manual",
@@ -109,7 +108,6 @@ def create_results_html(
                 if source_max_card > target_max_card and entry.action not in [
                     Action.COPY_TO,
                     Action.COPY_FROM,
-                    Action.EXTENSION,
                 ]:
                     warnings.add(
                         "The maximum cardinality of one of the source profiles exceeds "
@@ -124,7 +122,6 @@ def create_results_html(
                     not in [
                         Action.COPY_TO,
                         Action.COPY_FROM,
-                        Action.EXTENSION,
                     ]
                 ):
                     warnings.add(
