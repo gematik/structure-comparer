@@ -2,6 +2,7 @@ from .action import Action
 
 REMARKS = {
     Action.USE: "Property and value(s) will be retained",
+    Action.USE_RECURSIVE: "Property and all child elements will be retained",
     Action.NOT_USE: "Property and value(s) will NOT be retained",
     Action.EMPTY: "Will remain empty for now, as no source information is available",
     Action.MANUAL: "",
@@ -12,6 +13,7 @@ REMARKS = {
 
 DESCRIPTIONS = {
     Action.USE: "Property and value(s) will be RETAINED",
+    Action.USE_RECURSIVE: "Property and ALL CHILD ELEMENTS will be RETAINED",
     Action.NOT_USE: "Property and value(s) will NOT be retained",
     Action.EMPTY: "Will remain EMPTY for now, as no source information is available",
     Action.MANUAL: "Make your own NOTE",

@@ -10,6 +10,7 @@ from .model.mapping import MappingDetails as MappingDetailsModel
 
 CSS_CLASS = {
     Action.USE: "row-use",
+    Action.USE_RECURSIVE: "row-use-recursive",
     Action.NOT_USE: "row-not-use",
     Action.EMPTY: "row-not-use",
     Action.MANUAL: "row-manual",

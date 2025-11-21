@@ -16,6 +16,7 @@ class ActionType(str, Enum):
     """Semantic action types supported by the new mapping action engine."""
 
     USE = "use"
+    USE_RECURSIVE = "use_recursive"
     NOT_USE = "not_use"
     EMPTY = "empty"
     COPY_FROM = "copy_from"

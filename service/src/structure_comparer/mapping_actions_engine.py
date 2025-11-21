@@ -18,6 +18,7 @@ from .model.mapping_action_models import (
 _INHERITABLE_ACTIONS = {
     ActionType.NOT_USE,
     ActionType.EMPTY,
+    ActionType.USE_RECURSIVE,
     ActionType.COPY_FROM,
     ActionType.COPY_TO,
 }

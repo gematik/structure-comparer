@@ -3,6 +3,7 @@ from enum import StrEnum
 
 class Action(StrEnum):
     USE = "use"
+    USE_RECURSIVE = "use_recursive"
     NOT_USE = "not_use"
     EMPTY = "empty"
     MANUAL = "manual"

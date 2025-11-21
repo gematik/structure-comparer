@@ -39,6 +39,21 @@ table.dataTable.display tbody tr.row-use.odd {
     background-color: #DCF6E9;
 }
 
+table.dataTable.display tbody tr.row-use-recursive.even> .sorting_1,
+table.dataTable.display tbody tr.row-use-recursive.even> .sorting_2,
+table.dataTable.display tbody tr.row-use-recursive.even> .sorting_3,
+table.dataTable.display tbody tr.row-use-recursive {
+    background-color: #C8E6C9;
+    color: #000000;
+}
+
+table.dataTable.display tbody tr.row-use-recursive.odd> .sorting_1,
+table.dataTable.display tbody tr.row-use-recursive.odd> .sorting_2,
+table.dataTable.display tbody tr.row-use-recursive.odd> .sorting_3,
+table.dataTable.display tbody tr.row-use-recursive.odd {
+    background-color: #A5D6A7;
+}
+
 table.dataTable.display tbody tr.row-not-use.even> .sorting_1,
 table.dataTable.display tbody tr.row-not-use.even> .sorting_2,
 table.dataTable.display tbody tr.row-not-use.even> .sorting_3,
