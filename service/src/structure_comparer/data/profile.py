@@ -120,6 +120,10 @@ class Profile:
     def url(self) -> str:
         return self.__data.url
 
+    @property
+    def resource_type(self) -> str | None:
+        return getattr(self.__data, "type", None)
+
     def __lt__(self, other: "Profile") -> bool:
         return self.key < other.key
 
@@ -146,6 +150,18 @@ class Profile:
 
         else:
             return model
+
+    @property
+    def package_dir(self) -> Path | None:
+        if self.__package is None:
+            return None
+        package_root = self.__package.dir
+        candidate = package_root / "package"
+        return candidate if candidate.is_dir() else package_root
+
+    @property
+    def package_id(self) -> str | None:
+        return self.__package.id if self.__package is not None else None
 
     def to_pkg_model(self) -> ProfileModel:
         try:

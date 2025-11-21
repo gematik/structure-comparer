@@ -412,11 +412,13 @@ class _StructureMapBuilder:
         sources = self._mapping.sources or []
         for idx, profile in enumerate(sources):
             alias = self._source_alias if idx == 0 else self._alias_from_name(profile.name or f"source{idx}")
-            inputs.append({
-                "alias": alias,
-                "profile": profile,
-                "type": self._input_type_for_profile(profile),
-            })
+            inputs.append(
+                {
+                    "alias": alias,
+                    "profile": profile,
+                    "type": self._input_type_for_profile(profile, alias=alias),
+                }
+            )
         if not inputs:
             inputs.append({"alias": self._source_alias, "profile": None, "type": "Resource"})
         return inputs
@@ -426,12 +428,17 @@ class _StructureMapBuilder:
         return {
             "alias": self._target_alias,
             "profile": profile,
-            "type": self._input_type_for_profile(profile),
+            "type": self._input_type_for_profile(profile, alias=self._target_alias),
         }
 
-    def _input_type_for_profile(self, profile) -> str:
+    def _input_type_for_profile(self, profile, *, alias: str | None = None) -> str:
         if profile is None:
             return "Resource"
+        if alias:
+            return alias
+        resource_type = getattr(profile, "resource_type", None)
+        if resource_type:
+            return resource_type
         if getattr(profile, "url", None):
             return profile.url
         if getattr(profile, "name", None):

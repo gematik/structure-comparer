@@ -27,12 +27,12 @@
       "input": [
         {
           "name": "KBVPRERPPrescription",
-          "type": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
+          "type": "KBVPRERPPrescription",
           "mode": "source"
         },
         {
           "name": "EPAMedicationRequest",
-          "type": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request",
+          "type": "EPAMedicationRequest",
           "mode": "target"
         }
       ],

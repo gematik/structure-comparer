@@ -24,6 +24,21 @@
     "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription"
   }],
   "authoredOn" : "2024-05-20",
+  "dosageInstruction" : [{
+    "extension" : [{
+      "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_DosageFlag",
+      "valueBoolean" : false
+    }]
+  }],
+  "dispenseRequest" : {
+    "quantity" : {
+      "value" : 1,
+      "unit" : "Packung"
+    }
+  },
   "status" : "active",
-  "intent" : "filler-order"
+  "intent" : "filler-order",
+  "substitution" : {
+    "allowedBoolean" : true
+  }
 }

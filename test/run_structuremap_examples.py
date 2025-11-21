@@ -17,7 +17,7 @@ TEST_ROOT = REPO_ROOT / "test"
 JAVA_VALIDATOR_JAR = Path("/Users/gematik/dev/validators/current_hapi_validator.jar")
 FHIR_VERSION = "4.0.1"
 VALIDATE_STRUCTUREMAPS = True
-RUN_TRANSFORMATIONS = False  # Enable to run example transformations via validator -transform
+RUN_TRANSFORMATIONS = True  # Enable to run example transformations via validator -transform
 PROJECT_FILTER: list[str] = ["dgMP Mapping_2025-10"]  # Leave empty to process every project that exists in the projects dir.
 MAPPING_FILTER: list[str] = ["3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702"]  # Optional list of mapping UUIDs to limit the run.
 EXAMPLE_FILTER: list[str] = []  # Optional list of resource-type suffixes from example_source_*.json.
@@ -67,6 +67,7 @@ def main() -> None:
         mapping_dir_root = TEST_ROOT / project_key
         mapping_dir_root.mkdir(parents=True, exist_ok=True)
         structure_maps_for_validation: list[Path] = []
+        transform_jobs: list[tuple[Path, str, str, Path | None]] = []
 
         for mapping_id in project.mappings.keys():
             if MAPPING_FILTER and mapping_id not in MAPPING_FILTER:
@@ -106,21 +107,38 @@ def main() -> None:
             structure_map_path.write_text(structure_map_json, encoding="utf-8")
             _print_step(f"[{project_key}/{mapping_id}] StructureMap saved to {_as_repo_relative(structure_map_path)}")
             structure_maps_for_validation.append(structure_map_path.resolve())
+            if RUN_TRANSFORMATIONS:
+                transform_jobs.append(
+                    (
+                        mapping_dir,
+                        structure_map.get("url", ""),
+                        mapping_id,
+                        _profile_package_dir(target_profile),
+                    )
+                )
 
-            if not RUN_TRANSFORMATIONS:
-                continue
+        validation_ok = _validate_structuremaps(structure_maps_for_validation, project_key)
 
-            _run_transformations(
-                mapping_dir=mapping_dir,
-                structure_map_url=structure_map.get("url", ""),
-                project_key=project_key,
-                mapping_id=mapping_id,
-            )
+        if RUN_TRANSFORMATIONS and validation_ok:
+            _print_step(f"[{project_key}] Running StructureMap transformations")
+            for mapping_dir, structure_map_url, mapping_id, target_package_dir in transform_jobs:
+                _run_transformations(
+                    mapping_dir=mapping_dir,
+                    structure_map_url=structure_map_url,
+                    project_key=project_key,
+                    mapping_id=mapping_id,
+                    target_package_dir=target_package_dir,
+                )
 
-        _validate_structuremaps(structure_maps_for_validation, project_key)
 
-
-def _run_transformations(*, mapping_dir: Path, structure_map_url: str, project_key: str, mapping_id: str) -> None:
+def _run_transformations(
+    *,
+    mapping_dir: Path,
+    structure_map_url: str,
+    project_key: str,
+    mapping_id: str,
+    target_package_dir: Path | None,
+) -> None:
     if not structure_map_url:
         print(f"[{project_key}/{mapping_id}] Missing StructureMap url, skipping validator")
         return
@@ -147,6 +165,8 @@ def _run_transformations(*, mapping_dir: Path, structure_map_url: str, project_k
             continue
 
         output_file = mapping_dir / f"output-{resource_type}.json"
+        if output_file.exists():
+            output_file.unlink()
         cmd = [
             "java",
             "-jar",
@@ -162,22 +182,41 @@ def _run_transformations(*, mapping_dir: Path, structure_map_url: str, project_k
         cmd.extend(ig_args)
         cmd.extend(ADDITIONAL_TRANSFORM_ARGS)
 
-        _print_step(f"[{project_key}/{mapping_id}] Running validator for {example_file.name}")
+        _print_step(f"[{project_key}/{mapping_id}] Transforming {example_file.name} via StructureMap")
         try:
             subprocess.run(cmd, cwd=REPO_ROOT, check=True)
         except subprocess.CalledProcessError as exc:  # noqa: PERF203 - want explicit feedback
             print(f"[{project_key}/{mapping_id}] Validator failed for {example_file.name}: {exc}")
         else:
-            _print_step(f"[{project_key}/{mapping_id}] Output written to {_as_repo_relative(output_file)}")
+            if output_file.exists() and output_file.stat().st_size > 0:
+                _print_step(f"[{project_key}/{mapping_id}] Output written to {_as_repo_relative(output_file)}")
+                _validate_transformed_output(
+                    output_file=output_file,
+                    project_key=project_key,
+                    mapping_id=mapping_id,
+                    resource_type=resource_type,
+                    target_package_dir=target_package_dir,
+                )
+            else:
+                print(
+                    f"[{project_key}/{mapping_id}] Validator finished but no output file was produced for {example_file.name}."
+                )
 
 
-def _validate_structuremaps(structure_map_paths: list[Path], project_key: str) -> None:
+def _profile_package_dir(profile) -> Path | None:
+    package_dir = getattr(profile, "package_dir", None)
+    if not package_dir:
+        return None
+    return Path(package_dir)
+
+
+def _validate_structuremaps(structure_map_paths: list[Path], project_key: str) -> bool:
     if not VALIDATE_STRUCTUREMAPS or not structure_map_paths:
-        return
+        return True
 
     if not JAVA_VALIDATOR_JAR.exists():
         print(f"[{project_key}] Validator jar not found at {JAVA_VALIDATOR_JAR}, skipping StructureMap validation")
-        return
+        return False
 
     cmd = [
         "java",
@@ -199,8 +238,10 @@ def _validate_structuremaps(structure_map_paths: list[Path], project_key: str) -
         subprocess.run(cmd, cwd=REPO_ROOT, check=True)
     except subprocess.CalledProcessError as exc:  # noqa: PERF203 - want explicit feedback
         print(f"[{project_key}] StructureMap validation failed: {exc}")
+        return False
     else:
         _print_step(f"[{project_key}] StructureMap validation finished successfully")
+        return True
 
 
 def _project_ig_sources(project_key: str) -> list[str]:
@@ -224,6 +265,49 @@ def _project_ig_sources(project_key: str) -> list[str]:
 
     return igs
 
+
+def _validate_transformed_output(
+    *,
+    output_file: Path,
+    project_key: str,
+    mapping_id: str,
+    resource_type: str,
+    target_package_dir: Path | None,
+) -> None:
+    if target_package_dir is None:
+        print(
+            f"[{project_key}/{mapping_id}] Target package not available; skipping validation for output-{resource_type}.json"
+        )
+        return
+
+    if not target_package_dir.exists():
+        print(
+            f"[{project_key}/{mapping_id}] Target package path {target_package_dir} does not exist; skipping validation"
+        )
+        return
+
+    cmd = [
+        "java",
+        "-jar",
+        str(JAVA_VALIDATOR_JAR),
+        _as_repo_relative(output_file),
+        "-tx",
+        "n/a",
+        "-level",
+        "error",
+        "-version",
+        FHIR_VERSION,
+        "-ig",
+        _as_repo_relative(target_package_dir),
+    ]
+
+    _print_step(
+        f"[{project_key}/{mapping_id}] Validating output-{resource_type}.json against {_as_repo_relative(target_package_dir)}"
+    )
+    try:
+        subprocess.run(cmd, cwd=REPO_ROOT, check=True)
+    except subprocess.CalledProcessError as exc:  # noqa: PERF203 - want explicit feedback
+        print(f"[{project_key}/{mapping_id}] Output validation failed for output-{resource_type}.json: {exc}")
 
 def _as_repo_relative(path: Path) -> str:
     try:
