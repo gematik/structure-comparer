@@ -211,11 +211,23 @@ def _inherit_or_default(
     # Instead, return None action (will be converted to recommendation later)
     # This ensures compatible fields don't automatically get "solved" status
     if str(classification).lower() == "compatible":
+        # Check if USE action is allowed for this field
+        actions_allowed = getattr(field, "actions_allowed", None)
+        if actions_allowed is not None and ActionType.USE not in actions_allowed:
+            # USE is not allowed - show user decision required message
+            return ActionInfo(
+                action=None,
+                source=ActionSource.SYSTEM_DEFAULT,
+                auto_generated=True,
+                system_remark=None,
+            )
+        
+        # USE is allowed or no restrictions - show recommendation
         return ActionInfo(
             action=None,
             source=ActionSource.SYSTEM_DEFAULT,
             auto_generated=True,
-            system_remark="Default recommendation: USE (not yet applied)",
+            system_remark=None,
         )
 
     # No default action available for warning/incompatible fields
@@ -224,7 +236,7 @@ def _inherit_or_default(
         action=None,
         source=ActionSource.SYSTEM_DEFAULT,
         auto_generated=True,
-        system_remark="No action selected - user decision required",
+        system_remark=None,
     )
 
 

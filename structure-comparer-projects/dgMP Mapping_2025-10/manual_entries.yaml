@@ -1,3 +1,43 @@
 entries:
-- fields: []
+- fields:
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x]
+    other: Medication.extension:Kategorie.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].system
+    other: Medication.extension:Kategorie.value[x]:valueCodeableConcept.coding.system
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine
+    other: Medication.extension:Impfstoff
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].code
+    other: Medication.extension:Kategorie.value[x]:valueCodeableConcept.coding.code
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.id
+    other: Medication.extension:isVaccine.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.extension
+    other: Medication.extension:isVaccine.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.url
+    other: Medication.extension:isVaccine.url
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.value[x]
+    other: Medication.extension:isVaccine.value[x]
+    remark: null
   id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601

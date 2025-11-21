@@ -48,6 +48,8 @@ class RecommendationEngine:
     def _compute_compatible_recommendations(self) -> Dict[str, list[ActionInfo]]:
         """Compute USE recommendations for compatible fields without manual actions.
         
+        Only creates recommendations if the USE action is allowed for the field.
+        
         Returns:
             Dictionary mapping field names to USE recommendation lists
         """
@@ -66,6 +68,13 @@ class RecommendationEngine:
 
             # Only create recommendations for compatible fields
             if str(classification).lower() == "compatible":
+                # Check if USE action is allowed for this field
+                actions_allowed = getattr(field, "actions_allowed", None)
+                if actions_allowed is not None:
+                    # If actions_allowed is defined, only recommend if USE is in the list
+                    if ActionType.USE not in actions_allowed:
+                        continue
+                
                 recommendations[field_name] = [
                     ActionInfo(
                         action=ActionType.USE,
@@ -82,6 +91,8 @@ class RecommendationEngine:
         
         When a parent field has copy_from or copy_to action, child fields
         should receive recommendations (not active actions) with adjusted other_value.
+        
+        Only creates recommendations if the action is allowed for the field.
         
         Returns:
             Dictionary mapping field names to inherited recommendation lists
@@ -120,6 +131,15 @@ class RecommendationEngine:
             )
 
             if recommendation:
+                # Check if the recommended action is allowed for this field
+                field = self.fields.get(field_name)
+                if field:
+                    actions_allowed = getattr(field, "actions_allowed", None)
+                    if actions_allowed is not None:
+                        # If actions_allowed is defined, only recommend if action is allowed
+                        if recommendation.action not in actions_allowed:
+                            continue
+                
                 recommendations[field_name] = [recommendation]
 
         return recommendations
