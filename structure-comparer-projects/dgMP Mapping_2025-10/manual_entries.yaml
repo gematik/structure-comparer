@@ -15,11 +15,6 @@ entries:
     name: Medication.form.extension
     other: null
     remark: null
-  - action: use_recursive
-    fixed: null
-    name: Medication.ingredient
-    other: null
-    remark: null
   - action: copy_to
     fixed: null
     name: Medication.extension:Impfstoff
@@ -34,6 +29,26 @@ entries:
     fixed: null
     name: Medication.extension:Impfstoff.extension
     other: Medication.extension:isVaccine.extension
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine.value[x]
+    other: Medication.extension:Impfstoff.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory
+    other: Medication.extension:Kategorie
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:packaging
+    other: Medication.extension:Verpackung
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.amount.numerator.extension:totalQuantity
+    other: Medication.amount.numerator.extension:Gesamtmenge
     remark: null
   id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
 - fields:
