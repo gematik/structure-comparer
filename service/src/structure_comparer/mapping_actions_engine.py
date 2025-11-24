@@ -7,9 +7,10 @@ existing production logic until the rewrite reaches parity.
 
 from __future__ import annotations
 
-from typing import Dict, Mapping, Optional
+from typing import Any, Dict, Mapping, Optional
 
 from .field_utils import field_depth, parent_name
+from .fixed_value_extractor import FixedValueExtractor
 from .model.mapping_action_models import (
     ActionInfo,
     ActionSource,
@@ -18,7 +19,7 @@ from .model.mapping_action_models import (
 from .recommendation_engine import RecommendationEngine
 
 _INHERITABLE_ACTIONS = {
-    ActionType.NOT_USE,
+    # ActionType.NOT_USE,  # Removed: Now handled as recommendation only
     ActionType.EMPTY,
     ActionType.USE_RECURSIVE,
     ActionType.COPY_FROM,
@@ -192,15 +193,15 @@ def _inherit_or_default(
                     other_value=parent_info.other_value,
                 )
 
-    # Check for patternCoding.system in target field
-    pattern_system = _get_pattern_coding_system(field, target_key, all_fields)
-    if pattern_system:
+    # Check for any fixed value in target field
+    fixed_value = _get_fixed_value_from_field(field, target_key, all_fields)
+    if fixed_value is not None:
         return ActionInfo(
             action=ActionType.FIXED,
             source=ActionSource.SYSTEM_DEFAULT,
             auto_generated=True,
-            system_remark="Auto-detected from patternCoding.system in target profile",
-            fixed_value=pattern_system,
+            system_remark="Auto-detected fixed value from target profile",
+            fixed_value=fixed_value,
         )
 
     classification = (
@@ -211,11 +212,23 @@ def _inherit_or_default(
     # Instead, return None action (will be converted to recommendation later)
     # This ensures compatible fields don't automatically get "solved" status
     if str(classification).lower() == "compatible":
+        # Check if USE action is allowed for this field
+        actions_allowed = getattr(field, "actions_allowed", None)
+        if actions_allowed is not None and ActionType.USE not in actions_allowed:
+            # USE is not allowed - show user decision required message
+            return ActionInfo(
+                action=None,
+                source=ActionSource.SYSTEM_DEFAULT,
+                auto_generated=True,
+                system_remark=None,
+            )
+        
+        # USE is allowed or no restrictions - show recommendation
         return ActionInfo(
             action=None,
             source=ActionSource.SYSTEM_DEFAULT,
             auto_generated=True,
-            system_remark="Default recommendation: USE (not yet applied)",
+            system_remark=None,
         )
 
     # No default action available for warning/incompatible fields
@@ -224,7 +237,7 @@ def _inherit_or_default(
         action=None,
         source=ActionSource.SYSTEM_DEFAULT,
         auto_generated=True,
-        system_remark="No action selected - user decision required",
+        system_remark=None,
     )
 
 
@@ -334,3 +347,46 @@ def _get_pattern_coding_system(
                     return parent_pattern_system
 
     return None
+
+
+def _get_fixed_value_from_field(
+    field, target_key: Optional[str], all_fields: Dict[str, object]
+) -> Optional[Any]:
+    """Extract any fixed value from target field's profile.
+    
+    This function checks for:
+    1. Direct fixed values (fixedUri, fixedString, fixedCode, etc.)
+    2. Pattern coding system for .system fields
+    
+    Args:
+        field: The field to check
+        target_key: The target profile key
+        all_fields: All fields in the mapping
+        
+    Returns:
+        The fixed value if found, None otherwise
+    """
+    if field is None or target_key is None:
+        return None
+    
+    # Get the target profile field
+    profiles = getattr(field, "profiles", {})
+    target_field = profiles.get(target_key)
+    
+    if target_field is None:
+        return None
+    
+    # First check for direct fixed value
+    fixed_value = getattr(target_field, "fixed_value", None)
+    if fixed_value is not None:
+        return fixed_value
+    
+    # For .system fields, check parent's patternCoding
+    field_name = getattr(field, "name", None)
+    if field_name and field_name.endswith(".system"):
+        pattern_system = _get_pattern_coding_system(field, target_key, all_fields)
+        if pattern_system is not None:
+            return pattern_system
+    
+    return None
+

@@ -1,6 +1,6 @@
 """Utility functions for field name parsing and manipulation."""
 
-from typing import Optional
+from typing import Dict, List, Optional
 
 
 def field_depth(name: str) -> int:
@@ -55,3 +55,26 @@ def is_polymorphic_type_choice(suffix: str) -> bool:
         True if the suffix represents a polymorphic type choice (e.g., :valueBoolean)
     """
     return suffix.startswith(":value")
+
+
+def get_direct_children(parent_field_name: str, all_fields: Dict[str, object]) -> List[str]:
+    """Get all direct child field names of a parent field.
+    
+    Args:
+        parent_field_name: The parent field name (e.g., "Practitioner.identifier:ANR")
+        all_fields: Dictionary mapping field names to field objects
+        
+    Returns:
+        List of direct child field names (e.g., ["Practitioner.identifier:ANR.id", ...])
+    """
+    children = []
+    parent_depth = field_depth(parent_field_name)
+    
+    for field_name in all_fields.keys():
+        # Check if this field is a child of the parent
+        if field_name.startswith(parent_field_name + ".") or field_name.startswith(parent_field_name + ":"):
+            # Only include direct children (one level deeper)
+            if field_depth(field_name) == parent_depth + 1:
+                children.append(field_name)
+    
+    return children

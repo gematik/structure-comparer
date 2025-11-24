@@ -170,7 +170,11 @@ def test_inherited_recommendation_with_nested_children():
 
 
 def test_no_recommendation_when_target_field_missing():
-    """Test that no recommendation is created when target field doesn't exist."""
+    """Test recommendation behavior when target field doesn't explicitly exist.
+    
+    For sliced fields, if the source field exists, the target is considered
+    structurally valid even if not explicitly defined (inherits from base type).
+    """
     mapping = StubMapping([
         "Medication.extension:A",
         "Medication.extension:A.url",
@@ -180,19 +184,22 @@ def test_no_recommendation_when_target_field_missing():
     manual_entries = {
         "Medication.extension:A": {
             "action": "copy_from",
-            "other": "Medication.extension:B",  # B doesn't have .url child
+            "other": "Medication.extension:B",  # B doesn't have .url child explicitly
         }
     }
     
     recommendations = compute_recommendations(mapping, manual_entries)
     
-    # Child should NOT have recommendation (target doesn't exist)
-    # OR it should have only compatible USE recommendation, not copy_from
-    if "Medication.extension:A.url" in recommendations:
-        url_recs = recommendations["Medication.extension:A.url"]
-        # Should not have copy_from recommendation
-        copy_recs = [r for r in url_recs if r.action == ActionType.COPY_FROM]
-        assert len(copy_recs) == 0
+    # Child SHOULD have recommendation because target is structurally valid
+    # (even though Medication.extension:B.url doesn't exist explicitly)
+    assert "Medication.extension:A.url" in recommendations
+    url_recs = recommendations["Medication.extension:A.url"]
+    copy_recs = [r for r in url_recs if r.action == ActionType.COPY_FROM]
+    assert len(copy_recs) == 1
+    
+    # The recommendation should indicate it's implicitly valid
+    copy_rec = copy_recs[0]
+    assert "structurally valid" in " ".join(copy_rec.system_remarks)
 
 
 def test_compatible_and_inherited_recommendations_combined():
@@ -250,7 +257,7 @@ def test_polymorphic_value_field_no_recommendation():
 
 
 def test_not_use_action_still_inherits():
-    """Test that NOT_USE action still inherits as active action (not recommendation)."""
+    """Test that NOT_USE action creates recommendations for children (not active actions)."""
     mapping = StubMapping([
         "Medication.meta",
         "Medication.meta.profile",
@@ -268,12 +275,13 @@ def test_not_use_action_still_inherits():
     # Parent has NOT_USE
     assert actions["Medication.meta"].action == ActionType.NOT_USE
     
-    # Child should inherit NOT_USE as active action (not recommendation)
-    assert actions["Medication.meta.profile"].action == ActionType.NOT_USE
-    assert actions["Medication.meta.profile"].source == ActionSource.INHERITED
+    # Child should NOT inherit NOT_USE as active action anymore (new behavior)
+    # Instead, it should have no action until user accepts the recommendation
+    assert actions["Medication.meta.profile"].action is None
+    assert actions["Medication.meta.profile"].source == ActionSource.SYSTEM_DEFAULT
     
-    # Child should NOT have NOT_USE as recommendation
-    if "Medication.meta.profile" in recommendations:
-        recs = recommendations["Medication.meta.profile"]
-        not_use_recs = [r for r in recs if r.action == ActionType.NOT_USE]
-        assert len(not_use_recs) == 0
+    # Child SHOULD have NOT_USE as recommendation
+    assert "Medication.meta.profile" in recommendations
+    recs = recommendations["Medication.meta.profile"]
+    not_use_recs = [r for r in recs if r.action == ActionType.NOT_USE]
+    assert len(not_use_recs) == 1
