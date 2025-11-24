@@ -80,7 +80,39 @@ class RecommendationEngine:
             else:
                 recommendations[field_name] = recs
 
+        # Remove duplicate recommendations by action type
+        # Keep only one recommendation per action type (the first occurrence)
+        for field_name in recommendations:
+            recommendations[field_name] = self._deduplicate_recommendations(
+                recommendations[field_name]
+            )
+
         return recommendations
+
+    def _deduplicate_recommendations(
+        self, recommendations: list[ActionInfo]
+    ) -> list[ActionInfo]:
+        """Remove duplicate recommendations by action type.
+        
+        Keeps only the first occurrence of each action type.
+        This ensures that a field doesn't get multiple recommendations
+        for the same action type from different sources.
+        
+        Args:
+            recommendations: List of ActionInfo recommendations that may contain duplicates
+            
+        Returns:
+            Deduplicated list of recommendations
+        """
+        seen_actions = set()
+        deduplicated = []
+        
+        for rec in recommendations:
+            if rec.action not in seen_actions:
+                seen_actions.add(rec.action)
+                deduplicated.append(rec)
+        
+        return deduplicated
 
     def _compute_compatible_recommendations(
         self, evaluation_map: Dict[str, EvaluationResult]
