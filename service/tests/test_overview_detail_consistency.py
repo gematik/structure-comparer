@@ -85,32 +85,23 @@ def get_mapping_evaluation_full(project_name: str, mapping_id: str) -> Dict[str,
     return response.json()
 
 
-def extract_simplified_categories_from_full_evaluation(full_eval: Dict[str, Any]) -> Tuple[int, int, int, int]:
+def extract_status_counts_from_full_evaluation(full_eval: Dict[str, Any]) -> Tuple[int, int, int, int, int]:
     """
-    Extract simplified categories from full evaluation data.
+    Extract status counts from full evaluation data.
     This replicates the exact same backend logic to test consistency.
+    Returns: (compatible, solved, incompatible, warning, total)
     """
     # Get the summary from the full evaluation response
     summary = full_eval.get("summary", {})
     
-    # Apply the exact same simplified category logic as the backend
-    compatible_count = summary.get('compatible', 0) + summary.get('action_mitigated', 0)
-    resolved_count = summary.get('action_resolved', 0)
+    # Extract status counts matching the new API
+    compatible_count = summary.get('compatible', 0)
+    solved_count = summary.get('solved', 0)
+    incompatible_count = summary.get('incompatible', 0)
+    warning_count = summary.get('warning', 0)
+    total_count = summary.get('total', 0)
     
-    # Count unique fields that need action (incompatible OR has requires_attention)
-    # Avoid double-counting fields that are both incompatible AND need attention
-    needs_action_count = 0
-    field_evaluations = full_eval.get("field_evaluations", {})
-    for field_name, field_eval in field_evaluations.items():
-        is_incompatible = field_eval.get('enhanced_classification') == 'incompatible'
-        has_requires_attention = any(issue.get('requires_attention', False) for issue in field_eval.get('issues', []))
-        if is_incompatible or has_requires_attention:
-            needs_action_count += 1
-    
-    # Total from summary
-    total_count = summary.get('total_fields', len(field_evaluations))
-    
-    return compatible_count, resolved_count, needs_action_count, total_count
+    return compatible_count, solved_count, incompatible_count, warning_count, total_count
 
 
 def test_overview_detail_consistency():
@@ -197,18 +188,16 @@ def test_overview_detail_consistency():
         backend_sum = backend_compatible + backend_solved + backend_incompatible + backend_warning
         frontend_sum = frontend_compatible + frontend_solved + frontend_incompatible + frontend_warning
         
-        # Note: needs_attention is a cross-cutting flag, so total != sum of all simplified categories
-        # The math check should be: compatible + resolved <= total (needs_attention can overlap)
-        assert backend_base_sum <= backend_total, (
-            f"Backend base classification error: {backend_base_sum} > {backend_total}"
+        assert backend_sum == backend_total, (
+            f"Backend sum mismatch: {backend_sum} != {backend_total}"
         )
-        assert frontend_base_sum <= frontend_total, (
-            f"Frontend base classification error: {frontend_base_sum} > {frontend_total}"
+        assert frontend_sum == frontend_total, (
+            f"Frontend sum mismatch: {frontend_sum} != {frontend_total}"
         )
         
         print("✅ SUCCESS: Overview and detail pages show identical values!")
-        print(f"   Both show: Kompatibel={backend_compatible}, Gelöst={backend_resolved}, "
-              f"Aktion erforderlich={backend_needs_action}, Gesamt={backend_total}")
+        print(f"   Both show: Compatible={backend_compatible}, Solved={backend_solved}, "
+              f"Incompatible={backend_incompatible}, Warning={backend_warning}, Total={backend_total}")
         
     finally:
         if server_started:
@@ -254,32 +243,36 @@ def test_multiple_mappings_consistency():
                 summary_data = get_mapping_evaluation_summary(TEST_PROJECT, mapping_id)
                 full_data = get_mapping_evaluation_full(TEST_PROJECT, mapping_id)
                 
-                # Extract values
-                backend_compatible = summary_data["simplified_compatible"]
-                backend_resolved = summary_data["simplified_resolved"]
-                backend_needs_action = summary_data["simplified_needs_action"]
+                # Extract values using new API
+                backend_compatible = summary_data["compatible"]
+                backend_solved = summary_data["solved"]
+                backend_incompatible = summary_data["incompatible"]
+                backend_warning = summary_data["warning"]
                 
-                frontend_compatible, frontend_resolved, frontend_needs_action, _ = (
-                    extract_simplified_categories_from_full_evaluation(full_data)
+                frontend_compatible, frontend_solved, frontend_incompatible, frontend_warning, _ = (
+                    extract_status_counts_from_full_evaluation(full_data)
                 )
                 
                 # Check for inconsistencies
                 if (backend_compatible != frontend_compatible or
-                        backend_resolved != frontend_resolved or
-                        backend_needs_action != frontend_needs_action):
+                        backend_solved != frontend_solved or
+                        backend_incompatible != frontend_incompatible or
+                        backend_warning != frontend_warning):
                     
                     inconsistencies.append({
                         "mapping_name": mapping_name,
                         "mapping_id": mapping_id,
                         "backend": {
                             "compatible": backend_compatible,
-                            "resolved": backend_resolved,
-                            "needs_action": backend_needs_action
+                            "solved": backend_solved,
+                            "incompatible": backend_incompatible,
+                            "warning": backend_warning
                         },
                         "frontend": {
                             "compatible": frontend_compatible,
-                            "resolved": frontend_resolved,
-                            "needs_action": frontend_needs_action
+                            "solved": frontend_solved,
+                            "incompatible": frontend_incompatible,
+                            "warning": frontend_warning
                         }
                     })
                 
