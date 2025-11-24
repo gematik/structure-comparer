@@ -158,21 +158,21 @@ def test_use_recursive_recommended_when_descendant_incompatible_but_solved():
     ), "USE_RECURSIVE should be recommended when descendant is solved via manual action"
 
 
-def test_use_recursive_recommendation_does_not_depend_on_actions_allowed():
-    """Test USE_RECURSIVE recommendation is independent of actions_allowed.
+def test_use_recursive_recommendation_respects_actions_allowed():
+    """Test USE_RECURSIVE recommendation respects actions_allowed.
 
-    This is a critical test demonstrating that recommendations are system suggestions
-    based on evaluation, not restricted by what users can manually set.
+    Similar to USE recommendations, USE_RECURSIVE recommendations should only be created
+    if USE_RECURSIVE is in the field's actions_allowed list.
 
     Scenario:
     - Root: Patient (classification=compatible, actions_allowed=[USE, NOT_USE])
       Note: USE_RECURSIVE is NOT in actions_allowed
     - Child: Patient.name (classification=compatible)
-    - All descendants are compatible, so recommendation logic would suggest USE_RECURSIVE
+    - All descendants are compatible
 
     Expected:
-    - Recommendations contain USE_RECURSIVE even though it's not in actions_allowed
-    - This demonstrates that recommendations are independent of actions_allowed
+    - Recommendations contain USE (which IS in actions_allowed)
+    - Recommendations do NOT contain USE_RECURSIVE (which is NOT in actions_allowed)
     """
     # Create root field with actions_allowed that excludes USE_RECURSIVE
     root_field = _MockField(
@@ -201,13 +201,13 @@ def test_use_recursive_recommendation_does_not_depend_on_actions_allowed():
     root_recs = recommendations.get("Patient", [])
     actions = {rec.action for rec in root_recs}
 
-    # Critical assertion: USE_RECURSIVE is recommended despite not being in actions_allowed
+    # USE_RECURSIVE should NOT be recommended when not in actions_allowed
     assert (
-        ActionType.USE_RECURSIVE in actions
-    ), "USE_RECURSIVE should be recommended even when not in actions_allowed"
+        ActionType.USE_RECURSIVE not in actions
+    ), "USE_RECURSIVE should NOT be recommended when not in actions_allowed"
 
-    # Additional verification: USE should still be recommended (it IS in actions_allowed)
-    assert ActionType.USE in actions, "USE should also be recommended"
+    # USE should still be recommended (it IS in actions_allowed)
+    assert ActionType.USE in actions, "USE should be recommended when in actions_allowed"
 
 
 def test_use_recursive_not_recommended_for_field_without_descendants():

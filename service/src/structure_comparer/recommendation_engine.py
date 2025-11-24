@@ -88,12 +88,13 @@ class RecommendationEngine:
         """Compute USE and USE_RECURSIVE recommendations for compatible fields.
         
         For compatible fields without manual actions:
-        - Always recommend USE (if allowed by actions_allowed)
+        - Recommend USE only if allowed by actions_allowed
         - Additionally recommend USE_RECURSIVE if all descendants are compatible or solved
+          AND if USE_RECURSIVE is in actions_allowed
         
-        IMPORTANT: Recommendations are NOT filtered by actions_allowed.
-        The actions_allowed controls what users can manually set, but recommendations
-        are system suggestions based on evaluation.
+        IMPORTANT: Recommendations are filtered by actions_allowed.
+        The actions_allowed controls what actions can be manually set, and recommendations
+        should only suggest actions that are actually allowed for the field.
         
         Args:
             evaluation_map: Dictionary mapping field names to EvaluationResult
@@ -134,20 +135,23 @@ class RecommendationEngine:
                 
                 # Check if USE_RECURSIVE should also be recommended
                 # Condition: All descendants must be compatible OR solved
+                # AND USE_RECURSIVE must be in actions_allowed (if defined)
                 if all_descendants_compatible_or_solved(
                     field_name, self.fields, evaluation_map
                 ):
-                    field_recommendations.append(
-                        ActionInfo(
-                            action=ActionType.USE_RECURSIVE,
-                            source=ActionSource.SYSTEM_DEFAULT,
-                            auto_generated=True,
-                            system_remark=(
-                                "Field and all descendants are compatible or solved; "
-                                "you can safely use USE_RECURSIVE to keep the subtree."
-                            ),
+                    # Check if USE_RECURSIVE action is allowed for this field
+                    if actions_allowed is None or ActionType.USE_RECURSIVE in actions_allowed:
+                        field_recommendations.append(
+                            ActionInfo(
+                                action=ActionType.USE_RECURSIVE,
+                                source=ActionSource.SYSTEM_DEFAULT,
+                                auto_generated=True,
+                                system_remark=(
+                                    "Field and all descendants are compatible or solved; "
+                                    "you can safely use USE_RECURSIVE to keep the subtree."
+                                ),
+                            )
                         )
-                    )
                 
                 recommendations[field_name] = field_recommendations
 
