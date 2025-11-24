@@ -18,7 +18,7 @@ from .model.mapping_action_models import (
 from .recommendation_engine import RecommendationEngine
 
 _INHERITABLE_ACTIONS = {
-    ActionType.NOT_USE,
+    # ActionType.NOT_USE,  # Removed: Now handled as recommendation only
     ActionType.EMPTY,
     ActionType.USE_RECURSIVE,
     ActionType.COPY_FROM,

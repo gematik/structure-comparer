@@ -1,7 +1,7 @@
 """Engine for computing recommendations for fields without manual actions."""
 
 import logging
-from typing import Dict, List, Mapping, Optional
+from typing import Callable, Dict, List, Mapping, Optional
 
 from .field_utils import field_depth, get_direct_children, parent_name
 from .inheritance_engine import InheritanceEngine
@@ -54,6 +54,14 @@ class RecommendationEngine:
             else:
                 recommendations[field_name] = recs
 
+        # 4. USE/NOT_USE recommendations (greedy for all children)
+        use_not_use_recs = self._compute_use_not_use_recommendations()
+        for field_name, recs in use_not_use_recs.items():
+            if field_name in recommendations:
+                recommendations[field_name].extend(recs)
+            else:
+                recommendations[field_name] = recs
+
         return recommendations
 
     def _compute_compatible_recommendations(self) -> Dict[str, list[ActionInfo]]:
@@ -97,6 +105,71 @@ class RecommendationEngine:
 
         return recommendations
 
+    def _compute_inherited_recommendations(
+        self,
+        action_types: set[ActionType],
+        recommendation_factory: Callable[[str, str, ActionInfo], Optional[ActionInfo]],
+    ) -> Dict[str, list[ActionInfo]]:
+        """Generic method to compute inherited recommendations for specified action types.
+        
+        GREEDY BEHAVIOR:
+        When a parent field has an action in action_types, ALL descendant fields
+        should receive recommendations created by recommendation_factory.
+        
+        Only creates recommendations if the action is allowed for the field.
+        
+        Args:
+            action_types: Set of action types to look for in ancestors
+            recommendation_factory: Function that creates recommendation from
+                (field_name, parent_field_name, parent_action) -> Optional[ActionInfo]
+        
+        Returns:
+            Dictionary mapping field names to inherited recommendation lists
+        """
+        from .mapping_actions_engine import compute_mapping_actions
+
+        recommendations: Dict[str, list[ActionInfo]] = {}
+
+        # Build action map to know parent actions
+        action_map = compute_mapping_actions(self.mapping, self.manual_map)
+
+        # Process fields in depth-sorted order (parents before children)
+        ordered_field_names = sorted(self.fields.keys(), key=field_depth)
+
+        for field_name in ordered_field_names:
+            # Skip if field has manual entry
+            if field_name in self.manual_map:
+                continue
+
+            # Check all ancestors for actions in action_types
+            parent_field_name = parent_name(field_name)
+            while parent_field_name:
+                parent_action = action_map.get(parent_field_name)
+
+                if parent_action and parent_action.action in action_types:
+                    # Create recommendation using the factory
+                    recommendation = recommendation_factory(
+                        field_name, parent_field_name, parent_action
+                    )
+
+                    if recommendation:
+                        # Check if the recommended action is allowed for this field
+                        field = self.fields.get(field_name)
+                        if field:
+                            actions_allowed = getattr(field, "actions_allowed", None)
+                            if actions_allowed is not None:
+                                # If actions_allowed is defined, only recommend if action is allowed
+                                if recommendation.action not in actions_allowed:
+                                    break  # Don't check further ancestors
+
+                        recommendations[field_name] = [recommendation]
+                        break  # Found an action, use closest ancestor
+
+                # Move to next ancestor
+                parent_field_name = parent_name(parent_field_name)
+
+        return recommendations
+
     def _compute_inherited_copy_recommendations(self) -> Dict[str, list[ActionInfo]]:
         """Compute inherited recommendations for copy_from/copy_to actions.
         
@@ -110,83 +183,13 @@ class RecommendationEngine:
         Returns:
             Dictionary mapping field names to inherited recommendation lists
         """
-        from .mapping_actions_engine import compute_mapping_actions
-
-        recommendations: Dict[str, list[ActionInfo]] = {}
-
-        # Build action map to know parent actions
-        # We need this to find which parents have copy_from/copy_to
-        action_map = compute_mapping_actions(self.mapping, self.manual_map)
-        
-        logger.debug(f"Computing inherited copy recommendations for {len(self.fields)} fields")
-        logger.debug(f"Manual entries: {list(self.manual_map.keys())}")
-        
-        # Log all fields with copy actions
-        copy_action_fields = {
-            fname: action for fname, action in action_map.items()
-            if action.action in {ActionType.COPY_FROM, ActionType.COPY_TO}
-        }
-        logger.debug(f"Fields with copy actions: {list(copy_action_fields.keys())}")
-
-        # Process fields in depth-sorted order (parents before children)
-        ordered_field_names = sorted(self.fields.keys(), key=field_depth)
-
-        for field_name in ordered_field_names:
-            # Skip if field has manual entry
-            if field_name in self.manual_map:
-                logger.debug(f"  {field_name}: Skipping (has manual entry)")
-                continue
-
-            # Check all ancestors (not just immediate parent) for copy actions
-            parent_field_name = parent_name(field_name)
-            found_ancestor = None
-            
-            while parent_field_name:
-                parent_action = action_map.get(parent_field_name)
-                
-                if parent_action and self.inheritance_engine.is_copy_action(parent_action.action):
-                    found_ancestor = parent_field_name
-                    logger.debug(
-                        f"  {field_name}: Found copy action ancestor: {parent_field_name} "
-                        f"({parent_action.action.value})"
-                    )
-                    
-                    # Create inherited recommendation
-                    recommendation = self.inheritance_engine.create_inherited_recommendation(
-                        field_name, parent_field_name, parent_action
-                    )
-
-                    if recommendation:
-                        # Check if the recommended action is allowed for this field
-                        field = self.fields.get(field_name)
-                        if field:
-                            actions_allowed = getattr(field, "actions_allowed", None)
-                            if actions_allowed is not None:
-                                # If actions_allowed is defined, only recommend if action is allowed
-                                if recommendation.action not in actions_allowed:
-                                    logger.debug(
-                                        f"    -> Recommendation NOT allowed for field "
-                                        f"(actions_allowed={actions_allowed})"
-                                    )
-                                    break  # Don't check further ancestors
-                        
-                        logger.debug(
-                            f"    -> Created recommendation: {recommendation.action.value} "
-                            f"to {recommendation.other_value}"
-                        )
-                        recommendations[field_name] = [recommendation]
-                        break  # Found a copy action, use closest ancestor
-                    else:
-                        logger.debug("    -> No recommendation created (target field missing?)")
-                
-                # Move to next ancestor
-                parent_field_name = parent_name(parent_field_name)
-            
-            if not found_ancestor:
-                logger.debug(f"  {field_name}: No copy action ancestor found")
-
-        logger.debug(f"Total inherited copy recommendations created: {len(recommendations)}")
-        return recommendations
+        return self._compute_inherited_recommendations(
+            action_types={ActionType.COPY_FROM, ActionType.COPY_TO},
+            recommendation_factory=lambda field_name, parent_field_name, parent_action:
+                self.inheritance_engine.create_inherited_recommendation(
+                    field_name, parent_field_name, parent_action
+                )
+        )
 
     def _compute_use_recursive_recommendations(self) -> Dict[str, list[ActionInfo]]:
         """Compute USE recommendations for children of USE_RECURSIVE fields.
@@ -200,50 +203,39 @@ class RecommendationEngine:
         Returns:
             Dictionary mapping field names to USE recommendation lists
         """
-        from .mapping_actions_engine import compute_mapping_actions
+        return self._compute_inherited_recommendations(
+            action_types={ActionType.USE_RECURSIVE},
+            recommendation_factory=lambda field_name, parent_field_name, parent_action:
+                ActionInfo(
+                    action=ActionType.USE,
+                    source=ActionSource.SYSTEM_DEFAULT,
+                    auto_generated=True,
+                    system_remark=f"Recommendation: Parent {parent_field_name} has USE_RECURSIVE",
+                )
+        )
 
-        recommendations: Dict[str, list[ActionInfo]] = {}
-
-        # Build action map to know which fields have USE_RECURSIVE
-        action_map = compute_mapping_actions(self.mapping, self.manual_map)
-
-        # Process fields in depth-sorted order (parents before children)
-        ordered_field_names = sorted(self.fields.keys(), key=field_depth)
-
-        for field_name in ordered_field_names:
-            # Skip if field has manual entry
-            if field_name in self.manual_map:
-                continue
-
-            # Check all ancestors for USE_RECURSIVE
-            parent_field_name = parent_name(field_name)
-            while parent_field_name:
-                parent_action = action_map.get(parent_field_name)
-                
-                if parent_action and parent_action.action == ActionType.USE_RECURSIVE:
-                    # Create USE recommendation for this child
-                    field = self.fields.get(field_name)
-                    if field:
-                        actions_allowed = getattr(field, "actions_allowed", None)
-                        if actions_allowed is not None:
-                            # If actions_allowed is defined, only recommend if USE is allowed
-                            if ActionType.USE not in actions_allowed:
-                                break  # Don't check further ancestors
-                    
-                    recommendations[field_name] = [
-                        ActionInfo(
-                            action=ActionType.USE,
-                            source=ActionSource.SYSTEM_DEFAULT,
-                            auto_generated=True,
-                            system_remark=f"Recommendation: Parent {parent_field_name} has USE_RECURSIVE",
-                        )
-                    ]
-                    break  # Found USE_RECURSIVE, use closest ancestor
-                
-                # Move to next ancestor
-                parent_field_name = parent_name(parent_field_name)
-
-        return recommendations
+    def _compute_use_not_use_recommendations(self) -> Dict[str, list[ActionInfo]]:
+        """Compute USE/NOT_USE recommendations for children of USE/NOT_USE fields.
+        
+        GREEDY BEHAVIOR:
+        When a parent field has USE or NOT_USE action, ALL descendant fields
+        should receive corresponding recommendations.
+        
+        Only creates recommendations if the action is allowed for the field.
+        
+        Returns:
+            Dictionary mapping field names to USE/NOT_USE recommendation lists
+        """
+        return self._compute_inherited_recommendations(
+            action_types={ActionType.USE, ActionType.NOT_USE},
+            recommendation_factory=lambda field_name, parent_field_name, parent_action:
+                ActionInfo(
+                    action=parent_action.action,  # Inherit the same action (USE or NOT_USE)
+                    source=ActionSource.SYSTEM_DEFAULT,
+                    auto_generated=True,
+                    system_remarks=[f"Inherited recommendation from {parent_field_name}"],
+                )
+        )
 
     def _normalize_manual_entries(
         self, manual_entries: Optional[Mapping[str, dict]]

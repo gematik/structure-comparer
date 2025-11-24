@@ -183,7 +183,7 @@ class InheritanceEngine:
             return False
 
         inheritable_actions = {
-            ActionType.NOT_USE,
+            # ActionType.NOT_USE,  # Removed: Now handled as recommendation only
             ActionType.EMPTY,
             ActionType.USE_RECURSIVE,
             ActionType.COPY_FROM,

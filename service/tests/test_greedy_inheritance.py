@@ -231,7 +231,7 @@ def test_use_recursive_greedy_creates_use_recommendations_for_all_children():
 
 
 def test_use_does_not_create_recommendations_for_children():
-    """Test that plain USE does NOT create recommendations for children (not greedy)."""
+    """Test that plain USE creates recommendations for children (new behavior)."""
     mapping = StubMapping([
         "Medication.code",
         "Medication.code.coding",
@@ -251,19 +251,22 @@ def test_use_does_not_create_recommendations_for_children():
     # Parent has USE
     assert actions["Medication.code"].action == ActionType.USE
     
-    # Children should NOT inherit USE (USE is not in _INHERITABLE_ACTIONS)
+    # Children should NOT inherit USE as active action (USE is not in _INHERITABLE_ACTIONS)
     assert actions["Medication.code.coding"].action is None
     assert actions["Medication.code.text"].action is None
     
-    # Children should NOT have USE recommendations from parent
-    # (they may have their own USE recommendations if compatible)
-    if "Medication.code.coding" in recommendations:
-        coding_recs = recommendations["Medication.code.coding"]
-        # If there's a USE recommendation, it should be because field is compatible,
-        # not because parent has USE
-        for rec in coding_recs:
-            if rec.action == ActionType.USE:
-                assert "Medication.code" not in rec.system_remark
+    # Children SHOULD have USE recommendations from parent (new behavior)
+    assert "Medication.code.coding" in recommendations
+    coding_recs = recommendations["Medication.code.coding"]
+    use_recs = [r for r in coding_recs if r.action == ActionType.USE]
+    assert len(use_recs) > 0
+    
+    # Check that at least one recommendation mentions the parent
+    parent_mentioned = any(
+        rec.system_remarks and "Medication.code" in rec.system_remarks[0]
+        for rec in use_recs
+    )
+    assert parent_mentioned, "Expected at least one USE recommendation to mention parent field"
 
 
 def test_manual_child_overrides_greedy_recommendation():
