@@ -178,7 +178,7 @@ class Mapping(Comparison):
         
         # Adjust use_recursive in actions_allowed based on evaluation results
         from ..mapping_actions_engine import adjust_use_recursive_actions_allowed
-        adjust_use_recursive_actions_allowed(self, evaluation_map)
+        adjust_use_recursive_actions_allowed(self, evaluation_map, action_info_map)
 
         for field_name, field in self.fields.items():
             info = action_info_map.get(field_name)

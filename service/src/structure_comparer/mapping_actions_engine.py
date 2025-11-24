@@ -405,22 +405,26 @@ def _get_fixed_value_from_field(
 
 
 def adjust_use_recursive_actions_allowed(
-    mapping, evaluation_map: Dict[str, EvaluationResult]
+    mapping, evaluation_map: Dict[str, EvaluationResult],
+    action_info_map: Dict[str, ActionInfo] = None
 ) -> None:
     """Adjust actions_allowed for all fields regarding use_recursive.
     
     This function applies evaluation-aware logic to determine whether
     use_recursive should be in actions_allowed:
     - use_recursive is allowed when the field has descendants AND
-      all descendants are either compatible or solved.
+      all descendants WITHOUT manual actions are either compatible or solved.
     - Otherwise, use_recursive is removed from actions_allowed.
     
     This is a second pass after the baseline actions_allowed has been set
-    by fill_allowed_actions(), enriching it with knowledge from evaluation.
+    by fill_allowed_actions(), enriching it with knowledge from evaluation
+    and manual actions.
     
     Args:
         mapping: The mapping object with fields
         evaluation_map: Dictionary mapping field names to EvaluationResult
+        action_info_map: Optional dictionary mapping field names to ActionInfo objects.
+                         If provided, only descendants WITHOUT manual actions are considered.
     """
     fields = getattr(mapping, "fields", {})
     if not fields:
@@ -437,9 +441,9 @@ def adjust_use_recursive_actions_allowed(
             if Action.USE_RECURSIVE in field.actions_allowed:
                 field.actions_allowed.remove(Action.USE_RECURSIVE)
         else:
-            # Field has descendants: check if all are compatible or solved
+            # Field has descendants: check if all (without manual actions) are compatible or solved
             all_ok = all_descendants_compatible_or_solved(
-                field_name, fields, evaluation_map
+                field_name, fields, evaluation_map, action_info_map
             )
             
             if all_ok:

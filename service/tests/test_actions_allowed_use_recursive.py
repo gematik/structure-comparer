@@ -81,13 +81,18 @@ def create_field_mapping(field_defs: list) -> Dict[str, MappingField]:
     return fields
 
 
-def fill_actions_for_all_fields(fields: Dict[str, MappingField], evaluation_map: Dict[str, EvaluationResult] = None):
+def fill_actions_for_all_fields(
+    fields: Dict[str, MappingField],
+    evaluation_map: Dict[str, EvaluationResult] = None,
+    action_info_map: Dict = None
+):
     """
     Call fill_allowed_actions and adjust_use_recursive_actions_allowed on all fields.
     
     Args:
         fields: Dictionary of field names to MappingField objects
         evaluation_map: Optional evaluation map for use_recursive filtering
+        action_info_map: Optional action info map for checking manual actions
     """
     # First pass: set baseline actions_allowed
     for field in fields.values():
@@ -103,7 +108,7 @@ def fill_actions_for_all_fields(fields: Dict[str, MappingField], evaluation_map:
             self.fields = field_dict
     
     mapping = StubMapping(fields)
-    adjust_use_recursive_actions_allowed(mapping, evaluation_map)
+    adjust_use_recursive_actions_allowed(mapping, evaluation_map, action_info_map)
 
 
 # ============================================================================
@@ -646,3 +651,183 @@ def test_use_recursive_compatible_in_evaluation_counts_as_ok():
     patient_field = fields["Patient"]
     assert Action.USE_RECURSIVE in patient_field.actions_allowed, \
         "Parent should have use_recursive when all descendants are compatible"
+
+
+def test_use_recursive_allowed_when_all_children_have_manual_actions():
+    """
+    Parent with incompatible children that ALL have manual actions.
+    
+    Scenario:
+    - Root field: compatible
+    - Child 1: incompatible, has MANUAL action
+    - Child 2: warning, has MANUAL action
+    
+    Expected: use_recursive is NOT allowed because all children have manual actions
+    (no children without manual actions remaining for use_recursive to apply to)
+    """
+    from structure_comparer.model.mapping_action_models import ActionInfo, ActionSource, ActionType
+    
+    fields = create_field_mapping([
+        ("Patient", ComparisonClassification.COMPAT),
+        ("Patient.name", ComparisonClassification.INCOMPAT),
+        ("Patient.birthDate", ComparisonClassification.WARN),
+    ])
+    
+    # Both children have manual actions
+    action_info_map = {
+        "Patient.name": ActionInfo(
+            action=ActionType.NOT_USE,
+            source=ActionSource.MANUAL
+        ),
+        "Patient.birthDate": ActionInfo(
+            action=ActionType.EMPTY,
+            source=ActionSource.MANUAL
+        )
+    }
+    
+    # Evaluation map shows they are NOT solved
+    evaluation_map = {
+        "Patient.name": EvaluationResult(
+            status=EvaluationStatus.INCOMPATIBLE,
+            mapping_status=MappingStatus.INCOMPATIBLE
+        ),
+        "Patient.birthDate": EvaluationResult(
+            status=EvaluationStatus.ACTION_REQUIRED,
+            mapping_status=MappingStatus.WARNING
+        )
+    }
+    
+    fill_actions_for_all_fields(fields, evaluation_map, action_info_map)
+    
+    patient_field = fields["Patient"]
+    assert Action.USE_RECURSIVE not in patient_field.actions_allowed, \
+        "Parent should NOT have use_recursive when all children have manual actions"
+
+
+def test_use_recursive_allowed_when_some_children_have_manual_actions():
+    """
+    Parent with mixed children: some with manual actions, some without.
+    
+    Scenario:
+    - Root field: compatible
+    - Child 1: incompatible, has MANUAL action (SOLVED)
+    - Child 2: compatible, NO manual action
+    
+    Expected: use_recursive IS allowed because child 2 has no manual action
+    and is compatible
+    """
+    from structure_comparer.model.mapping_action_models import ActionInfo, ActionSource, ActionType
+    
+    fields = create_field_mapping([
+        ("Patient", ComparisonClassification.COMPAT),
+        ("Patient.name", ComparisonClassification.INCOMPAT),
+        ("Patient.birthDate", ComparisonClassification.COMPAT),
+    ])
+    
+    # Only first child has manual action
+    action_info_map = {
+        "Patient.name": ActionInfo(
+            action=ActionType.NOT_USE,
+            source=ActionSource.MANUAL
+        )
+    }
+    
+    # Evaluation map
+    evaluation_map = {
+        "Patient.name": EvaluationResult(
+            status=EvaluationStatus.RESOLVED,
+            mapping_status=MappingStatus.SOLVED
+        ),
+        "Patient.birthDate": EvaluationResult(
+            status=EvaluationStatus.OK,
+            mapping_status=MappingStatus.COMPATIBLE
+        )
+    }
+    
+    fill_actions_for_all_fields(fields, evaluation_map, action_info_map)
+    
+    patient_field = fields["Patient"]
+    assert Action.USE_RECURSIVE in patient_field.actions_allowed, \
+        "Parent should have use_recursive when some children lack manual actions and are compatible/solved"
+
+
+def test_use_recursive_with_inherited_actions_not_counted_as_manual():
+    """
+    Children with INHERITED actions should NOT be excluded from the check.
+    
+    Scenario:
+    - Root field: compatible
+    - Child 1: incompatible, has INHERITED action (not manual)
+    
+    Expected: use_recursive is NOT allowed because inherited actions don't count
+    """
+    from structure_comparer.model.mapping_action_models import ActionInfo, ActionSource, ActionType
+    
+    fields = create_field_mapping([
+        ("Patient", ComparisonClassification.COMPAT),
+        ("Patient.name", ComparisonClassification.INCOMPAT),
+    ])
+    
+    # Child has inherited action (not manual)
+    action_info_map = {
+        "Patient.name": ActionInfo(
+            action=ActionType.NOT_USE,
+            source=ActionSource.INHERITED,
+            inherited_from="Patient"
+        )
+    }
+    
+    # Evaluation map shows not solved
+    evaluation_map = {
+        "Patient.name": EvaluationResult(
+            status=EvaluationStatus.INCOMPATIBLE,
+            mapping_status=MappingStatus.INCOMPATIBLE
+        )
+    }
+    
+    fill_actions_for_all_fields(fields, evaluation_map, action_info_map)
+    
+    patient_field = fields["Patient"]
+    assert Action.USE_RECURSIVE not in patient_field.actions_allowed, \
+        "Parent should NOT have use_recursive when child has inherited (not manual) action"
+
+
+def test_use_recursive_with_action_none_not_counted_as_manual():
+    """
+    Children with action=None should NOT be excluded from the check.
+    
+    Scenario:
+    - Root field: compatible
+    - Child 1: incompatible, action is None
+    
+    Expected: use_recursive is NOT allowed
+    """
+    from structure_comparer.model.mapping_action_models import ActionInfo, ActionSource
+    
+    fields = create_field_mapping([
+        ("Patient", ComparisonClassification.COMPAT),
+        ("Patient.name", ComparisonClassification.INCOMPAT),
+    ])
+    
+    # Child has action=None
+    action_info_map = {
+        "Patient.name": ActionInfo(
+            action=None,
+            source=ActionSource.SYSTEM_DEFAULT
+        )
+    }
+    
+    # Evaluation map shows not solved
+    evaluation_map = {
+        "Patient.name": EvaluationResult(
+            status=EvaluationStatus.INCOMPATIBLE,
+            mapping_status=MappingStatus.INCOMPATIBLE
+        )
+    }
+    
+    fill_actions_for_all_fields(fields, evaluation_map, action_info_map)
+    
+    patient_field = fields["Patient"]
+    assert Action.USE_RECURSIVE not in patient_field.actions_allowed, \
+        "Parent should NOT have use_recursive when child has action=None"
+
