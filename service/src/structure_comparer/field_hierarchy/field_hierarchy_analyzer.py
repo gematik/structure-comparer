@@ -1,6 +1,6 @@
 """High-level analysis of field hierarchies for status and action purposes."""
 
-from typing import Dict, List
+from typing import Any, Dict, List
 from .field_navigator import FieldHierarchyNavigator
 from ..model.mapping_action_models import EvaluationResult, MappingStatus
 
@@ -104,3 +104,104 @@ class FieldHierarchyAnalyzer:
                 summary[status] = summary.get(status, 0) + 1
         
         return summary
+
+
+def all_descendants_compatible(field_name: str, mapping: Dict[str, Any]) -> bool:
+    """
+    Check if all descendants of a field have classification == "compatible".
+    
+    Args:
+        field_name: The field name to check
+        mapping: Dictionary mapping field names to field objects (must have 'classification' attribute)
+        
+    Returns:
+        True if all descendants (children, grandchildren, etc.) are compatible.
+        Returns True for fields with no descendants.
+    """
+    navigator = FieldHierarchyNavigator(mapping)
+    descendants = navigator.get_all_descendants(field_name)
+    
+    # Field without descendants returns True
+    if not descendants:
+        return True
+    
+    # Check all descendants
+    for desc in descendants:
+        field = mapping.get(desc)
+        if field is None:
+            continue
+        
+        # Get classification, handle both attribute and dict access
+        classification = getattr(field, 'classification', None)
+        if classification is None and hasattr(field, '__getitem__'):
+            classification = field.get('classification')
+        
+        # Convert to string for comparison
+        if classification is not None and str(classification).lower() != "compatible":
+            return False
+    
+    return True
+
+
+def all_descendants_compatible_or_solved(
+    field_name: str,
+    mapping: Dict[str, Any],
+    evaluation_map: Dict[str, EvaluationResult]
+) -> bool:
+    """
+    Check if all descendants are either compatible or solved.
+    
+    A descendant is considered OK if either:
+    - classification == "compatible", OR
+    - classification != "compatible" AND mapping_status == SOLVED in evaluation_map
+    
+    Args:
+        field_name: The field name to check
+        mapping: Dictionary mapping field names to field objects (must have 'classification' attribute)
+        evaluation_map: Dictionary mapping field names to EvaluationResult objects
+        
+    Returns:
+        True if all descendants (children, grandchildren, etc.) are compatible or solved.
+        Returns True for fields with no descendants.
+        Fields without evaluation_map entry are NOT considered solved.
+    """
+    navigator = FieldHierarchyNavigator(mapping)
+    descendants = navigator.get_all_descendants(field_name)
+    
+    # Field without descendants returns True
+    if not descendants:
+        return True
+    
+    # Check all descendants
+    for desc in descendants:
+        field = mapping.get(desc)
+        if field is None:
+            continue
+        
+        # Get classification, handle both attribute and dict access
+        classification = getattr(field, 'classification', None)
+        if classification is None and hasattr(field, '__getitem__'):
+            classification = field.get('classification')
+        
+        # Convert to string for comparison
+        classification_str = str(classification).lower() if classification is not None else ""
+        
+        # Check if compatible
+        if classification_str == "compatible":
+            continue
+        
+        # Not compatible - check if solved in evaluation_map
+        eval_result = evaluation_map.get(desc)
+        if eval_result is None:
+            # No evaluation entry means NOT solved
+            return False
+        
+        # Check mapping_status - handle both Enum and string comparison
+        mapping_status = eval_result.mapping_status
+        if mapping_status == MappingStatus.SOLVED or str(mapping_status) == "solved":
+            continue
+        
+        # Neither compatible nor solved
+        return False
+    
+    return True
