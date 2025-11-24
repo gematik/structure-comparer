@@ -4,7 +4,7 @@ import logging
 from typing import Callable, Dict, List, Mapping, Optional
 
 from .conflict_detector import ConflictDetector
-from .field_utils import field_depth, get_direct_children, parent_name
+from .field_hierarchy import field_depth, get_direct_children, parent_name
 from .inheritance_engine import InheritanceEngine
 from .model.mapping_action_models import ActionInfo, ActionSource, ActionType
 

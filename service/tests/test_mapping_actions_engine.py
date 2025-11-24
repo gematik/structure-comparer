@@ -8,21 +8,39 @@ from structure_comparer.model.mapping_action_models import (
 )
 
 
+class StubProfileField:
+    """Stub for a profile field with optional fixed_value."""
+    def __init__(self, fixed_value=None):
+        self.fixed_value = fixed_value
+
+
 class StubField:
-    def __init__(self, name: str, classification: str = "compatible"):
+    def __init__(self, name: str, classification: str = "compatible", profiles=None):
         self.name = name
         self.classification = classification
+        self.profiles = profiles or {}
 
 
 class StubMapping:
-    def __init__(self, field_defs):
+    def __init__(self, field_defs, target_key=None):
         self.fields: Dict[str, StubField] = {}
+        self.target = None
+        if target_key:
+            self.target = type('obj', (object,), {'key': target_key})()
+        
         for definition in field_defs:
             if isinstance(definition, tuple):
                 name, classification = definition
+                self.fields[name] = StubField(name, classification)
+            elif isinstance(definition, dict):
+                # Allow passing dict with name, classification, and profiles
+                name = definition["name"]
+                classification = definition.get("classification", "compatible")
+                profiles = definition.get("profiles", {})
+                self.fields[name] = StubField(name, classification, profiles)
             else:
                 name, classification = definition, "compatible"
-            self.fields[name] = StubField(name, classification)
+                self.fields[name] = StubField(name, classification)
 
 
 def test_manual_action_overrides_everything():
@@ -289,3 +307,98 @@ def test_recommendations_are_separate_from_actions():
     # Patient.birthDate should have a recommendation (no manual action + compatible)
     assert "Patient.birthDate" in recommendations
     assert len(recommendations["Patient.birthDate"]) == 1
+
+
+def test_incompatible_field_with_auto_detected_fixed_value():
+    """Test that incompatible fields with auto-detected fixed values get FIXED action.
+    
+    This tests the scenario where:
+    - A field is classified as 'incompatible' (e.g., due to cardinality differences)
+    - The target profile has a fixed value for this field
+    - The system should automatically create a FIXED action
+    - The action should be marked as auto-generated with appropriate system remark
+    
+    Real example:
+    Medication.ingredient.strength.extension:amountText.url
+    - Classification: incompatible
+    - Fixed value: "https://gematik.de/fhir/epa-medication/StructureDefinition/..."
+    - System remark: "Auto-detected fixed value from target profile"
+    
+    Note: The field remains 'incompatible' in classification, but the FIXED action
+    resolves it. SYSTEM_DEFAULT actions (like auto-detected FIXED values) are treated
+    as resolved in the evaluation engine, so the field will show as 'resolved' even
+    though the user didn't manually select the action. This is the expected behavior -
+    auto-detected fixed values automatically resolve incompatibilities since they
+    represent constraints from the target profile that must be satisfied.
+    """
+    target_key = "target-profile-key"
+    expected_fixed_value = (
+        "https://gematik.de/fhir/epa-medication/StructureDefinition/"
+        "medication-ingredient-amount-extension"
+    )
+    
+    # Create a field with incompatible classification but with a fixed value in target profile
+    field_def = {
+        "name": "Medication.ingredient.strength.extension:amountText.url",
+        "classification": "incompatible",
+        "profiles": {
+            target_key: StubProfileField(fixed_value=expected_fixed_value)
+        }
+    }
+    
+    mapping = StubMapping([field_def], target_key=target_key)
+    
+    # No manual entries - let system detect fixed value automatically
+    result = compute_mapping_actions(mapping, manual_entries={})
+    
+    field_action = result["Medication.ingredient.strength.extension:amountText.url"]
+    
+    # Should have FIXED action (not None)
+    assert field_action.action == ActionType.FIXED
+    
+    # Should be auto-generated system default
+    assert field_action.source == ActionSource.SYSTEM_DEFAULT
+    assert field_action.auto_generated is True
+    
+    # Should have the correct system remark
+    assert field_action.system_remark == "Auto-detected fixed value from target profile"
+    
+    # Should contain the fixed value
+    assert field_action.fixed_value == expected_fixed_value
+
+
+def test_manual_override_of_auto_detected_fixed_value():
+    """Test that manual actions override auto-detected fixed values.
+    
+    Even if the system detects a fixed value, the user should be able to
+    override this with a different action (e.g., NOT_USE).
+    """
+    target_key = "target-profile-key"
+    expected_fixed_value = "https://example.org/fixed-value"
+    
+    field_def = {
+        "name": "Observation.code.system",
+        "classification": "incompatible",
+        "profiles": {
+            target_key: StubProfileField(fixed_value=expected_fixed_value)
+        }
+    }
+    
+    mapping = StubMapping([field_def], target_key=target_key)
+    
+    # User decides to use NOT_USE instead of the auto-detected FIXED
+    manual_entries = {
+        "Observation.code.system": {
+            "action": "not_use",
+            "remark": "User prefers not to use this field"
+        }
+    }
+    
+    result = compute_mapping_actions(mapping, manual_entries)
+    field_action = result["Observation.code.system"]
+    
+    # Manual action should override the auto-detected FIXED
+    assert field_action.action == ActionType.NOT_USE
+    assert field_action.source == ActionSource.MANUAL
+    assert field_action.user_remark == "User prefers not to use this field"
+    assert field_action.auto_generated is False

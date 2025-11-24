@@ -133,13 +133,18 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
 
     if classification == "incompatible":
         # Check if user has made an explicit decision (manual/inherited action)
-        has_user_action = (
+        # OR if system has auto-detected a solution (e.g., FIXED value)
+        has_action = (
             action_info.action is not None
-            and action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED)
+            and action_info.source in (
+                ActionSource.MANUAL,
+                ActionSource.INHERITED,
+                ActionSource.SYSTEM_DEFAULT
+            )
         )
         
-        # If the field is incompatible but user has selected an action, it's resolved
-        if has_user_action:
+        # If the field is incompatible but has an action, it's resolved
+        if has_action:
             reason = EvaluationReason(
                 code="FIELD_INCOMPATIBLE_RESOLVED",
                 severity=EvaluationSeverity.INFO,
@@ -174,13 +179,18 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
 
     if classification == "warning":
         # Check if user has made an explicit decision (manual/inherited action)
-        has_user_action = (
+        # OR if system has auto-detected a solution (e.g., FIXED value)
+        has_action = (
             action_info.action is not None
-            and action_info.source in (ActionSource.MANUAL, ActionSource.INHERITED)
+            and action_info.source in (
+                ActionSource.MANUAL,
+                ActionSource.INHERITED,
+                ActionSource.SYSTEM_DEFAULT
+            )
         )
         
-        # If the field is a warning but user has selected an action, it's resolved
-        if has_user_action:
+        # If the field is a warning but has an action, it's resolved
+        if has_action:
             reason = EvaluationReason(
                 code="FIELD_WARNING_RESOLVED",
                 severity=EvaluationSeverity.INFO,

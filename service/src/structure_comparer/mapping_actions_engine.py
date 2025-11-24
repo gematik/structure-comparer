@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Mapping, Optional
 
-from .field_utils import field_depth, parent_name
+from .field_hierarchy import field_depth, parent_name
 from .fixed_value_extractor import FixedValueExtractor
 from .model.mapping_action_models import (
     ActionInfo,

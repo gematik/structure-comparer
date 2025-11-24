@@ -223,3 +223,85 @@ def test_warning_field_with_inherited_action_is_solved():
     assert evaluation.status == EvaluationStatus.RESOLVED
     assert evaluation.has_warnings is False
     assert evaluation.has_errors is False
+
+
+def test_incompatible_field_with_auto_detected_fixed_value_is_resolved():
+    """Test that incompatible fields with auto-detected FIXED actions are resolved.
+    
+    This validates that SYSTEM_DEFAULT actions (like auto-detected fixed values)
+    properly resolve incompatibilities, matching the real-world behavior where
+    fixed values from the target profile automatically satisfy constraints.
+    """
+    fixed_url = (
+        "https://gematik.de/fhir/epa-medication/StructureDefinition/"
+        "medication-ingredient-amount-extension"
+    )
+    
+    mapping = EvalMapping([
+        EvalField(
+            "Medication.ingredient.strength.extension:amountText.url",
+            is_target_required=False,
+            classification="incompatible"
+        ),
+    ])
+    actions = {
+        "Medication.ingredient.strength.extension:amountText.url": ActionInfo(
+            action=ActionType.FIXED,
+            source=ActionSource.SYSTEM_DEFAULT,
+            auto_generated=True,
+            system_remark="Auto-detected fixed value from target profile",
+            fixed_value=fixed_url
+        )
+    }
+
+    result = evaluate_mapping(mapping, actions)
+    evaluation = result["Medication.ingredient.strength.extension:amountText.url"]
+
+    # Should be resolved, not action required
+    assert evaluation.status == EvaluationStatus.RESOLVED
+    assert evaluation.has_warnings is False
+    assert evaluation.has_errors is False
+    assert evaluation.mapping_status == MappingStatus.SOLVED
+    
+    # Should have a reason explaining the resolution
+    assert len(evaluation.reasons) > 0
+    reason = evaluation.reasons[0]
+    assert reason.code == "FIELD_INCOMPATIBLE_RESOLVED"
+    assert reason.severity == EvaluationSeverity.INFO
+    assert reason.related_action == ActionType.FIXED
+
+
+def test_warning_field_with_auto_detected_fixed_value_is_resolved():
+    """Test that warning fields with auto-detected FIXED actions are also resolved."""
+    mapping = EvalMapping([
+        EvalField(
+            "Observation.code.system",
+            is_target_required=False,
+            classification="warning"
+        ),
+    ])
+    actions = {
+        "Observation.code.system": ActionInfo(
+            action=ActionType.FIXED,
+            source=ActionSource.SYSTEM_DEFAULT,
+            auto_generated=True,
+            system_remark="Auto-detected fixed value from target profile",
+            fixed_value="http://loinc.org"
+        )
+    }
+
+    result = evaluate_mapping(mapping, actions)
+    evaluation = result["Observation.code.system"]
+
+    # Should be resolved
+    assert evaluation.status == EvaluationStatus.RESOLVED
+    assert evaluation.has_warnings is False
+    assert evaluation.has_errors is False
+    assert evaluation.mapping_status == MappingStatus.SOLVED
+    
+    # Should have a reason explaining the resolution
+    assert len(evaluation.reasons) > 0
+    reason = evaluation.reasons[0]
+    assert reason.code == "FIELD_WARNING_RESOLVED"
+    assert reason.severity == EvaluationSeverity.INFO
+    assert reason.related_action == ActionType.FIXED

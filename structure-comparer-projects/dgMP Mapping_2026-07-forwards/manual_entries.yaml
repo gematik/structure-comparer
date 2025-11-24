@@ -10,4 +10,44 @@ entries:
     name: Medication.extension:Impfstoff
     other: Medication.extension:isVaccine
     remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.id
+    other: Medication.extension:isVaccine.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.extension
+    other: Medication.extension:isVaccine.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.value[x]
+    other: Medication.extension:isVaccine.value[x]
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.value[x]:valueBoolean
+    other: Medication.extension:isVaccine.value[x]:valueBoolean
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.extension:Impfstoff.url
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
   id: e5c8dcf6-6071-8dce-3e52-9f012ab34c56
