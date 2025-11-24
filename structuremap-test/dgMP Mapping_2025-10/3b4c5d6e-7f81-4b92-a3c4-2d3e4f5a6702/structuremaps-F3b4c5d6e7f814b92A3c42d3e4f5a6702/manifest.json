@@ -1,0 +1,18 @@
+{
+  "packageVersion": 1,
+  "generatedAt": "2025-11-24T07:51:44.247619+00:00",
+  "mappingId": "3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702",
+  "projectKey": "dgMP Mapping_2025-10",
+  "rulesetName": "3b4c5d6e_7f81_4b92_a3c4_2d3e4f5a6702_structuremap",
+  "packageRoot": "structuremaps-F3b4c5d6e7f814b92A3c42d3e4f5a6702",
+  "artifacts": [
+    {
+      "name": "F3b4c5d6e7f814b92A3c42d3e4f5a6702Structuremap",
+      "filename": "F3b4c5d6e7f814b92A3c42d3e4f5a6702Structuremap.json",
+      "kind": "mapping",
+      "structureMapUrl": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request/StructureMap/F3b4c5d6e7f814b92A3c42d3e4f5a6702Structuremap",
+      "sourceProfileUrl": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Prescription",
+      "sourceProfileName": "KBV_PR_ERP_Prescription"
+    }
+  ]
+}

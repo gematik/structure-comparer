@@ -1,12 +1,15 @@
+import io
+import json
 import os
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
+from zipfile import ZipFile, ZIP_DEFLATED
 
 import yaml
 import uvicorn
 from fastapi import FastAPI, Response, UploadFile
-from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from .errors import (
@@ -61,7 +64,10 @@ from .model.project import ProjectList as ProjectListModel
 from .manual_entries_migration import migrate_manual_entries
 from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
 from .manual_entries import ManualEntries
-from .fshMappingGenerator.fsh_mapping_main import build_structuremap_fsh
+from .fshMappingGenerator.fsh_mapping_main import (
+  build_structuremap_package,
+  default_package_root,
+)
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -957,24 +963,33 @@ async def download_structuremap(
         # Create a ruleset name from mapping ID
         ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
 
-        # Generate StructureMap content (FHIR-compliant)
-        structuremap_content = build_structuremap_fsh(
+        package = build_structuremap_package(
           mapping=mapping,
           actions=actions,
           source_alias=source_alias,
           target_alias=target_alias,
           ruleset_name=ruleset_name,
         )
-        
-        # Return as downloadable file
-        filename = f"{mapping_id}_structuremap.json"
-        return PlainTextResponse(
-          content=structuremap_content,
-          media_type="application/fhir+json",
-            headers={
-                "Content-Disposition": f'attachment; filename="{filename}"'
-            },
+
+        package_root = default_package_root(mapping_id)
+        manifest = package.manifest(
+          mapping_id=mapping_id,
+          project_key=project_key,
+          ruleset_name=ruleset_name,
+          package_root=package_root,
         )
+
+        buffer = io.BytesIO()
+        with ZipFile(buffer, mode="w", compression=ZIP_DEFLATED) as zf:
+          manifest_path = f"{package_root}/manifest.json"
+          zf.writestr(manifest_path, json.dumps(manifest, indent=2, ensure_ascii=False))
+          for artifact in package.artifacts:
+            zf.writestr(f"{package_root}/{artifact.filename}", artifact.content)
+
+        buffer.seek(0)
+        filename = f"{mapping_id}_structuremaps.zip"
+        headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
+        return Response(content=buffer.read(), media_type="application/zip", headers=headers)
         
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404

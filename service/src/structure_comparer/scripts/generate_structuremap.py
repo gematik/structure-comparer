@@ -1,12 +1,18 @@
-"""Helper utility to generate StructureMap JSON from a mapping project."""
+"""Helper utility to generate StructureMap packages from a mapping project."""
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
+import sys
 from pathlib import Path
+from zipfile import ZipFile, ZIP_DEFLATED
 
-from structure_comparer.fshMappingGenerator.fsh_mapping_main import build_structuremap_fsh
+from structure_comparer.fshMappingGenerator.fsh_mapping_main import (
+    build_structuremap_package,
+    default_package_root,
+)
 from structure_comparer.handler.mapping import MappingHandler
 from structure_comparer.handler.project import ProjectsHandler
 
@@ -29,7 +35,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ruleset-name", help="Optional custom name for the StructureMap")
     parser.add_argument("--source-alias", help="Override source alias")
     parser.add_argument("--target-alias", help="Override target alias")
-    parser.add_argument("--output", type=Path, help="Write the generated JSON to this file instead of stdout")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="Write the generated StructureMap package (ZIP archive) to this path",
+    )
 
     args = parser.parse_args()
 
@@ -58,7 +68,7 @@ def main() -> None:
 
     ruleset_name = args.ruleset_name or _default_alias(mapping.name.replace(" ", "_"), "structuremap")
 
-    structure_map_json = build_structuremap_fsh(
+    package = build_structuremap_package(
         mapping=mapping,
         actions=actions,
         source_alias=source_alias,
@@ -67,10 +77,27 @@ def main() -> None:
     )
 
     if args.output:
-        args.output.write_text(structure_map_json, encoding="utf-8")
-        print(f"StructureMap written to {args.output}")
-    else:
-        print(structure_map_json)
+        package_root = default_package_root(mapping.id)
+        manifest = package.manifest(
+            mapping_id=mapping.id,
+            project_key=args.project_key,
+            ruleset_name=ruleset_name,
+            package_root=package_root,
+        )
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        with ZipFile(args.output, mode="w", compression=ZIP_DEFLATED) as zf:
+            zf.writestr(f"{package_root}/manifest.json", json.dumps(manifest, indent=2, ensure_ascii=False))
+            for artifact in package.artifacts:
+                zf.writestr(f"{package_root}/{artifact.filename}", artifact.content)
+        print(f"StructureMap package written to {args.output}")
+        return
+
+    if len(package.artifacts) == 1:
+        print(package.artifacts[0].content)
+        return
+
+    print("Multiple StructureMaps were generated; please rerun with --output <zip_path> to receive the package.")
+    sys.exit(1)
 
 if __name__ == "__main__":
     main()

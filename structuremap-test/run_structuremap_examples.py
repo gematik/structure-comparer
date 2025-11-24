@@ -5,12 +5,15 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.error import URLError, HTTPError
 from urllib.parse import quote
 from urllib.request import urlopen
+from zipfile import ZipFile
 
 # ---------------------------------------------------------------------------
 # Edit the values in this block to control what the script processes.
@@ -23,7 +26,7 @@ FHIR_VERSION = "4.0.1"
 VALIDATE_STRUCTUREMAPS = True
 RUN_TRANSFORMATIONS = True  # Enable to run example transformations via validator -transform
 PROJECT_FILTER: list[str] = ["dgMP Mapping_2025-10"]  # Leave empty to process every project that exists in the projects dir.
-MAPPING_FILTER: list[str] = ["3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702"]  # Optional list of mapping UUIDs to limit the run.
+MAPPING_FILTER: list[str] = ["2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601"]  # Optional list of mapping UUIDs to limit the run.
 EXAMPLE_FILTER: list[str] = []  # Optional list of resource-type suffixes from example_source_*.json.
 EXTRA_IG_SOURCES: list[str | Path] = []  # Additional -ig arguments besides the mapping test folder itself.
 ADDITIONAL_TRANSFORM_ARGS: list[str] = []
@@ -65,29 +68,32 @@ def main() -> None:
                 continue
 
             downloaded_path = mapping_dir / "downloaded_structuremap.json"
-            structure_map = _download_structuremap(project_key, mapping_id, downloaded_path)
-            
+            download_info = _download_structuremap(project_key, mapping_id, downloaded_path)
+
             mapping_json_path = mapping_dir / "mapping.json"
             _download_mapping(project_key, mapping_id, mapping_json_path)
 
-            if structure_map is None:
-                structure_map_path = _find_structuremap_file(mapping_dir)
-                if structure_map_path is None:
+            if download_info is None:
+                structure_map_paths = _find_structuremap_files(mapping_dir)
+                if not structure_map_paths:
                     print(f"[{project_key}/{mapping_id}] No StructureMap *.json file found; skipping")
                     continue
-                structure_map = json.loads(structure_map_path.read_text(encoding="utf-8"))
+                router_map_path = structure_map_paths[0]
+                router_map = json.loads(router_map_path.read_text(encoding="utf-8"))
+                router_map_url = router_map.get("url", "")
             else:
-                structure_map_path = downloaded_path
-            structure_maps_for_validation.append(structure_map_path.resolve())
+                structure_map_paths = download_info.files
+                router_map_path = download_info.router_path
+                router_map_url = download_info.router_url or _read_structuremap_url(router_map_path)
+            structure_maps_for_validation.extend(path.resolve() for path in structure_map_paths)
 
-            structure_map_url = structure_map.get("url", "")
             target_profile = _get_target_profile(mapping_handler, project_key, mapping_id)
 
             if RUN_TRANSFORMATIONS:
                 transform_jobs.append(
                     (
                         mapping_dir,
-                        structure_map_url,
+                        router_map_url,
                         mapping_id,
                         _profile_package_dir(target_profile),
                     )
@@ -286,7 +292,14 @@ def _validate_transformed_output(
         print(f"[{project_key}/{mapping_id}] Output validation failed for output-{resource_type}.json: {exc}")
 
 
-def _download_structuremap(project_key: str, mapping_id: str, destination: Path) -> dict | None:
+@dataclass
+class DownloadedStructureMap:
+    files: list[Path]
+    router_path: Path
+    router_url: str | None
+
+
+def _download_structuremap(project_key: str, mapping_id: str, destination: Path) -> DownloadedStructureMap | None:
     encoded_project = quote(project_key, safe="")
     encoded_mapping = quote(mapping_id, safe="")
     url = f"{SERVER_BASE_URL}/project/{encoded_project}/mapping/{encoded_mapping}/structuremap"
@@ -294,6 +307,7 @@ def _download_structuremap(project_key: str, mapping_id: str, destination: Path)
     try:
         with urlopen(url) as response:
             content_bytes = response.read()
+            content_type = response.info().get_content_type()
     except HTTPError as exc:
         print(f"[{project_key}/{mapping_id}] Failed to download StructureMap: HTTP {exc.code} {exc.reason}")
         return None
@@ -301,13 +315,69 @@ def _download_structuremap(project_key: str, mapping_id: str, destination: Path)
         print(f"[{project_key}/{mapping_id}] Failed to reach StructureMap endpoint: {exc}")
         return None
 
+    if _is_zip_payload(content_bytes, content_type):
+        return _process_structuremap_zip(content_bytes, destination)
+
     content = content_bytes.decode("utf-8")
     destination.write_text(content, encoding="utf-8")
     try:
-        return json.loads(content)
+        data = json.loads(content)
     except json.JSONDecodeError as exc:
         print(f"[{project_key}/{mapping_id}] Downloaded StructureMap is not valid JSON: {exc}")
         return None
+    return DownloadedStructureMap(files=[destination], router_path=destination, router_url=data.get("url"))
+
+
+def _is_zip_payload(content: bytes, content_type: str | None) -> bool:
+    if content_type and content_type.lower() == "application/zip":
+        return True
+    return content.startswith(b"PK")
+
+
+def _process_structuremap_zip(content_bytes: bytes, destination: Path) -> DownloadedStructureMap | None:
+    zip_path = destination.with_suffix(".zip")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    zip_path.write_bytes(content_bytes)
+
+    with ZipFile(zip_path) as zf:
+        manifest_name = next((name for name in zf.namelist() if name.endswith("manifest.json")), None)
+        if manifest_name is None:
+            print("[structuremap] ZIP package missing manifest.json; skipping")
+            return None
+        manifest = json.loads(zf.read(manifest_name).decode("utf-8"))
+        package_root = manifest.get("packageRoot") or Path(manifest_name).parent.as_posix()
+        extract_root = destination.parent / package_root
+        if extract_root.exists():
+            shutil.rmtree(extract_root)
+        zf.extractall(destination.parent)
+
+    artifacts = manifest.get("artifacts", [])
+    if not artifacts:
+        print("[structuremap] ZIP package contains no artifacts; skipping")
+        return None
+
+    artifact_files: list[Path] = []
+    for artifact in artifacts:
+        filename = artifact.get("filename")
+        if not filename:
+            continue
+        artifact_files.append((extract_root / filename).resolve())
+
+    if not artifact_files:
+        print("[structuremap] No artifact files extracted; skipping")
+        return None
+
+    router_entry = next((a for a in artifacts if a.get("kind") == "router"), artifacts[0])
+    router_filename = router_entry.get("filename") or artifacts[0].get("filename")
+    router_path = (extract_root / router_filename).resolve()
+    if router_path.exists():
+        destination.write_text(router_path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    return DownloadedStructureMap(
+        files=artifact_files,
+        router_path=router_path,
+        router_url=router_entry.get("structureMapUrl"),
+    )
 
 
 def _download_mapping(project_key: str, mapping_id: str, destination: Path) -> None:
@@ -329,13 +399,19 @@ def _download_mapping(project_key: str, mapping_id: str, destination: Path) -> N
     destination.write_text(content, encoding="utf-8")
 
 
-def _find_structuremap_file(mapping_dir: Path) -> Path | None:
+def _find_structuremap_files(mapping_dir: Path) -> list[Path]:
     candidates = sorted(
-        p for p in mapping_dir.glob("*.json") if "structuremap" in p.stem.lower() and not p.name.startswith("output")
+        p for p in mapping_dir.glob("**/*.json") if "structuremap" in p.stem.lower() and not p.name.startswith("output")
     )
-    if candidates:
-        return candidates[0]
-    return None
+    return candidates
+
+
+def _read_structuremap_url(path: Path) -> str:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+    return data.get("url", "")
 
 
 def _discover_projects() -> list[str]:

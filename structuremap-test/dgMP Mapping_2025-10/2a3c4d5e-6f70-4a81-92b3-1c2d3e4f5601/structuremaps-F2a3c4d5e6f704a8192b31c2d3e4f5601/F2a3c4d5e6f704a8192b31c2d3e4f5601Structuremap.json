@@ -1,0 +1,165 @@
+{
+  "resourceType": "StructureMap",
+  "id": "F2a3c4d5e6f704a8192b31c2d3e4f5601Structuremap29ddbcee",
+  "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601Structuremap",
+  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601Structuremap",
+  "status": "active",
+  "version": "1.1",
+  "date": "2025-11-24",
+  "description": "Router StructureMap for KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2",
+  "structure": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Medication",
+      "mode": "source",
+      "alias": "KBVPRERPMedicationCompounding"
+    },
+    {
+      "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication",
+      "mode": "target",
+      "alias": "EPAMedication"
+    }
+  ],
+  "group": [
+    {
+      "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601Structuremap",
+      "typeMode": "none",
+      "documentation": "Router StructureMap for KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2",
+      "input": [
+        {
+          "name": "KBVPRERPMedicationCompounding",
+          "type": "Medication",
+          "mode": "source"
+        },
+        {
+          "name": "EPAMedication",
+          "type": "Medication",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "RouteKbvPrErpMedicationCompounding",
+          "documentation": "Routes resources constrained by KBV_PR_ERP_Medication_Compounding",
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding",
+              "condition": "meta.profile.exists(p | p = 'https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding')"
+            }
+          ],
+          "rule": [
+            {
+              "name": "CallF2a3c4d5e6f704a8192b31c2d3e4f5601structuremapkbvprerpmedicat",
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
+                }
+              ],
+              "dependent": [
+                {
+                  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationC",
+                  "variable": [
+                    "KBVPRERPMedicationCompounding",
+                    "EPAMedication"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "RouteKbvPrErpMedicationFreetext",
+          "documentation": "Routes resources constrained by KBV_PR_ERP_Medication_FreeText",
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding",
+              "condition": "meta.profile.exists(p | p = 'https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText')"
+            }
+          ],
+          "rule": [
+            {
+              "name": "CallF2a3c4d5e6f704a8192b31c2d3e4f5601structuremapkbvprerpmedicat",
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
+                }
+              ],
+              "dependent": [
+                {
+                  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationF",
+                  "variable": [
+                    "KBVPRERPMedicationCompounding",
+                    "EPAMedication"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "RouteKbvPrErpMedicationIngredient",
+          "documentation": "Routes resources constrained by KBV_PR_ERP_Medication_Ingredient",
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding",
+              "condition": "meta.profile.exists(p | p = 'https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient')"
+            }
+          ],
+          "rule": [
+            {
+              "name": "CallF2a3c4d5e6f704a8192b31c2d3e4f5601structuremapkbvprerpmedicat",
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
+                }
+              ],
+              "dependent": [
+                {
+                  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationI",
+                  "variable": [
+                    "KBVPRERPMedicationCompounding",
+                    "EPAMedication"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "RouteKbvPrErpMedicationPzn",
+          "documentation": "Routes resources constrained by KBV_PR_ERP_Medication_PZN",
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding",
+              "condition": "meta.profile.exists(p | p = 'https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN')"
+            }
+          ],
+          "rule": [
+            {
+              "name": "CallF2a3c4d5e6f704a8192b31c2d3e4f5601structuremapkbvprerpmedicat",
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
+                }
+              ],
+              "dependent": [
+                {
+                  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationP",
+                  "variable": [
+                    "KBVPRERPMedicationCompounding",
+                    "EPAMedication"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "import": [
+    "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationC",
+    "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationF",
+    "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationI",
+    "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationP"
+  ]
+}

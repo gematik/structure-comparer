@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Iterable
 
 from structure_comparer.model.mapping_action_models import ActionInfo
 
@@ -8,6 +8,62 @@ from .extension_utils import find_skipped_slices, get_extension_url, is_extensio
 from .naming import slug, stable_id, var_name
 from .nodes import FieldNode
 from .tree_builder import SKIP_ACTIONS
+
+
+CHOICE_TYPE_SUFFIXES: tuple[str, ...] = (
+    "Base64Binary",
+    "Boolean",
+    "Canonical",
+    "Code",
+    "Date",
+    "DateTime",
+    "Decimal",
+    "Id",
+    "Instant",
+    "Integer",
+    "Markdown",
+    "Oid",
+    "PositiveInt",
+    "String",
+    "Time",
+    "UnsignedInt",
+    "Uri",
+    "Url",
+    "Uuid",
+    "Address",
+    "Age",
+    "Annotation",
+    "Attachment",
+    "CodeableConcept",
+    "Coding",
+    "ContactPoint",
+    "Count",
+    "Distance",
+    "Duration",
+    "HumanName",
+    "Identifier",
+    "Money",
+    "MoneyQuantity",
+    "Period",
+    "Quantity",
+    "Range",
+    "Ratio",
+    "Reference",
+    "SampledData",
+    "Signature",
+    "Timing",
+    "ContactDetail",
+    "Contributor",
+    "DataRequirement",
+    "Expression",
+    "ParameterDefinition",
+    "RelatedArtifact",
+    "TriggerDefinition",
+    "UsageContext",
+    "Dosage",
+    "Meta",
+    "SimpleQuantity",
+)
 
 
 class StructureMapRuleBuilder:
@@ -401,6 +457,9 @@ class StructureMapRuleBuilder:
             current_full_path = f"{root}.{partial}"
 
             field = self._mapping.fields.get(current_full_path)
+            profile_field = self._profile_field_for_keys(field, profile_keys)
+            if chain_kind == "target" and profile_field is None:
+                return []
             if field and self._target_profile_key and chain_kind == "target":
                 target_field = field.profiles.get(self._target_profile_key)
                 if target_field:
@@ -441,6 +500,19 @@ class StructureMapRuleBuilder:
             slice_name = None
             if ":" in segment:
                 slice_name = segment.split(":", 1)[1]
+
+            element_name = self._normalize_element_name(
+                element_name,
+                base_name=base_name,
+                slice_supported=profile_field is not None,
+            )
+
+            choice_base, choice_type = self._split_choice_suffix(element_name)
+            if choice_base:
+                element_name = choice_base
+                base_name = element_name.split(":")[0]
+                if resolved_type is None:
+                    resolved_type = choice_type
 
             extension_url = None
             if base_name in {"extension", "modifierExtension"}:
@@ -486,6 +558,48 @@ class StructureMapRuleBuilder:
             chain.append(entry)
             context = variable
         return chain
+
+    def _profile_field_for_keys(self, field, profile_keys: str | Iterable[str] | None):
+        if not field or not profile_keys:
+            return None
+        if isinstance(profile_keys, str):
+            return field.profiles.get(profile_keys)
+        for key in profile_keys:
+            profile_field = field.profiles.get(key)
+            if profile_field:
+                return profile_field
+        return None
+
+    def _normalize_element_name(self, element: str, *, base_name: str, slice_supported: bool) -> str:
+        if ":" not in element:
+            return element
+
+        head, tail = element.split(":", 1)
+        head_clean = head[:-3] if head.endswith("[x]") else head
+        tail_matches_head = bool(tail and tail.lower().startswith(head_clean.lower()))
+
+        if slice_supported:
+            if head in {"extension", "modifierExtension"}:
+                return head
+            if tail_matches_head:
+                return tail
+            return head_clean
+
+        if head in {"extension", "modifierExtension"}:
+            return head
+
+        if tail_matches_head:
+            return tail
+
+        return head_clean
+
+    def _split_choice_suffix(self, element: str) -> tuple[str, str] | tuple[None, None]:
+        for suffix in CHOICE_TYPE_SUFFIXES:
+            if element.endswith(suffix) and len(element) > len(suffix):
+                base = element[: -len(suffix)]
+                if base and base[-1].islower():
+                    return base, suffix
+        return None, None
 
     def _resolve_target_type(self, path: str | None) -> str | None:
         if not path or not self._target_profile_key:

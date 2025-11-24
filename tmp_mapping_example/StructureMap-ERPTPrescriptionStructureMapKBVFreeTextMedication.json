@@ -1,0 +1,159 @@
+{
+  "resourceType": "StructureMap",
+  "id": "ERPTPrescriptionStructureMapKBVFreeTextMedication",
+  "url": "https://gematik.de/fhir/erp-t-prescription/StructureMap/ERPTPrescriptionStructureMapKBVFreeTextMedication",
+  "title": "E-T-Rezept Structure Map for KBV FreeText Medication",
+  "description": "Maps KBV FreeText Medication to BfArM T-Prescription Medication format",
+  "structure": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Medication",
+      "mode": "source",
+      "alias": "kbvMedicationFreeText"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Medication",
+      "mode": "target",
+      "alias": "bfarmMedication"
+    }
+  ],
+  "group": [
+    {
+      "input": [
+        {
+          "name": "kbvMedicationFreeText",
+          "type": "kbvMedicationFreeText",
+          "mode": "source"
+        },
+        {
+          "name": "bfarmMedication",
+          "type": "bfarmMedication",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "source": [
+            {
+              "context": "kbvMedicationFreeText",
+              "element": "id",
+              "variable": "IdVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "IdVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy"
+            }
+          ],
+          "name": "medicationId",
+          "documentation": "Übernimmt die eindeutige Medication-ID unverändert"
+        },
+        {
+          "source": [
+            {
+              "context": "kbvMedicationFreeText",
+              "element": "code",
+              "variable": "srcCodeVar"
+            }
+          ],
+          "target": [
+            {
+              "contextType": "variable",
+              "context": "bfarmMedication",
+              "element": "code",
+              "variable": "tgtCodeVar"
+            }
+          ],
+          "rule": [
+            {
+              "source": [
+                {
+                  "context": "srcCodeVar",
+                  "element": "text",
+                  "variable": "srcCodeTextVar"
+                }
+              ],
+              "target": [
+                {
+                  "parameter": [
+                    {
+                      "valueId": "srcCodeTextVar"
+                    }
+                  ],
+                  "context": "tgtCodeVar",
+                  "contextType": "variable",
+                  "element": "text",
+                  "transform": "copy"
+                }
+              ],
+              "name": "medicationCodeText",
+              "documentation": "Kopiert die Freitext-Bezeichnung des Medikaments (z.B. 'Aspirin 500mg Tabletten')"
+            }
+          ],
+          "name": "medicationCode",
+          "documentation": "Mappt den Medikamentencode mit Freitext-Beschreibung"
+        },
+        {
+          "source": [
+            {
+              "context": "kbvMedicationFreeText",
+              "element": "form",
+              "variable": "srcFormVar"
+            }
+          ],
+          "target": [
+            {
+              "contextType": "variable",
+              "context": "bfarmMedication",
+              "element": "form",
+              "variable": "tgtFormVar"
+            }
+          ],
+          "rule": [
+            {
+              "source": [
+                {
+                  "context": "srcFormVar",
+                  "element": "text",
+                  "variable": "srcformTextVar"
+                }
+              ],
+              "target": [
+                {
+                  "parameter": [
+                    {
+                      "valueId": "srcformTextVar"
+                    }
+                  ],
+                  "context": "tgtFormVar",
+                  "contextType": "variable",
+                  "element": "text",
+                  "transform": "copy"
+                }
+              ],
+              "name": "medicationFormText",
+              "documentation": "Übernimmt die Freitext-Darreichungsform (z.B. 'Tabletten', 'Tropfen zum Einnehmen')"
+            }
+          ],
+          "name": "medicationForm",
+          "documentation": "Mappt die Darreichungsform als Freitext"
+        }
+      ],
+      "name": "ERPTPrescriptionStructureMapKBVFreeTextMedication",
+      "typeMode": "none",
+      "documentation": "Mapping-Anweisungen zur Transformation von KBV Freitext-Medikamenten zu BfArM T-Prescription Format"
+    }
+  ],
+  "status": "draft",
+  "version": "1.1.0-ballot3",
+  "date": "2025-07-07",
+  "name": "ERPTPrescriptionStructureMapKBVFreeTextMedication",
+  "experimental": false
+}

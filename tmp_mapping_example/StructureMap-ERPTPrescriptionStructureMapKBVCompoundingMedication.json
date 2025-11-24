@@ -1,0 +1,693 @@
+{
+  "resourceType": "StructureMap",
+  "id": "ERPTPrescriptionStructureMapKBVCompoundingMedication",
+  "url": "https://gematik.de/fhir/erp-t-prescription/StructureMap/ERPTPrescriptionStructureMapKBVCompoundingMedication",
+  "title": "E-T-Rezept Structure Map for KBV Compounding Medication",
+  "description": "Mapping-Anweisungen zur Transformation von KBV Rezeptur-Medikamenten zu BfArM T-Prescription Format",
+  "structure": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Medication",
+      "mode": "source",
+      "alias": "kbvMedicationCompounding"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Medication",
+      "mode": "target",
+      "alias": "bfarmMedication"
+    }
+  ],
+  "group": [
+    {
+      "input": [
+        {
+          "name": "kbvMedicationCompounding",
+          "type": "kbvMedicationCompounding",
+          "mode": "source"
+        },
+        {
+          "name": "bfarmMedication",
+          "type": "bfarmMedication",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "source": [
+            {
+              "context": "kbvMedicationCompounding",
+              "element": "extension",
+              "variable": "extVar"
+            }
+          ],
+          "target": [
+            {
+              "contextType": "variable",
+              "context": "bfarmMedication",
+              "element": "extension",
+              "variable": "tgtExtVar"
+            }
+          ],
+          "rule": [
+            {
+              "source": [
+                {
+                  "context": "extVar",
+                  "variable": "extMatchVar",
+                  "condition": "url='https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Packaging'"
+                }
+              ],
+              "target": [
+                {
+                  "parameter": [
+                    {
+                      "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension"
+                    }
+                  ],
+                  "context": "tgtExtVar",
+                  "contextType": "variable",
+                  "element": "url",
+                  "transform": "copy"
+                }
+              ],
+              "rule": [
+                {
+                  "source": [
+                    {
+                      "context": "extMatchVar",
+                      "element": "value",
+                      "variable": "extValVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "extValVar"
+                        }
+                      ],
+                      "context": "tgtExtVar",
+                      "contextType": "variable",
+                      "element": "value",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "copyExtensionValue",
+                  "documentation": "Übernimmt den Verpackungswert für die Rezeptur"
+                }
+              ],
+              "name": "copyFormulaPackagingExtensionUrl",
+              "documentation": "Transformiert KBV-Verpackungs-Extension in gematik-Formulierungs-Verpackungs-Extension"
+            }
+          ],
+          "name": "medicationExt",
+          "documentation": "Mappt Rezeptur-spezifische Extensions von KBV- zu BfArM-Format"
+        },
+        {
+          "source": [
+            {
+              "context": "kbvMedicationCompounding",
+              "element": "id",
+              "variable": "IdVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "IdVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy"
+            }
+          ],
+          "name": "medicationId",
+          "documentation": "Übernimmt die eindeutige Medication-ID unverändert"
+        },
+        {
+          "source": [
+            {
+              "context": "kbvMedicationCompounding",
+              "element": "code",
+              "variable": "srcCodeVar"
+            }
+          ],
+          "target": [
+            {
+              "contextType": "variable",
+              "context": "bfarmMedication",
+              "element": "code",
+              "variable": "tgtCodeVar"
+            }
+          ],
+          "rule": [
+            {
+              "source": [
+                {
+                  "context": "srcCodeVar",
+                  "element": "text",
+                  "variable": "srcCodeTextVar"
+                }
+              ],
+              "target": [
+                {
+                  "parameter": [
+                    {
+                      "valueId": "srcCodeTextVar"
+                    }
+                  ],
+                  "context": "tgtCodeVar",
+                  "contextType": "variable",
+                  "element": "text",
+                  "transform": "copy"
+                }
+              ],
+              "name": "medicationCodeText",
+              "documentation": "Kopiert die Bezeichnung der Rezeptur (z.B. 'Hydrocortison-Salbe 1%')"
+            }
+          ],
+          "name": "medicationCode",
+          "documentation": "Mappt den Rezeptur-Code mit Bezeichnung"
+        },
+        {
+          "source": [
+            {
+              "context": "kbvMedicationCompounding",
+              "element": "form",
+              "variable": "formVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "formVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "form",
+              "transform": "copy"
+            }
+          ],
+          "name": "medicationForm",
+          "documentation": "Übernimmt die Darreichungsform der Rezeptur (Salbe, Creme, Kapseln, etc.)"
+        },
+        {
+          "source": [
+            {
+              "context": "kbvMedicationCompounding",
+              "element": "amount",
+              "variable": "amountVar"
+            }
+          ],
+          "target": [
+            {
+              "contextType": "variable",
+              "context": "bfarmMedication",
+              "element": "amount",
+              "variable": "tgtAmountVar"
+            }
+          ],
+          "rule": [
+            {
+              "source": [
+                {
+                  "context": "amountVar",
+                  "element": "denominator",
+                  "variable": "amountDenominatorVar"
+                }
+              ],
+              "target": [
+                {
+                  "parameter": [
+                    {
+                      "valueId": "amountDenominatorVar"
+                    }
+                  ],
+                  "context": "tgtAmountVar",
+                  "contextType": "variable",
+                  "element": "denominator",
+                  "transform": "copy"
+                }
+              ],
+              "name": "medicationAmountDenominator",
+              "documentation": "Kopiert den Nenner der Mengenangabe (z.B. '1' für 'pro Rezeptur')"
+            },
+            {
+              "source": [
+                {
+                  "context": "amountVar",
+                  "element": "numerator",
+                  "variable": "amountNumeratorVar"
+                }
+              ],
+              "target": [
+                {
+                  "contextType": "variable",
+                  "context": "tgtAmountVar",
+                  "element": "numerator",
+                  "variable": "tgtAmountNumeratorVar"
+                }
+              ],
+              "rule": [
+                {
+                  "source": [
+                    {
+                      "context": "amountNumeratorVar",
+                      "element": "extension",
+                      "variable": "amountNumExtVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "contextType": "variable",
+                      "context": "tgtAmountNumeratorVar",
+                      "element": "extension",
+                      "variable": "tgtAmountNumExtVar"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "source": [
+                        {
+                          "context": "amountNumExtVar",
+                          "condition": "url='https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_PackagingSize'"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "parameter": [
+                            {
+                              "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-packaging-size-extension"
+                            }
+                          ],
+                          "context": "tgtAmountNumExtVar",
+                          "contextType": "variable",
+                          "element": "url",
+                          "transform": "copy"
+                        }
+                      ],
+                      "name": "copyPackagingSizeExtensionUrl",
+                      "documentation": "Wandelt KBV-Packungsgrößen-Extension in gematik EPA-Medication Extension um"
+                    },
+                    {
+                      "source": [
+                        {
+                          "context": "amountNumExtVar",
+                          "element": "value",
+                          "variable": "extValVar"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "parameter": [
+                            {
+                              "valueId": "extValVar"
+                            }
+                          ],
+                          "context": "tgtAmountNumExtVar",
+                          "contextType": "variable",
+                          "element": "value",
+                          "transform": "copy"
+                        }
+                      ],
+                      "name": "copyExtensionValue",
+                      "documentation": "Übernimmt den Packungsgrößenwert für die Rezeptur"
+                    }
+                  ],
+                  "name": "medicationAmountExt",
+                  "documentation": "Transformiert Packungsgrößen-Extensions für Rezepturen"
+                },
+                {
+                  "source": [
+                    {
+                      "context": "amountNumeratorVar",
+                      "element": "value",
+                      "variable": "amountNumeratorValueVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "amountNumeratorValueVar"
+                        }
+                      ],
+                      "context": "tgtAmountNumeratorVar",
+                      "contextType": "variable",
+                      "element": "value",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "medicationAmountNumeratorValue",
+                  "documentation": "Kopiert den numerischen Wert der Gesamtmenge (z.B. '50' für 50g Salbe)"
+                },
+                {
+                  "source": [
+                    {
+                      "context": "amountNumeratorVar",
+                      "element": "unit",
+                      "variable": "amountNumeratorUnitVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "amountNumeratorUnitVar"
+                        }
+                      ],
+                      "context": "tgtAmountNumeratorVar",
+                      "contextType": "variable",
+                      "element": "unit",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "medicationAmountNumeratorUnit",
+                  "documentation": "Übernimmt die Mengeneinheit für die Rezeptur (g, ml, Stück, etc.)"
+                },
+                {
+                  "source": [
+                    {
+                      "context": "amountNumeratorVar",
+                      "element": "system",
+                      "variable": "amountNumeratorSystemVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "amountNumeratorSystemVar"
+                        }
+                      ],
+                      "context": "tgtAmountNumeratorVar",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "medicationAmountNumeratorSystem",
+                  "documentation": "Kopiert das Codesystem für die Mengeneinheit (meist UCUM)"
+                },
+                {
+                  "source": [
+                    {
+                      "context": "amountNumeratorVar",
+                      "element": "code",
+                      "variable": "amountNumeratorCodeVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "amountNumeratorCodeVar"
+                        }
+                      ],
+                      "context": "tgtAmountNumeratorVar",
+                      "contextType": "variable",
+                      "element": "code",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "medicationAmountNumeratorCode",
+                  "documentation": "Übernimmt den standardisierten Code für die Mengeneinheit"
+                }
+              ],
+              "name": "medicationAmountNumerator",
+              "documentation": "Mappt die detaillierte Mengenangabe der Rezeptur"
+            }
+          ],
+          "name": "medicationAmount",
+          "documentation": "Mappt die Gesamtmenge der herzustellenden Rezeptur"
+        },
+        {
+          "source": [
+            {
+              "context": "kbvMedicationCompounding",
+              "element": "ingredient",
+              "variable": "ingredientVar"
+            }
+          ],
+          "target": [
+            {
+              "contextType": "variable",
+              "context": "bfarmMedication",
+              "element": "ingredient",
+              "variable": "tgtIngredientVar"
+            }
+          ],
+          "rule": [
+            {
+              "source": [
+                {
+                  "context": "ingredientVar",
+                  "element": "item",
+                  "variable": "IngredientItemValueVar"
+                }
+              ],
+              "target": [
+                {
+                  "parameter": [
+                    {
+                      "valueId": "IngredientItemValueVar"
+                    }
+                  ],
+                  "context": "tgtIngredientVar",
+                  "contextType": "variable",
+                  "element": "item",
+                  "transform": "copy"
+                }
+              ],
+              "name": "medicationIngredientItemValue",
+              "documentation": "Kopiert die Referenz oder den Code des Rezeptur-Bestandteils"
+            },
+            {
+              "source": [
+                {
+                  "context": "ingredientVar",
+                  "element": "extension",
+                  "variable": "IngredientExtVar"
+                }
+              ],
+              "target": [
+                {
+                  "contextType": "variable",
+                  "context": "tgtIngredientVar",
+                  "element": "extension",
+                  "variable": "tgtIngredientExtVar"
+                }
+              ],
+              "rule": [
+                {
+                  "source": [
+                    {
+                      "context": "IngredientExtVar",
+                      "condition": "url='https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form'"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension"
+                        }
+                      ],
+                      "context": "tgtIngredientExtVar",
+                      "contextType": "variable",
+                      "element": "url",
+                      "transform": "copy"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "source": [
+                        {
+                          "context": "IngredientExtVar",
+                          "element": "value",
+                          "variable": "extValVar"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "parameter": [
+                            {
+                              "valueId": "extValVar"
+                            }
+                          ],
+                          "context": "tgtIngredientExtVar",
+                          "contextType": "variable",
+                          "element": "value",
+                          "transform": "copy"
+                        }
+                      ],
+                      "name": "copyExtensionValue",
+                      "documentation": "Übernimmt die Darreichungsform des Bestandteils"
+                    }
+                  ],
+                  "name": "copyIngredientFormExtensionUrl",
+                  "documentation": "Wandelt KBV-Bestandteil-Darreichungsform-Extension in gematik-Format um"
+                }
+              ],
+              "name": "medicationIngredientExt",
+              "documentation": "Transformiert Bestandteil-spezifische Extensions"
+            },
+            {
+              "source": [
+                {
+                  "context": "ingredientVar",
+                  "element": "strength",
+                  "variable": "IngredientStrengthValueVar"
+                }
+              ],
+              "target": [
+                {
+                  "contextType": "variable",
+                  "context": "tgtIngredientVar",
+                  "element": "strength",
+                  "variable": "IngredientStrengthValueVar"
+                }
+              ],
+              "rule": [
+                {
+                  "source": [
+                    {
+                      "context": "IngredientStrengthValueVar",
+                      "element": "denominator",
+                      "variable": "ingredientDenominatorVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "ingredientDenominatorVar"
+                        }
+                      ],
+                      "context": "IngredientStrengthValueVar",
+                      "contextType": "variable",
+                      "element": "denominator",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "medicationIngredientDenominator",
+                  "documentation": "Kopiert den Nenner für die Stärkeangabe (Bezugsmenge)"
+                },
+                {
+                  "source": [
+                    {
+                      "context": "IngredientStrengthValueVar",
+                      "element": "numerator",
+                      "variable": "ingredientNumeratorVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "ingredientNumeratorVar"
+                        }
+                      ],
+                      "context": "IngredientStrengthValueVar",
+                      "contextType": "variable",
+                      "element": "numerator",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "medicationIngredientNumerator",
+                  "documentation": "Kopiert den Zähler für die Stärkeangabe (Wirkstoffmenge)"
+                },
+                {
+                  "source": [
+                    {
+                      "context": "IngredientStrengthValueVar",
+                      "element": "extension",
+                      "variable": "IngredientStrExtVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "contextType": "variable",
+                      "context": "IngredientStrengthValueVar",
+                      "element": "extension",
+                      "variable": "tgtIngredientStrExtVar"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "source": [
+                        {
+                          "context": "IngredientStrExtVar",
+                          "condition": "url='https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount'"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "parameter": [
+                            {
+                              "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension"
+                            }
+                          ],
+                          "context": "tgtIngredientStrExtVar",
+                          "contextType": "variable",
+                          "element": "url",
+                          "transform": "copy"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "source": [
+                            {
+                              "context": "IngredientStrExtVar",
+                              "element": "value",
+                              "variable": "extValVar"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "parameter": [
+                                {
+                                  "valueId": "extValVar"
+                                }
+                              ],
+                              "context": "tgtIngredientStrExtVar",
+                              "contextType": "variable",
+                              "element": "value",
+                              "transform": "copy"
+                            }
+                          ],
+                          "name": "copyExtensionValue",
+                          "documentation": "Übernimmt die Mengenangabe des Bestandteils"
+                        }
+                      ],
+                      "name": "copyIngredientAmountExtensionUrl",
+                      "documentation": "Wandelt KBV-Bestandteil-Mengen-Extension in gematik-Format um"
+                    }
+                  ],
+                  "name": "medicationIngredientStrengthExt",
+                  "documentation": "Transformiert Bestandteil-Mengen-Extensions"
+                }
+              ],
+              "name": "medicationIngredientStrength",
+              "documentation": "Mappt die Stärke/Konzentration des Bestandteils in der Rezeptur"
+            }
+          ],
+          "name": "medicationIngredient",
+          "documentation": "Mappt die Bestandteile der Rezeptur mit detaillierten Mengen- und Stärkeangaben"
+        }
+      ],
+      "name": "ERPTPrescriptionStructureMapKBVCompoundingMedication",
+      "typeMode": "none",
+      "documentation": "Mapping-Anweisungen zur Transformation von KBV Rezeptur-Medikamenten zu BfArM T-Prescription Format"
+    }
+  ],
+  "status": "draft",
+  "version": "1.1.0-ballot3",
+  "date": "2025-07-07",
+  "name": "ERPTPrescriptionStructureMapKBVCompoundingMedication",
+  "experimental": false
+}
