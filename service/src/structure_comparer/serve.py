@@ -1,11 +1,15 @@
+import io
+import json
 import logging
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
+from zipfile import ZipFile, ZIP_DEFLATED
 
 import uvicorn
 import yaml
 from fastapi import FastAPI, Response, UploadFile
+from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, PlainTextResponse
 
@@ -68,7 +72,10 @@ from .model.project import ProjectList as ProjectListModel
 from .manual_entries_migration import migrate_manual_entries
 from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
 from .manual_entries import ManualEntries
-from .structureMap_generator.structureMap_generator_main import build_structuremap
+from .fshMappingGenerator.fsh_mapping_main import (
+  build_structuremap_package,
+  default_package_root,
+)
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -78,8 +85,12 @@ mapping_handler: MappingHandler
 cur_proj: str
 
 
-# REMOVED: Obsolete function _build_status_summary() - replaced by StatusAggregator.build_status_summary()
-# The aggregation logic has been moved to evaluation/status_aggregator.py for better code organization
+def _alias_from_profile(profile, fallback: str) -> str:
+  text = getattr(profile, "name", None)
+  if not text:
+    text = getattr(profile, "id", None) or getattr(profile, "url", None) or ""
+  cleaned = "".join(ch for ch in text if ch.isalnum())
+  return cleaned or fallback
 
 
 @asynccontextmanager
@@ -921,42 +932,41 @@ async def download_structuremap(
         
         # Get actions
         actions = mapping.get_action_info_map()
-        
-        # Determine aliases from profile names
-        source_aliases = []
-        target_alias = "target"
-        
-        if mapping.sources and len(mapping.sources) > 0:
-            for source in mapping.sources:
-                # Create a simple alias from the profile name
-                alias = source.name.replace(" ", "").replace("-", "")
-                source_aliases.append(alias)
-        
-        if mapping.target:
-            target_name = mapping.target.name
-            target_alias = target_name.replace(" ", "").replace("-", "")
-        
+
+        primary_source = mapping.sources[0] if mapping.sources else None
+        source_alias = _alias_from_profile(primary_source, "source")
+        target_alias = _alias_from_profile(mapping.target, "target")
+
         # Create a ruleset name from mapping ID
         ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
-        
-        # Generate StructureMap content
-        structuremap_content = build_structuremap(
-            mapping=mapping,
-            actions=actions,
-            source_aliases=source_aliases,
-            target_alias=target_alias,
-            ruleset_name=ruleset_name,
+
+        package = build_structuremap_package(
+          mapping=mapping,
+          actions=actions,
+          source_alias=source_alias,
+          target_alias=target_alias,
+          ruleset_name=ruleset_name,
         )
-        
-        # Return as downloadable file
-        filename = f"{mapping_id}_structuremap.json"
-        return PlainTextResponse(
-            content=structuremap_content,
-            media_type="text/json",
-            headers={
-                "Content-Disposition": f'attachment; filename="{filename}"'
-            },
+
+        package_root = default_package_root(mapping_id)
+        manifest = package.manifest(
+          mapping_id=mapping_id,
+          project_key=project_key,
+          ruleset_name=ruleset_name,
+          package_root=package_root,
         )
+
+        buffer = io.BytesIO()
+        with ZipFile(buffer, mode="w", compression=ZIP_DEFLATED) as zf:
+          manifest_path = f"{package_root}/manifest.json"
+          zf.writestr(manifest_path, json.dumps(manifest, indent=2, ensure_ascii=False))
+          for artifact in package.artifacts:
+            zf.writestr(f"{package_root}/{artifact.filename}", artifact.content)
+
+        buffer.seek(0)
+        filename = f"{mapping_id}_structuremaps.zip"
+        headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
+        return Response(content=buffer.read(), media_type="application/zip", headers=headers)
         
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404

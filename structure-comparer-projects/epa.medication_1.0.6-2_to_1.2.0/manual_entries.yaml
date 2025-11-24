@@ -21,3 +21,10 @@ entries:
     other: null
     remark: null
   id: c9fdc5ae-2083-4a01-bdd6-fffcc0d8c9d6
+- fields:
+  - action: use
+    fixed: null
+    name: MedicationRequest.medication[x]
+    other: null
+    remark: null
+  id: 3d41373b-c5bd-40ee-a716-7a7585bccfd8

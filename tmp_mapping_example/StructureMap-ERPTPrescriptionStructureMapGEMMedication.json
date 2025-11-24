@@ -1,0 +1,308 @@
+{
+  "resourceType": "StructureMap",
+  "id": "ERPTPrescriptionStructureMapGEMMedication",
+  "url": "https://gematik.de/fhir/erp-t-prescription/StructureMap/ERPTPrescriptionStructureMapGEMMedication",
+  "title": "E-T-Rezept Structure Map for Medication",
+  "description": "Maps GEM ERP Medication to BfArM T-Prescription Medication format",
+  "structure": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Medication",
+      "mode": "source",
+      "alias": "gematikMedication"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Medication",
+      "mode": "target",
+      "alias": "bfarmMedication"
+    }
+  ],
+  "group": [
+    {
+      "input": [
+        {
+          "name": "gematikMedication",
+          "type": "gematikMedication",
+          "mode": "source"
+        },
+        {
+          "name": "bfarmMedication",
+          "type": "bfarmMedication",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "source": [
+            {
+              "context": "gematikMedication",
+              "element": "id",
+              "variable": "IdVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "IdVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy"
+            }
+          ],
+          "name": "medicationId",
+          "documentation": "Übernimmt die eindeutige Medication-ID unverändert"
+        },
+        {
+          "source": [
+            {
+              "context": "gematikMedication",
+              "element": "contained",
+              "variable": "ContainedVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "ContainedVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "contained",
+              "transform": "copy"
+            }
+          ],
+          "name": "mapContainedRessources",
+          "documentation": "Kopiert eingebettete Ressourcen (z.B. referenzierte Medications oder Organizations)"
+        },
+        {
+          "source": [
+            {
+              "context": "gematikMedication",
+              "element": "extension",
+              "variable": "extVar"
+            }
+          ],
+          "target": [
+            {
+              "contextType": "variable",
+              "context": "bfarmMedication",
+              "element": "extension",
+              "variable": "tgtExtVar"
+            }
+          ],
+          "rule": [
+            {
+              "source": [
+                {
+                  "context": "extVar",
+                  "condition": "url='http://fhir.de/StructureDefinition/normgroesse'"
+                }
+              ],
+              "target": [
+                {
+                  "parameter": [
+                    {
+                      "valueString": "http://fhir.de/StructureDefinition/normgroesse"
+                    }
+                  ],
+                  "context": "tgtExtVar",
+                  "contextType": "variable",
+                  "element": "url",
+                  "transform": "copy"
+                }
+              ],
+              "rule": [
+                {
+                  "source": [
+                    {
+                      "context": "extVar",
+                      "element": "value",
+                      "variable": "extValVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "extValVar"
+                        }
+                      ],
+                      "context": "tgtExtVar",
+                      "contextType": "variable",
+                      "element": "value",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "copyExtensionValue",
+                  "documentation": "Kopiert den Wert der Normgröße-Extension"
+                }
+              ],
+              "name": "copyNormgroesseExtensionUrl",
+              "documentation": "Übernimmt die Normgröße-Extension unverändert (deutsche Packungsgrößenangabe N1, N2, N3)"
+            },
+            {
+              "source": [
+                {
+                  "context": "extVar",
+                  "condition": "url='https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension'"
+                }
+              ],
+              "target": [
+                {
+                  "parameter": [
+                    {
+                      "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension"
+                    }
+                  ],
+                  "context": "tgtExtVar",
+                  "contextType": "variable",
+                  "element": "url",
+                  "transform": "copy"
+                }
+              ],
+              "rule": [
+                {
+                  "source": [
+                    {
+                      "context": "extVar",
+                      "element": "value",
+                      "variable": "extValVar"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "parameter": [
+                        {
+                          "valueId": "extValVar"
+                        }
+                      ],
+                      "context": "tgtExtVar",
+                      "contextType": "variable",
+                      "element": "value",
+                      "transform": "copy"
+                    }
+                  ],
+                  "name": "copyExtensionValue",
+                  "documentation": "Kopiert den Wert der Verpackungs-Extension"
+                }
+              ],
+              "name": "copyPackagingExtensionUrl",
+              "documentation": "Übernimmt die gematik-Verpackungs-Extension für Formulierungen"
+            }
+          ],
+          "name": "medicationExtension",
+          "documentation": "Mappt gematik-spezifische Medication-Extensions zu BfArM-Format"
+        },
+        {
+          "source": [
+            {
+              "context": "gematikMedication",
+              "element": "code",
+              "variable": "codeVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "codeVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "code",
+              "transform": "copy"
+            }
+          ],
+          "name": "medicationCode",
+          "documentation": "Kopiert den Medikamentencode (PZN oder andere Identifikation) des abgegebenen Arzneimittels"
+        },
+        {
+          "source": [
+            {
+              "context": "gematikMedication",
+              "element": "form",
+              "variable": "formVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "formVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "form",
+              "transform": "copy"
+            }
+          ],
+          "name": "medicationForm",
+          "documentation": "Übernimmt die Darreichungsform des tatsächlich abgegebenen Arzneimittels"
+        },
+        {
+          "source": [
+            {
+              "context": "gematikMedication",
+              "element": "amount",
+              "variable": "amountVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "amountVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "amount",
+              "transform": "copy"
+            }
+          ],
+          "name": "medicationAmount",
+          "documentation": "Kopiert die Mengenangaben des abgegebenen Arzneimittels (tatsächlich ausgehändigte Menge)"
+        },
+        {
+          "source": [
+            {
+              "context": "gematikMedication",
+              "element": "ingredient",
+              "variable": "ingredientVar"
+            }
+          ],
+          "target": [
+            {
+              "parameter": [
+                {
+                  "valueId": "ingredientVar"
+                }
+              ],
+              "context": "bfarmMedication",
+              "contextType": "variable",
+              "element": "ingredient",
+              "transform": "copy"
+            }
+          ],
+          "name": "medicationIngredient",
+          "documentation": "Übernimmt Wirkstoffinformationen des abgegebenen Arzneimittels (falls vorhanden)"
+        }
+      ],
+      "name": "ERPTPrescriptionStructureMapGEMMedication",
+      "typeMode": "none",
+      "documentation": "Mapping-Anweisungen zur Transformation von gematik ERP-Medikamenten zu BfArM T-Prescription Format"
+    }
+  ],
+  "status": "draft",
+  "version": "1.1.0-ballot3",
+  "date": "2025-07-07",
+  "name": "ERPTPrescriptionStructureMapGEMMedication",
+  "experimental": false
+}
