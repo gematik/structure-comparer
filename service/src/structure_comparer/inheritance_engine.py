@@ -3,7 +3,7 @@
 import logging
 from typing import Dict, Optional
 
-from .field_utils import child_suffix, is_polymorphic_type_choice
+from .field_hierarchy import child_suffix, is_polymorphic_type_choice
 from .model.mapping_action_models import ActionInfo, ActionSource, ActionType
 
 logger = logging.getLogger(__name__)

@@ -52,11 +52,12 @@ from .model.mapping import MappingField as MappingFieldModel
 from .model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from .model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from .model.mapping_input import MappingInput
-from .model.mapping_action_models import EvaluationResult, MappingStatus
+from .model.mapping_action_models import EvaluationResult
 from .model.mapping_evaluation_model import (
   MappingEvaluationModel,
   MappingEvaluationSummaryModel,
 )
+from .evaluation import StatusAggregator
 from .model.package import Package as PackageModel
 from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
@@ -77,35 +78,8 @@ mapping_handler: MappingHandler
 cur_proj: str
 
 
-def _build_status_summary(evaluations: dict[str, EvaluationResult]) -> dict[str, int]:
-    """
-    Calculate status summary matching frontend logic.
-    
-    This mirrors the logic in SummaryHelper.calculateStatusSummary() and
-    StatusHelper.getFieldStatus() from the frontend.
-    """
-    summary = {
-        "total": len(evaluations),
-        "incompatible": 0,
-        "warning": 0,
-        "solved": 0,
-        "compatible": 0,
-    }
-
-    for result in evaluations.values():
-        # Use mapping_status directly (which is computed by the evaluation engine)
-        status = result.mapping_status
-        
-        if status == MappingStatus.INCOMPATIBLE:
-            summary["incompatible"] += 1
-        elif status == MappingStatus.WARNING:
-            summary["warning"] += 1
-        elif status == MappingStatus.SOLVED:
-            summary["solved"] += 1
-        elif status == MappingStatus.COMPATIBLE:
-            summary["compatible"] += 1
-
-    return summary
+# REMOVED: Obsolete function _build_status_summary() - replaced by StatusAggregator.build_status_summary()
+# The aggregation logic has been moved to evaluation/status_aggregator.py for better code organization
 
 
 @asynccontextmanager
@@ -1543,7 +1517,7 @@ async def get_mapping_evaluation(
     try:
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
         evaluations = mapping.get_evaluation_map()
-        summary = _build_status_summary(evaluations)
+        summary = StatusAggregator.build_status_summary(evaluations)
 
         return MappingEvaluationModel(
             mapping_id=mapping_id,
@@ -1571,7 +1545,7 @@ async def get_mapping_evaluation_summary(
     try:
         mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
         evaluations = mapping.get_evaluation_map()
-        summary = _build_status_summary(evaluations)
+        summary = StatusAggregator.build_status_summary(evaluations)
 
         return MappingEvaluationSummaryModel(
             mapping_id=mapping_id,

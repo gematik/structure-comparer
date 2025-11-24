@@ -161,7 +161,14 @@ class Mapping(Comparison):
         # Compute recommendations separately - returns dict[field_name, list[ActionInfo]]
         recommendations_map = compute_recommendations(self, manual_mappings)
         
+        # Original evaluation
         evaluation_map = evaluate_mapping(self, action_info_map)
+        
+        # NEW: Propagate incompatible status from children to parents
+        from ..evaluation import StatusPropagator
+        propagator = StatusPropagator(self.fields, evaluation_map)
+        evaluation_map = propagator.propagate_incompatible_to_parents()
+        
         self._evaluation_map = evaluation_map
 
         for field_name, field in self.fields.items():
@@ -229,20 +236,10 @@ class Mapping(Comparison):
         }
         target = ProfileModel(**target_dict)
 
-        # Calculate status counts based on evaluation results
+        # Calculate status counts based on evaluation results using StatusAggregator
+        from ..evaluation import StatusAggregator
         evaluations = self.get_evaluation_map()
-        status_counts = {
-            "total": len(evaluations),
-            "incompatible": 0,
-            "warning": 0,
-            "solved": 0,
-            "compatible": 0,
-        }
-
-        for result in evaluations.values():
-            status = result.mapping_status
-            if status.value in status_counts:
-                status_counts[status.value] += 1
+        status_counts = StatusAggregator.build_status_summary(evaluations)
 
         try:
             model = MappingBaseModel(
