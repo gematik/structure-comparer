@@ -256,6 +256,15 @@ def _parse_action(value: object) -> ActionType | None:
         return None
     if isinstance(value, ActionType):
         return value
+    # IMPORTANT: Also handle legacy Action enum (from action.py)
+    # This ensures that applying a USE_RECURSIVE recommendation (which writes Action.USE_RECURSIVE)
+    # behaves exactly like manually selecting USE_RECURSIVE.
+    if isinstance(value, Action):
+        try:
+            return ActionType(value.value)
+        except ValueError:
+            # Invalid action value -> treat as "no action selected"
+            return None
     if isinstance(value, str):
         try:
             return ActionType(value)

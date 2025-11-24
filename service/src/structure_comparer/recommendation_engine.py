@@ -1,12 +1,19 @@
 """Engine for computing recommendations for fields without manual actions."""
 
 import logging
-from typing import Callable, Dict, List, Mapping, Optional
+from typing import Callable, Dict, Mapping, Optional
 
 from .conflict_detector import ConflictDetector
-from .field_hierarchy import field_depth, get_direct_children, parent_name
+from .field_hierarchy import field_depth, parent_name
+from .field_hierarchy.field_hierarchy_analyzer import all_descendants_compatible_or_solved
 from .inheritance_engine import InheritanceEngine
-from .model.mapping_action_models import ActionInfo, ActionSource, ActionType
+from .mapping_evaluation_engine import evaluate_mapping
+from .model.mapping_action_models import (
+    ActionInfo,
+    ActionSource,
+    ActionType,
+    EvaluationResult,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -38,10 +45,13 @@ class RecommendationEngine:
         action_map = compute_mapping_actions(self.mapping, self.manual_map)
         self.conflict_detector = ConflictDetector(action_map)
         
+        # Compute evaluation map for use in recommendations
+        evaluation_map: Dict[str, EvaluationResult] = evaluate_mapping(self.mapping, action_map)
+        
         recommendations: Dict[str, list[ActionInfo]] = {}
 
-        # 1. Compatible field recommendations (USE action)
-        compatible_recs = self._compute_compatible_recommendations()
+        # 1. Compatible field recommendations (USE action and USE_RECURSIVE)
+        compatible_recs = self._compute_compatible_recommendations(evaluation_map)
         for field_name, recs in compatible_recs.items():
             recommendations[field_name] = recs
 
@@ -72,13 +82,24 @@ class RecommendationEngine:
 
         return recommendations
 
-    def _compute_compatible_recommendations(self) -> Dict[str, list[ActionInfo]]:
-        """Compute USE recommendations for compatible fields without manual actions.
+    def _compute_compatible_recommendations(
+        self, evaluation_map: Dict[str, EvaluationResult]
+    ) -> Dict[str, list[ActionInfo]]:
+        """Compute USE and USE_RECURSIVE recommendations for compatible fields.
         
-        Only creates recommendations if the USE action is allowed for the field.
+        For compatible fields without manual actions:
+        - Always recommend USE (if allowed by actions_allowed)
+        - Additionally recommend USE_RECURSIVE if all descendants are compatible or solved
+        
+        IMPORTANT: Recommendations are NOT filtered by actions_allowed.
+        The actions_allowed controls what users can manually set, but recommendations
+        are system suggestions based on evaluation.
+        
+        Args:
+            evaluation_map: Dictionary mapping field names to EvaluationResult
         
         Returns:
-            Dictionary mapping field names to USE recommendation lists
+            Dictionary mapping field names to recommendation lists
         """
         recommendations: Dict[str, list[ActionInfo]] = {}
 
@@ -102,7 +123,7 @@ class RecommendationEngine:
                     if ActionType.USE not in actions_allowed:
                         continue
                 
-                recommendations[field_name] = [
+                field_recommendations = [
                     ActionInfo(
                         action=ActionType.USE,
                         source=ActionSource.SYSTEM_DEFAULT,
@@ -110,6 +131,25 @@ class RecommendationEngine:
                         system_remark="Recommendation: Field is compatible, suggest using it directly",
                     )
                 ]
+                
+                # Check if USE_RECURSIVE should also be recommended
+                # Condition: All descendants must be compatible OR solved
+                if all_descendants_compatible_or_solved(
+                    field_name, self.fields, evaluation_map
+                ):
+                    field_recommendations.append(
+                        ActionInfo(
+                            action=ActionType.USE_RECURSIVE,
+                            source=ActionSource.SYSTEM_DEFAULT,
+                            auto_generated=True,
+                            system_remark=(
+                                "Field and all descendants are compatible or solved; "
+                                "you can safely use USE_RECURSIVE to keep the subtree."
+                            ),
+                        )
+                    )
+                
+                recommendations[field_name] = field_recommendations
 
         return recommendations
 
