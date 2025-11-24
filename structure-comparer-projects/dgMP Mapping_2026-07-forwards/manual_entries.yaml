@@ -5,4 +5,9 @@ entries:
     name: Medication.extension:normSizeCode.url
     other: Medication.extension:Normgroesse
     remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff
+    other: Medication.extension:isVaccine
+    remark: null
   id: e5c8dcf6-6071-8dce-3e52-9f012ab34c56
