@@ -8,6 +8,7 @@ from fhir.resources.R4B.elementdefinition import ElementDefinition
 from fhir.resources.R4B.structuredefinition import StructureDefinition
 from pydantic import ValidationError
 
+from ..fixed_value_extractor import FixedValueExtractor
 from ..model.profile import PackageProfile as PackageProfileModel
 from ..model.profile import Profile as ProfileModel
 from ..model.profile import ProfileField as ProfileFieldModel
@@ -246,10 +247,34 @@ class ProfileField:
     @property
     def pattern_coding_system(self) -> str | None:
         """Extrahiert das system aus patternCoding, falls vorhanden."""
-        pattern_coding = getattr(self.__data, "patternCoding", None)
-        if pattern_coding is None:
-            return None
-        return getattr(pattern_coding, "system", None)
+        return FixedValueExtractor.extract_pattern_coding_system(self.__data)
+    
+    @property
+    def fixed_value(self) -> Any | None:
+        """Extrahiert jeden fixed* Wert aus dem ElementDefinition.
+        
+        Returns:
+            Der fixed value (beliebiger Typ) wenn vorhanden, None sonst
+        """
+        return FixedValueExtractor.extract_fixed_value(self.__data)
+    
+    @property
+    def fixed_value_type(self) -> str | None:
+        """Gibt den Typ des fixed value zurück (z.B. 'fixedUri', 'fixedString').
+        
+        Returns:
+            Der Attributname des fixed value Typs wenn vorhanden, None sonst
+        """
+        return FixedValueExtractor.get_fixed_value_type(self.__data)
+    
+    @property
+    def has_fixed_or_pattern(self) -> bool:
+        """Prüft ob dieses Feld einen fixed oder pattern value hat.
+        
+        Returns:
+            True wenn fixed oder pattern value vorhanden ist
+        """
+        return FixedValueExtractor.has_fixed_or_pattern_value(self.__data)
     
     @property
     def is_default(self) -> bool:
