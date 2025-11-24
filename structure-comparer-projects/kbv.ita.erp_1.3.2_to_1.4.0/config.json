@@ -1,5 +1,7 @@
 {
     "name": "KBV Changes: kbv.ita.erp|1.3.2 -> kbv.ita.erp|1.4.0",
+    "version": "0.9",
+    "status": "draft",
     "comparisons": [],
     "mappings": [
         {

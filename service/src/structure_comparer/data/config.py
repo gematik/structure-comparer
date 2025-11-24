@@ -45,6 +45,8 @@ class MappingConfig(BaseModel):
 
 class ProjectConfig(BaseModel):
     name: str | None = None
+    version: str | None = None
+    status: str | None = None
     manual_entries_file: str = "manual_entries.yaml"
     data_dir: str = "data"
     html_output_dir: str = "docs"
