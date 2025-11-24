@@ -1,4 +1,4 @@
-from structure_comparer.serve import _build_evaluation_summary
+from structure_comparer.evaluation.status_aggregator import StatusAggregator
 from structure_comparer.model.mapping_action_models import (
     EvaluationReason,
     EvaluationResult,
@@ -35,10 +35,10 @@ def test_build_evaluation_summary_counts_mapping_actions_as_resolved():
         ),
     }
 
-    summary = _build_evaluation_summary(evaluations)
+    summary = StatusAggregator.build_status_summary(evaluations)
 
-    assert summary["total_fields"] == 2
-    assert summary["action_resolved"] == 1
-    assert summary["needs_attention"] == 1
+    assert summary["total"] == 2
+    assert summary["solved"] == 1
     assert summary["incompatible"] == 1
-    assert summary["warnings"] == 0
+    assert summary["warning"] == 0
+    assert summary["compatible"] == 0
