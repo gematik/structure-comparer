@@ -107,13 +107,12 @@ class StructureMapRuleBuilder:
             src_element = src_element[:-3]
 
         tgt_element = node.segment
-        parts = tgt_element.split(":")
-        if parts[0].endswith("[x]"):
-            parts[0] = parts[0][:-3]
-        if parts[0] in {"extension", "modifierExtension"} and len(parts) > 1:
-            tgt_element = parts[0]
-        else:
-            tgt_element = ":".join(parts)
+        parts = tgt_element.split(":", 1)
+        head = parts[0]
+        if head.endswith("[x]"):
+            head = head[:-3]
+
+        tgt_element = head
 
         if node.intent == "copy_to" and node.other_path:
             tgt_element = node.other_path.split(".")[-1]
@@ -458,8 +457,11 @@ class StructureMapRuleBuilder:
 
             field = self._mapping.fields.get(current_full_path)
             profile_field = self._profile_field_for_keys(field, profile_keys)
-            if chain_kind == "target" and profile_field is None:
-                return []
+            if chain_kind == "target":
+                if profile_field is None:
+                    return []
+                if not self._profile_field_supports(profile_field):
+                    return []
             if field and self._target_profile_key and chain_kind == "target":
                 target_field = field.profiles.get(self._target_profile_key)
                 if target_field:
@@ -501,13 +503,22 @@ class StructureMapRuleBuilder:
             if ":" in segment:
                 slice_name = segment.split(":", 1)[1]
 
+            if ":" in element_name:
+                head_part, tail_part = element_name.split(":", 1)
+                if tail_part.lower().startswith(head_part.lower()):
+                    element_name = tail_part
+
             element_name = self._normalize_element_name(
                 element_name,
                 base_name=base_name,
                 slice_supported=profile_field is not None,
             )
 
-            choice_base, choice_type = self._split_choice_suffix(element_name)
+            allow_choice_split = (":" in segment) or ("[x]" in segment)
+            choice_base, choice_type = self._split_choice_suffix(
+                element_name,
+                allow_split=allow_choice_split,
+            )
             if choice_base:
                 element_name = choice_base
                 base_name = element_name.split(":")[0]
@@ -570,6 +581,14 @@ class StructureMapRuleBuilder:
                 return profile_field
         return None
 
+    def _profile_field_supports(self, profile_field) -> bool:
+        if profile_field is None:
+            return False
+        max_num = getattr(profile_field, "max_num", None)
+        if max_num is None:
+            return True
+        return max_num != 0
+
     def _normalize_element_name(self, element: str, *, base_name: str, slice_supported: bool) -> str:
         if ":" not in element:
             return element
@@ -593,7 +612,9 @@ class StructureMapRuleBuilder:
 
         return head_clean
 
-    def _split_choice_suffix(self, element: str) -> tuple[str, str] | tuple[None, None]:
+    def _split_choice_suffix(self, element: str, *, allow_split: bool) -> tuple[str, str] | tuple[None, None]:
+        if not allow_split:
+            return None, None
         for suffix in CHOICE_TYPE_SUFFIXES:
             if element.endswith(suffix) and len(element) > len(suffix):
                 base = element[: -len(suffix)]

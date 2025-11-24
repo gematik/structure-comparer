@@ -117,6 +117,7 @@ def build_structuremap_dict(
     target_alias: str,
     ruleset_name: str,
     source_profiles: Sequence["Profile"] | None = None,
+    use_alias_for_input_type: bool = True,
 ) -> dict:
     builder = _StructureMapBuilder(
         mapping=mapping,
@@ -125,6 +126,7 @@ def build_structuremap_dict(
         target_alias=target_alias,
         ruleset_name=ruleset_name,
         source_profiles=source_profiles,
+        use_alias_for_input_type=use_alias_for_input_type,
     )
     return builder.build()
 
@@ -181,6 +183,7 @@ def build_structuremap_package(
             target_alias=target_alias,
             ruleset_name=child_ruleset,
             source_profiles=[profile],
+            use_alias_for_input_type=False,
         )
         artifacts.append(
             StructureMapArtifact(
@@ -198,6 +201,7 @@ def build_structuremap_package(
                 "profile": profile,
                 "ruleset_name": structure_map["name"],
                 "structure_map_url": structure_map.get("url"),
+                "source_input_type": structure_map["group"][0]["input"][0].get("type"),
             }
         )
 
@@ -233,6 +237,7 @@ class _StructureMapBuilder:
         target_alias: str,
         ruleset_name: str,
         source_profiles: Sequence["Profile"] | None = None,
+        use_alias_for_input_type: bool = True,
     ) -> None:
         self._mapping = mapping
         self._actions = actions
@@ -242,6 +247,7 @@ class _StructureMapBuilder:
         self._target_profile_key = mapping.target.key if mapping.target else None
         self._source_profiles = list(source_profiles) if source_profiles is not None else list(mapping.sources or [])
         self._source_profile_keys = [p.key for p in self._source_profiles]
+        self._use_alias_for_input_type = use_alias_for_input_type
 
         self._source_inputs = self._compute_source_inputs()
         self._target_input = self._compute_target_input()
@@ -343,7 +349,10 @@ class _StructureMapBuilder:
                 {
                     "alias": alias,
                     "profile": profile,
-                    "type": self._input_type_for_profile(profile, alias=alias),
+                    "type": self._input_type_for_profile(
+                        profile,
+                        alias=alias if self._use_alias_for_input_type else None,
+                    ),
                 }
             )
         if not inputs:
@@ -355,7 +364,10 @@ class _StructureMapBuilder:
         return {
             "alias": self._target_alias,
             "profile": profile,
-            "type": self._input_type_for_profile(profile, alias=self._target_alias),
+            "type": self._input_type_for_profile(
+                profile,
+                alias=self._target_alias if self._use_alias_for_input_type else None,
+            ),
         }
 
     def _input_type_for_profile(self, profile, *, alias: str | None = None) -> str:
@@ -407,8 +419,8 @@ def _build_router_structuremap(
     if target_structure_url:
         structure_entries.append({"url": target_structure_url, "mode": "target", "alias": target_alias})
 
-    source_input_type = shared_resource_type or "Resource"
-    target_input_type = getattr(target, "resource_type", None) or target_alias
+    source_input_type = source_alias or shared_resource_type or "Resource"
+    target_input_type = target_alias or getattr(target, "resource_type", None) or "Resource"
 
     group_rule = {
         "name": ruleset_name,
@@ -424,6 +436,7 @@ def _build_router_structuremap(
                 source_alias=source_alias,
                 target_alias=target_alias,
                 child_ruleset_name=ref["ruleset_name"],
+                source_input_type=ref.get("source_input_type"),
             )
             for ref in child_refs
         ],
@@ -446,28 +459,40 @@ def _build_router_structuremap(
     return router_map
 
 
-def _build_router_rule(*, profile: "Profile", source_alias: str, target_alias: str, child_ruleset_name: str) -> dict:
+def _build_router_rule(
+    *,
+    profile: "Profile",
+    source_alias: str,
+    target_alias: str,
+    child_ruleset_name: str,
+    source_input_type: str | None = None,
+) -> dict:
     profile_name = getattr(profile, "name", None) or profile.url
     condition = f"meta.profile.exists(p | p = '{profile.url}')"
     route_rule_name = normalize_ruleset_name(f"route_{profile_name}")
     invoke_rule_name = normalize_ruleset_name(f"call_{child_ruleset_name}")
+    typed_variable = slug(f"{source_alias}_{profile_name or 'source'}", suffix="Routed")
+    source_clause: dict[str, str] = {
+        "context": source_alias,
+        "condition": condition,
+    }
+    dependent_source_context = source_alias
+    if source_input_type:
+        source_clause["type"] = source_input_type
+        source_clause["variable"] = typed_variable
+        dependent_source_context = typed_variable
     return {
         "name": route_rule_name,
         "documentation": f"Routes resources constrained by {profile_name}",
-        "source": [
-            {
-                "context": source_alias,
-                "condition": condition,
-            }
-        ],
+        "source": [source_clause],
         "rule": [
             {
                 "name": invoke_rule_name,
-                "source": [{"context": source_alias}],
+                "source": [{"context": dependent_source_context}],
                 "dependent": [
                     {
                         "name": child_ruleset_name,
-                        "variable": [source_alias, target_alias],
+                        "variable": [dependent_source_context, target_alias],
                     }
                 ],
             }

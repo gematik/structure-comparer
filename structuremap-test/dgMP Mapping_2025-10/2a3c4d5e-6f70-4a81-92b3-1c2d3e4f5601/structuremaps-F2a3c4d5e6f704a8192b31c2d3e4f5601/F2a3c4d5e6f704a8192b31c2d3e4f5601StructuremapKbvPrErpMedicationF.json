@@ -27,12 +27,12 @@
       "input": [
         {
           "name": "KBVPRERPMedicationCompounding",
-          "type": "KBVPRERPMedicationCompounding",
+          "type": "Medication",
           "mode": "source"
         },
         {
           "name": "EPAMedication",
-          "type": "EPAMedication",
+          "type": "Medication",
           "mode": "target"
         }
       ],
@@ -63,7 +63,7 @@
                   "source": [
                     {
                       "context": "srcKBVPRERPMedicationCompoundingBatch76856f17",
-                      "element": "expiration",
+                      "element": "expirationDate",
                       "variable": "srcKBVPRERPMedicationCompoundingBatchExpirationdate376f43f9"
                     }
                   ],
@@ -71,7 +71,7 @@
                     {
                       "context": "tgtEPAMedicationBatch90ce2ac1",
                       "contextType": "variable",
-                      "element": "expiration",
+                      "element": "expirationDate",
                       "variable": "tgtEPAMedicationBatchExpirationdate85aee4ca",
                       "transform": "copy",
                       "parameter": [
@@ -90,7 +90,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationBatchIdb8d14759",
@@ -145,7 +145,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationBatchLotnumber690d6ea8",
@@ -200,7 +200,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationCodeCoding9b1e4117",
@@ -255,7 +255,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationCodeIdae69aeee",
@@ -310,7 +310,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationCodeText75c8453e",
@@ -365,44 +365,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
-        },
-        {
-          "name": "MedicationExtensionDrugcategorye963e601",
-          "documentation": "Copied from 'Medication.extension:Arzneimittelkategorie'",
-          "source": [
-            {
-              "context": "KBVPRERPMedicationCompounding",
-              "element": "extension",
-              "variable": "srcKBVPRERPMedicationCompoundingExtensionArzneimittelkatego82a24",
-              "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category' and url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category'"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "extension",
-              "variable": "tgtEPAMedicationExtensionDrugcategory059b5c6b",
-              "transform": "create",
-              "parameter": [
-                {
-                  "valueString": "Extension"
-                }
-              ]
-            },
-            {
-              "context": "tgtEPAMedicationExtensionDrugcategory059b5c6b",
-              "contextType": "variable",
-              "element": "url",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension"
-                }
-              ]
-            }
-          ]
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationExtensionIsvaccine98c25b06",
@@ -436,6 +399,32 @@
               "parameter": [
                 {
                   "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationExtensionIsvaccineIdb9468475",
+              "source": [
+                {
+                  "context": "srcKBVPRERPMedicationCompoundingExtensionImpfstoffb07a0850",
+                  "element": "id",
+                  "variable": "srcMedicationExtensionIsvaccineIdb9468475"
+                }
+              ],
+              "target": [
+                {
+                  "context": "tgtEPAMedicationExtensionIsvaccinea7742b5a",
+                  "contextType": "variable",
+                  "element": "id",
+                  "variable": "tgtMedicationExtensionIsvaccineIdb9468475",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "srcMedicationExtensionIsvaccineIdb9468475"
+                    }
+                  ]
                 }
               ]
             }
@@ -524,7 +513,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingEdqmDisplaya28b19fe",
@@ -609,7 +598,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingEdqmIdacadef7a",
@@ -694,7 +683,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingEdqmSystemd4f0f067",
@@ -778,7 +767,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Fixed value 'http://standardterms.edqm.eu' | Auto-detected from patternCoding.system in target profile"
+          "documentation": "Fixed value 'http://standardterms.edqm.eu' | Auto-detected fixed value from target profile"
         },
         {
           "name": "MedicationFormCodingEdqmUserselected68fcb4dc",
@@ -863,7 +852,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingEdqmVersionfa7a3cbe",
@@ -948,7 +937,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingKbvdarreichungsformCode174f9b5d",
@@ -1033,7 +1022,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingKbvdarreichungsformDisplay682d1abe",
@@ -1118,7 +1107,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingKbvdarreichungsformId5c3a5dfc",
@@ -1203,7 +1192,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingKbvdarreichungsformSystem24f022bc",
@@ -1287,7 +1276,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Fixed value 'https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM' | Auto-detected from patternCoding.system in target profile"
+          "documentation": "Fixed value 'https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM' | Auto-detected fixed value from target profile"
         },
         {
           "name": "MedicationFormCodingKbvdarreichungsformUserselectedde379a25",
@@ -1372,7 +1361,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingKbvdarreichungsformVersion5c1a3f46",
@@ -1457,7 +1446,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingSnomedCode51fd4f1d",
@@ -1542,7 +1531,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingSnomedDisplay17c0c5c0",
@@ -1627,7 +1616,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingSnomedId4fcf3578",
@@ -1712,7 +1701,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingSnomedSystem14c3392a",
@@ -1796,7 +1785,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Fixed value 'http://snomed.info/sct' | Auto-detected from patternCoding.system in target profile"
+          "documentation": "Fixed value 'http://snomed.info/sct' | Auto-detected fixed value from target profile"
         },
         {
           "name": "MedicationFormCodingSnomedUserselectede6846c06",
@@ -1881,7 +1870,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormCodingSnomedVersionf2c08b93",
@@ -1966,7 +1955,62 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
+        },
+        {
+          "name": "MedicationFormExtension4520fac8",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "form",
+              "variable": "tgtEPAMedicationForm691ed321",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationFormExtension4520fac8",
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding",
+                  "element": "form",
+                  "variable": "srcKBVPRERPMedicationCompoundingFormc5146e0b"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "MedicationFormExtension4520fac8",
+                  "source": [
+                    {
+                      "context": "srcKBVPRERPMedicationCompoundingFormc5146e0b",
+                      "element": "extension",
+                      "variable": "srcKBVPRERPMedicationCompoundingFormExtensionbb014f54"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationForm691ed321",
+                      "contextType": "variable",
+                      "element": "extension",
+                      "variable": "tgtEPAMedicationFormExtension03f15678",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcKBVPRERPMedicationCompoundingFormExtensionbb014f54"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
+            }
+          ],
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormId893b4834",
@@ -2021,7 +2065,7 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationFormTexta60d9090",
@@ -2076,11 +2120,11 @@
               "context": "KBVPRERPMedicationCompounding"
             }
           ],
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)"
+          "documentation": "Automatic copy"
         },
         {
           "name": "MedicationId034aa67d",
-          "documentation": "Automatic copy | Default recommendation: USE (not yet applied)",
+          "documentation": "Automatic copy",
           "source": [
             {
               "context": "KBVPRERPMedicationCompounding",

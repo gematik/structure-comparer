@@ -1,0 +1,18 @@
+{
+  "packageVersion": 1,
+  "generatedAt": "2025-11-24T14:24:23.395264+00:00",
+  "mappingId": "0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72",
+  "projectKey": "dgMP Mapping_2025-10",
+  "rulesetName": "0c2a1b59_6c5f_4e9b_9f22_1a3d4b5c6e72_structuremap",
+  "packageRoot": "structuremaps-F0c2a1b596c5f4e9b9f221a3d4b5c6e72",
+  "artifacts": [
+    {
+      "name": "F0c2a1b596c5f4e9b9f221a3d4b5c6e72Structuremap",
+      "filename": "F0c2a1b596c5f4e9b9f221a3d4b5c6e72Structuremap.json",
+      "kind": "mapping",
+      "structureMapUrl": "https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory/StructureMap/F0c2a1b596c5f4e9b9f221a3d4b5c6e72Structuremap",
+      "sourceProfileUrl": "https://fhir.kbv.de/StructureDefinition/KBV_PR_FOR_Organization",
+      "sourceProfileName": "KBV_PR_FOR_Organization"
+    }
+  ]
+}
