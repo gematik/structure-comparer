@@ -81,7 +81,8 @@ class ActionInfo(BaseModel):
     auto_generated: bool = False
 
     user_remark: Optional[str] = None
-    system_remark: Optional[str] = None
+    system_remark: Optional[str] = None  # Deprecated: Use system_remarks instead
+    system_remarks: Optional[list[str]] = None  # Multiple system remarks for detailed information
 
     fixed_value: Optional[Any] = None
     other_value: Optional[Any] = None

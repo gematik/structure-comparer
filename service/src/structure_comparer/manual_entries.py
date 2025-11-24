@@ -59,14 +59,6 @@ class ManualEntries:
         if self._data is None:
             raise NotInitialized("ManualEntries data was not initialized")
 
-        logger.debug(f"write() called for file: {self._file}")
-        logger.debug(f"Number of entries before filtering: {len(self._data.entries)}")
-        for i, entry in enumerate(self._data.entries):
-            logger.debug(
-                f"  Entry {i}: id={entry.id}, "
-                f"num_fields={len(entry.fields)}"
-            )
-
         # Drop auto-generated child entries – only persist manual decisions.
         for entry in self._data.entries:
             filtered_fields = []
@@ -79,13 +71,6 @@ class ManualEntries:
                 filtered_fields.append(field.__class__.model_validate(field_payload))
             entry.fields = filtered_fields
 
-        logger.debug(f"Number of entries after filtering: {len(self._data.entries)}")
-        for i, entry in enumerate(self._data.entries):
-            logger.debug(
-                f"  Entry {i} after filter: id={entry.id}, "
-                f"num_fields={len(entry.fields)}"
-            )
-
         content = None
         if self._file.suffix == ".json":
             content = self._data.model_dump_json(indent=4)
@@ -93,10 +78,7 @@ class ManualEntries:
             content = yaml.safe_dump(self._data.model_dump())
 
         if content is not None:
-            logger.debug(f"Writing content to {self._file}")
-            logger.debug(f"Content preview: {content[:500]}")
             self._file.write_text(content, encoding="utf-8")
-            logger.debug("Write completed successfully")
 
     def __iter__(self):
         return iter(self.entries)

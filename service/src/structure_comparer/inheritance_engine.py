@@ -1,9 +1,12 @@
 """Engine for computing inherited actions and recommendations for copy_from/copy_to."""
 
+import logging
 from typing import Dict, Optional
 
 from .field_utils import child_suffix, is_polymorphic_type_choice
 from .model.mapping_action_models import ActionInfo, ActionSource, ActionType
+
+logger = logging.getLogger(__name__)
 
 
 class InheritanceEngine:
@@ -22,7 +25,7 @@ class InheritanceEngine:
         field_name: str,
         parent_field_name: str,
         parent_other_value: str,
-    ) -> Optional[str]:
+    ) -> Optional[tuple[str, bool]]:
         """Calculate the inherited other_value for a child field.
         
         When a parent field has a copy_from/copy_to action with an other_value,
@@ -32,40 +35,109 @@ class InheritanceEngine:
         - Parent: "Medication.extension:A" -> "Medication.extension:B"
         - Child: "Medication.extension:A.url" -> "Medication.extension:B.url"
         
+        For sliced fields without explicit children, falls back to the base type:
+        - Parent: "Practitioner.identifier:ANR" -> "Practitioner.identifier:LANR"
+        - Child: "Practitioner.identifier:ANR.id" -> "Practitioner.identifier:LANR.id"
+          (if LANR.id doesn't exist, try Practitioner.identifier.id as fallback)
+        
         Args:
             field_name: The child field name
             parent_field_name: The parent field name
             parent_other_value: The parent's other_value
             
         Returns:
-            The calculated other_value for the child field, or None if invalid
+            A tuple of (other_value, is_implicit_slice) where:
+            - other_value: The calculated other_value for the child field
+            - is_implicit_slice: True if target field is not explicitly defined but
+              structurally valid (inherits from base type), False otherwise
+            Returns None if the target is invalid
         """
         if not parent_other_value:
+            logger.debug(f"    No parent_other_value for {field_name}")
             return None
 
         # Extract the child suffix (e.g., ".system" or ".code")
         suffix = child_suffix(field_name, parent_field_name)
+        logger.debug(f"    Child suffix for {field_name}: '{suffix}'")
 
         # Don't inherit for polymorphic type choices (e.g., :valueBoolean)
         # These are concrete type implementations, not structural children
         if is_polymorphic_type_choice(suffix):
+            logger.debug(f"    Skipping polymorphic type choice: {suffix}")
             return None
 
         # Append the same suffix to the parent's other_value
         candidate_other_value = parent_other_value + suffix
+        logger.debug(f"    Candidate target: {candidate_other_value}")
 
         # Validate that the target field actually exists
         target_exists = candidate_other_value in self.all_fields
+        is_implicit_slice = False  # Track if target is implicitly valid but not explicitly defined
 
         # Handle polymorphic value[x] fields specially
         if not target_exists and ".value[x]" in parent_other_value:
+            logger.debug("    Trying polymorphic value[x] handling...")
             candidate_other_value = self._handle_polymorphic_value_field(
                 parent_other_value, suffix
             )
             if candidate_other_value:
                 target_exists = True
+                logger.debug(f"    Found polymorphic alternative: {candidate_other_value}")
 
-        return candidate_other_value if target_exists else None
+        # Fallback for sliced fields
+        if not target_exists and ":" in parent_other_value:
+            logger.debug("    Target not found, checking sliced field fallback...")
+            
+            # Check if parent is also a sliced field
+            parent_is_sliced = ":" in parent_field_name
+            
+            if parent_is_sliced:
+                # Both parent and target are slices of the same base type
+                # Check if the parent slice itself exists and has this child
+                if parent_field_name in self.all_fields and field_name in self.all_fields:
+                    # The source field exists, so the target should be structurally compatible
+                    # even if not explicitly defined (FHIR slices inherit from base type)
+                    logger.debug("    Source slice has this child, accepting target slice")
+                    target_exists = True
+                    is_implicit_slice = True  # Mark as implicit since target slice child doesn't exist explicitly
+            
+            # If still not found, try base field fallback
+            if not target_exists:
+                logger.debug("    Trying base field fallback...")
+                base_other_value = self._get_base_field_name(parent_other_value)
+                if base_other_value:
+                    fallback_candidate = base_other_value + suffix
+                    logger.debug(f"    Fallback candidate: {fallback_candidate}")
+                    if fallback_candidate in self.all_fields:
+                        # The base field exists, so we can use the sliced target
+                        logger.debug("    Base field exists, using original target")
+                        target_exists = True
+                        is_implicit_slice = True  # Mark as implicit
+
+        logger.debug(f"    Target exists: {target_exists}")
+        return (candidate_other_value, is_implicit_slice) if target_exists else None
+
+    def _get_base_field_name(self, sliced_field_name: str) -> Optional[str]:
+        """Get the base field name without slice suffix.
+        
+        For example:
+        - "Practitioner.identifier:LANR" -> "Practitioner.identifier"
+        - "Medication.extension:A" -> "Medication.extension"
+        
+        Args:
+            sliced_field_name: Field name potentially containing a slice (colon)
+            
+        Returns:
+            Base field name without slice, or None if not a sliced field
+        """
+        if ":" not in sliced_field_name:
+            return None
+        
+        # Find the last colon (slice marker)
+        last_colon = sliced_field_name.rfind(":")
+        base_name = sliced_field_name[:last_colon]
+        
+        return base_name
 
     def _handle_polymorphic_value_field(
         self, parent_other_value: str, suffix: str
@@ -152,17 +224,28 @@ class InheritanceEngine:
             return None
 
         # Calculate the inherited other_value
-        inherited_other_value = self.calculate_inherited_other_value(
+        result = self.calculate_inherited_other_value(
             field_name, parent_field_name, parent_action.other_value
         )
 
-        if not inherited_other_value:
+        if not result:
             return None
+
+        inherited_other_value, is_implicit_slice = result
+
+        # Create appropriate remarks based on whether target is implicitly valid
+        if is_implicit_slice:
+            remarks = [
+                f"Inherited from {parent_field_name}.",
+                "Target field not explicitly defined in profile but structurally valid (inherits from base type)."
+            ]
+        else:
+            remarks = [f"Inherited recommendation from {parent_field_name}"]
 
         return ActionInfo(
             action=parent_action.action,
             source=ActionSource.SYSTEM_DEFAULT,
             auto_generated=True,
-            system_remark=f"Inherited recommendation from {parent_field_name}",
+            system_remarks=remarks,
             other_value=inherited_other_value,
         )
