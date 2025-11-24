@@ -227,6 +227,12 @@ class ProfileField:
         return (
             ("." + self.path_full.split(".", 1)[1]) if "." in self.path_full else None
         )
+    
+    def _get_parent_path(self) -> str | None:
+        """Get the parent path of this field."""
+        if self.path is None or "." not in self.path:
+            return None
+        return self.path.rsplit(".", 1)[0]
 
     @property
     def min(self) -> int:
@@ -310,10 +316,34 @@ class ProfileField:
         except Exception:
             return False
 
-    def to_model(self) -> ProfileFieldModel:
+    def to_model(self, all_fields: Dict[str, "ProfileField"] | None = None) -> ProfileFieldModel:
+        """Convert to ProfileFieldModel.
+        
+        Args:
+            all_fields: Optional dictionary of all fields in the profile to check parent cardinality
+            
+        Returns:
+            ProfileFieldModel with cardinality info and optional inherited note
+        """
+        cardinality_note = None
+        min_val = self.min
+        max_val = self.max
+        
+        # Check if parent has 0..0 cardinality
+        if all_fields is not None:
+            parent_path = self._get_parent_path()
+            if parent_path:
+                parent_field = all_fields.get(parent_path)
+                if parent_field and parent_field.min == 0 and parent_field.max == "0":
+                    # Inherit 0..0 from parent
+                    min_val = 0
+                    max_val = "0"
+                    cardinality_note = f"inherited from {parent_path}"
+        
         return ProfileFieldModel(
-            min=self.min,
-            max=self.max,
+            min=min_val,
+            max=max_val,
             must_support=self.must_support,
             ref_types=self.ref_types if len(self.ref_types) else None,
+            cardinality_note=cardinality_note,
         )

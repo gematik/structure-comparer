@@ -97,7 +97,13 @@ class MappingField(ComparisonField):
         self.fixed = info.fixed_value if isinstance(info.fixed_value, str) else None
 
     def to_model(self) -> MappingFieldModel:
-        profiles = {k: p.to_model() for k, p in self.profiles.items() if p}
+        profiles = {}
+        for k, p in self.profiles.items():
+            if p is not None:
+                # Get the Profile object for this profile key
+                profile_obj = self._profile_objects.get(k)
+                all_fields = profile_obj.fields if profile_obj else None
+                profiles[k] = p.to_model(all_fields)
 
         # Calculate show_mapping_content based on processing status logic
         # If the field has needs_action status (incompatible + use action), hide mapping content
