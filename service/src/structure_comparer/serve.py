@@ -76,6 +76,13 @@ from .fshMappingGenerator.fsh_mapping_main import (
   build_structuremap_package,
   default_package_root,
 )
+from .utils.structuremap_helpers import (
+  sanitize_folder_name,
+  get_safe_mapping_folder_name,
+  get_safe_mapping_filename,
+  get_safe_project_filename,
+  alias_from_profile,
+)
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -83,14 +90,6 @@ package_handler: PackageHandler
 comparison_handler: ComparisonHandler
 mapping_handler: MappingHandler
 cur_proj: str
-
-
-def _alias_from_profile(profile, fallback: str) -> str:
-  text = getattr(profile, "name", None)
-  if not text:
-    text = getattr(profile, "id", None) or getattr(profile, "url", None) or ""
-  cleaned = "".join(ch for ch in text if ch.isalnum())
-  return cleaned or fallback
 
 
 @asynccontextmanager
@@ -934,8 +933,8 @@ async def download_structuremap(
         actions = mapping.get_action_info_map()
 
         primary_source = mapping.sources[0] if mapping.sources else None
-        source_alias = _alias_from_profile(primary_source, "source")
-        target_alias = _alias_from_profile(mapping.target, "target")
+        source_alias = alias_from_profile(primary_source, "source")
+        target_alias = alias_from_profile(mapping.target, "target")
 
         # Create a ruleset name from mapping ID
         ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
@@ -958,13 +957,17 @@ async def download_structuremap(
 
         buffer = io.BytesIO()
         with ZipFile(buffer, mode="w", compression=ZIP_DEFLATED) as zf:
-          manifest_path = f"{package_root}/manifest.json"
+          # Write files directly without the package_root subfolder
+          manifest_path = "manifest.json"
           zf.writestr(manifest_path, json.dumps(manifest, indent=2, ensure_ascii=False))
           for artifact in package.artifacts:
-            zf.writestr(f"{package_root}/{artifact.filename}", artifact.content)
+            zf.writestr(artifact.filename, artifact.content)
 
         buffer.seek(0)
-        filename = f"{mapping_id}_structuremaps.zip"
+        
+        # Create human-readable filename from mapping name and version
+        filename = get_safe_mapping_filename(mapping, mapping_id)
+        
         headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
         return Response(content=buffer.read(), media_type="application/zip", headers=headers)
         
@@ -975,6 +978,106 @@ async def download_structuremap(
         logging.exception(f"Error generating StructureMap export: {str(e)}")
         response.status_code = 500
         return ErrorModel(error=f"StructureMap export failed: {str(e)}")
+
+
+@app.get(
+    "/project/{project_key}/structuremaps",
+    tags=["Projects", "StructureMap Export"],
+    responses={404: {"model": ErrorModel}},
+)
+async def download_project_structuremaps(
+    project_key: str,
+    response: Response,
+):
+    """
+    Download all FHIR StructureMaps for all mappings in a project.
+    
+    Returns a ZIP file containing StructureMap packages for each mapping.
+    Each mapping's StructureMaps are organized in a separate folder.
+    
+    Args:
+        project_key: The project identifier
+        
+    Returns:
+        ZIP file containing all StructureMap packages with Content-Disposition header for download
+        
+    Raises:
+        404: Project not found
+    """
+    
+    global mapping_handler
+    try:
+        # Get the project
+        project = mapping_handler.project_handler._get(project_key)
+        
+        # Create master ZIP buffer
+        master_buffer = io.BytesIO()
+        
+        with ZipFile(master_buffer, mode="w", compression=ZIP_DEFLATED) as master_zip:
+            # Iterate through all mappings in the project
+            for mapping_id in project.mappings.keys():
+                try:
+                    # Get the mapping with actions
+                    mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
+                    
+                    # Get actions
+                    actions = mapping.get_action_info_map()
+
+                    primary_source = mapping.sources[0] if mapping.sources else None
+                    source_alias = alias_from_profile(primary_source, "source")
+                    target_alias = alias_from_profile(mapping.target, "target")
+
+                    # Create a ruleset name from mapping ID
+                    ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
+
+                    package = build_structuremap_package(
+                      mapping=mapping,
+                      actions=actions,
+                      source_alias=source_alias,
+                      target_alias=target_alias,
+                      ruleset_name=ruleset_name,
+                    )
+
+                    package_root = default_package_root(mapping_id)
+                    manifest = package.manifest(
+                      mapping_id=mapping_id,
+                      project_key=project_key,
+                      ruleset_name=ruleset_name,
+                      package_root=package_root,
+                    )
+
+                    # Create a safe folder name from the mapping name
+                    folder_name = get_safe_mapping_folder_name(mapping, mapping_id)
+
+                    # Add manifest to master ZIP (directly in folder_name, without package_root subfolder)
+                    manifest_path = f"{folder_name}/manifest.json"
+                    master_zip.writestr(manifest_path, json.dumps(manifest, indent=2, ensure_ascii=False))
+                    
+                    # Add all artifacts to master ZIP (directly in folder_name)
+                    for artifact in package.artifacts:
+                        artifact_path = f"{folder_name}/{artifact.filename}"
+                        master_zip.writestr(artifact_path, artifact.content)
+                        
+                except Exception as e:
+                    logging.warning(f"Failed to generate StructureMap for mapping {mapping_id}: {str(e)}")
+                    # Continue with next mapping even if one fails
+                    continue
+
+        master_buffer.seek(0)
+        
+        # Create human-readable filename from project name
+        filename = get_safe_project_filename(project, project_key)
+        
+        headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
+        return Response(content=master_buffer.read(), media_type="application/zip", headers=headers)
+        
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except Exception as e:
+        logging.exception(f"Error generating project StructureMap export: {str(e)}")
+        response.status_code = 500
+        return ErrorModel(error=f"Project StructureMap export failed: {str(e)}")
 
 
 @app.get(
