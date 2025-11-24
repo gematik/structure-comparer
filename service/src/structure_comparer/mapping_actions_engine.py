@@ -9,12 +9,16 @@ from __future__ import annotations
 
 from typing import Any, Dict, Mapping, Optional
 
+from .action import Action
 from .field_hierarchy import field_depth, parent_name
+from .field_hierarchy.field_hierarchy_analyzer import all_descendants_compatible_or_solved
+from .field_hierarchy.field_navigator import FieldHierarchyNavigator
 from .fixed_value_extractor import FixedValueExtractor
 from .model.mapping_action_models import (
     ActionInfo,
     ActionSource,
     ActionType,
+    EvaluationResult,
 )
 from .recommendation_engine import RecommendationEngine
 
@@ -389,4 +393,52 @@ def _get_fixed_value_from_field(
             return pattern_system
     
     return None
+
+
+def adjust_use_recursive_actions_allowed(
+    mapping, evaluation_map: Dict[str, EvaluationResult]
+) -> None:
+    """Adjust actions_allowed for all fields regarding use_recursive.
+    
+    This function applies evaluation-aware logic to determine whether
+    use_recursive should be in actions_allowed:
+    - use_recursive is allowed when the field has descendants AND
+      all descendants are either compatible or solved.
+    - Otherwise, use_recursive is removed from actions_allowed.
+    
+    This is a second pass after the baseline actions_allowed has been set
+    by fill_allowed_actions(), enriching it with knowledge from evaluation.
+    
+    Args:
+        mapping: The mapping object with fields
+        evaluation_map: Dictionary mapping field names to EvaluationResult
+    """
+    fields = getattr(mapping, "fields", {})
+    if not fields:
+        return
+    
+    navigator = FieldHierarchyNavigator(fields)
+    
+    for field_name, field in fields.items():
+        # Check if field has descendants
+        descendants = navigator.get_all_descendants(field_name)
+        
+        if not descendants:
+            # Leaf field: remove use_recursive if present
+            if Action.USE_RECURSIVE in field.actions_allowed:
+                field.actions_allowed.remove(Action.USE_RECURSIVE)
+        else:
+            # Field has descendants: check if all are compatible or solved
+            all_ok = all_descendants_compatible_or_solved(
+                field_name, fields, evaluation_map
+            )
+            
+            if all_ok:
+                # Ensure use_recursive is in actions_allowed (if not already)
+                if Action.USE_RECURSIVE not in field.actions_allowed:
+                    field.actions_allowed.append(Action.USE_RECURSIVE)
+            else:
+                # Not all descendants are compatible/solved: remove use_recursive
+                if Action.USE_RECURSIVE in field.actions_allowed:
+                    field.actions_allowed.remove(Action.USE_RECURSIVE)
 

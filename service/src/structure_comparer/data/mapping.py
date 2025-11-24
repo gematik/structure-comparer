@@ -54,6 +54,11 @@ class MappingField(ComparisonField):
         return self.name.rsplit(".", 1)[0]
 
     def fill_allowed_actions(self, source_profiles: List[str], target_profile: str):
+        """Set baseline actions_allowed based on source/target presence.
+        
+        Note: use_recursive filtering based on descendants is handled separately
+        by adjust_use_recursive_actions_allowed() after evaluation is computed.
+        """
         allowed = set([c for c in Action])
 
         any_source_present = any(
@@ -170,6 +175,10 @@ class Mapping(Comparison):
         evaluation_map = propagator.propagate_incompatible_to_parents()
         
         self._evaluation_map = evaluation_map
+        
+        # Adjust use_recursive in actions_allowed based on evaluation results
+        from ..mapping_actions_engine import adjust_use_recursive_actions_allowed
+        adjust_use_recursive_actions_allowed(self, evaluation_map)
 
         for field_name, field in self.fields.items():
             info = action_info_map.get(field_name)
