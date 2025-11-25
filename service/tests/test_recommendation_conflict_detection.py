@@ -23,9 +23,12 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         target = Mock()
         target.key = "target-profile|1.0.0"
         mapping.target = target
+        mapping.sources = []  # Add sources to avoid TypeError
+        mapping.sources = []  # Add sources to avoid TypeError
         
         # Parent field with copy_to action (manual entry)
         parent_source = Mock()
+        parent_source.types = []  # Add types for compatibility check
         parent_source.name = "Medication.extension:Impfstoff"
         parent_source.classification = "compatible"
         parent_source.actions_allowed = []
@@ -35,9 +38,11 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         # Child source field (where recommendation would appear)
         child_source = Mock()
+        child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Medication.extension:Impfstoff.url"
         child_source.classification = "compatible"
         child_source.actions_allowed = [ActionType.COPY_TO, ActionType.USE, ActionType.NOT_USE]
+        child_source.types = ["uri"]  # Add types for compatibility check
         
         child_source_target = Mock()
         child_source_target.fixed_value = None  # Source field has no fixed value
@@ -46,6 +51,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         # Child target field (has FIXED value from system)
         child_target = Mock()
+        child_target.types = ["uri"]  # Add types for compatibility check
         child_target.name = "Medication.extension:isVaccine.url"
         child_target.classification = "compatible"
         child_target.actions_allowed = []
@@ -61,6 +67,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         # Add parent target field (must exist for inheritance to work)
         parent_target_field = Mock()
+        parent_target_field.types = []  # Add types for compatibility check
         parent_target_field.name = "Medication.extension:isVaccine"
         parent_target_field.classification = "compatible"
         parent_target_field.actions_allowed = []
@@ -124,9 +131,11 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         target = Mock()
         target.key = "target-profile|1.0.0"
         mapping.target = target
+        mapping.sources = []  # Add sources to avoid TypeError
         
         # Parent with copy_to
         parent_source = Mock()
+        parent_source.types = []  # Add types for compatibility check
         parent_source.name = "Extension.valueString"
         parent_source.classification = "compatible"
         parent_source.actions_allowed = []
@@ -134,6 +143,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         # Child source
         child_source = Mock()
+        child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Extension.valueString.id"
         child_source.classification = "compatible"
         child_source.actions_allowed = [ActionType.COPY_TO]
@@ -141,6 +151,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         # Child target (NO action)
         child_target = Mock()
+        child_target.types = ["uri"]  # Add types for compatibility check
         child_target.name = "Extension.valueBoolean.id"
         child_target.classification = "compatible"
         child_target.actions_allowed = []
@@ -182,20 +193,24 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         target = Mock()
         target.key = "target-profile|1.0.0"
         mapping.target = target
+        mapping.sources = []  # Add sources to avoid TypeError
         
         parent_source = Mock()
+        parent_source.types = []  # Add types for compatibility check
         parent_source.name = "Medication.code"
         parent_source.classification = "compatible"
         parent_source.actions_allowed = []
         parent_source.profiles = {"target-profile|1.0.0": Mock()}
         
         child_source = Mock()
+        child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Medication.code.coding"
         child_source.classification = "compatible"
         child_source.actions_allowed = [ActionType.COPY_TO]
         child_source.profiles = {"target-profile|1.0.0": Mock()}
         
         child_target = Mock()
+        child_target.types = ["uri"]  # Add types for compatibility check
         child_target.name = "Medication.ingredient.itemCodeableConcept"
         child_target.classification = "compatible"
         child_target.actions_allowed = []
@@ -244,14 +259,17 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         target = Mock()
         target.key = "target-profile|1.0.0"
         mapping.target = target
+        mapping.sources = []  # Add sources to avoid TypeError
         
         parent_source = Mock()
+        parent_source.types = []  # Add types for compatibility check
         parent_source.name = "Medication.extension:A"
         parent_source.classification = "compatible"
         parent_source.actions_allowed = []
         parent_source.profiles = {"target-profile|1.0.0": Mock()}
         
         child_source = Mock()
+        child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Medication.extension:A.url"
         child_source.classification = "compatible"
         child_source.actions_allowed = [ActionType.COPY_FROM]
@@ -259,6 +277,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         # Other field (copy source) has FIXED value
         other_field = Mock()
+        other_field.types = ["uri"]  # Add types for compatibility check
         other_field.name = "Medication.extension:B.url"
         other_field.classification = "compatible"
         other_field.actions_allowed = []
@@ -304,9 +323,11 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         target = Mock()
         target.key = "target-profile|1.0.0"
         mapping.target = target
+        mapping.sources = []  # Add sources to avoid TypeError
         
         # Parent with copy_to (manual)
         parent_source = Mock()
+        parent_source.types = []  # Add types for compatibility check
         parent_source.name = "Medication.extension:Impfstoff"
         parent_source.classification = "compatible"
         parent_source.actions_allowed = []
@@ -325,6 +346,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         # Child source (no fixed value)
         child_source = Mock()
+        child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Medication.extension:Impfstoff.url"
         child_source.classification = "compatible"
         child_source.actions_allowed = [ActionType.COPY_TO, ActionType.USE, ActionType.NOT_USE]
@@ -336,6 +358,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         # Child target (HAS fixed value -> will get FIXED action)
         child_target = Mock()
+        child_target.types = ["uri"]  # Add types for compatibility check
         child_target.name = "Medication.extension:isVaccine.url"
         child_target.classification = "compatible"
         child_target.actions_allowed = []
