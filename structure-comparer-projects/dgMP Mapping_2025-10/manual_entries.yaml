@@ -240,6 +240,51 @@ entries:
     name: Medication.identifier:RxOriginatorProcessIdentifier
     other: null
     remark: Wird vom MedicationService gesetzt
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].system
+    other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.system
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.versionId
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.identifier
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine.id
+    other: Medication.extension:Impfstoff.id
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine
+    other: Medication.extension:Impfstoff
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.display
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.userSelected
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.version
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
   id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
 - fields:
   - action: copy_to
