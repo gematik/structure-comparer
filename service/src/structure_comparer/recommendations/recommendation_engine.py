@@ -67,7 +67,10 @@ class RecommendationEngine:
         self._merge_recommendations(recommendations, use_recursive_recs)
 
         # 4. USE/NOT_USE recommendations (greedy for all children)
-        use_not_use_recommender = UseNotUseRecommender(self.mapping, self.fields, self.manual_map)
+        # Pass copy_recommender to enable NOT_USE for type-incompatible fields
+        use_not_use_recommender = UseNotUseRecommender(
+            self.mapping, self.fields, self.manual_map, copy_recommender
+        )
         use_not_use_recs = use_not_use_recommender.compute_recommendations()
         self._merge_recommendations(recommendations, use_not_use_recs)
 
