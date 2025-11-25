@@ -251,6 +251,19 @@ class ProfileField:
         return self.__data.mustSupport if self.__data.mustSupport else False
 
     @property
+    def types(self) -> list[str]:
+        """Gibt die in den Element-Typen definierten code-Werte zurück."""
+        type_codes: list[str] = []
+        types = getattr(self.__data, "type", None) or []
+
+        for t in types:
+            code = getattr(t, "code", None)
+            if code and code not in type_codes:
+                type_codes.append(code)
+
+        return type_codes
+    
+    @property
     def ref_types(self) -> list[str]:
         """Gibt die in den Element-Typen erlaubten targetProfile (References) zurück."""
         refs: list[str] = []
@@ -344,6 +357,7 @@ class ProfileField:
             min=min_val,
             max=max_val,
             must_support=self.must_support,
+            types=self.types if len(self.types) else None,
             ref_types=self.ref_types if len(self.ref_types) else None,
             cardinality_note=cardinality_note,
         )
