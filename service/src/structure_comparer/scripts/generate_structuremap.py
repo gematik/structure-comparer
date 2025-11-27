@@ -11,7 +11,6 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 from structure_comparer.fshMappingGenerator.fsh_mapping_main import (
     build_structuremap_package,
-    default_package_root,
 )
 from structure_comparer.handler.mapping import MappingHandler
 from structure_comparer.handler.project import ProjectsHandler
@@ -77,18 +76,17 @@ def main() -> None:
     )
 
     if args.output:
-        package_root = default_package_root(mapping.id)
         manifest = package.manifest(
             mapping_id=mapping.id,
             project_key=args.project_key,
             ruleset_name=ruleset_name,
-            package_root=package_root,
+            package_root=".",
         )
         args.output.parent.mkdir(parents=True, exist_ok=True)
         with ZipFile(args.output, mode="w", compression=ZIP_DEFLATED) as zf:
-            zf.writestr(f"{package_root}/manifest.json", json.dumps(manifest, indent=2, ensure_ascii=False))
+            zf.writestr("manifest.json", json.dumps(manifest, indent=2, ensure_ascii=False))
             for artifact in package.artifacts:
-                zf.writestr(f"{package_root}/{artifact.filename}", artifact.content)
+                zf.writestr(artifact.filename, artifact.content)
         print(f"StructureMap package written to {args.output}")
         return
 

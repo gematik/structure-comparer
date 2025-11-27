@@ -27,7 +27,6 @@ if TYPE_CHECKING:  # pragma: no cover - only used for type checking
 
 
 STRUCTUREMAP_PACKAGE_VERSION = 1
-STRUCTUREMAP_PACKAGE_ROOT_PREFIX = "structuremaps"
 
 
 @dataclass(frozen=True)
@@ -39,8 +38,28 @@ class StructureMapArtifact:
     content: str
     kind: Literal["router", "mapping"]
     structure_map_url: str | None
+    mapping_id: str
+    mapping_name: str | None
+    ruleset_name: str
     source_profile_url: str | None = None
     source_profile_name: str | None = None
+    target_profile_url: str | None = None
+    target_profile_name: str | None = None
+
+    def manifest_entry(self, *, filename: str | None = None) -> dict:
+        return {
+            "name": self.name,
+            "filename": filename or self.filename,
+            "kind": self.kind,
+            "structureMapUrl": self.structure_map_url,
+            "mappingId": self.mapping_id,
+            "mappingName": self.mapping_name,
+            "rulesetName": self.ruleset_name,
+            "sourceProfileUrl": self.source_profile_url,
+            "sourceProfileName": self.source_profile_name,
+            "targetProfileUrl": self.target_profile_url,
+            "targetProfileName": self.target_profile_name,
+        }
 
 
 @dataclass(frozen=True)
@@ -55,7 +74,7 @@ class StructureMapPackage:
         mapping_id: str,
         project_key: str | None,
         ruleset_name: str,
-        package_root: str,
+        package_root: str | None = None,
     ) -> dict:
         generated_at = datetime.now(timezone.utc).isoformat()
         return {
@@ -64,26 +83,45 @@ class StructureMapPackage:
             "mappingId": mapping_id,
             "projectKey": project_key,
             "rulesetName": ruleset_name,
-            "packageRoot": package_root,
-            "artifacts": [
-                {
-                    "name": artifact.name,
-                    "filename": artifact.filename,
-                    "kind": artifact.kind,
-                    "structureMapUrl": artifact.structure_map_url,
-                    "sourceProfileUrl": artifact.source_profile_url,
-                    "sourceProfileName": artifact.source_profile_name,
-                }
-                for artifact in self.artifacts
-            ],
+            "packageRoot": package_root or ".",
+            "artifacts": [artifact.manifest_entry() for artifact in self.artifacts],
         }
 
 
-def default_package_root(mapping_id: str) -> str:
-    """Return the default folder name used inside ZIP downloads."""
+def _profile_label(profile: "Profile" | None, fallback: str) -> str:
+    if profile is None:
+        return fallback
+    for attr in ("name", "key", "id", "url"):
+        value = getattr(profile, attr, None)
+        if value:
+            return value
+    return fallback
 
-    safe_mapping_id = slug(mapping_id or STRUCTUREMAP_PACKAGE_ROOT_PREFIX, suffix="")
-    return f"{STRUCTUREMAP_PACKAGE_ROOT_PREFIX}-{safe_mapping_id}"
+
+def _profile_slug(profile: "Profile" | None, fallback: str) -> str:
+    label = _profile_label(profile, fallback)
+    return slug(label, suffix="") or fallback
+
+
+def _base_filename(
+    *,
+    source_profile: "Profile" | None,
+    target_profile: "Profile" | None,
+    kind: Literal["router", "mapping"],
+) -> str:
+    target_slug = _profile_slug(target_profile, "Target")
+    if kind == "router":
+        return f"StructureMap-router-to-{target_slug}"
+
+    source_slug = _profile_slug(source_profile, "Source")
+    return f"StructureMap-{source_slug}-to-{target_slug}"
+
+
+def _unique_filename(base: str, registry: dict[str, int]) -> str:
+    counter = registry.get(base, 0)
+    registry[base] = counter + 1
+    suffix = "" if counter == 0 else f"-{counter + 1}"
+    return f"{base}{suffix}.json"
 
 
 
@@ -148,7 +186,12 @@ def build_structuremap_package(
 
     normalized_ruleset = normalize_ruleset_name(ruleset_name or "structuremap")
     sources = list(mapping.sources or [])
+    target_profile = mapping.target
+    target_profile_url = getattr(target_profile, "url", None)
+    target_profile_name = getattr(target_profile, "name", None)
+
     artifacts: list[StructureMapArtifact] = []
+    filename_registry: dict[str, int] = {}
 
     if len(sources) <= 1:
         structure_map = build_structuremap_dict(
@@ -159,15 +202,29 @@ def build_structuremap_package(
             ruleset_name=normalized_ruleset,
             source_profiles=sources or None,
         )
+        source_profile = sources[0] if sources else None
+        filename = _unique_filename(
+            _base_filename(
+                source_profile=source_profile,
+                target_profile=target_profile,
+                kind="mapping",
+            ),
+            filename_registry,
+        )
         artifacts.append(
             StructureMapArtifact(
                 name=structure_map["name"],
-                filename=f"{structure_map['name']}.json",
+                filename=filename,
                 content=json.dumps(structure_map, indent=2, ensure_ascii=False),
                 kind="mapping",
                 structure_map_url=structure_map.get("url"),
-                source_profile_url=sources[0].url if sources else None,
-                source_profile_name=getattr(sources[0], "name", None) if sources else None,
+                mapping_id=mapping.id,
+                mapping_name=getattr(mapping, "name", None),
+                ruleset_name=structure_map["name"],
+                source_profile_url=getattr(source_profile, "url", None),
+                source_profile_name=getattr(source_profile, "name", None),
+                target_profile_url=target_profile_url,
+                target_profile_name=target_profile_name,
             )
         )
         return StructureMapPackage(artifacts=artifacts)
@@ -185,15 +242,28 @@ def build_structuremap_package(
             source_profiles=[profile],
             use_alias_for_input_type=False,
         )
+        filename = _unique_filename(
+            _base_filename(
+                source_profile=profile,
+                target_profile=target_profile,
+                kind="mapping",
+            ),
+            filename_registry,
+        )
         artifacts.append(
             StructureMapArtifact(
                 name=structure_map["name"],
-                filename=f"{structure_map['name']}.json",
+                filename=filename,
                 content=json.dumps(structure_map, indent=2, ensure_ascii=False),
                 kind="mapping",
                 structure_map_url=structure_map.get("url"),
+                mapping_id=mapping.id,
+                mapping_name=getattr(mapping, "name", None),
+                ruleset_name=structure_map["name"],
                 source_profile_url=profile.url,
                 source_profile_name=getattr(profile, "name", None),
+                target_profile_url=target_profile_url,
+                target_profile_name=target_profile_name,
             )
         )
         child_refs.append(
@@ -212,14 +282,23 @@ def build_structuremap_package(
         target_alias=target_alias,
         child_refs=child_refs,
     )
+    router_filename = _unique_filename(
+        _base_filename(source_profile=None, target_profile=target_profile, kind="router"),
+        filename_registry,
+    )
     artifacts.insert(
         0,
         StructureMapArtifact(
             name=router_map["name"],
-            filename=f"{router_map['name']}.json",
+            filename=router_filename,
             content=json.dumps(router_map, indent=2, ensure_ascii=False),
             kind="router",
             structure_map_url=router_map.get("url"),
+            mapping_id=mapping.id,
+            mapping_name=getattr(mapping, "name", None),
+            ruleset_name=router_map["name"],
+            target_profile_url=target_profile_url,
+            target_profile_name=target_profile_name,
         ),
     )
     return StructureMapPackage(artifacts=artifacts)

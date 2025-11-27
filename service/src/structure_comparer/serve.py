@@ -2,6 +2,7 @@ import io
 import json
 import logging
 import os
+from datetime import datetime, timezone
 from contextlib import asynccontextmanager
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -73,16 +74,29 @@ from .manual_entries_migration import migrate_manual_entries
 from .manual_entries_id_mapping import rewrite_manual_entries_ids_by_fhir_context
 from .manual_entries import ManualEntries
 from .fshMappingGenerator.fsh_mapping_main import (
+  STRUCTUREMAP_PACKAGE_VERSION,
   build_structuremap_package,
-  default_package_root,
 )
 from .utils.structuremap_helpers import (
-  sanitize_folder_name,
-  get_safe_mapping_folder_name,
   get_safe_mapping_filename,
   get_safe_project_filename,
   alias_from_profile,
 )
+
+
+def _ensure_unique_filename(filename: str, used: set[str]) -> str:
+    if filename not in used:
+        used.add(filename)
+        return filename
+
+    stem, ext = os.path.splitext(filename)
+    counter = 2
+    while True:
+        candidate = f"{stem}-{counter}{ext}"
+        if candidate not in used:
+            used.add(candidate)
+            return candidate
+        counter += 1
 
 origins = ["http://localhost:4200", "http://127.0.0.1:4200"]
 project_handler: ProjectsHandler
@@ -947,12 +961,11 @@ async def download_structuremap(
           ruleset_name=ruleset_name,
         )
 
-        package_root = default_package_root(mapping_id)
         manifest = package.manifest(
           mapping_id=mapping_id,
           project_key=project_key,
           ruleset_name=ruleset_name,
-          package_root=package_root,
+          package_root=".",
         )
 
         buffer = io.BytesIO()
@@ -993,7 +1006,8 @@ async def download_project_structuremaps(
     Download all FHIR StructureMaps for all mappings in a project.
     
     Returns a ZIP file containing StructureMap packages for each mapping.
-    Each mapping's StructureMaps are organized in a separate folder.
+    The archive stores all StructureMap JSON files in the root alongside a
+    single manifest.json entry.
     
     Args:
         project_key: The project identifier
@@ -1010,58 +1024,58 @@ async def download_project_structuremaps(
         # Get the project
         project = mapping_handler.project_handler._get(project_key)
         
-        # Create master ZIP buffer
         master_buffer = io.BytesIO()
-        
+        aggregated_entries: list[dict] = []
+        used_filenames: set[str] = set()
+        successful_mappings = 0
+        failed_mappings: list[str] = []
+
         with ZipFile(master_buffer, mode="w", compression=ZIP_DEFLATED) as master_zip:
-            # Iterate through all mappings in the project
-            for mapping_id in project.mappings.keys():
-                try:
-                    # Get the mapping with actions
-                    mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
-                    
-                    # Get actions
-                    actions = mapping.get_action_info_map()
+          for mapping_id in project.mappings.keys():
+            try:
+              mapping = mapping_handler._MappingHandler__get(project_key, mapping_id)
+              actions = mapping.get_action_info_map()
 
-                    primary_source = mapping.sources[0] if mapping.sources else None
-                    source_alias = alias_from_profile(primary_source, "source")
-                    target_alias = alias_from_profile(mapping.target, "target")
+              primary_source = mapping.sources[0] if mapping.sources else None
+              source_alias = alias_from_profile(primary_source, "source")
+              target_alias = alias_from_profile(mapping.target, "target")
 
-                    # Create a ruleset name from mapping ID
-                    ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
+              ruleset_name = f"{mapping_id.replace('-', '_')}_structuremap"
 
-                    package = build_structuremap_package(
-                      mapping=mapping,
-                      actions=actions,
-                      source_alias=source_alias,
-                      target_alias=target_alias,
-                      ruleset_name=ruleset_name,
-                    )
+              package = build_structuremap_package(
+                mapping=mapping,
+                actions=actions,
+                source_alias=source_alias,
+                target_alias=target_alias,
+                ruleset_name=ruleset_name,
+              )
 
-                    package_root = default_package_root(mapping_id)
-                    manifest = package.manifest(
-                      mapping_id=mapping_id,
-                      project_key=project_key,
-                      ruleset_name=ruleset_name,
-                      package_root=package_root,
-                    )
+              successful_mappings += 1
 
-                    # Create a safe folder name from the mapping name
-                    folder_name = get_safe_mapping_folder_name(mapping, mapping_id)
+              for artifact in package.artifacts:
+                filename = _ensure_unique_filename(artifact.filename, used_filenames)
+                master_zip.writestr(filename, artifact.content)
+                aggregated_entries.append(artifact.manifest_entry(filename=filename))
 
-                    # Add manifest to master ZIP (directly in folder_name, without package_root subfolder)
-                    manifest_path = f"{folder_name}/manifest.json"
-                    master_zip.writestr(manifest_path, json.dumps(manifest, indent=2, ensure_ascii=False))
-                    
-                    # Add all artifacts to master ZIP (directly in folder_name)
-                    for artifact in package.artifacts:
-                        artifact_path = f"{folder_name}/{artifact.filename}"
-                        master_zip.writestr(artifact_path, artifact.content)
-                        
-                except Exception as e:
-                    logging.warning(f"Failed to generate StructureMap for mapping {mapping_id}: {str(e)}")
-                    # Continue with next mapping even if one fails
-                    continue
+            except Exception as e:
+              logging.warning(f"Failed to generate StructureMap for mapping {mapping_id}: {str(e)}")
+              failed_mappings.append(mapping_id)
+              continue
+
+          combined_manifest = {
+            "packageVersion": STRUCTUREMAP_PACKAGE_VERSION,
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
+            "projectKey": project_key,
+            "mappingCount": successful_mappings,
+            "artifactCount": len(aggregated_entries),
+            "failedMappings": failed_mappings or None,
+            "packageRoot": ".",
+            "artifacts": aggregated_entries,
+          }
+          if combined_manifest["failedMappings"] is None:
+            combined_manifest.pop("failedMappings")
+
+          master_zip.writestr("manifest.json", json.dumps(combined_manifest, indent=2, ensure_ascii=False))
 
         master_buffer.seek(0)
         
