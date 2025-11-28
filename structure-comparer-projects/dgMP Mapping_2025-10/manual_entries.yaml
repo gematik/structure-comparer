@@ -474,4 +474,10 @@ transformation_entries:
     name: Bundle.entry:RezeptierdatenFreitextverordnung.resource
     other: .parameter:rxPrescription.part:medication.resource
     remark: null
+  - action: use
+    fixed: null
+    map: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
+    name: Bundle.entry:Einrichtung.resource
+    other: .parameter:rxPrescription.part:organization.resource
+    remark: null
   id: 837f9230-c28e-426e-a32e-268702d6e853
