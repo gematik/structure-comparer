@@ -1,4 +1,5 @@
-entries:
+transformation_entries: []
+mapping_entries:
 - fields:
   - action: empty
     fixed: null

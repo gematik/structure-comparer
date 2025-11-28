@@ -1,0 +1,5052 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Structure Comparer",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Ping",
+        "operationId": "ping__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get Projects Old",
+        "operationId": "get_projects_old_projects_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/project": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get Project List",
+        "operationId": "get_project_list_project_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get Project",
+        "operationId": "get_project_project__project_key__get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Project"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Project Project  Project Key  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Update Or Create Project",
+        "operationId": "update_or_create_project_project__project_key__post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Delete Project",
+        "description": "Delete a project and all its data",
+        "operationId": "delete_project_project__project_key__delete",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/init_project": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Post Init Project",
+        "operationId": "post_init_project_init_project_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitProjectInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "error": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "error": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/create_project": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Create Project Old",
+        "operationId": "create_project_old_create_project_post",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "project_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Name"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/package": {
+      "get": {
+        "tags": [
+          "Packages"
+        ],
+        "summary": "Get Package List",
+        "description": "Returns a list of the packages in the project",
+        "operationId": "get_package_list_project__project_key__package_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/PackageList"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Package List Project  Project Key  Package Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "error": {},
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Packages"
+        ],
+        "summary": "Post Package",
+        "description": "Add a new package from the uploaded file\n\nThe uploaded file needs to be valid FHIR package tarball and the profiles\nneed to include snapshots.",
+        "operationId": "post_package_project__project_key__package_post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_post_package_project__project_key__package_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Package"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Post Package Project  Project Key  Package Post"
+                }
+              }
+            }
+          },
+          "404": {
+            "error": {},
+            "description": "Not Found"
+          },
+          "409": {
+            "error": {},
+            "description": "Conflict"
+          },
+          "422": {
+            "error": {},
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/project/{project_key}/package/{package_id}": {
+      "post": {
+        "tags": [
+          "Packages"
+        ],
+        "summary": "Update Package",
+        "description": "Update the information of a package",
+        "operationId": "update_package_project__project_key__package__package_id__post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "package_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Package Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PackageInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Package"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Update Package Project  Project Key  Package  Package Id  Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "error": {},
+            "description": "Bad Request"
+          },
+          "404": {
+            "error": {},
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/profile": {
+      "get": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Get Profile List",
+        "description": "Returns a list of all profiles in this project",
+        "operationId": "get_profile_list_project__project_key__profile_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ProfileList"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Profile List Project  Project Key  Profile Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "error": {},
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/comparison": {
+      "get": {
+        "tags": [
+          "Comparison"
+        ],
+        "summary": "Get Comparison List",
+        "description": "Returns a list of all comparisons in this project",
+        "operationId": "get_comparison_list_project__project_key__comparison_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ComparisonList"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Comparison List Project  Project Key  Comparison Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "error": {},
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comparison"
+        ],
+        "summary": "Create Comparison",
+        "description": "Creates a new comparison",
+        "operationId": "create_comparison_project__project_key__comparison_post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComparisonCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ComparisonOverview"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Create Comparison Project  Project Key  Comparison Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "error": {},
+            "description": "Bad Request"
+          },
+          "404": {
+            "error": {},
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/comparison/{comparison_id}": {
+      "get": {
+        "tags": [
+          "Comparison"
+        ],
+        "summary": "Get Comparison",
+        "description": "Get a comparison",
+        "operationId": "get_comparison_project__project_key__comparison__comparison_id__get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "comparison_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Comparison Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ComparisonDetail"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Comparison Project  Project Key  Comparison  Comparison Id  Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "error": {},
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comparison"
+        ],
+        "summary": "Delete Comparison",
+        "description": "Delete an existing comparison",
+        "operationId": "delete_comparison_project__project_key__comparison__comparison_id__delete",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "comparison_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Comparison Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "error": {},
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/action": {
+      "get": {
+        "tags": [
+          "Action"
+        ],
+        "summary": "Get Action Options",
+        "description": "Get all classifications\n---\nproduces:\n  - application/json\nresponses:\n  200:\n    description: Classifications\n    schema:\n      required:\n        - classifications\n      properties:\n        classifications:\n          type: array\n          items:\n            type: object\n            properties:\n              value:\n                type: string\n              remark:\n                type: string\n              instruction:\n                type: string",
+        "operationId": "get_action_options_action_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionOutput"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mappings": {
+      "get": {
+        "tags": [
+          "Mappings"
+        ],
+        "summary": "Get Mappings Old",
+        "description": "Get the available mappings\nReturns a list with all mappings, including the name and the url to access it.\n---\nproduces:\n  - application/json\nasync definitions:\n  - schema:\n      id: OverviewMapping\n      type: object\n      required:\n        - id\n        - name\n        - url\n        - version\n        - last_updated\n        - status\n        - sources\n        - target\n      properties:\n        id:\n          type: string\n        name:\n          type: string\n        url:\n          type: string\n        version:\n          type: string\n        last_updated:\n          type: string\n        status:\n          type: string\n        sources:\n          type: array\n          items:\n            type: object\n            properties:\n              name:\n                type: string\n              profile_key:\n                type: string\n              simplifier_url:\n                type: string\n              version:\n                type: string\n        target:\n          type: object\n          properties:\n            name:\n              type: string\n            profile_key:\n              type: string\n            simplifier_url:\n              type: string\n            version:\n              type: string\nresponses:\n  200:\n    description: Available mappings\n    schema:\n      required:\n        - mappings\n      properties:\n        mappings:\n          type: array\n          items:\n            $ref: \"#/async definitions/OverviewMapping\"",
+        "operationId": "get_mappings_old_mappings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/GetMappingsOutput"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Mappings Old Mappings Get"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition Failed"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/project/{project_key}/mapping": {
+      "get": {
+        "tags": [
+          "Mappings"
+        ],
+        "summary": "Get Mappings",
+        "description": "Get the available mappings\nReturns a list with all mappings, including the name and the url to access it.\n---\nproduces:\n  - application/json\nasync definitions:\n  - schema:\n      id: OverviewMapping\n      type: object\n      required:\n        - id\n        - name\n        - url\n        - version\n        - last_updated\n        - status\n        - sources\n        - target\n      properties:\n        id:\n          type: string\n        name:\n          type: string\n        url:\n          type: string\n        version:\n          type: string\n        last_updated:\n          type: string\n        status:\n          type: string\n        sources:\n          type: array\n          items:\n            type: object\n            properties:\n              name:\n                type: string\n              profile_key:\n                type: string\n              simplifier_url:\n                type: string\n              version:\n                type: string\n        target:\n          type: object\n          properties:\n            name:\n              type: string\n            profile_key:\n              type: string\n            simplifier_url:\n              type: string\n            version:\n              type: string\nresponses:\n  200:\n    description: Available mappings\n    schema:\n      required:\n        - mappings\n      properties:\n        mappings:\n          type: array\n          items:\n            $ref: \"#/async definitions/OverviewMapping\"",
+        "operationId": "get_mappings_project__project_key__mapping_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/GetMappingsOutput"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Mappings Project  Project Key  Mapping Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Mappings"
+        ],
+        "summary": "Post Mapping",
+        "description": "Post a new mapping for a project\nCreates a new mapping in the project with the given key.\nThe mapping needs to be a valid MappingBaseModel.\n\n---\nconsumes:\n  - application/json\nparameters:\n  - in: path\n    name: project_key\n    type: string\n    required: true\n    description: The key of the project\nresponses:\n  200:\n    description: The mapping was created\n  400:\n    description: There was something wrong with the request\n    schema:\n      properties:\n        error:\n          type: string\n          description: An error message\n  404:\n    description: Project not found",
+        "operationId": "post_mapping_project__project_key__mapping_post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MappingCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MappingDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Post Mapping Project  Project Key  Mapping Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mapping/{id}": {
+      "get": {
+        "tags": [
+          "Mappings"
+        ],
+        "summary": "Get Mapping Old",
+        "description": "Get a specific mapping\nReturns the mapping with the given id. This includes all details like classifications, presences in profiles, etc.\n---\nproduces:\n  - application/json\nasync definitions:\n  - schema:\n      id: MappingFieldProfile\n      type: object\n      required:\n        - name\n        - present\n      properties:\n        name:\n          type: string\n        present:\n            type: boolean\n  - schema:\n      id: MappingField\n      required:\n        - id\n        - name\n        - classification\n        - profiles\n        - remark\n      type: object\n      properties:\n        id:\n          type: string\n        name:\n          type: string\n        classification:\n          type: string\n        classifications_allowed:\n          type: array\n          items:\n            string\n        extension:\n          type: string\n        extra:\n          type: string\n        profiles:\n          type: array\n          items:\n            $ref: \"#/async definitions/MappingFieldProfile\"\n        remark:\n          type: string\n  - schema:\n      id: Mapping\n      type: object\n      required:\n        - id\n        - name\n        - source_profiles\n        - target_profile\n        - fields\n      properties:\n        fields:\n          type: array\n          items:\n            $ref: \"#/async definitions/MappingField\"\n        id:\n          type: string\n        name:\n          type: string\n        source_profiles:\n          type: array\n          items:\n            type: string\n        target_profile:\n          type: string\nparameters:\n  - in: path\n    name: id\n    type: string\n    required: true\n    description: The id of the mapping\nresponses:\n  200:\n    description: The mapping with the given id\n    schema:\n      $ref: \"#/async definitions/Mapping\"\n  404:\n    description: Mapping not found",
+        "operationId": "get_mapping_old_mapping__id__get",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MappingBase"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Mapping Old Mapping  Id  Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}": {
+      "get": {
+        "tags": [
+          "Mappings"
+        ],
+        "summary": "Get Mapping",
+        "description": "Get the available mappings\nReturns a list with all mappings, including the name and the url to access it.\n---\nproduces:\n  - application/json\nasync definitions:\n  - schema:\n      id: OverviewMapping\n      type: object\n      required:\n        - id\n        - name\n        - url\n        - version\n        - last_updated\n        - status\n        - sources\n        - target\n      properties:\n        id:\n          type: string\n        name:\n          type: string\n        url:\n          type: string\n        version:\n          type: string\n        last_updated:\n          type: string\n        status:\n          type: string\n        sources:\n          type: array\n          items:\n            type: object\n            properties:\n              name:\n                type: string\n              profile_key:\n                type: string\n              simplifier_url:\n                type: string\n              version:\n                type: string\n        target:\n          type: object\n          properties:\n            name:\n              type: string\n            profile_key:\n              type: string\n            simplifier_url:\n              type: string\n            version:\n              type: string\nresponses:\n  200:\n    description: Available mappings\n    schema:\n      required:\n        - mappings\n      properties:\n        mappings:\n          type: array\n          items:\n            $ref: \"#/async definitions/OverviewMapping\"",
+        "operationId": "get_mapping_project__project_key__mapping__mapping_id__get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MappingDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Mapping Project  Project Key  Mapping  Mapping Id  Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Mappings"
+        ],
+        "summary": "Patch Mapping",
+        "description": "Update mapping metadata (status, version)\n\nUpdates the metadata of an existing mapping such as status and version.\nThe last_updated timestamp is automatically updated.\n\nArgs:\n    project_key: The unique identifier of the project\n    mapping_id: The unique identifier of the mapping\n    update_data: The fields to update\n    \nReturns:\n    The updated mapping details\n    \nRaises:\n    404: Project or mapping not found",
+        "operationId": "patch_mapping_project__project_key__mapping__mapping_id__patch",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MappingUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MappingDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Patch Mapping Project  Project Key  Mapping  Mapping Id  Patch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}/html": {
+      "get": {
+        "tags": [
+          "Mappings"
+        ],
+        "summary": "Get Mapping Results",
+        "description": "Get a static HTML page with the mappings\nReturns a static HTML page with all mappings.\n---\nproduces:\n  - text/html\nresponses:\n  200:\n    description: A static HTML page with the mappings\n    content:\n      text/html:\n        schema:\n          type: string\n          format: binary\n    headers:\n      Content-Disposition:\n        description: The filename of the HTML file\n        schema:\n          type: string\n          example: \"mapping_results.html\"",
+        "operationId": "get_mapping_results_project__project_key__mapping__mapping_id__html_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          },
+          {
+            "name": "show_remarks",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "title": "Show Remarks"
+            }
+          },
+          {
+            "name": "show_warnings",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "title": "Show Warnings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}/structuremap": {
+      "get": {
+        "tags": [
+          "Mappings",
+          "StructureMap Export"
+        ],
+        "summary": "Download Structuremap",
+        "description": "Download FHIR StructureMap for a mapping.\n\nReturns a file containing a StructureMap RuleSet\ngenerated from the mapping's actions.\n\nArgs:\n    project_key: The project identifier\n    mapping_id: The mapping identifier\n    \nReturns:\n    StructureMap file as text/plain with Content-Disposition header for download\n    \nRaises:\n    404: Project or mapping not found",
+        "operationId": "download_structuremap_project__project_key__mapping__mapping_id__structuremap_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/structuremaps": {
+      "get": {
+        "tags": [
+          "Projects",
+          "StructureMap Export"
+        ],
+        "summary": "Download Project Structuremaps",
+        "description": "Download all FHIR StructureMaps for all mappings in a project.\n\nReturns a ZIP file containing StructureMap packages for each mapping.\nEach mapping's StructureMaps are organized in a separate folder.\n\nArgs:\n    project_key: The project identifier\n    \nReturns:\n    ZIP file containing all StructureMap packages with Content-Disposition header for download\n    \nRaises:\n    404: Project not found",
+        "operationId": "download_project_structuremaps_project__project_key__structuremaps_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mapping/{id}/fields": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Get Mapping Fields Old",
+        "description": "Get the fields of a mapping\nReturns a brief list of the fields\n---\nproduces:\n  - application/json\nasync definitions:\n  - schema:\n      id: MappingFieldShort\n      type: object\n      reuqired:\n        - id\n        - name\n      properties:\n        id:\n          type: string\n        name:\n          type: string\n  - schema:\n      id: MappingShort\n      type: object\n      required:\n        - id\n        - fields\n      properties:\n        fields:\n          type: array\n          items:\n            $ref: \"#/async definitions/MappingFieldShort\"\n        id:\n          type: string\nparameters:\n  - in: path\n    name: id\n    type: string\n    required: true\n    description: The id of the mapping\nresponses:\n  200:\n    description: The fields of the mapping\n    schema:\n      $ref: \"#/async definitions/MappingShort\"\n  404:\n    description: Mapping not found",
+        "operationId": "get_mapping_fields_old_mapping__id__fields_get",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MappingFieldsOutput"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Mapping Fields Old Mapping  Id  Fields Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}/field": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Get Mapping Fields",
+        "description": "Get the fields of a mapping\nReturns a brief list of the fields\n---\nproduces:\n  - application/json\nasync definitions:\n  - schema:\n      id: MappingFieldShort\n      type: object\n      reuqired:\n        - id\n        - name\n      properties:\n        id:\n          type: string\n        name:\n          type: string\n  - schema:\n      id: MappingShort\n      type: object\n      required:\n        - id\n        - fields\n      properties:\n        fields:\n          type: array\n          items:\n            $ref: \"#/async definitions/MappingFieldShort\"\n        id:\n          type: string\nparameters:\n  - in: path\n    name: id\n    type: string\n    required: true\n    description: The id of the mapping\nresponses:\n  200:\n    description: The fields of the mapping\n    schema:\n      $ref: \"#/async definitions/MappingShort\"\n  404:\n    description: Mapping not found",
+        "operationId": "get_mapping_fields_project__project_key__mapping__mapping_id__field_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MappingFieldsOutput"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Mapping Fields Project  Project Key  Mapping  Mapping Id  Field Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Get Mapping Field",
+        "description": "Get the fields of a mapping\nReturns a brief list of the fields\n---\nproduces:\n  - application/json\nasync definitions:\n  - schema:\n      id: MappingFieldShort\n      type: object\n      reuqired:\n        - id\n        - name\n      properties:\n        id:\n          type: string\n        name:\n          type: string\n  - schema:\n      id: MappingShort\n      type: object\n      required:\n        - id\n        - fields\n      properties:\n        fields:\n          type: array\n          items:\n            $ref: \"#/async definitions/MappingFieldShort\"\n        id:\n          type: string\nparameters:\n  - in: path\n    name: id\n    type: string\n    required: true\n    description: The id of the mapping\nresponses:\n  200:\n    description: The fields of the mapping\n    schema:\n      $ref: \"#/async definitions/MappingShort\"\n  404:\n    description: Mapping not found",
+        "operationId": "get_mapping_field_project__project_key__mapping__mapping_id__field__field_name__get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          },
+          {
+            "name": "field_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MappingField"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Mapping Field Project  Project Key  Mapping  Mapping Id  Field  Field Name  Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Post Mapping Field",
+        "description": "Post a manual classification for a field\nOverrides the default action of a field.\n\n`action` selects the new action. `target` applies to copy actions. `value`\ntransports fixed values when required.\n---\nconsumes:\n  - application/json\nparameters:\n  - in: path\n    name: mapping_id\n    type: string\n    required: true\n    description: The id of the mapping\n  - in: path\n    name: field_id\n    type: string\n    required: true\n    description: The id of the field\n  - in: body\n    name: body\n    schema:\n      required:\n        - action\n      properties:\n        action:\n          type: string\n          enum:\n            - copy_from\n            - copy_to\n            - fixed\n            - use\n            - not_use\n            - empty\n          description: Which action should be performed\n        target:\n          type: string\n          description: Field that is targetted (for copy actions)\n        value:\n          type: string\n          description: The fixed value\nresponses:\n  200:\n    description: The field was updated\n  400:\n    description: There was something wrong with the request\n    schema:\n      properties:\n        error:\n          type: string\n          description: An error message\n  404:\n    description: Mapping or field not found",
+        "operationId": "post_mapping_field_project__project_key__mapping__mapping_id__field__field_name__post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          },
+          {
+            "name": "field_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MappingFieldMinimal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MappingField"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Post Mapping Field Project  Project Key  Mapping  Mapping Id  Field  Field Name  Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mapping/{mapping_id}/field/{field_id}/classification": {
+      "post": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Post Mapping Field Classification Old",
+        "description": "Post a manual classification for a field\nOverrides the default action of a field.\n\n`action` selects the new action. `target` applies to copy actions. `value`\ntransports fixed values when required.\n---\nconsumes:\n  - application/json\nparameters:\n  - in: path\n    name: mapping_id\n    type: string\n    required: true\n    description: The id of the mapping\n  - in: path\n    name: field_id\n    type: string\n    required: true\n    description: The id of the field\n  - in: body\n    name: body\n    schema:\n      required:\n        - action\n      properties:\n        action:\n          type: string\n          enum:\n            - copy_from\n            - copy_to\n            - fixed\n            - use\n            - not_use\n            - empty\n          description: Which action should be performed\n        target:\n          type: string\n          description: Field that is targetted (for copy actions)\n        value:\n          type: string\n          description: The fixed value\nresponses:\n  200:\n    description: The field was updated\n  400:\n    description: There was something wrong with the request\n    schema:\n      properties:\n        error:\n          type: string\n          description: An error message\n  404:\n    description: Mapping or field not found",
+        "operationId": "post_mapping_field_classification_old_mapping__mapping_id__field__field_id__classification_post",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          },
+          {
+            "name": "field_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MappingInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/apply-recommendation": {
+      "post": {
+        "tags": [
+          "mapping"
+        ],
+        "summary": "Apply Recommendation",
+        "description": "Apply a recommendation to convert it into an active action.\n\nThis endpoint:\n- Takes the recommendation at the specified index for a field\n- Converts it to a manual action\n- Persists it in manual_entries.yaml\n- Re-evaluates the mapping\n- Returns the updated field\n\n---\nparameters:\n  - in: path\n    name: project_key\n    type: string\n    required: true\n    description: The project key\n  - in: path\n    name: mapping_id\n    type: string\n    required: true\n    description: The id of the mapping\n  - in: path\n    name: field_name\n    type: string\n    required: true\n    description: The name of the field\n  - in: query\n    name: index\n    type: integer\n    default: 0\n    description: Index of the recommendation to apply (0-based)\nresponses:\n  200:\n    description: Recommendation was successfully applied\n  404:\n    description: Project, mapping, field, or recommendation not found\n  400:\n    description: Invalid request (e.g., invalid index)",
+        "operationId": "apply_recommendation_project__project_key__mapping__mapping_id__field__field_name__apply_recommendation_post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          },
+          {
+            "name": "field_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Name"
+            }
+          },
+          {
+            "name": "index",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Index"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MappingField"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}/evaluation": {
+      "get": {
+        "tags": [
+          "Mappings",
+          "Evaluation"
+        ],
+        "summary": "Get Mapping Evaluation",
+        "description": "Return evaluation data for each field within the mapping.",
+        "operationId": "get_mapping_evaluation_project__project_key__mapping__mapping_id__evaluation_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MappingEvaluationModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}/evaluation/summary": {
+      "get": {
+        "tags": [
+          "Mappings",
+          "Evaluation"
+        ],
+        "summary": "Get Mapping Evaluation Summary",
+        "description": "Return aggregated counters for the mapping evaluation.",
+        "operationId": "get_mapping_evaluation_summary_project__project_key__mapping__mapping_id__evaluation_summary_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MappingEvaluationSummaryModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "412": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/evaluation": {
+      "get": {
+        "tags": [
+          "Fields",
+          "Evaluation"
+        ],
+        "summary": "Get Field Evaluation",
+        "description": "Return evaluation data for a single field.",
+        "operationId": "get_field_evaluation_project__project_key__mapping__mapping_id__field__field_name__evaluation_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "mapping_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mapping Id"
+            }
+          },
+          {
+            "name": "field_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/manual-entries/import": {
+      "post": {
+        "tags": [
+          "Manual Entries"
+        ],
+        "summary": "Import Manual Entries",
+        "description": "Import legacy manual_entries.yaml file into the project.\n\nUploads and migrates an old manual_entries.yaml file to the current format.\nThe migrated data will replace the current manual_entries.yaml in the project.\n\nArgs:\n    project_key: The project identifier\n    file: The legacy manual_entries.yaml file to import\n    \nReturns:\n    Dictionary with import status and statistics\n    \nRaises:\n    404: Project not found\n    400: No file uploaded, empty file, or invalid YAML format\n    500: Import or migration failed",
+        "operationId": "import_manual_entries_project__project_key__manual_entries_import_post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_import_manual_entries_project__project_key__manual_entries_import_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Import Manual Entries Project  Project Key  Manual Entries Import Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/transformation": {
+      "get": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Get Transformations",
+        "description": "Get all transformations for a project.\nReturns a list of all transformations with their metadata.",
+        "operationId": "get_transformations_project__project_key__transformation_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransformationBase"
+                      }
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Transformations Project  Project Key  Transformation Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Create Transformation",
+        "description": "Create a new transformation.",
+        "operationId": "create_transformation_project__project_key__transformation_post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransformationCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransformationDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Create Transformation Project  Project Key  Transformation Post"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/transformation/{transformation_id}": {
+      "get": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Get Transformation",
+        "description": "Get a specific transformation with all details including fields and linked mappings.",
+        "operationId": "get_transformation_project__project_key__transformation__transformation_id__get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "transformation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Transformation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransformationDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Transformation Project  Project Key  Transformation  Transformation Id  Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Update Transformation",
+        "description": "Update transformation metadata (status, version, profile information).",
+        "operationId": "update_transformation_project__project_key__transformation__transformation_id__patch",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "transformation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Transformation Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransformationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransformationDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Update Transformation Project  Project Key  Transformation  Transformation Id  Patch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Delete Transformation",
+        "description": "Delete a transformation.",
+        "operationId": "delete_transformation_project__project_key__transformation__transformation_id__delete",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "transformation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Transformation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Delete Transformation Project  Project Key  Transformation  Transformation Id  Delete"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/transformation/{transformation_id}/field": {
+      "get": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Get Transformation Fields",
+        "description": "Get all fields for a transformation.",
+        "operationId": "get_transformation_fields_project__project_key__transformation__transformation_id__field_get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "transformation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Transformation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransformationFieldsOutput"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Transformation Fields Project  Project Key  Transformation  Transformation Id  Field Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/transformation/{transformation_id}/field/{field_name}": {
+      "get": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Get Transformation Field",
+        "description": "Get a specific field from a transformation.",
+        "operationId": "get_transformation_field_project__project_key__transformation__transformation_id__field__field_name__get",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "transformation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Transformation Id"
+            }
+          },
+          {
+            "name": "field_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransformationField"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Get Transformation Field Project  Project Key  Transformation  Transformation Id  Field  Field Name  Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Set Transformation Field",
+        "description": "Set or update a field in a transformation.",
+        "operationId": "set_transformation_field_project__project_key__transformation__transformation_id__field__field_name__put",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "transformation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Transformation Id"
+            }
+          },
+          {
+            "name": "field_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransformationFieldMinimal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransformationField"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Set Transformation Field Project  Project Key  Transformation  Transformation Id  Field  Field Name  Put"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{project_key}/transformation/{transformation_id}/field/{field_name}/link-mapping": {
+      "post": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Link Mapping To Transformation Field",
+        "description": "Link a mapping to a transformation field.\nThis creates a reference from the transformation field to a child mapping.",
+        "operationId": "link_mapping_to_transformation_field_project__project_key__transformation__transformation_id__field__field_name__link_mapping_post",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "transformation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Transformation Id"
+            }
+          },
+          {
+            "name": "field_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransformationMappingLink"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransformationField"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Link Mapping To Transformation Field Project  Project Key  Transformation  Transformation Id  Field  Field Name  Link Mapping Post"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Transformations"
+        ],
+        "summary": "Unlink Mapping From Transformation Field",
+        "description": "Remove a mapping link from a transformation field.",
+        "operationId": "unlink_mapping_from_transformation_field_project__project_key__transformation__transformation_id__field__field_name__link_mapping_delete",
+        "parameters": [
+          {
+            "name": "project_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Project Key"
+            }
+          },
+          {
+            "name": "transformation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Transformation Id"
+            }
+          },
+          {
+            "name": "field_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Field Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TransformationField"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  ],
+                  "title": "Response Unlink Mapping From Transformation Field Project  Project Key  Transformation  Transformation Id  Field  Field Name  Link Mapping Delete"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Action-Input": {
+        "type": "string",
+        "enum": [
+          "use",
+          "use_recursive",
+          "not_use",
+          "empty",
+          "manual",
+          "copy_from",
+          "copy_to",
+          "fixed"
+        ],
+        "title": "Action"
+      },
+      "ActionInfo": {
+        "properties": {
+          "action": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ActionType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "$ref": "#/components/schemas/ActionSource"
+          },
+          "inherited_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inherited From"
+          },
+          "auto_generated": {
+            "type": "boolean",
+            "title": "Auto Generated",
+            "default": false
+          },
+          "user_remark": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Remark"
+          },
+          "system_remark": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Remark"
+          },
+          "system_remarks": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Remarks"
+          },
+          "fixed_value": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fixed Value"
+          },
+          "other_value": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Other Value"
+          },
+          "raw_manual_entry": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Manual Entry"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "source"
+        ],
+        "title": "ActionInfo",
+        "description": "Effective mapping action for a single field.\n\nConvention:\n- action = None: No action has been selected yet. User must make a decision.\n                 This is typically the case for fields with 'warning' or 'incompatible'\n                 classification where no default action can be automatically determined.\n- action = ActionType value: An action has been determined (either manually set,\n                              inherited from parent, or auto-determined as system default).\n- action = 'manual' (in legacy system): User has set a manual action with a remark field\n                                         containing implementation instructions."
+      },
+      "ActionOutput": {
+        "properties": {
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/src__structure_comparer__model__action__Action"
+            },
+            "type": "array",
+            "title": "Actions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "actions"
+        ],
+        "title": "ActionOutput"
+      },
+      "ActionSource": {
+        "type": "string",
+        "enum": [
+          "manual",
+          "inherited",
+          "system_default"
+        ],
+        "title": "ActionSource",
+        "description": "Origin of a mapping action applied to a field."
+      },
+      "ActionType": {
+        "type": "string",
+        "enum": [
+          "use",
+          "use_recursive",
+          "not_use",
+          "empty",
+          "copy_from",
+          "copy_to",
+          "fixed",
+          "manual"
+        ],
+        "title": "ActionType",
+        "description": "Semantic action types supported by the new mapping action engine."
+      },
+      "Body_import_manual_entries_project__project_key__manual_entries_import_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_import_manual_entries_project__project_key__manual_entries_import_post"
+      },
+      "Body_post_package_project__project_key__package_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_post_package_project__project_key__package_post"
+      },
+      "ComparisonClassification": {
+        "type": "string",
+        "enum": [
+          "compatible",
+          "warning",
+          "incompatible"
+        ],
+        "title": "ComparisonClassification"
+      },
+      "ComparisonCreate": {
+        "properties": {
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Ids"
+          },
+          "target_id": {
+            "type": "string",
+            "title": "Target Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_ids",
+          "target_id"
+        ],
+        "title": "ComparisonCreate"
+      },
+      "ComparisonDetail": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "target": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/ComparisonField"
+            },
+            "type": "array",
+            "title": "Fields"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "sources",
+          "target",
+          "fields"
+        ],
+        "title": "ComparisonDetail"
+      },
+      "ComparisonField": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "profiles": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ProfileField"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Profiles"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/ComparisonClassification"
+          },
+          "issues": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ComparisonIssue"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Issues"
+          },
+          "explanations": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Explanations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "profiles",
+          "classification",
+          "issues"
+        ],
+        "title": "ComparisonField"
+      },
+      "ComparisonIssue": {
+        "type": "string",
+        "enum": [
+          "ms",
+          "min",
+          "max",
+          "ref"
+        ],
+        "title": "ComparisonIssue"
+      },
+      "ComparisonList": {
+        "properties": {
+          "comparisons": {
+            "items": {
+              "$ref": "#/components/schemas/ComparisonOverview"
+            },
+            "type": "array",
+            "title": "Comparisons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "comparisons"
+        ],
+        "title": "ComparisonList"
+      },
+      "ComparisonOverview": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "sources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "sources",
+          "target"
+        ],
+        "title": "ComparisonOverview"
+      },
+      "Error": {
+        "properties": {
+          "error": {
+            "type": "string",
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "Error"
+      },
+      "EvaluationReason": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/EvaluationSeverity"
+          },
+          "message_key": {
+            "type": "string",
+            "title": "Message Key"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details",
+            "default": {}
+          },
+          "related_action": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ActionType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "severity",
+          "message_key"
+        ],
+        "title": "EvaluationReason",
+        "description": "Structured reason emitted by the evaluation engine."
+      },
+      "EvaluationResult": {
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/EvaluationStatus"
+          },
+          "reasons": {
+            "items": {
+              "$ref": "#/components/schemas/EvaluationReason"
+            },
+            "type": "array",
+            "title": "Reasons",
+            "default": []
+          },
+          "has_warnings": {
+            "type": "boolean",
+            "title": "Has Warnings",
+            "default": false
+          },
+          "has_errors": {
+            "type": "boolean",
+            "title": "Has Errors",
+            "default": false
+          },
+          "summary_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary Key"
+          },
+          "mapping_status": {
+            "$ref": "#/components/schemas/MappingStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "mapping_status"
+        ],
+        "title": "EvaluationResult",
+        "description": "Aggregated evaluation state for a field."
+      },
+      "EvaluationSeverity": {
+        "type": "string",
+        "enum": [
+          "info",
+          "warning",
+          "error"
+        ],
+        "title": "EvaluationSeverity",
+        "description": "Severity level for individual evaluation reasons."
+      },
+      "EvaluationStatus": {
+        "type": "string",
+        "enum": [
+          "ok",
+          "action_required",
+          "resolved",
+          "incompatible",
+          "unknown",
+          "evaluation_failed"
+        ],
+        "title": "EvaluationStatus",
+        "description": "Overall evaluation outcome for a field."
+      },
+      "GetMappingsOutput": {
+        "properties": {
+          "mappings": {
+            "items": {
+              "$ref": "#/components/schemas/MappingBase"
+            },
+            "type": "array",
+            "title": "Mappings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mappings"
+        ],
+        "title": "GetMappingsOutput"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InitProjectInput": {
+        "properties": {
+          "project_name": {
+            "type": "string",
+            "title": "Project Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "project_name"
+        ],
+        "title": "InitProjectInput"
+      },
+      "MappingBase": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "last_updated": {
+            "type": "string",
+            "title": "Last Updated"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "target": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total"
+          },
+          "incompatible": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Incompatible"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning"
+          },
+          "solved": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solved"
+          },
+          "compatible": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compatible"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "url",
+          "version",
+          "last_updated",
+          "status",
+          "sources",
+          "target"
+        ],
+        "title": "MappingBase"
+      },
+      "MappingCreate": {
+        "properties": {
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Ids"
+          },
+          "target_id": {
+            "type": "string",
+            "title": "Target Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_ids",
+          "target_id"
+        ],
+        "title": "MappingCreate"
+      },
+      "MappingDetails": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "last_updated": {
+            "type": "string",
+            "title": "Last Updated"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "target": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total"
+          },
+          "incompatible": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Incompatible"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning"
+          },
+          "solved": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solved"
+          },
+          "compatible": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compatible"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/MappingField"
+            },
+            "type": "array",
+            "title": "Fields"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "url",
+          "version",
+          "last_updated",
+          "status",
+          "sources",
+          "target",
+          "fields"
+        ],
+        "title": "MappingDetails"
+      },
+      "MappingEvaluationModel": {
+        "properties": {
+          "mapping_id": {
+            "type": "string",
+            "title": "Mapping Id"
+          },
+          "mapping_name": {
+            "type": "string",
+            "title": "Mapping Name"
+          },
+          "field_evaluations": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/EvaluationResult"
+            },
+            "type": "object",
+            "title": "Field Evaluations"
+          },
+          "summary": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Summary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mapping_id",
+          "mapping_name",
+          "field_evaluations",
+          "summary"
+        ],
+        "title": "MappingEvaluationModel"
+      },
+      "MappingEvaluationSummaryModel": {
+        "properties": {
+          "mapping_id": {
+            "type": "string",
+            "title": "Mapping Id"
+          },
+          "mapping_name": {
+            "type": "string",
+            "title": "Mapping Name"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "incompatible": {
+            "type": "integer",
+            "title": "Incompatible"
+          },
+          "warning": {
+            "type": "integer",
+            "title": "Warning"
+          },
+          "solved": {
+            "type": "integer",
+            "title": "Solved"
+          },
+          "compatible": {
+            "type": "integer",
+            "title": "Compatible"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mapping_id",
+          "mapping_name",
+          "total",
+          "incompatible",
+          "warning",
+          "solved",
+          "compatible"
+        ],
+        "title": "MappingEvaluationSummaryModel"
+      },
+      "MappingField": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "profiles": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ProfileField"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Profiles"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/ComparisonClassification"
+          },
+          "issues": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ComparisonIssue"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Issues"
+          },
+          "explanations": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Explanations"
+          },
+          "action": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/src__structure_comparer__action__Action"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "other": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Other"
+          },
+          "fixed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fixed"
+          },
+          "actions_allowed": {
+            "items": {
+              "$ref": "#/components/schemas/src__structure_comparer__action__Action"
+            },
+            "type": "array",
+            "title": "Actions Allowed"
+          },
+          "show_mapping_content": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Show Mapping Content"
+          },
+          "action_info": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ActionInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evaluation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvaluationResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/ActionInfo"
+            },
+            "type": "array",
+            "title": "Recommendations",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "profiles",
+          "classification",
+          "issues",
+          "action",
+          "actions_allowed"
+        ],
+        "title": "MappingField",
+        "description": "Representation returned to clients when requesting mapping details.\n\nConvention for action field:\n- None: No action has been selected yet. Field requires user decision.\n         Typically for warning/incompatible fields without a default action.\n- Action enum value: An action is set (manually, inherited, or system default).\n         'manual' specifically means user provided implementation instructions in remark.\n\nConvention for recommendations field:\n- Contains a list of suggested actions that have NOT been applied yet\n- Does NOT influence mapping_status\n- User must explicitly apply one to convert it to active action\n- Empty list [] if no recommendations available"
+      },
+      "MappingFieldMinimal": {
+        "properties": {
+          "action": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Action-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "other": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Other"
+          },
+          "fixed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fixed"
+          },
+          "remark": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "MappingFieldMinimal",
+        "description": "Minimal payload accepted when updating a field.\n\nConvention for action field:\n- None: No action selected yet (user must decide)\n- Action enum value: Specific action chosen (use, not_use, manual, etc.)"
+      },
+      "MappingFieldsOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/MappingField"
+            },
+            "type": "array",
+            "title": "Fields"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "fields"
+        ],
+        "title": "MappingFieldsOutput"
+      },
+      "MappingInput": {
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/Action-Input"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "MappingInput"
+      },
+      "MappingReference": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "url",
+          "version",
+          "status"
+        ],
+        "title": "MappingReference",
+        "description": "Lightweight reference to a linked Mapping."
+      },
+      "MappingStatus": {
+        "type": "string",
+        "enum": [
+          "incompatible",
+          "warning",
+          "solved",
+          "compatible"
+        ],
+        "title": "MappingStatus",
+        "description": "Unified mapping status surfaced to clients."
+      },
+      "MappingUpdate": {
+        "properties": {
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ProfileUpdate"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sources"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileUpdate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "MappingUpdate",
+        "description": "Payload for updating mapping metadata."
+      },
+      "Package": {
+        "properties": {
+          "display": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "version"
+        ],
+        "title": "Package"
+      },
+      "PackageInput": {
+        "properties": {
+          "display": {
+            "type": "string",
+            "title": "Display"
+          }
+        },
+        "type": "object",
+        "required": [
+          "display"
+        ],
+        "title": "PackageInput"
+      },
+      "PackageList": {
+        "properties": {
+          "packages": {
+            "items": {
+              "$ref": "#/components/schemas/Package"
+            },
+            "type": "array",
+            "title": "Packages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "packages"
+        ],
+        "title": "PackageList"
+      },
+      "PackageProfile": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "webUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weburl"
+          },
+          "package": {
+            "type": "string",
+            "title": "Package"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "version",
+          "id",
+          "key",
+          "name",
+          "package"
+        ],
+        "title": "PackageProfile"
+      },
+      "Profile": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "webUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weburl"
+          },
+          "package": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Package"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "version",
+          "id",
+          "key",
+          "name"
+        ],
+        "title": "Profile"
+      },
+      "ProfileField": {
+        "properties": {
+          "min": {
+            "type": "integer",
+            "title": "Min"
+          },
+          "max": {
+            "type": "string",
+            "title": "Max"
+          },
+          "must_support": {
+            "type": "boolean",
+            "title": "Must Support"
+          },
+          "types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Types"
+          },
+          "ref_types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref Types"
+          },
+          "cardinality_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cardinality Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "min",
+          "max",
+          "must_support"
+        ],
+        "title": "ProfileField"
+      },
+      "ProfileList": {
+        "properties": {
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/PackageProfile"
+            },
+            "type": "array",
+            "title": "Profiles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profiles"
+        ],
+        "title": "ProfileList"
+      },
+      "ProfileUpdate": {
+        "properties": {
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          },
+          "webUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weburl"
+          },
+          "package": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Package"
+          }
+        },
+        "type": "object",
+        "title": "ProfileUpdate",
+        "description": "Profile metadata for updates."
+      },
+      "Project": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "mappings": {
+            "items": {
+              "$ref": "#/components/schemas/MappingBase"
+            },
+            "type": "array",
+            "title": "Mappings"
+          },
+          "comparisons": {
+            "items": {
+              "$ref": "#/components/schemas/ComparisonOverview"
+            },
+            "type": "array",
+            "title": "Comparisons"
+          },
+          "transformations": {
+            "items": {
+              "$ref": "#/components/schemas/TransformationBase"
+            },
+            "type": "array",
+            "title": "Transformations",
+            "default": []
+          },
+          "packages": {
+            "items": {
+              "$ref": "#/components/schemas/Package"
+            },
+            "type": "array",
+            "title": "Packages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "mappings",
+          "comparisons",
+          "packages"
+        ],
+        "title": "Project"
+      },
+      "ProjectInput": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ProjectInput"
+      },
+      "ProjectList": {
+        "properties": {
+          "projects": {
+            "items": {
+              "$ref": "#/components/schemas/ProjectOverview"
+            },
+            "type": "array",
+            "title": "Projects"
+          }
+        },
+        "type": "object",
+        "required": [
+          "projects"
+        ],
+        "title": "ProjectList"
+      },
+      "ProjectOverview": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "url"
+        ],
+        "title": "ProjectOverview"
+      },
+      "TransformationBase": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "last_updated": {
+            "type": "string",
+            "title": "Last Updated"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "target": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "linked_mappings_count": {
+            "type": "integer",
+            "title": "Linked Mappings Count",
+            "default": 0
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total"
+          },
+          "incompatible": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Incompatible"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning"
+          },
+          "solved": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solved"
+          },
+          "compatible": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compatible"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "url",
+          "version",
+          "last_updated",
+          "status",
+          "sources",
+          "target"
+        ],
+        "title": "TransformationBase",
+        "description": "Base model for Transformation list views."
+      },
+      "TransformationCreate": {
+        "properties": {
+          "source_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Ids"
+          },
+          "target_id": {
+            "type": "string",
+            "title": "Target Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_ids",
+          "target_id"
+        ],
+        "title": "TransformationCreate",
+        "description": "Payload for creating a new Transformation."
+      },
+      "TransformationDetails": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "last_updated": {
+            "type": "string",
+            "title": "Last Updated"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Profile"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "target": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "linked_mappings_count": {
+            "type": "integer",
+            "title": "Linked Mappings Count",
+            "default": 0
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total"
+          },
+          "incompatible": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Incompatible"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning"
+          },
+          "solved": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solved"
+          },
+          "compatible": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compatible"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/TransformationField"
+            },
+            "type": "array",
+            "title": "Fields"
+          },
+          "linked_mappings": {
+            "items": {
+              "$ref": "#/components/schemas/MappingReference"
+            },
+            "type": "array",
+            "title": "Linked Mappings",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "url",
+          "version",
+          "last_updated",
+          "status",
+          "sources",
+          "target",
+          "fields"
+        ],
+        "title": "TransformationDetails",
+        "description": "Full Transformation details including fields."
+      },
+      "TransformationField": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "action": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/src__structure_comparer__action__Action"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "other": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Other"
+          },
+          "fixed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fixed"
+          },
+          "remark": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remark"
+          },
+          "map": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Map"
+          },
+          "map_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Map Name"
+          },
+          "actions_allowed": {
+            "items": {
+              "$ref": "#/components/schemas/src__structure_comparer__action__Action"
+            },
+            "type": "array",
+            "title": "Actions Allowed",
+            "default": []
+          },
+          "action_info": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ActionInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evaluation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvaluationResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/ActionInfo"
+            },
+            "type": "array",
+            "title": "Recommendations",
+            "default": []
+          },
+          "source_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Min"
+          },
+          "source_max": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Max"
+          },
+          "target_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Min"
+          },
+          "target_max": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Max"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "path",
+          "action"
+        ],
+        "title": "TransformationField",
+        "description": "Full transformation field representation returned to clients.\n\nA TransformationField describes how a specific element from the source Bundle\nmaps to the target structure, potentially using a referenced Mapping."
+      },
+      "TransformationFieldMinimal": {
+        "properties": {
+          "action": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Action-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "other": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Other"
+          },
+          "fixed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fixed"
+          },
+          "remark": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remark"
+          },
+          "map": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Map"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "TransformationFieldMinimal",
+        "description": "Minimal payload accepted when updating a transformation field.\n\nFields have action='transform' and reference a child mapping via 'map'."
+      },
+      "TransformationFieldsOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/TransformationField"
+            },
+            "type": "array",
+            "title": "Fields"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "fields"
+        ],
+        "title": "TransformationFieldsOutput",
+        "description": "Output model for transformation field list endpoint."
+      },
+      "TransformationMappingLink": {
+        "properties": {
+          "field_name": {
+            "type": "string",
+            "title": "Field Name"
+          },
+          "mapping_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mapping Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "field_name",
+          "mapping_id"
+        ],
+        "title": "TransformationMappingLink",
+        "description": "Model for linking/unlinking a Mapping to a Transformation field."
+      },
+      "TransformationUpdate": {
+        "properties": {
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ProfileUpdate"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sources"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileUpdate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "TransformationUpdate",
+        "description": "Payload for updating Transformation metadata."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "src__structure_comparer__action__Action": {
+        "type": "string",
+        "enum": [
+          "use",
+          "use_recursive",
+          "not_use",
+          "empty",
+          "manual",
+          "copy_from",
+          "copy_to",
+          "fixed"
+        ],
+        "title": "Action"
+      },
+      "src__structure_comparer__model__action__Action": {
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/src__structure_comparer__action__Action"
+          },
+          "remark": {
+            "type": "string",
+            "title": "Remark"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value",
+          "remark",
+          "description"
+        ],
+        "title": "Action"
+      }
+    }
+  }
+}

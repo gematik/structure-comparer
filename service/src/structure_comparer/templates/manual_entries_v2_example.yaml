@@ -1,0 +1,194 @@
+transformation_entries:
+- fields:
+  - action: transform
+    fixed: null
+    name: Bundle.entry:RezeptierdatenPZNVerordnung.resource 
+    other: Parameters.parameter:rxPrescription.part:medication.resource
+    remark: null
+    map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+  id: ac2f9eec-7ee2-4722-b96b-df099e54df34
+mapping_entries:
+- fields:
+  - action: use
+    fixed: null
+    name: Medication.form
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.form.id
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.form.extension
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.ingredient
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff
+    other: Medication.extension:isVaccine
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.id
+    other: Medication.extension:isVaccine.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Impfstoff.extension
+    other: Medication.extension:isVaccine.extension
+    remark: null
+  id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+- fields:
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR
+    other: Practitioner.identifier:LANR
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.id
+    other: Practitioner.identifier:LANR.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.extension
+    other: Practitioner.identifier:LANR.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.use
+    other: Practitioner.identifier:LANR.use
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type
+    other: Practitioner.identifier:LANR.type
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type.id
+    other: Practitioner.identifier:LANR.type.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type.extension
+    other: Practitioner.identifier:LANR.type.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type.coding
+    other: Practitioner.identifier:LANR.type.coding
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type.coding.id
+    other: Practitioner.identifier:LANR.type.coding.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type.coding.extension
+    other: Practitioner.identifier:LANR.type.coding.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type.coding.system
+    other: Practitioner.identifier:LANR.type.coding.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type.coding.code
+    other: Practitioner.identifier:LANR.type.coding.code
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.type.coding.display
+    other: Practitioner.identifier:LANR.type.coding.display
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.system
+    other: Practitioner.identifier:LANR.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.value
+    other: Practitioner.identifier:LANR.value
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.id
+    other: Practitioner.identifier:LANR.assigner.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.extension
+    other: Practitioner.identifier:LANR.assigner.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.reference
+    other: Practitioner.identifier:LANR.assigner.reference
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.type
+    other: Practitioner.identifier:LANR.assigner.type
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier
+    other: Practitioner.identifier:LANR.assigner.identifier
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier.id
+    other: Practitioner.identifier:LANR.assigner.identifier.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier.extension
+    other: Practitioner.identifier:LANR.assigner.identifier.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier.use
+    other: Practitioner.identifier:LANR.assigner.identifier.use
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier.type
+    other: Practitioner.identifier:LANR.assigner.identifier.type
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier.system
+    other: Practitioner.identifier:LANR.assigner.identifier.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier.value
+    other: Practitioner.identifier:LANR.assigner.identifier.value
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier.period
+    other: Practitioner.identifier:LANR.assigner.identifier.period
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.identifier.assigner
+    other: Practitioner.identifier:LANR.assigner.identifier.assigner
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Practitioner.identifier:ANR.assigner.display
+    other: Practitioner.identifier:LANR.assigner.display
+    remark: null
+  id: e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31

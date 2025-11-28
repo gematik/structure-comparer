@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from .comparison import ComparisonOverview
 from .mapping import MappingBase
 from .package import Package
+from .transformation import TransformationBase
 
 
 class Project(BaseModel):
@@ -11,6 +12,7 @@ class Project(BaseModel):
     status: str | None = None
     mappings: list[MappingBase]
     comparisons: list[ComparisonOverview]
+    transformations: list[TransformationBase] = []
     packages: list[Package]
 
 
