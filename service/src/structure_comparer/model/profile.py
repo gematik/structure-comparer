@@ -29,3 +29,8 @@ class ProfileField(BaseModel):
 
 class ProfileList(BaseModel):
     profiles: list[PackageProfile]
+
+
+class ProfileDetails(Profile):
+    """Profile with full field details."""
+    fields: dict[str, ProfileField]

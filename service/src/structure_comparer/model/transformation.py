@@ -127,8 +127,9 @@ class TransformationFieldsOutput(BaseModel):
 
 class TransformationMappingLink(BaseModel):
     """Model for linking/unlinking a Mapping to a Transformation field."""
-    field_name: str
-    mapping_id: str | None  # None to unlink
+    mapping_id: str | None = None  # None to unlink
+    other: str | None = None  # Target profile field path
+    action: Action | None = None  # Optional action to set when linking
 
 
 # Avoid circular import

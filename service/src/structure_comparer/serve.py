@@ -77,6 +77,7 @@ from .model.package import Package as PackageModel
 from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
 from .model.profile import ProfileList as ProfileListModel
+from .model.profile import ProfileDetails as ProfileDetailsModel
 from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
@@ -371,6 +372,33 @@ async def get_profile_list(
         return ErrorModel.from_except(e)
 
     return proj
+
+
+@app.get(
+    "/project/{project_key}/profile/{profile_id}",
+    tags=["Profiles"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def get_profile_detail(
+    project_key: str, profile_id: str, response: Response
+) -> ProfileDetailsModel | ErrorModel:
+    """
+    Returns a single profile with all its field information
+    """
+    global package_handler
+    try:
+        profile = package_handler.get_profile(project_key, profile_id)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except PackageNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return profile
 
 
 @app.get(

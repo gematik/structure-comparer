@@ -29,8 +29,8 @@ class Project:
         self.__load_packages()
         self.load_comparisons()
         self.load_mappings()
-        self.load_transformations()
         self.__read_manual_entries()
+        self.load_transformations()
 
     def _ensure_structure(self) -> None:
         """

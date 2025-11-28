@@ -150,7 +150,7 @@ class TransformationHandler:
             action=input.action
         )
 
-        # Handle COPY_FROM/COPY_TO actions
+        # Handle COPY_FROM/COPY_TO actions - validate target field exists
         if input.action in [Action.COPY_FROM, Action.COPY_TO]:
             if target_id := input.other:
                 target = self._get_field_by_name(transformation, target_id)
@@ -159,9 +159,12 @@ class TransformationHandler:
                 new_entry.other = target.name
             else:
                 raise MappingTargetMissing()
+        # For other actions, just pass through the 'other' field value (target profile field path)
+        elif input.other:
+            new_entry.other = input.other
 
         # Handle FIXED action
-        elif input.action == Action.FIXED:
+        if input.action == Action.FIXED:
             if fixed := input.fixed:
                 new_entry.fixed = fixed
             else:
@@ -189,6 +192,9 @@ class TransformationHandler:
         # Apply the manual entry
         manual_entries.set_field(new_entry)
         proj.manual_entries.write()
+
+        # Reload transformations to apply the updated manual entries
+        proj.load_transformations()
 
         return new_entry
 
@@ -255,18 +261,24 @@ class TransformationHandler:
         existing_entry = manual_entries.get_field(field_name)
         if existing_entry:
             existing_entry.map = link_data.mapping_id
+            if link_data.other:
+                existing_entry.other = link_data.other
             manual_entries.set_field(existing_entry)
         else:
             new_entry = TransformationFieldBaseModel(
                 name=field_name,
                 action=link_data.action or Action.USE,
                 map=link_data.mapping_id,
+                other=link_data.other,
             )
             manual_entries.set_field(new_entry)
 
         proj.manual_entries.write()
 
-        # Reload and return the updated field
+        # Reload transformations to apply the updated manual entries
+        proj.load_transformations()
+
+        # Return the updated field
         transformation = self._get_transformation(project_key, transformation_id, proj)
         updated_field = self._get_field_by_name(transformation, field_name)
         return updated_field.to_model()
@@ -288,16 +300,19 @@ class TransformationHandler:
         if field is None:
             raise FieldNotFound()
 
-        # Get manual entries
+        # Get manual entries and remove the field entry completely
         manual_entries = proj.manual_entries.get_transformation(transformation_id)
         if manual_entries:
             existing_entry = manual_entries.get_field(field_name)
             if existing_entry:
-                existing_entry.map = None
-                manual_entries.set_field(existing_entry)
+                # Remove the entry completely instead of just clearing the map
+                manual_entries.remove_field(field_name)
                 proj.manual_entries.write()
 
-        # Reload and return the updated field
+        # Reload transformations to apply the updated manual entries
+        proj.load_transformations()
+
+        # Return the updated field
         transformation = self._get_transformation(project_key, transformation_id, proj)
         updated_field = self._get_field_by_name(transformation, field_name)
         return updated_field.to_model()
