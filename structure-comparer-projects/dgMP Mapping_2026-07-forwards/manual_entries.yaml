@@ -50,4 +50,156 @@ entries:
     name: Medication.ingredient.item[x]:itemReference
     other: null
     remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.lastUpdated
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.source
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.security
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.tag
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.language
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.text
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.contained
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.identifier
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.display
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.userSelected
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.version
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.display
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.userSelected
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.status
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.manufacturer
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.code.coding:pzn.display
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.code.coding:pzn.userSelected
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.code.coding:pzn.version
+    other: null
+    remark: null
   id: e5c8dcf6-6071-8dce-3e52-9f012ab34c56
+- fields:
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.meta.lastUpdated
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.meta.source
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.meta.security
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.meta.tag
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.language
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.text
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.contained
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.identifier
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationRequest.statusReason
+    other: null
+    remark: null
+  id: f6d9edd7-7182-9edf-4f63-af123bc45d67

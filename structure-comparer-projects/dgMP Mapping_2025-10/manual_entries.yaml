@@ -15,11 +15,6 @@ entries:
     name: Medication.form.extension
     other: null
     remark: null
-  - action: use_recursive
-    fixed: null
-    name: Medication.ingredient
-    other: null
-    remark: null
   - action: copy_to
     fixed: null
     name: Medication.extension:Impfstoff
@@ -34,6 +29,276 @@ entries:
     fixed: null
     name: Medication.extension:Impfstoff.extension
     other: Medication.extension:isVaccine.extension
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine.value[x]
+    other: Medication.extension:Impfstoff.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory
+    other: Medication.extension:Arzneimittelkategorie
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:packaging
+    other: Medication.extension:Verpackung
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.amount.numerator.extension:totalQuantity
+    other: Medication.amount.numerator.extension:Gesamtmenge
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.id
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.versionId
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.lastUpdated
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.source
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.security
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.tag
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.language
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.text
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.contained
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Medication.extension:rxPrescriptionProcessIdentifier
+    other: null
+    remark: Wird vom Medication Service gesetzt.
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].code
+    other: Medication.extension:Arzneimittelkategorie.value[x].code
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].system
+    other: Medication.extension:Arzneimittelkategorie.value[x].system
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x]
+    other: Medication.extension:Arzneimittelkategorie.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.id
+    other: Medication.extension:Arzneimittelkategorie.id
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.extension
+    other: Medication.extension:Arzneimittelkategorie.extension
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].id
+    other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.id
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].extension
+    other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.extension
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].version
+    other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.version
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].display
+    other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.display
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].userSelected
+    other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.userSelected
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:normSizeCode
+    other: Medication.extension:Normgroesse
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:normSizeCode.id
+    other: Medication.extension:Normgroesse.id
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:normSizeCode.extension
+    other: Medication.extension:Normgroesse.extension
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:normSizeCode.value[x]
+    other: Medication.extension:Normgroesse.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:packaging.value[x]
+    other: Medication.extension:Verpackung.value[x]
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:packaging.id
+    other: Medication.extension:Verpackung.id
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:packaging.extension
+    other: Medication.extension:Verpackung.extension
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions
+    other: Medication.extension:Herstellungsanweisung
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions.id
+    other: Medication.extension:Herstellungsanweisung.id
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions.extension
+    other: Medication.extension:Herstellungsanweisung.extension
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:manufacturingInstructions.value[x]
+    other: Medication.extension:Herstellungsanweisung.value[x]
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.extension:type
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.modifierExtension
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Medication.identifier:EPAMedicationUniqueIdentifier
+    other: null
+    remark: Wird vom MedicationService gesetzt
+  - action: manual
+    fixed: null
+    name: Medication.identifier:RxOriginatorProcessIdentifier
+    other: null
+    remark: Wird vom MedicationService gesetzt
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:drugCategory.value[x].system
+    other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.system
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.versionId
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.identifier
+    other: null
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine.id
+    other: Medication.extension:Impfstoff.id
+    remark: null
+  - action: copy_from
+    fixed: null
+    name: Medication.extension:isVaccine
+    other: Medication.extension:Impfstoff
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.display
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.userSelected
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.version
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding
+    other: Medication.extension:drugCategory.value[x]:valueCoding
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.extension:Herstellungsanweisung.url
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.extension:Impfstoff.url
+    other: null
     remark: null
   id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
 - fields:

@@ -22,7 +22,9 @@ class ProfileField(BaseModel):
     min: int
     max: str
     must_support: bool
-    ref_types: list[str] | None
+    types: list[str] | None = None
+    ref_types: list[str] | None = None
+    cardinality_note: str | None = None
 
 
 class ProfileList(BaseModel):

@@ -314,9 +314,11 @@ class MappingHandler:
             proj.manual_entries[mapping_id] = manual_entries
 
         # Convert recommendation to manual action
+        converted_action = Action(recommendation.action.value) if recommendation.action else None
+        
         new_entry = MappingFieldBaseModel(
             name=field.name,
-            action=Action(recommendation.action.value) if recommendation.action else None,
+            action=converted_action,
         )
 
         # Copy values from recommendation if present

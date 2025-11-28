@@ -46,12 +46,12 @@ def test_required_target_with_not_use_manual_action_counts_as_solved():
     assert evaluation.mapping_status == MappingStatus.SOLVED
 
 
-def test_required_target_with_extension_is_resolved():
+def test_required_target_with_manual_action_is_resolved():
     mapping = EvalMapping([
         EvalField("Practitioner.identifier", is_target_required=True, classification="incompatible"),
     ])
     actions = {
-        "Practitioner.identifier": ActionInfo(action=ActionType.EXTENSION, source=ActionSource.MANUAL)
+        "Practitioner.identifier": ActionInfo(action=ActionType.MANUAL, source=ActionSource.MANUAL)
     }
 
     result = evaluate_mapping(mapping, actions)
@@ -63,7 +63,7 @@ def test_required_target_with_extension_is_resolved():
     assert evaluation.reasons
     reason = evaluation.reasons[0]
     assert reason.severity == EvaluationSeverity.INFO
-    assert reason.related_action == ActionType.EXTENSION
+    assert reason.related_action == ActionType.MANUAL
     assert evaluation.mapping_status == MappingStatus.SOLVED
 
 

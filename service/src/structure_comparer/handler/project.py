@@ -66,6 +66,12 @@ class ProjectsHandler:
         # Check if update
         if proj := self.__projs.get(proj_key):
             proj.name = input.name
+            # Update version and status if provided
+            if input.version is not None:
+                proj.config.version = input.version
+            if input.status is not None:
+                proj.config.status = input.status
+            proj.config.write()
 
         # Create new one otherwise
         else:
@@ -73,6 +79,12 @@ class ProjectsHandler:
 
             # Load the newly created project
             proj = Project.create(project_path, input.name)
+            # Set version and status if provided
+            if input.version is not None:
+                proj.config.version = input.version
+            if input.status is not None:
+                proj.config.status = input.status
+            proj.config.write()
             self.__projs[proj_key] = proj
 
         return proj.to_model()

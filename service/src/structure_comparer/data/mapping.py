@@ -54,6 +54,11 @@ class MappingField(ComparisonField):
         return self.name.rsplit(".", 1)[0]
 
     def fill_allowed_actions(self, source_profiles: List[str], target_profile: str):
+        """Set baseline actions_allowed based on source/target presence.
+        
+        Note: use_recursive filtering based on descendants is handled separately
+        by adjust_use_recursive_actions_allowed() after evaluation is computed.
+        """
         allowed = set([c for c in Action])
 
         any_source_present = any(
@@ -92,7 +97,13 @@ class MappingField(ComparisonField):
         self.fixed = info.fixed_value if isinstance(info.fixed_value, str) else None
 
     def to_model(self) -> MappingFieldModel:
-        profiles = {k: p.to_model() for k, p in self.profiles.items() if p}
+        profiles = {}
+        for k, p in self.profiles.items():
+            if p is not None:
+                # Get the Profile object for this profile key
+                profile_obj = self._profile_objects.get(k)
+                all_fields = profile_obj.fields if profile_obj else None
+                profiles[k] = p.to_model(all_fields)
 
         # Calculate show_mapping_content based on processing status logic
         # If the field has needs_action status (incompatible + use action), hide mapping content
@@ -170,6 +181,10 @@ class Mapping(Comparison):
         evaluation_map = propagator.propagate_incompatible_to_parents()
         
         self._evaluation_map = evaluation_map
+        
+        # Adjust use_recursive in actions_allowed based on evaluation results
+        from ..mapping_actions_engine import adjust_use_recursive_actions_allowed
+        adjust_use_recursive_actions_allowed(self, evaluation_map, action_info_map)
 
         for field_name, field in self.fields.items():
             info = action_info_map.get(field_name)

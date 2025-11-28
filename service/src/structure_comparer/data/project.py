@@ -169,8 +169,18 @@ class Project:
         comparisons = [c.to_overview_model() for c in self.comparisons.values()]
 
         return ProjectModel(
-            name=self.name, mappings=mappings, comparisons=comparisons, packages=pkgs
+            name=self.name,
+            version=self.config.version,
+            status=self.config.status,
+            mappings=mappings,
+            comparisons=comparisons,
+            packages=pkgs
         )
 
     def to_overview_model(self) -> ProjectOverviewModel:
-        return ProjectOverviewModel(name=self.name, url=self.url)
+        return ProjectOverviewModel(
+            name=self.name,
+            url=self.url,
+            version=self.config.version,
+            status=self.config.status
+        )

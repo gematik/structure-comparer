@@ -21,6 +21,7 @@ class ComparisonField:
         self.profiles: OrderedDict[str, ProfileField | None] = OrderedDict()
         self._classification: ComparisonClassification = ComparisonClassification.COMPAT
         self.issues: list[ComparisonIssue] = []
+        self._profile_objects: dict[str, Profile] = {}  # Maps profile key to Profile object
 
     # --- NEW: Eltern-Optionalität prüfen ------------------------------------
     def _parent_path(self, path: str) -> str | None:
@@ -124,7 +125,16 @@ class ComparisonField:
             self.issues.append(ComparisonIssue.REF)
 
     def to_model(self) -> ComparisonFieldModel:
-        profiles = {k: p.to_model() if p else None for k, p in self.profiles.items()}
+        profiles = {}
+        for k, p in self.profiles.items():
+            if p is None:
+                profiles[k] = None
+            else:
+                # Get the Profile object for this profile key
+                profile_obj = self._profile_objects.get(k)
+                all_fields = profile_obj.fields if profile_obj else None
+                profiles[k] = p.to_model(all_fields)
+        
         return ComparisonFieldModel(
             name=self.name,
             profiles=profiles,
@@ -225,6 +235,8 @@ class Comparison:
                     self.fields[field_name] = FieldType(field_name)
 
                 self.fields[field_name].profiles[profile.key] = field
+                # Store reference to the Profile object
+                self.fields[field_name]._profile_objects[profile.key] = profile
 
         # Fill the absent profiles
         all_profiles_keys = [profile.key for profile in all_profiles]

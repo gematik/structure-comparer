@@ -223,7 +223,7 @@ def test_compatible_field_gets_recommendation():
     
     assert "Observation.code" in result
     recommendations = result["Observation.code"]
-    assert len(recommendations) == 1
+    assert len(recommendations) == 2  # USE and USE_RECURSIVE
     assert recommendations[0].action == ActionType.USE
     assert recommendations[0].source == ActionSource.SYSTEM_DEFAULT
     assert recommendations[0].auto_generated is True
@@ -262,13 +262,13 @@ def test_multiple_compatible_fields_get_recommendations():
     
     result = compute_recommendations(mapping, manual_entries={})
     
-    # Two compatible fields should have recommendations
+    # Two compatible fields should have recommendations (USE and USE_RECURSIVE each)
     assert "Patient.name" in result
-    assert len(result["Patient.name"]) == 1
+    assert len(result["Patient.name"]) == 2
     assert result["Patient.name"][0].action == ActionType.USE
     
     assert "Patient.birthDate" in result
-    assert len(result["Patient.birthDate"]) == 1
+    assert len(result["Patient.birthDate"]) == 2
     assert result["Patient.birthDate"][0].action == ActionType.USE
     
     # Incompatible field should not have recommendation
@@ -304,9 +304,9 @@ def test_recommendations_are_separate_from_actions():
     # Patient.birthDate has no manual action, so it gets None action (changed behavior)
     assert actions["Patient.birthDate"].action is None
     
-    # Patient.birthDate should have a recommendation (no manual action + compatible)
+    # Patient.birthDate should have recommendations (no manual action + compatible)
     assert "Patient.birthDate" in recommendations
-    assert len(recommendations["Patient.birthDate"]) == 1
+    assert len(recommendations["Patient.birthDate"]) == 2  # USE and USE_RECURSIVE
 
 
 def test_incompatible_field_with_auto_detected_fixed_value():

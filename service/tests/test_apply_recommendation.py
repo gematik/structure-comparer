@@ -36,12 +36,12 @@ def test_apply_first_recommendation_from_list():
     
     recommendations = compute_recommendations(mapping, manual_entries={})
     
-    # Patient.name should have recommendations
+    # Patient.name should have recommendations (USE and USE_RECURSIVE)
     assert "Patient.name" in recommendations
     name_recommendations = recommendations["Patient.name"]
-    assert len(name_recommendations) == 1
+    assert len(name_recommendations) == 2
     
-    # Simulate applying the first recommendation (index 0)
+    # Simulate applying the first recommendation (index 0 = USE)
     applied_recommendation = name_recommendations[0]
     assert applied_recommendation.action == ActionType.USE
     assert applied_recommendation.source == ActionSource.SYSTEM_DEFAULT
@@ -59,19 +59,25 @@ def test_apply_specific_recommendation_by_index():
     
     recommendations = compute_recommendations(mapping, manual_entries={})
     
-    # Currently we only have one recommendation per field
+    # Now we have two recommendations per compatible field (USE and USE_RECURSIVE)
     name_recommendations = recommendations["Patient.name"]
-    assert len(name_recommendations) == 1
+    assert len(name_recommendations) == 2
     
     # Test index validation would happen in handler
-    # Valid: index = 0
-    # Invalid: index = 1 (out of bounds)
+    # Valid: index = 0 (USE), index = 1 (USE_RECURSIVE)
+    # Invalid: index = 2 (out of bounds)
     
     # Simulate applying with index 0
     index = 0
     assert index < len(name_recommendations)
     applied = name_recommendations[index]
     assert applied.action == ActionType.USE
+    
+    # Simulate applying with index 1
+    index = 1
+    assert index < len(name_recommendations)
+    applied = name_recommendations[index]
+    assert applied.action == ActionType.USE_RECURSIVE
 
 
 def test_invalid_index_out_of_bounds():
@@ -118,9 +124,9 @@ def test_recommendations_remain_separate_from_manual_actions():
     # Patient.name has manual action -> no recommendation
     assert "Patient.name" not in recommendations or len(recommendations.get("Patient.name", [])) == 0
     
-    # Patient.birthDate has no manual action -> has recommendation
+    # Patient.birthDate has no manual action -> has 2 recommendations (USE and USE_RECURSIVE)
     assert "Patient.birthDate" in recommendations
-    assert len(recommendations["Patient.birthDate"]) == 1
+    assert len(recommendations["Patient.birthDate"]) == 2
     
     # After applying the recommendation for Patient.birthDate:
     # 1. It becomes a manual action

@@ -16,6 +16,7 @@ fhir-resources = "^8.0.0"
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"
 pytest = "^9.0.1"
+requests = "^2.32.0"
 
 [build-system]
 requires = ["poetry-core"]

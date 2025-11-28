@@ -7,6 +7,8 @@ from .package import Package
 
 class Project(BaseModel):
     name: str
+    version: str | None = None
+    status: str | None = None
     mappings: list[MappingBase]
     comparisons: list[ComparisonOverview]
     packages: list[Package]
@@ -14,11 +16,15 @@ class Project(BaseModel):
 
 class ProjectInput(BaseModel):
     name: str
+    version: str | None = None
+    status: str | None = None
 
 
 class ProjectOverview(BaseModel):
     name: str
     url: str
+    version: str | None = None
+    status: str | None = None
 
 
 class ProjectList(BaseModel):

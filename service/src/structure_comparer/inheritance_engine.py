@@ -1,12 +1,9 @@
 """Engine for computing inherited actions and recommendations for copy_from/copy_to."""
 
-import logging
 from typing import Dict, Optional
 
 from .field_hierarchy import child_suffix, is_polymorphic_type_choice
 from .model.mapping_action_models import ActionInfo, ActionSource, ActionType
-
-logger = logging.getLogger(__name__)
 
 
 class InheritanceEngine:
@@ -53,22 +50,18 @@ class InheritanceEngine:
             Returns None if the target is invalid
         """
         if not parent_other_value:
-            logger.debug(f"    No parent_other_value for {field_name}")
             return None
 
         # Extract the child suffix (e.g., ".system" or ".code")
         suffix = child_suffix(field_name, parent_field_name)
-        logger.debug(f"    Child suffix for {field_name}: '{suffix}'")
 
         # Don't inherit for polymorphic type choices (e.g., :valueBoolean)
         # These are concrete type implementations, not structural children
         if is_polymorphic_type_choice(suffix):
-            logger.debug(f"    Skipping polymorphic type choice: {suffix}")
             return None
 
         # Append the same suffix to the parent's other_value
         candidate_other_value = parent_other_value + suffix
-        logger.debug(f"    Candidate target: {candidate_other_value}")
 
         # Validate that the target field actually exists
         target_exists = candidate_other_value in self.all_fields
@@ -76,18 +69,14 @@ class InheritanceEngine:
 
         # Handle polymorphic value[x] fields specially
         if not target_exists and ".value[x]" in parent_other_value:
-            logger.debug("    Trying polymorphic value[x] handling...")
             candidate_other_value = self._handle_polymorphic_value_field(
                 parent_other_value, suffix
             )
             if candidate_other_value:
                 target_exists = True
-                logger.debug(f"    Found polymorphic alternative: {candidate_other_value}")
 
         # Fallback for sliced fields
         if not target_exists and ":" in parent_other_value:
-            logger.debug("    Target not found, checking sliced field fallback...")
-            
             # Check if parent is also a sliced field
             parent_is_sliced = ":" in parent_field_name
             
@@ -97,24 +86,19 @@ class InheritanceEngine:
                 if parent_field_name in self.all_fields and field_name in self.all_fields:
                     # The source field exists, so the target should be structurally compatible
                     # even if not explicitly defined (FHIR slices inherit from base type)
-                    logger.debug("    Source slice has this child, accepting target slice")
                     target_exists = True
                     is_implicit_slice = True  # Mark as implicit since target slice child doesn't exist explicitly
             
             # If still not found, try base field fallback
             if not target_exists:
-                logger.debug("    Trying base field fallback...")
                 base_other_value = self._get_base_field_name(parent_other_value)
                 if base_other_value:
                     fallback_candidate = base_other_value + suffix
-                    logger.debug(f"    Fallback candidate: {fallback_candidate}")
                     if fallback_candidate in self.all_fields:
                         # The base field exists, so we can use the sliced target
-                        logger.debug("    Base field exists, using original target")
                         target_exists = True
                         is_implicit_slice = True  # Mark as implicit
 
-        logger.debug(f"    Target exists: {target_exists}")
         return (candidate_other_value, is_implicit_slice) if target_exists else None
 
     def _get_base_field_name(self, sliced_field_name: str) -> Optional[str]:
