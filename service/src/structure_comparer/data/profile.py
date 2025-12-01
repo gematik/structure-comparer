@@ -11,6 +11,7 @@ from pydantic import ValidationError
 from ..fixed_value_extractor import FixedValueExtractor
 from ..model.profile import PackageProfile as PackageProfileModel
 from ..model.profile import Profile as ProfileModel
+from ..model.profile import ProfileDetails as ProfileDetailsModel
 from ..model.profile import ProfileField as ProfileFieldModel
 
 logger = logging.getLogger(__name__)
@@ -193,6 +194,22 @@ class Profile:
         except ValidationError as e:
             logger.exception(e)
 
+        else:
+            return model
+
+    def to_details_model(self) -> ProfileDetailsModel:
+        """Convert to ProfileDetailsModel with all field information."""
+        try:
+            base_dict = self.__to_pkg_dict()
+            # Convert all fields to ProfileFieldModel, using path as key
+            fields_dict = {
+                field.path: field.to_model(self.__fields)
+                for field in self.__fields.values()
+                if field.path is not None
+            }
+            model = ProfileDetailsModel(**base_dict, fields=fields_dict)
+        except ValidationError as e:
+            logger.exception(e)
         else:
             return model
 

@@ -1,26 +1,27 @@
 {
     "name": "dgMP Mapping_2025-10",
-    "version": "1.13",
-    "status": "active",
     "comparisons": [],
     "transformations": [
         {
-            "id": "837f9230-c28e-426e-a32e-268702d6e853",
+            "id": "ac2f9eec-7ee2-4722-b96b-df099e54df34",
             "version": "1.0",
-            "status": "draft",
+            "status": "active",
             "transformations": {
                 "sourceprofiles": [
                     {
                         "url": "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle",
-                        "version": "1.3.2"
+                        "version": "1.3.2",
+                        "webUrl": "https://simplifier.net/packages/kbv.ita.erp/1.3.2/files/2880350",
+                        "package": "kbv.ita.erp"
                     }
                 ],
                 "targetprofile": {
-                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters",
-                    "version": "1.0.6-2"
+                    "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/op-parameter-prescription",
+                    "version": "1.0.6-2",
+                    "webUrl": "https://simplifier.net/packages/de.gematik.epa.medication/1.0.6-2/files/2843691",
+                    "package": "de.gematik.epa.medication"
                 }
-            },
-            "last_updated": "2025-11-28T09:48:35.699220"
+            }
         }
     ],
     "mappings": [

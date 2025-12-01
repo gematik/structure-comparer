@@ -39,6 +39,7 @@ from .errors import (
 )
 from .handler.comparison import ComparisonHandler
 from .handler.mapping import MappingHandler
+from .handler.transformation import TransformationHandler, TransformationNotFound
 from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
@@ -62,11 +63,22 @@ from .model.mapping_evaluation_model import (
   MappingEvaluationModel,
   MappingEvaluationSummaryModel,
 )
+from .model.transformation import (
+    TransformationBase as TransformationBaseModel,
+    TransformationCreate as TransformationCreateModel,
+    TransformationDetails as TransformationDetailsModel,
+    TransformationUpdate as TransformationUpdateModel,
+    TransformationField as TransformationFieldModel,
+    TransformationFieldMinimal as TransformationFieldMinimalModel,
+    TransformationFieldsOutput as TransformationFieldsOutputModel,
+    TransformationMappingLink as TransformationMappingLinkModel,
+)
 from .evaluation import StatusAggregator
 from .model.package import Package as PackageModel
 from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
 from .model.profile import ProfileList as ProfileListModel
+from .model.profile import ProfileDetails as ProfileDetailsModel
 from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
@@ -103,6 +115,7 @@ project_handler: ProjectsHandler
 package_handler: PackageHandler
 comparison_handler: ComparisonHandler
 mapping_handler: MappingHandler
+transformation_handler: TransformationHandler
 cur_proj: str
 
 
@@ -112,6 +125,7 @@ async def lifespan(app: FastAPI):
     global package_handler
     global comparison_handler
     global mapping_handler
+    global transformation_handler
 
     # Set up
     project_handler = ProjectsHandler(
@@ -122,6 +136,7 @@ async def lifespan(app: FastAPI):
     package_handler = PackageHandler(project_handler)
     comparison_handler = ComparisonHandler(project_handler)
     mapping_handler = MappingHandler(project_handler)
+    transformation_handler = TransformationHandler(project_handler)
 
     # Let the app do its job
     yield
@@ -371,6 +386,33 @@ async def get_profile_list(
         return ErrorModel.from_except(e)
 
     return proj
+
+
+@app.get(
+    "/project/{project_key}/profile/{profile_id}",
+    tags=["Profiles"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def get_profile_detail(
+    project_key: str, profile_id: str, response: Response
+) -> ProfileDetailsModel | ErrorModel:
+    """
+    Returns a single profile with all its field information
+    """
+    global package_handler
+    try:
+        profile = package_handler.get_profile(project_key, profile_id)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except PackageNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return profile
 
 
 @app.get(
@@ -1855,6 +1897,446 @@ async def import_manual_entries(
         logger.exception(f"Unexpected error during import: {str(e)}")
         response.status_code = 500
         return {"error": f"Import failed: {str(e)}"}
+
+
+# ============================================================================
+# Migration Endpoints
+# ============================================================================
+
+@app.post(
+    "/project/{project_key}/migrate",
+    tags=["Migration"],
+    responses={404: {}},
+)
+async def migrate_project(
+    project_key: str, response: Response
+) -> dict | ErrorModel:
+    """
+    Migrate a project's config.json and manual_entries.yaml to v2 format.
+    
+    This adds the 'transformations' array to config.json if missing.
+    The manual_entries.yaml format is preserved (backwards compatible).
+    """
+    global project_handler
+    try:
+        from .migration.config_migration import migrate_config_to_v2, detect_config_version
+        import json
+        
+        project = project_handler._get(project_key)
+        if project is None:
+            raise ProjectNotFound()
+        
+        config_file = project.dir / "config.json"
+        
+        # Read current config
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        original_version = detect_config_version(config)
+        
+        if original_version == '2.0':
+            return {
+                "status": "already_migrated",
+                "message": "Project config is already in v2 format",
+                "project_key": project_key,
+                "config_version": "2.0"
+            }
+        
+        # Migrate config
+        migrated_config = migrate_config_to_v2(config)
+        
+        # Write migrated config
+        with open(config_file, 'w', encoding='utf-8') as f:
+            json.dump(migrated_config, f, indent=2, ensure_ascii=False)
+        
+        # Reload project config
+        from .data.config import ProjectConfig
+        project.config = ProjectConfig.from_json(config_file)
+        
+        return {
+            "status": "migrated",
+            "message": "Project config migrated to v2 format",
+            "project_key": project_key,
+            "config_version": "2.0",
+            "changes": ["Added 'transformations' array to config.json"]
+        }
+        
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except Exception as e:
+        logger.exception(f"Migration failed: {str(e)}")
+        response.status_code = 500
+        return {"error": f"Migration failed: {str(e)}"}
+
+
+@app.post(
+    "/migrate/all",
+    tags=["Migration"],
+)
+async def migrate_all_projects(response: Response) -> dict:
+    """
+    Migrate all projects to v2 format.
+    Migrates both config.json (adds transformations array) and 
+    manual_entries.yaml (renames entries to mapping_entries).
+    """
+    global project_handler
+    from .migration.config_migration import migrate_config_to_v2, detect_config_version
+    import json
+    
+    results = []
+    
+    for project_key in project_handler.keys:
+        try:
+            project = project_handler._get(project_key)
+            changes = []
+            
+            # --- Migrate config.json ---
+            config_file = project.dir / "config.json"
+            
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            
+            config_version = detect_config_version(config)
+            
+            if config_version == '1.0':
+                migrated_config = migrate_config_to_v2(config)
+                
+                with open(config_file, 'w', encoding='utf-8') as f:
+                    json.dump(migrated_config, f, indent=2, ensure_ascii=False)
+                
+                # Reload project config
+                from .data.config import ProjectConfig
+                project.config = ProjectConfig.from_json(config_file)
+                changes.append("config.json: Added 'transformations' array")
+            
+            # --- Migrate manual_entries.yaml ---
+            manual_entries_file = project.dir / project.config.manual_entries_file
+            
+            if manual_entries_file.exists():
+                with open(manual_entries_file, 'r', encoding='utf-8') as f:
+                    manual_content = yaml.safe_load(f) or {}
+                
+                # Check if migration is needed (has 'entries' but no 'mapping_entries')
+                has_legacy_entries = 'entries' in manual_content and manual_content['entries']
+                has_new_format = 'mapping_entries' in manual_content and manual_content['mapping_entries']
+                
+                if has_legacy_entries and not has_new_format:
+                    # Migrate: move entries to mapping_entries
+                    migrated_manual = {
+                        'transformation_entries': manual_content.get('transformation_entries', []),
+                        'mapping_entries': manual_content['entries'],
+                    }
+                    
+                    with open(manual_entries_file, 'w', encoding='utf-8') as f:
+                        yaml.safe_dump(migrated_manual, f, default_flow_style=False, allow_unicode=True)
+                    
+                    # Reload manual entries
+                    project._Project__read_manual_entries()
+                    changes.append("manual_entries.yaml: Renamed 'entries' to 'mapping_entries', added 'transformation_entries'")
+                elif not has_legacy_entries and not has_new_format:
+                    # Empty file - add new format structure
+                    migrated_manual = {
+                        'transformation_entries': [],
+                        'mapping_entries': [],
+                    }
+                    
+                    with open(manual_entries_file, 'w', encoding='utf-8') as f:
+                        yaml.safe_dump(migrated_manual, f, default_flow_style=False, allow_unicode=True)
+                    
+                    project._Project__read_manual_entries()
+                    changes.append("manual_entries.yaml: Initialized with v2 format")
+            
+            if changes:
+                results.append({
+                    "project": project_key,
+                    "status": "migrated",
+                    "changes": changes
+                })
+            else:
+                results.append({
+                    "project": project_key,
+                    "status": "already_migrated"
+                })
+            
+        except Exception as e:
+            results.append({
+                "project": project_key,
+                "status": "error",
+                "error": str(e)
+            })
+    
+    migrated_count = sum(1 for r in results if r["status"] == "migrated")
+    already_migrated_count = sum(1 for r in results if r["status"] == "already_migrated")
+    error_count = sum(1 for r in results if r["status"] == "error")
+    
+    return {
+        "status": "completed",
+        "summary": {
+            "total": len(results),
+            "migrated": migrated_count,
+            "already_migrated": already_migrated_count,
+            "errors": error_count
+        },
+        "results": results
+    }
+
+
+# ============================================================================
+# Transformation Endpoints
+# ============================================================================
+
+@app.get(
+    "/project/{project_key}/transformation",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_transformations(
+    project_key: str, response: Response
+) -> list[TransformationBaseModel] | ErrorModel:
+    """
+    Get all transformations for a project.
+    Returns a list of all transformations with their metadata.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.get_list(project_key)
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/transformation/{transformation_id}",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_transformation(
+    project_key: str, transformation_id: str, response: Response
+) -> TransformationDetailsModel | ErrorModel:
+    """
+    Get a specific transformation with all details including fields and linked mappings.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.get(project_key, transformation_id)
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/transformation",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def create_transformation(
+    project_key: str,
+    transformation: TransformationCreateModel,
+    response: Response,
+) -> TransformationDetailsModel | ErrorModel:
+    """
+    Create a new transformation.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.create(project_key, transformation)
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except Exception as e:
+        response.status_code = 500
+        return ErrorModel(error=str(e))
+
+
+@app.patch(
+    "/project/{project_key}/transformation/{transformation_id}",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def update_transformation(
+    project_key: str,
+    transformation_id: str,
+    update_data: TransformationUpdateModel,
+    response: Response,
+) -> TransformationDetailsModel | ErrorModel:
+    """
+    Update transformation metadata (status, version, profile information).
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.update(project_key, transformation_id, update_data)
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.delete(
+    "/project/{project_key}/transformation/{transformation_id}",
+    tags=["Transformations"],
+    responses={404: {}},
+)
+async def delete_transformation(
+    project_key: str, transformation_id: str, response: Response
+) -> dict | ErrorModel:
+    """
+    Delete a transformation.
+    """
+    global transformation_handler
+    try:
+        transformation_handler.delete(project_key, transformation_id)
+        return {"status": "deleted", "id": transformation_id}
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/transformation/{transformation_id}/field",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_transformation_fields(
+    project_key: str, transformation_id: str, response: Response
+) -> TransformationFieldsOutputModel | ErrorModel:
+    """
+    Get all fields for a transformation.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.get_field_list(project_key, transformation_id)
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/transformation/{transformation_id}/field/{field_name:path}",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_transformation_field(
+    project_key: str,
+    transformation_id: str,
+    field_name: str,
+    response: Response,
+) -> TransformationFieldModel | ErrorModel:
+    """
+    Get a specific field from a transformation.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.get_field(project_key, transformation_id, field_name)
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except FieldNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.put(
+    "/project/{project_key}/transformation/{transformation_id}/field/{field_name:path}",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def set_transformation_field(
+    project_key: str,
+    transformation_id: str,
+    field_name: str,
+    input: TransformationFieldMinimalModel,
+    response: Response,
+) -> TransformationFieldModel | ErrorModel:
+    """
+    Set or update a field in a transformation.
+    """
+    global transformation_handler
+    try:
+        transformation_handler.set_field(project_key, transformation_id, field_name, input)
+        return transformation_handler.get_field(project_key, transformation_id, field_name)
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except FieldNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except (MappingTargetNotFound, MappingTargetMissing, MappingValueMissing) as e:
+        response.status_code = 400
+        return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/transformation/{transformation_id}/field/{field_name:path}/link-mapping",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def link_mapping_to_transformation_field(
+    project_key: str,
+    transformation_id: str,
+    field_name: str,
+    link_data: TransformationMappingLinkModel,
+    response: Response,
+) -> TransformationFieldModel | ErrorModel:
+    """
+    Link a mapping to a transformation field.
+    This creates a reference from the transformation field to a child mapping.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.link_mapping(
+            project_key, transformation_id, field_name, link_data
+        )
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except (FieldNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.delete(
+    "/project/{project_key}/transformation/{transformation_id}/field/{field_name:path}/link-mapping",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def unlink_mapping_from_transformation_field(
+    project_key: str,
+    transformation_id: str,
+    field_name: str,
+    response: Response,
+) -> TransformationFieldModel | ErrorModel:
+    """
+    Remove a mapping link from a transformation field.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.unlink_mapping(
+            project_key, transformation_id, field_name
+        )
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except FieldNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
 
 
 def serve():

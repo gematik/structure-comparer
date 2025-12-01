@@ -8,6 +8,7 @@ from .comparison import Comparison
 from .config import PackageConfig, ProjectConfig
 from .mapping import Mapping
 from .package import Package
+from .transformation import Transformation
 
 
 class Project:
@@ -17,6 +18,7 @@ class Project:
 
         self.mappings: Dict[str, Mapping]
         self.comparisons: Dict[str, Comparison]
+        self.transformations: Dict[str, Transformation]
         self.manual_entries: ManualEntries
 
         self.pkgs: list[Package]
@@ -28,6 +30,7 @@ class Project:
         self.load_comparisons()
         self.load_mappings()
         self.__read_manual_entries()
+        self.load_transformations()
 
     def _ensure_structure(self) -> None:
         """
@@ -84,6 +87,17 @@ class Project:
     def load_mappings(self):
         self.mappings = {
             m.id: Mapping(m, self).init_ext() for m in self.config.mappings
+        }
+
+    def load_transformations(self):
+        """Load all transformations from config."""
+        if not self.config.transformations:
+            self.transformations = {}
+            return
+
+        self.transformations = {
+            t.id: Transformation(t, self).init_ext()
+            for t in self.config.transformations
         }
 
     def __read_manual_entries(self):
@@ -167,6 +181,7 @@ class Project:
         mappings = [m.to_base_model() for m in self.mappings.values()]
         pkgs = [p.to_model() for p in self.pkgs]
         comparisons = [c.to_overview_model() for c in self.comparisons.values()]
+        transformations = [t.to_base_model() for t in self.transformations.values()]
 
         return ProjectModel(
             name=self.name,
@@ -174,6 +189,7 @@ class Project:
             status=self.config.status,
             mappings=mappings,
             comparisons=comparisons,
+            transformations=transformations,
             packages=pkgs
         )
 

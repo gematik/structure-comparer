@@ -43,6 +43,21 @@ class MappingConfig(BaseModel):
     )
 
 
+class TransformationConfig(BaseModel):
+    """Configuration for a Transformation (meta-level mapping).
+
+    A Transformation bundles multiple Mappings together to describe
+    how a complete FHIR Bundle is transformed into another structure.
+    """
+    id: str
+    version: str
+    status: str = "draft"
+    transformations: ComparisonProfilesConfig = None
+    last_updated: str = (datetime.now(timezone.utc) + timedelta(hours=2)).strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+
 class ProjectConfig(BaseModel):
     name: str | None = None
     version: str | None = None
@@ -52,6 +67,7 @@ class ProjectConfig(BaseModel):
     html_output_dir: str = "docs"
     packages: list[PackageConfig] = []
     comparisons: list[ComparisonConfig] = []
+    transformations: list[TransformationConfig] = []  # NEW: meta-level mappings
     mapping_output_file: str = "mapping.json"
     mappings: list[MappingConfig] = []
     show_remarks: bool = True

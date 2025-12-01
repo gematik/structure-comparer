@@ -2,6 +2,69 @@ entries:
 - fields:
   - action: use
     fixed: null
+    name: Medication.id
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.meta
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.extension
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.versionId
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.lastUpdated
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.source
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.security
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.meta.tag
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Medication.language
+    other: null
+    remark: null
+  id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+mapping_entries:
+- fields:
+  - action: use
+    fixed: null
     name: Medication.form
     other: null
     remark: null
@@ -448,3 +511,36 @@ entries:
     other: Practitioner.identifier:LANR.assigner.display
     remark: null
   id: e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31
+transformation_entries:
+- fields:
+  - action: use
+    fixed: null
+    map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+    name: Bundle.entry:RezeptierdatenPZNVerordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
+    remark: null
+  - action: use
+    fixed: null
+    map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+    name: Bundle.entry:RezeptierdatenWirkstoffverordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
+    remark: null
+  - action: use
+    fixed: null
+    map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+    name: Bundle.entry:RezeptierdatenRezepturverordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
+    remark: null
+  - action: use
+    fixed: null
+    map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+    name: Bundle.entry:RezeptierdatenFreitextverordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
+    remark: null
+  - action: use
+    fixed: null
+    map: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
+    name: Bundle.entry:Einrichtung.resource
+    other: .parameter:rxPrescription.part:organization.resource
+    remark: null
+  id: 837f9230-c28e-426e-a32e-268702d6e853

@@ -18,6 +18,7 @@ from ..model.package import Package as PackageModel
 from ..model.package import PackageInput as PackageInputModel
 from ..model.package import PackageList as PackageListModel
 from ..model.profile import ProfileList as ProfileListModel
+from ..model.profile import ProfileDetails as ProfileDetailsModel
 from .project import ProjectsHandler
 
 
@@ -49,6 +50,17 @@ class PackageHandler:
 
         profs = [prof.to_pkg_model() for pkg in proj.pkgs for prof in pkg.profiles]
         return ProfileListModel(profiles=profs)
+
+    def get_profile(self, proj_key: str, profile_id: str) -> ProfileDetailsModel:
+        """Get a single profile with all its fields."""
+        proj = self.project_handler._get(proj_key)
+
+        for pkg in proj.pkgs:
+            for prof in pkg.profiles:
+                if prof.id == profile_id:
+                    return prof.to_details_model()
+
+        raise PackageNotFound()  # TODO: Create ProfileNotFound error
 
     def new_from_file_upload(self, proj_key: str, file: UploadFile) -> PackageModel:
         if file.content_type != "application/gzip":
