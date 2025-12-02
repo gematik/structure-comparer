@@ -12,6 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
+import re
 from typing import TYPE_CHECKING, Iterable, Literal, Sequence
 
 from structure_comparer.model.mapping_action_models import ActionInfo
@@ -27,6 +28,7 @@ if TYPE_CHECKING:  # pragma: no cover - only used for type checking
 
 
 STRUCTUREMAP_PACKAGE_VERSION = 1
+STRUCTUREMAP_URL_PREFIX = "https://gematik.de/fhir/structure-comparer/StructureMap/"
 
 
 @dataclass(frozen=True)
@@ -124,6 +126,69 @@ def _unique_filename(base: str, registry: dict[str, int]) -> str:
     return f"{base}{suffix}.json"
 
 
+_STRUCTUREMAP_NAME_CHARS = re.compile(r"[^A-Za-z0-9\-.]+")
+
+
+def _sanitize_structuremap_label(label: str, fallback: str) -> str:
+    cleaned = _STRUCTUREMAP_NAME_CHARS.sub("-", label or "")
+    cleaned = re.sub(r"-+", "-", cleaned).strip("-.")
+    return cleaned or fallback
+
+
+def _unique_structuremap_name(base_name: str, registry: dict[str, int]) -> str:
+    base = base_name or "StructureMap-Map"
+    counter = registry.get(base, 0)
+    registry[base] = counter + 1
+    if counter == 0:
+        candidate = base
+    else:
+        suffix = f"-{counter + 1}"
+        max_base_len = max(1, 64 - len(suffix))
+        candidate = f"{base[:max_base_len]}{suffix}"
+
+    if candidate[0].isdigit():
+        candidate = f"F{candidate[:-1]}" if len(candidate) == 64 else f"F{candidate}"
+
+    return candidate[:64]
+
+
+def _structuremap_name_from_profile(
+    profile: "Profile" | None,
+    *,
+    fallback: str,
+    registry: dict[str, int],
+) -> str:
+    label = _profile_label(profile, fallback)
+    sanitized = _sanitize_structuremap_label(label, fallback)
+    max_base_len = max(1, 64 - len("-Map"))
+    sanitized = sanitized[:max_base_len]
+    base_name = f"{sanitized}-Map"
+    return _unique_structuremap_name(base_name, registry)
+
+
+def _structuremap_name_for_router(
+    mapping: "Mapping",
+    *,
+    registry: dict[str, int],
+    fallback: str | None = None,
+) -> str:
+    target_label = _profile_label(getattr(mapping, "target", None), fallback or getattr(mapping, "name", "Router"))
+    sanitized = _sanitize_structuremap_label(target_label, "Router")
+    max_base_len = max(1, 64 - len("-Map"))
+    base = f"{sanitized[:max_base_len]}-Map"
+    return _unique_structuremap_name(base, registry)
+
+
+def _ensure_valid_structuremap_name(name: str) -> str:
+    sanitized = _sanitize_structuremap_label(name or "StructureMap", "StructureMap")
+    sanitized = sanitized[:64]
+    if not sanitized:
+        sanitized = "StructureMap"
+    if sanitized[0].isdigit():
+        sanitized = f"F{sanitized[:-1]}" if len(sanitized) == 64 else f"F{sanitized}"
+    return sanitized
+
+
 
 def build_structuremap_fsh(
     mapping: "Mapping",
@@ -184,7 +249,6 @@ def build_structuremap_package(
     source profile.
     """
 
-    normalized_ruleset = normalize_ruleset_name(ruleset_name or "structuremap")
     sources = list(mapping.sources or [])
     target_profile = mapping.target
     target_profile_url = getattr(target_profile, "url", None)
@@ -192,14 +256,22 @@ def build_structuremap_package(
 
     artifacts: list[StructureMapArtifact] = []
     filename_registry: dict[str, int] = {}
+    ruleset_registry: dict[str, int] = {}
+    requested_ruleset = ruleset_name or mapping.name or mapping.id
 
     if len(sources) <= 1:
+        primary_profile = sources[0] if sources else target_profile
+        structuremap_name = _structuremap_name_from_profile(
+            primary_profile,
+            fallback=requested_ruleset,
+            registry=ruleset_registry,
+        )
         structure_map = build_structuremap_dict(
             mapping=mapping,
             actions=actions,
             source_alias=source_alias,
             target_alias=target_alias,
-            ruleset_name=normalized_ruleset,
+            ruleset_name=structuremap_name,
             source_profiles=sources or None,
         )
         source_profile = sources[0] if sources else None
@@ -231,8 +303,11 @@ def build_structuremap_package(
 
     child_refs: list[dict] = []
     for index, profile in enumerate(sources):
-        suffix = _profile_suffix(profile, index)
-        child_ruleset = normalize_ruleset_name(f"{normalized_ruleset}_{suffix}")
+        child_ruleset = _structuremap_name_from_profile(
+            profile,
+            fallback=f"{requested_ruleset}_{index + 1}" if requested_ruleset else f"source_{index + 1}",
+            registry=ruleset_registry,
+        )
         structure_map = build_structuremap_dict(
             mapping=mapping,
             actions=actions,
@@ -277,7 +352,7 @@ def build_structuremap_package(
 
     router_map = _build_router_structuremap(
         mapping=mapping,
-        ruleset_name=normalized_ruleset,
+        ruleset_name=_structuremap_name_for_router(mapping, registry=ruleset_registry, fallback=requested_ruleset),
         source_alias=source_alias,
         target_alias=target_alias,
         child_refs=child_refs,
@@ -322,7 +397,7 @@ class _StructureMapBuilder:
         self._actions = actions
         self._source_alias = source_alias or "source"
         self._target_alias = target_alias or "target"
-        self._ruleset_name = normalize_ruleset_name(ruleset_name or "structuremap")
+        self._ruleset_name = _ensure_valid_structuremap_name(ruleset_name or "StructureMap")
         self._target_profile_key = mapping.target.key if mapping.target else None
         self._source_profiles = list(source_profiles) if source_profiles is not None else list(mapping.sources or [])
         self._source_profile_keys = [p.key for p in self._source_profiles]
@@ -369,8 +444,8 @@ class _StructureMapBuilder:
 
         return {
             "resourceType": "StructureMap",
-            "id": slug(self._ruleset_name, suffix=stable_id(self._ruleset_name)),
-            "url": f"{self._mapping.target.url}/StructureMap/{self._ruleset_name}",
+            "id": self._ruleset_name,
+            "url": f"{STRUCTUREMAP_URL_PREFIX}{self._ruleset_name}",
             "name": self._ruleset_name,
             "status": self._mapping.status or "draft",
             "version": self._mapping.version,
@@ -485,7 +560,7 @@ def _build_router_structuremap(
 ) -> dict:
     target = mapping.target
     target_url = getattr(target, "url", None)
-    router_id = slug(ruleset_name, suffix=stable_id(ruleset_name))
+    router_id = _ensure_valid_structuremap_name(ruleset_name)
     imports = [ref["structure_map_url"] for ref in child_refs if ref.get("structure_map_url")]
 
     shared_resource_type = _shared_resource_type(mapping.sources or [])
@@ -524,7 +599,7 @@ def _build_router_structuremap(
     router_map = {
         "resourceType": "StructureMap",
         "id": router_id,
-        "url": f"{target_url}/StructureMap/{ruleset_name}" if target_url else f"StructureMap/{ruleset_name}",
+        "url": f"{STRUCTUREMAP_URL_PREFIX}{router_id}",
         "name": ruleset_name,
         "status": mapping.status or "draft",
         "version": mapping.version,
@@ -592,13 +667,4 @@ def _canonical_url_for_resource_type(resource_type: str | None) -> str | None:
     if not resource_type:
         return None
     return f"http://hl7.org/fhir/StructureDefinition/{resource_type}"
-
-
-def _profile_suffix(profile: "Profile", index: int) -> str:
-    if getattr(profile, "name", None):
-        return profile.name
-    url = getattr(profile, "url", None)
-    if url:
-        return url.rstrip("/").split("/")[-1]
-    return f"source{index}"
 
