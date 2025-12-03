@@ -13,12 +13,18 @@
 | 4 | 4.1 | ✅ | TargetCreationHandler erstellen |
 | 5 | 5.1 | ✅ | Router erstellen |
 | 5 | 5.2 | ✅ | Router registrieren |
-| 6 | 6.1 | ⬜ | Frontend Models erstellen |
-| 7 | 7.1 | ⬜ | Frontend TargetCreationService erstellen |
-| 8 | 8.1-8.4 | ⬜ | Frontend Components |
-| 9 | 9.1-9.3 | ⬜ | Routing & Navigation |
-| 10 | 10.1-10.2 | ⬜ | Shared Components anpassen |
-| 11 | 11.1-11.5 | ⬜ | Transformation-Integration |
+| 6 | 6.1 | ✅ | Frontend Models erstellen |
+| 7 | 7.1 | ✅ | Frontend TargetCreationService erstellen |
+| 8 | 8.1 | ✅ | Target Creation List Component erstellen |
+| 8 | 8.2 | ✅ | Target Creation Detail Component erstellen |
+| 8 | 8.3 | ✅ | Edit Target Creation Field Dialog erstellen |
+| 8 | 8.4 | ✅ | Add Target Creation Dialog erstellen |
+| 8 | 8.5 | ✅ | Integration in Edit Project |
+| 8 | 8.6 | ✅ | Routing konfiguriert |
+| 9 | 9.1-9.3 | ✅ | Breadcrumb Integration & Testing |
+| 10 | 10.1-10.2 | ✅ | Shared Components Wiederverwendung (in Phase 8 integriert) |
+| 11 | 11.1-11.2 | ⬜ | Optional Enhancements (YAML Export, Update Dialog) |
+| 12 | 12.1-12.5 | ⬜ | Transformation-Integration |
 
 ---
 
@@ -308,6 +314,193 @@ target_creation_handler = TargetCreationHandler(project_handler)
 
 ### Phase 6: Frontend - Models
 
+#### Schritt 6.1: Target Creation Models erstellen ✅ ERLEDIGT
+**Datei:** `src/app/models/target-creation.model.ts` (neu erstellt)
+
+**Status:** Vollständig implementiert am 2025-12-03
+
+**Erstellte Models:**
+```typescript
+// Action Types (restricted subset)
+export type TargetCreationAction = 'manual' | 'fixed';
+
+// Profile Information
+export interface ProfileInfo { name, url, version, webUrl?, package? }
+export interface ProfileReference { url, version, webUrl?, package? }
+
+// Status Counts (different from Mappings)
+export interface TargetCreationStatusCounts {
+  total: number;
+  action_required: number;  // Mandatory fields without action
+  resolved: number;         // Fields with action defined
+  optional_pending: number; // Optional fields without action
+}
+
+// Field Models
+export interface TargetCreationField {
+  name: string;
+  types: string[];
+  min: number;
+  max: string;
+  extension?: string;
+  description?: string;
+  actions_allowed: TargetCreationAction[];  // Always ['manual', 'fixed']
+  action_info?: ActionInfo;     // Reused from mapping-evaluation.model.ts
+  evaluation?: EvaluationResult; // Reused from mapping-evaluation.model.ts
+}
+
+export interface TargetCreationFieldUpdate {
+  action: TargetCreationAction;
+  fixed?: string;   // For action='fixed'
+  remark?: string;  // For action='manual'
+}
+
+// Entity Models
+export interface TargetCreationListItem {
+  id, name, url, version, status, target, status_counts, last_updated
+}
+
+export interface TargetCreationDetail {
+  id, name, url, version, status, target, fields, status_counts, last_updated
+}
+
+// Input Models
+export interface TargetCreationCreateInput {
+  targetprofile: ProfileReference;  // Only target required, no sources
+}
+
+export interface TargetCreationUpdateInput {
+  status?: string;
+  version?: string;
+  target?: ProfileReference;
+}
+
+// Evaluation
+export interface TargetCreationEvaluationSummary {
+  target_creation_id, target_creation_name, status_counts, field_evaluations
+}
+
+export interface TargetCreationFieldsOutput {
+  fields: TargetCreationField[];
+}
+```
+
+**Besonderheiten:**
+- Wiederverwendung von `ActionInfo` und `EvaluationResult` aus `mapping-evaluation.model.ts`
+- Keine source-bezogenen Felder (keine SourceProfile)
+- Eigene Status-Counts (action_required/resolved/optional_pending statt incompatible/warning/solved/compatible)
+- Restriktive Actions (nur manual, fixed)
+- Ausführliche JSDoc-Kommentare für alle Interfaces
+
+**Datei-Größe:** ~200 Zeilen inkl. Copyright und Kommentare
+
+---
+
+### Phase 7: Frontend - Service
+
+#### Schritt 7.1: TargetCreationService erstellen ✅ ERLEDIGT
+**Datei:** `src/app/target-creation.service.ts` (neu erstellt)
+
+**Status:** Vollständig implementiert am 2025-12-03
+
+**Implementierte Methoden:**
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class TargetCreationService {
+  private baseUrl = 'http://127.0.0.1:8000';
+
+  // ===== CRUD Operations =====
+  getTargetCreations(projectKey: string): Observable<TargetCreationListItem[]>  ✅
+    → GET /project/{key}/target-creation
+
+  getTargetCreation(projectKey: string, id: string): Observable<TargetCreationDetail>  ✅
+    → GET /project/{key}/target-creation/{id}
+
+  createTargetCreation(projectKey: string, input: TargetCreationCreateInput): Observable<{id: string}>  ✅
+    → POST /project/{key}/target-creation
+
+  updateTargetCreation(projectKey: string, id: string, input: TargetCreationUpdateInput): Observable<void>  ✅
+    → PATCH /project/{key}/target-creation/{id}
+
+  deleteTargetCreation(projectKey: string, id: string): Observable<void>  ✅
+    → DELETE /project/{key}/target-creation/{id}
+
+  // ===== Field Operations =====
+  getFields(projectKey: string, id: string): Observable<TargetCreationField[]>  ✅
+    → GET /project/{key}/target-creation/{id}/field
+    → Extrahiert fields Array aus { fields: [...] } Response
+
+  getField(projectKey: string, id: string, fieldName: string): Observable<TargetCreationField>  ✅
+    → GET /project/{key}/target-creation/{id}/field/{name}
+
+  setField(projectKey: string, id: string, fieldName: string, input: TargetCreationFieldUpdate): Observable<void>  ✅
+    → PUT /project/{key}/target-creation/{id}/field/{name}
+
+  // ===== Evaluation =====
+  getEvaluationSummary(projectKey: string, id: string): Observable<TargetCreationEvaluationSummary>  ✅
+    → GET /project/{key}/target-creation/{id}/evaluation/summary
+
+  // ===== Error Handling =====
+  private handleError(error: HttpErrorResponse)  ✅
+    → Unified error handling analog zu MappingsService
+}
+```
+
+**Alle 9 Backend-Endpoints abgedeckt:**
+- ✅ List Target Creations
+- ✅ Get Target Creation Details
+- ✅ Create Target Creation
+- ✅ Update Target Creation Metadata
+- ✅ Delete Target Creation
+- ✅ List Fields
+- ✅ Get Field
+- ✅ Set Field Action
+- ✅ Get Evaluation Summary
+
+**Besonderheiten:**
+- Analog zu `MappingsService` strukturiert
+- Alle Methoden nutzen HttpClient mit typsicheren Generics
+- URL-Encoding für alle Parameter (projectKey, id, fieldName)
+- Einheitliches Error-Handling mit catchError
+- `getFields()` extrahiert Array aus Backend-Wrapper { fields: [...] }
+- Ausführliche JSDoc-Kommentare für jede Methode
+
+**Datei-Größe:** ~240 Zeilen inkl. Copyright und Kommentare
+
+---
+
+### Phase 6-7: Zusammenfassung
+
+**Neue Dateien erstellt:**
+- ✅ `src/app/models/target-creation.model.ts` (200 Zeilen)
+- ✅ `src/app/target-creation.service.ts` (240 Zeilen)
+
+**Gesamt:** ~440 neue Zeilen Frontend-Code
+
+**Backend-Integration:**
+- ✅ Alle 9 Backend-Endpoints werden vom Service aufgerufen
+- ✅ TypeScript Models matchen Backend Pydantic Models
+- ✅ Wiederverwendung existierender Types (ActionInfo, EvaluationResult)
+
+**Code-Qualität:**
+- ✅ Copyright-Header in allen Dateien
+- ✅ Ausführliche JSDoc-Dokumentation
+- ✅ TypeScript strict mode kompatibel
+- ✅ Konsistente Namensgebung mit Mappings
+- ✅ Error-Handling implementiert
+
+**Nächste Phase: Components (Phase 8)**
+Die Models und Service sind fertig. Als nächstes folgen:
+1. Target Creation List Component (in edit-project integrieren)
+2. Target Creation Detail Component (Feld-Tabelle)
+3. Add Target Creation Dialog (Target-Profil auswählen)
+4. Edit Target Creation Field Dialog (Action: manual/fixed)
+
+---
+
+### Phase 6: Frontend - Models
+
 #### Schritt 6.1: Target Creation Models erstellen
 **Datei:** `src/app/models/target-creation.model.ts` (neu)
 
@@ -476,24 +669,70 @@ Vereinfachte Version von `add-mapping-dialog/`:
 
 ---
 
-### Phase 10: Frontend - Shared Components Anpassen
+### Phase 10: Frontend - Shared Components Wiederverwendung ✅ ERLEDIGT
 
-#### Schritt 10.1: Action Selection anpassen
-**Datei:** `src/app/edit-property-action-dialog/action-selection/`
+**Status:** Bereits in Phase 8.2-8.4 integriert
 
-Option A: Generisch machen mit Input für erlaubte Actions
-Option B: Separate `TargetCreationActionSelection` Component
+#### Schritt 10.1: Action Display wiederverwendet ✅
+**Implementiert in:** Phase 8.2 (Target Creation Detail Component)
 
-#### Schritt 10.2: Status Display wiederverwenden
-Die Components `mapping-status-display` und `mapping-action-display` können wiederverwendet werden, da sie auf `ActionInfo` basieren.
+Die `MappingActionDisplayComponent` wird in der Target Creation Detail Component wiederverwendet:
+```typescript
+// In target-creation-detail.component.ts
+import { MappingActionDisplayComponent } from '../shared/mapping-action-display/mapping-action-display.component';
+
+// Im Template verwendet für Action-Badges
+```
+
+#### Schritt 10.2: Status Display wiederverwendet ✅
+**Implementiert in:** Phase 8.2 (Target Creation Detail Component)
+
+Die `MappingStatusDisplayComponent` wird wiederverwendet, da beide auf `ActionInfo` und `EvaluationResult` basieren:
+```typescript
+// In target-creation-detail.component.ts
+import { MappingStatusDisplayComponent } from '../shared/mapping-status-display/mapping-status-display.component';
+```
+
+**Ergebnis:**
+- ✅ Keine neuen Action/Status Display Components nötig
+- ✅ Konsistentes UI durch Wiederverwendung
+- ✅ Weniger Code-Duplikation
 
 ---
 
-### Phase 11: Transformation-Integration
+### Phase 11: Optional Enhancements
+
+#### Schritt 11.1: YAML Export implementieren
+**Datei:** `src/app/target-creation-detail/target-creation-detail.component.ts`
+
+**Was fehlt:**
+- Implementierung von `exportAsYaml()` (aktuell Placeholder)
+- Format: manual_entries.yaml Export
+- Download-Logik
+
+**Placeholder:**
+```typescript
+exportAsYaml(): void {
+  this.snackBar.open('YAML Export wird implementiert', 'OK', { duration: 2000 });
+  // TODO: Implement YAML export (Phase 11.1)
+}
+```
+
+#### Schritt 11.2: Update Metadata Dialog
+**Was fehlt:**
+- Dialog zum Ändern von Metadaten (Version, Status)
+- Analog zu EditMappingDialog
+- Button im Detail-Header
+
+**Priorität:** Niedrig (Metadaten ändern sich selten)
+
+---
+
+### Phase 12: Transformation-Integration
 
 Target Creations können (analog zu Mappings) in Transformations verlinkt werden, um anzuzeigen welche Zielressourcen ohne Quelldaten erstellt werden müssen.
 
-#### Schritt 11.1: Backend - TransformationField erweitern
+#### Schritt 12.1: Backend - TransformationField erweitern
 **Datei:** `service/src/structure_comparer/models/transformation.py`
 
 ```python
@@ -501,7 +740,7 @@ Target Creations können (analog zu Mappings) in Transformations verlinkt werden
 target_creation: Optional[str]  # ID einer verlinkten Target Creation (analog zu map)
 ```
 
-#### Schritt 11.2: Backend - TransformationHandler erweitern
+#### Schritt 12.2: Backend - TransformationHandler erweitern
 **Datei:** `service/src/structure_comparer/handlers/transformation_handler.py`
 
 ```python
@@ -512,7 +751,7 @@ def unlink_target_creation(self, project_key: str, transformation_id: str,
                            field_name: str)
 ```
 
-#### Schritt 11.3: Backend - API Endpoints erweitern
+#### Schritt 12.3: Backend - API Endpoints erweitern
 **Datei:** `service/src/structure_comparer/routers/transformation.py`
 
 ```python
@@ -521,7 +760,7 @@ def unlink_target_creation(self, project_key: str, transformation_id: str,
 @router.delete("/{id}/fields/{field_name}/target-creation") # Unlink Target Creation
 ```
 
-#### Schritt 11.4: Frontend - Transformation Service erweitern
+#### Schritt 12.4: Frontend - Transformation Service erweitern
 **Datei:** `src/app/transformation.service.ts`
 
 ```typescript
@@ -532,7 +771,7 @@ unlinkTargetCreation(projectKey: string, transformationId: string,
                      fieldName: string): Observable<void>
 ```
 
-#### Schritt 11.5: Frontend - Transformation Detail UI erweitern
+#### Schritt 12.5: Frontend - Transformation Detail UI erweitern
 **Datei:** `src/app/transformation-detail/`
 
 - In der Resource-Tabelle: Zusätzliche Spalte/Option für "Target Creation"
@@ -694,4 +933,63 @@ Erstelle `src/app/models/target-creation.model.ts` mit allen TypeScript Interfac
 - Detailed Implementation: `IMPLEMENTATION_PHASE_4_5_SUMMARY.md`
 - API Endpoints: Siehe Phase 5 in diesem Dokument
 - Model Definitions: `service/src/structure_comparer/model/target_creation.py`
+
+---
+
+### Dateien Erstellt/Geändert in Phase 6-8.1
+
+#### **Phase 6-7: Frontend Foundation** ✅ KOMPLETT (2025-12-03)
+- ✅ Models (`src/app/models/target-creation.model.ts` - 208 Zeilen)
+  - 12 Interfaces/Types für Target Creation
+  - Wiederverwendung von ActionInfo, EvaluationResult
+  - Eigene Status-Kategorien (action_required, resolved, optional_pending)
+- ✅ Service (`src/app/target-creation.service.ts` - 251 Zeilen)
+  - 9 Methoden für alle Backend-Endpoints
+  - Type-safe mit TypeScript Generics
+  - Error-Handling analog zu MappingsService
+
+#### **Phase 8.1: Target Creation List Component** ✅ KOMPLETT (2025-12-03)
+- ✅ Component (`src/app/shared/target-creation-list/target-creation-list.component.ts` - 273 Zeilen)
+  - Standalone Component mit inline Template
+  - Tabelle mit 10 Spalten (ID, Name, Version, Status, Target, Counts, Actions)
+  - Sortierung nach allen Spalten
+  - Status Badges: draft/active/deprecated
+  - Status Pills: Total/Required/Resolved/Optional
+  - Events: View, Delete, Create, Changed
+- ✅ Styles (`src/app/shared/target-creation-list/target-creation-list.component.css` - 236 Zeilen)
+  - Responsive Table Design
+  - Colored Pills und Badges
+  - Hover Effects
+  - Media Queries
+
+**Frontend Status (Phase 6-8.1):** 🟢 Bereit für Integration  
+**LOC:** ~968 Zeilen (Models: 208, Service: 251, Component: 509)  
+**TypeScript Errors:** ✅ Keine
+
+**Neu erstellt in Phase 8.1:**
+- `src/app/shared/target-creation-list/target-creation-list.component.ts`
+- `src/app/shared/target-creation-list/target-creation-list.component.css`
+- `IMPLEMENTATION_PHASE_8_1_SUMMARY.md` (Dokumentation)
+- `PHASE_8_1_QUICK_REFERENCE.md` (Quick Reference)
+
+### Nächster Schritt: Phase 8.2 (Detail Component)
+
+```bash
+Führe Phase 8.2 aus: Target Creation Detail Component erstellen!
+```
+
+**Was zu tun ist:**
+1. Erstelle `src/app/target-creation-detail/` mit 3 Dateien (.ts, .html, .css)
+2. Header mit Target Creation Metadaten (Name, Version, Status, Target Profile)
+3. Field-Tabelle mit Tree/Flat View (wie MappingDetail)
+4. KEINE Source-Profile, KEINE Classification-Spalte
+5. Click auf Feld öffnet Edit-Dialog (Phase 8.3)
+
+**Referenzen:**
+- Struktur: `src/app/mapping-detail/`
+- Service: `TargetCreationService.getTargetCreation(), getFields()`
+- Models: `TargetCreationDetail`, `TargetCreationField`
+- Checkpoint: `CHECKPOINT_PHASE_6_7.md`
+
+---
 
