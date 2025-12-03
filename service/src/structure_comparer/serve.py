@@ -39,6 +39,7 @@ from .errors import (
 from .handler.comparison import ComparisonHandler
 from .handler.mapping import MappingHandler
 from .handler.transformation import TransformationHandler, TransformationNotFound
+from .handler.target_creation import TargetCreationHandler, TargetCreationNotFound
 from .handler.package import PackageHandler
 from .handler.project import ProjectsHandler
 from .model.action import ActionOutput as ActionOutputModel
@@ -72,6 +73,16 @@ from .model.transformation import (
     TransformationFieldsOutput as TransformationFieldsOutputModel,
     TransformationMappingLink as TransformationMappingLinkModel,
 )
+from .model.target_creation import (
+    TargetCreationBase as TargetCreationBaseModel,
+    TargetCreationCreate as TargetCreationCreateModel,
+    TargetCreationDetails as TargetCreationDetailsModel,
+    TargetCreationUpdate as TargetCreationUpdateModel,
+    TargetCreationField as TargetCreationFieldModel,
+    TargetCreationFieldMinimal as TargetCreationFieldMinimalModel,
+    TargetCreationFieldsOutput as TargetCreationFieldsOutputModel,
+    TargetCreationEvaluationSummary as TargetCreationEvaluationSummaryModel,
+)
 from .evaluation import StatusAggregator
 from .model.package import Package as PackageModel
 from .model.package import PackageInput as PackageInputModel
@@ -102,6 +113,7 @@ package_handler: PackageHandler
 comparison_handler: ComparisonHandler
 mapping_handler: MappingHandler
 transformation_handler: TransformationHandler
+target_creation_handler: TargetCreationHandler
 cur_proj: str
 
 
@@ -112,6 +124,7 @@ async def lifespan(app: FastAPI):
     global comparison_handler
     global mapping_handler
     global transformation_handler
+    global target_creation_handler
 
     # Set up
     project_handler = ProjectsHandler(
@@ -123,6 +136,7 @@ async def lifespan(app: FastAPI):
     comparison_handler = ComparisonHandler(project_handler)
     mapping_handler = MappingHandler(project_handler)
     transformation_handler = TransformationHandler(project_handler)
+    target_creation_handler = TargetCreationHandler(project_handler)
 
     # Let the app do its job
     yield
@@ -2321,6 +2335,230 @@ async def unlink_mapping_from_transformation_field(
         response.status_code = 404
         return ErrorModel.from_except(e)
     except FieldNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+# ============================================================================
+# TARGET CREATION ENDPOINTS
+# Phase 5, Step 5.1: Router erstellen ✅
+# Created: 2025-12-03
+# ============================================================================
+
+
+@app.get(
+    "/project/{project_key}/target-creation",
+    tags=["Target Creations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_target_creations(
+    project_key: str, response: Response
+) -> list[TargetCreationBaseModel] | ErrorModel:
+    """
+    Get all target creations for a project.
+    Returns a list of all target creations with their metadata and status counts.
+    """
+    global target_creation_handler
+    try:
+        return target_creation_handler.get_list(project_key)
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/target-creation/{target_creation_id}",
+    tags=["Target Creations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_target_creation(
+    project_key: str, target_creation_id: str, response: Response
+) -> TargetCreationDetailsModel | ErrorModel:
+    """
+    Get a specific target creation with all details including fields.
+    """
+    global target_creation_handler
+    try:
+        return target_creation_handler.get(project_key, target_creation_id)
+    except (ProjectNotFound, TargetCreationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/target-creation",
+    tags=["Target Creations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def create_target_creation(
+    project_key: str,
+    target_creation: TargetCreationCreateModel,
+    response: Response,
+) -> TargetCreationDetailsModel | ErrorModel:
+    """
+    Create a new target creation.
+    Only requires a target profile (no source profiles).
+    """
+    global target_creation_handler
+    try:
+        return target_creation_handler.create(project_key, target_creation)
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except Exception as e:
+        response.status_code = 500
+        return ErrorModel(error=str(e))
+
+
+@app.patch(
+    "/project/{project_key}/target-creation/{target_creation_id}",
+    tags=["Target Creations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def update_target_creation(
+    project_key: str,
+    target_creation_id: str,
+    update_data: TargetCreationUpdateModel,
+    response: Response,
+) -> TargetCreationDetailsModel | ErrorModel:
+    """
+    Update target creation metadata (status, version, target profile information).
+    """
+    global target_creation_handler
+    try:
+        return target_creation_handler.update(project_key, target_creation_id, update_data)
+    except (ProjectNotFound, TargetCreationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.delete(
+    "/project/{project_key}/target-creation/{target_creation_id}",
+    tags=["Target Creations"],
+    responses={404: {}},
+)
+async def delete_target_creation(
+    project_key: str, target_creation_id: str, response: Response
+) -> dict | ErrorModel:
+    """
+    Delete a target creation.
+    """
+    global target_creation_handler
+    try:
+        target_creation_handler.delete(project_key, target_creation_id)
+        return {"status": "deleted", "id": target_creation_id}
+    except (ProjectNotFound, TargetCreationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/target-creation/{target_creation_id}/field",
+    tags=["Target Creations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_target_creation_fields(
+    project_key: str, target_creation_id: str, response: Response
+) -> TargetCreationFieldsOutputModel | ErrorModel:
+    """
+    Get all fields for a target creation.
+    """
+    global target_creation_handler
+    try:
+        return target_creation_handler.get_field_list(project_key, target_creation_id)
+    except (ProjectNotFound, TargetCreationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/target-creation/{target_creation_id}/field/{field_name:path}",
+    tags=["Target Creations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_target_creation_field(
+    project_key: str,
+    target_creation_id: str,
+    field_name: str,
+    response: Response,
+) -> TargetCreationFieldModel | ErrorModel:
+    """
+    Get a specific field from a target creation.
+    """
+    global target_creation_handler
+    try:
+        return target_creation_handler.get_field(project_key, target_creation_id, field_name)
+    except (ProjectNotFound, TargetCreationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except FieldNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.put(
+    "/project/{project_key}/target-creation/{target_creation_id}/field/{field_name:path}",
+    tags=["Target Creations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def set_target_creation_field(
+    project_key: str,
+    target_creation_id: str,
+    field_name: str,
+    input: TargetCreationFieldMinimalModel,
+    response: Response,
+) -> TargetCreationFieldModel | ErrorModel:
+    """
+    Set or update a field in a target creation.
+    Only 'manual' and 'fixed' actions are allowed.
+    """
+    global target_creation_handler
+    try:
+        target_creation_handler.set_field(project_key, target_creation_id, field_name, input)
+        return target_creation_handler.get_field(project_key, target_creation_id, field_name)
+    except (ProjectNotFound, TargetCreationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except FieldNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except MappingValueMissing as e:
+        response.status_code = 400
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/target-creation/{target_creation_id}/evaluation/summary",
+    tags=["Target Creations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_target_creation_evaluation_summary(
+    project_key: str, target_creation_id: str, response: Response
+) -> TargetCreationEvaluationSummaryModel | ErrorModel:
+    """
+    Get evaluation summary for a target creation.
+    Returns counts of fields by status (action_required, resolved, optional_pending).
+    """
+    global target_creation_handler
+    try:
+        return target_creation_handler.get_evaluation_summary(project_key, target_creation_id)
+    except (ProjectNotFound, TargetCreationNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
 

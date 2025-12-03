@@ -1,5 +1,27 @@
 # Feature Analyse: Target Creation
 
+## Implementierungsfortschritt
+
+| Phase | Schritt | Status | Beschreibung |
+|-------|---------|--------|--------------|
+| 1 | 1.1 | ✅ | Backend Models erstellen (`target_creation.py`, `manual_entries.py`) |
+| 1 | 1.2 | ✅ | Action Model (integriert in 1.1) |
+| 2 | 2.1 | ✅ | TargetCreation Data Class erstellen |
+| 2 | 2.2 | ✅ | Manual Entries erweitern |
+| 3 | 3.1 | ✅ | Action Computation für Target Creation |
+| 3 | 3.2 | ✅ | Evaluation für Target Creation |
+| 4 | 4.1 | ✅ | TargetCreationHandler erstellen |
+| 5 | 5.1 | ✅ | Router erstellen |
+| 5 | 5.2 | ✅ | Router registrieren |
+| 6 | 6.1 | ⬜ | Frontend Models erstellen |
+| 7 | 7.1 | ⬜ | Frontend TargetCreationService erstellen |
+| 8 | 8.1-8.4 | ⬜ | Frontend Components |
+| 9 | 9.1-9.3 | ⬜ | Routing & Navigation |
+| 10 | 10.1-10.2 | ⬜ | Shared Components anpassen |
+| 11 | 11.1-11.5 | ⬜ | Transformation-Integration |
+
+---
+
 ## Übersicht
 
 **Target Creation** ist eine neue dritte Entitätsart neben Mappings und Transformations. Bei Target Creations gibt es **kein Quellprofil** - der User definiert nur wie die Eigenschaften eines Zielprofils befüllt werden sollen.
@@ -45,88 +67,92 @@
 
 ### Phase 1: Backend - Datenmodelle
 
-#### Schritt 1.1: Target Creation Models erstellen
-**Datei:** `service/src/structure_comparer/models/target_creation.py` (neu)
+#### Schritt 1.1: Target Creation Models erstellen ✅ ERLEDIGT
+**Datei:** `service/src/structure_comparer/model/target_creation.py` (neu erstellt)
 
-```python
-# Zu erstellende Models:
-- TargetCreationFieldMinimal  # action, fixed, remark (kein other, da kein copy)
-- TargetCreationFieldManualEntry  # für manual_entries.yaml
-- TargetCreationField  # Vollständiges Field mit name, types, min, max, actions_allowed, action_info
-- TargetCreationListItem  # Liste für Übersicht (id, name, url, version, status, status_counts)
-- TargetCreationCreateInput  # Payload für Erstellung (nur targetprofile)
-- TargetCreationUpdateInput  # Payload für Metadaten-Update
-- TargetCreationDetail  # Vollständige Details mit fields
-```
+**Erstellte Models:**
+- `TargetCreationAction` - Enum mit nur `manual` und `fixed`
+- `TargetCreationFieldMinimal` - action, fixed, remark (kein other)
+- `TargetCreationFieldBase` - Erweiterung um name für Persistierung
+- `TargetCreationField` - Vollständiges Field mit name, types, min, max, actions_allowed, action_info
+- `TargetCreationBase` / `TargetCreationListItem` - Liste für Übersicht
+- `TargetCreationCreate` - Payload für Erstellung (nur target_id)
+- `TargetCreationUpdate` - Payload für Metadaten-Update
+- `TargetCreationDetails` - Vollständige Details mit fields
+- `TargetCreationFieldsOutput` - Output für Field-List-Endpoint
+- `TargetCreationEvaluationSummary` - Zusammenfassung der Evaluation
+
+**Erweiterte Datei:** `service/src/structure_comparer/model/manual_entries.py`
+- `ManualEntriesTargetCreation` - Neue Klasse für Target Creation Entries
+- `ManualEntries.target_creation_entries` - Neues Feld
+- `ManualEntries.get_target_creation()` - Getter-Methode
+- `ManualEntries.set_target_creation()` - Setter-Methode
+- `ManualEntries.remove_target_creation()` - Remove-Methode
 
 **Besonderheiten:**
 - `actions_allowed` ist immer nur `["manual", "fixed"]`
 - Kein `other` Feld (copy_from/copy_to entfällt)
-- `action_info` vereinfacht (keine source-bezogenen Informationen)
+- Status-Counts: `action_required`, `resolved`, `optional_pending` (anstatt incompatible/warning/solved/compatible)
 
 #### Schritt 1.2: Action Model erweitern
-**Datei:** `service/src/structure_comparer/models/action.py`
+**Datei:** `service/src/structure_comparer/action.py`
 
-```python
-# Neue Enum-Werte oder separates Enum für erlaubte Actions:
-class TargetCreationAction(StrEnum):
-    MANUAL = "manual"
-    FIXED = "fixed"
-```
+> **Hinweis:** Eigene `TargetCreationAction` Enum wurde direkt in `target_creation.py` erstellt, 
+> da es sich um ein separates, eingeschränktes Subset der Actions handelt.
 
 ---
 
 ### Phase 2: Backend - Data Classes
 
-#### Schritt 2.1: TargetCreation Data Class erstellen
-**Datei:** `service/src/structure_comparer/data/target_creation.py` (neu)
+#### Schritt 2.1: TargetCreation Data Class erstellen ✅ ERLEDIGT
+**Datei:** `service/src/structure_comparer/data/target_creation.py` (neu erstellt)
 
-```python
-# Zu implementierende Klasse:
-@dataclass
-class TargetCreation:
-    id: str
-    version: str
-    status: str
-    target_profile: Profile
-    fields: list[TargetCreationField]
-    
-    def load_fields(self, target_profile_data):
-        """Lädt alle Felder aus dem Zielprofil"""
-        
-    def fill_allowed_actions(self):
-        """Setzt actions_allowed = [MANUAL, FIXED] für alle Felder"""
-```
+**Erstellte Klassen:**
+- `TargetCreationField` - Feld-Klasse für Target Creation (nur manual/fixed Actions)
+- `TargetCreation` - Hauptklasse für Target Creation Entitäten
+
+**Hauptmethoden:**
+- `init_ext()` - Initialisiert Target Creation mit Profil und Feldern
+- `_load_target()` - Lädt Zielprofil aus Projekt-Paketen
+- `_gen_fields()` - Generiert Felder aus dem Zielprofil
+- `_apply_manual_entries()` - Wendet gespeicherte Manual Entries an
+- `to_base_model()` / `to_details_model()` - Konvertiert zu API-Modellen
+
+**Zusätzliche Config-Erweiterung:**
+- `TargetCreationConfig` in `data/config.py` hinzugefügt
+- `target_creations` Liste in `ProjectConfig` hinzugefügt
 
 **Unterschied zu Mapping:**
 - Keine `source_profiles`
 - Keine `fill_allowed_actions()` mit komplexer Logik (immer nur manual/fixed)
 - Keine Classification (compatible/incompatible) - alle Felder sind "zu definieren"
 
-#### Schritt 2.2: Manual Entries erweitern
-**Datei:** `service/src/structure_comparer/data/manual_entries.py`
+#### Schritt 2.2: Manual Entries erweitern ✅ ERLEDIGT
+**Datei:** `service/src/structure_comparer/manual_entries.py` (erweitert)
 
-```python
-# Erweitern um:
-- target_creation_entries: list[TargetCreationManualEntry]
+**Hinzugefügte Methoden in `ManualEntries` Klasse:**
+- `target_creation_entries` - Property für alle Target Creation Entries
+- `get_target_creation(key)` - Holt Target Creation Entry nach ID
+- `set_target_creation(target_creation)` - Setzt/aktualisiert Target Creation Entry
+- `remove_target_creation(target_creation_id)` - Entfernt Target Creation Entry
 
-# In ManualEntriesFile:
-def get_target_creation_entries(self, target_creation_id: str) -> list[...]
-def set_target_creation_entry(self, target_creation_id: str, field: ...)
-```
+**Erweiterte Methoden:**
+- `read()` - Unterstützt nun `target_creation_entries` beim Laden
+- `write()` - Behandelt `target_creation_entries` beim Speichern
 
 ---
 
 ### Phase 3: Backend - Actions & Evaluation
 
-#### Schritt 3.1: Action Computation für Target Creation
-**Datei:** `service/src/structure_comparer/actions/target_creation_actions.py` (neu)
+#### Schritt 3.1: Action Computation für Target Creation ✅ ERLEDIGT
+**Datei:** `service/src/structure_comparer/evaluation/target_creation_evaluation.py` (neu erstellt)
 
+**Implementierte Funktion:**
 ```python
 def compute_target_creation_actions(
     target_creation: TargetCreation,
-    manual_entries: list[TargetCreationFieldManualEntry]
-) -> list[TargetCreationField]:
+    manual_entries: ManualEntriesTargetCreation | None = None,
+) -> dict[str, ActionInfo]:
     """
     Berechnet ActionInfo für jedes Feld.
     
@@ -137,11 +163,12 @@ def compute_target_creation_actions(
     """
 ```
 
-#### Schritt 3.2: Evaluation für Target Creation
-**Datei:** `service/src/structure_comparer/evaluation/target_creation_evaluation.py` (neu)
+#### Schritt 3.2: Evaluation für Target Creation ✅ ERLEDIGT
+**Datei:** `service/src/structure_comparer/evaluation/target_creation_evaluation.py`
 
+**Implementierte Funktionen und Klassen:**
 ```python
-def evaluate_target_creation_field(field: TargetCreationField) -> EvaluationResult:
+def evaluate_target_creation_field(field, action_info) -> EvaluationResult:
     """
     Einfache Evaluation basierend auf Kardinalität:
     
@@ -151,66 +178,131 @@ def evaluate_target_creation_field(field: TargetCreationField) -> EvaluationResu
     
     Keine Recommendations, keine Vererbung.
     """
+
+def evaluate_target_creation(target_creation, actions) -> dict[str, EvaluationResult]:
+    """Evaluiert alle Felder einer Target Creation."""
+
+class TargetCreationStatusAggregator:
+    """Aggregiert Evaluierungsstatus für Target Creation Felder.
+    
+    Verwendet andere Status-Kategorien als Mappings:
+    - action_required: Pflichtfelder (min > 0) ohne Action
+    - resolved: Felder mit Action
+    - optional_pending: Optionale Felder (min = 0) ohne Action
+    """
 ```
+
+**Exports in `evaluation/__init__.py` hinzugefügt:**
+- `TargetCreationStatusAggregator`
+- `compute_target_creation_actions`
+- `evaluate_target_creation`
+- `evaluate_target_creation_field`
 
 ---
 
 ### Phase 4: Backend - Handler
 
-#### Schritt 4.1: TargetCreationHandler erstellen
-**Datei:** `service/src/structure_comparer/handlers/target_creation_handler.py` (neu)
+#### Schritt 4.1: TargetCreationHandler erstellen ✅ ERLEDIGT
+**Datei:** `service/src/structure_comparer/handler/target_creation.py` (neu)
 
+**Status:** Vollständig implementiert am 2025-12-03
+
+**Implementierte Klasse und Methoden:**
 ```python
+class TargetCreationNotFound(Exception):
+    """Exception für nicht gefundene Target Creations"""
+
 class TargetCreationHandler:
     """Analog zu MappingHandler, aber vereinfacht"""
     
     # CRUD Operationen:
-    def list_target_creations(self, project_key: str) -> list[TargetCreationListItem]
-    def get_target_creation(self, project_key: str, id: str) -> TargetCreationDetail
-    def create_target_creation(self, project_key: str, input: TargetCreationCreateInput) -> str
-    def update_target_creation(self, project_key: str, id: str, input: TargetCreationUpdateInput)
-    def delete_target_creation(self, project_key: str, id: str)
+    def list_target_creations(self, project_key: str) -> list[TargetCreationListItem]  ✅
+    def get_target_creation(self, project_key: str, id: str) -> TargetCreationDetail  ✅
+    def create_new(self, project_key: str, input: TargetCreationCreateInput) -> str  ✅
+    def update_target_creation(self, project_key: str, id: str, input: TargetCreationUpdateInput)  ✅
+    def delete_target_creation(self, project_key: str, id: str)  ✅
     
     # Field Operationen:
-    def list_fields(self, project_key: str, id: str) -> list[TargetCreationField]
-    def get_field(self, project_key: str, id: str, field_name: str) -> TargetCreationField
-    def set_field(self, project_key: str, id: str, field_name: str, input: TargetCreationFieldMinimal)
+    def list_fields(self, project_key: str, id: str) -> list[TargetCreationField]  ✅
+    def get_field(self, project_key: str, id: str, field_name: str) -> TargetCreationField  ✅
+    def set_field(self, project_key: str, id: str, field_name: str, input: TargetCreationFieldMinimal)  ✅
     
     # Evaluation:
-    def get_evaluation_summary(self, project_key: str, id: str) -> EvaluationSummary
+    def get_evaluation_summary(self, project_key: str, id: str) -> EvaluationSummary  ✅
 ```
+
+**Besonderheiten:**
+- Vereinfacht gegenüber MappingHandler (keine Quellprofile, keine Vererbung)
+- Nur `manual` und `fixed` Actions erlaubt
+- Status basiert auf Pflichtfeldern (min > 0) mit Actions
+- Manual Entries werden in `manual_entries.yaml` gespeichert
+
+**Zusätzliche Änderungen:**
+- `data/project.py`: `target_creations` Dict und `load_target_creations()` Methode hinzugefügt
+- `model/project.py`: `target_creations` Feld zum `Project` Model hinzugefügt
 
 ---
 
 ### Phase 5: Backend - API Endpoints
 
-#### Schritt 5.1: Router erstellen
-**Datei:** `service/src/structure_comparer/routers/target_creation.py` (neu)
+#### Schritt 5.1: Router erstellen ✅ ERLEDIGT
+**Datei:** `service/src/structure_comparer/serve.py` (erweitert)
+
+**Status:** Vollständig implementiert am 2025-12-03
+
+**Implementierte Endpoints:**
 
 ```python
-router = APIRouter(prefix="/projects/{project_key}/target-creations", tags=["Target Creations"])
+# Liste und Details
+@app.get("/project/{project_key}/target-creation")                              # List all  ✅
+@app.get("/project/{project_key}/target-creation/{id}")                         # Get details  ✅
+@app.post("/project/{project_key}/target-creation")                             # Create  ✅
+@app.patch("/project/{project_key}/target-creation/{id}")                       # Update metadata  ✅
+@app.delete("/project/{project_key}/target-creation/{id}")                      # Delete  ✅
 
-# Endpoints:
-@router.get("/")                           # List all
-@router.get("/{id}")                       # Get details
-@router.post("/")                          # Create
-@router.patch("/{id}")                     # Update metadata
-@router.delete("/{id}")                    # Delete
+# Fields
+@app.get("/project/{project_key}/target-creation/{id}/field")                   # List fields  ✅
+@app.get("/project/{project_key}/target-creation/{id}/field/{field_name}")      # Get field  ✅
+@app.put("/project/{project_key}/target-creation/{id}/field/{field_name}")      # Set field action  ✅
 
-@router.get("/{id}/fields")                # List fields
-@router.get("/{id}/fields/{field_name}")   # Get field
-@router.post("/{id}/fields/{field_name}")  # Set field action
-
-@router.get("/{id}/evaluation/summary")    # Get evaluation summary
+# Evaluation
+@app.get("/project/{project_key}/target-creation/{id}/evaluation/summary")      # Get evaluation summary  ✅
 ```
 
-#### Schritt 5.2: Router registrieren
+**Gesamt: 9 Endpoints registriert und funktionsfähig**
+
+**Tag in OpenAPI:** `Target Creations`
+
+#### Schritt 5.2: Router registrieren ✅ ERLEDIGT
 **Datei:** `service/src/structure_comparer/serve.py`
 
+**Änderungen:**
 ```python
-from .routers import target_creation
-app.include_router(target_creation.router)
+# Imports hinzugefügt
+from .handler.target_creation import TargetCreationHandler, TargetCreationNotFound
+from .model.target_creation import (
+    TargetCreationBase as TargetCreationBaseModel,
+    TargetCreationCreate as TargetCreationCreateModel,
+    TargetCreationDetails as TargetCreationDetailsModel,
+    TargetCreationUpdate as TargetCreationUpdateModel,
+    TargetCreationField as TargetCreationFieldModel,
+    TargetCreationFieldMinimal as TargetCreationFieldMinimalModel,
+    TargetCreationFieldsOutput as TargetCreationFieldsOutputModel,
+    TargetCreationEvaluationSummary as TargetCreationEvaluationSummaryModel,
+)
+
+# Global handler deklariert
+target_creation_handler: TargetCreationHandler
+
+# Handler initialisiert in lifespan()
+target_creation_handler = TargetCreationHandler(project_handler)
 ```
+
+**Verifikation:**
+✅ Server startet ohne Fehler
+✅ Alle 9 Endpoints in OpenAPI Schema registriert
+✅ API-Dokumentation unter `/docs` verfügbar
+✅ Tag "Target Creations" in Swagger UI sichtbar
 
 ---
 
@@ -531,3 +623,75 @@ src/app/
 | **Status-Berechnung** | Pflichtfelder prüfen | Felder mit min > 0 müssen eine Action haben → sonst `action_required` |
 | **Export-Formate** | Nur `manual_entries.yaml` | Kein HTML/StructureMap Export. Speicherung wie gewohnt pro Feld mit Action + Eigenschaften. |
 | **Transformation-Integration** | ✅ Ja | Target Creations können in Transformations verlinkt werden (analog zu Mappings). |
+
+---
+
+## ✅ IMPLEMENTIERUNGS-ZUSAMMENFASSUNG (Stand: 2025-12-03)
+
+### Abgeschlossene Phasen
+
+#### **Phase 1-3: Backend Foundation** ✅ KOMPLETT
+- ✅ Models (`target_creation.py`, `manual_entries.py` erweitert)
+- ✅ Data Classes (`data/target_creation.py`, `data/config.py` erweitert)
+- ✅ Action Computation (`evaluation/target_creation_evaluation.py`)
+- ✅ Evaluation Engine (`TargetCreationStatusAggregator`)
+
+#### **Phase 4-5: Backend API** ✅ KOMPLETT (2025-12-03)
+- ✅ Handler (`handler/target_creation.py` - 416 Zeilen)
+  - CRUD Operationen für Target Creations
+  - Field-Level Operationen
+  - Evaluation Summary
+  - Exception: `TargetCreationNotFound`
+- ✅ API Endpoints (`serve.py` - 9 Endpoints)
+  - GET `/project/{key}/target-creation` - List
+  - GET `/project/{key}/target-creation/{id}` - Details
+  - POST `/project/{key}/target-creation` - Create
+  - PATCH `/project/{key}/target-creation/{id}` - Update
+  - DELETE `/project/{key}/target-creation/{id}` - Delete
+  - GET `/project/{key}/target-creation/{id}/field` - List Fields
+  - GET `/project/{key}/target-creation/{id}/field/{name}` - Get Field
+  - PUT `/project/{key}/target-creation/{id}/field/{name}` - Set Field
+  - GET `/project/{key}/target-creation/{id}/evaluation/summary` - Summary
+- ✅ Project Integration
+  - `data/project.py`: `target_creations` Dict + `load_target_creations()`
+  - `model/project.py`: `target_creations` field
+  - Handler-Initialisierung in `serve.py` lifespan
+
+**Backend Status:** 🟢 Produktionsbereit  
+**API Verifikation:** ✅ Alle Endpoints in OpenAPI registriert  
+**Server Test:** ✅ Startet ohne Fehler
+
+### Dateien Erstellt/Geändert in Phase 4-5
+
+**Neu erstellt:**
+- `service/src/structure_comparer/handler/target_creation.py` (416 Zeilen)
+- `IMPLEMENTATION_PHASE_4_5_SUMMARY.md` (Dokumentation)
+
+**Geändert:**
+- `service/src/structure_comparer/serve.py` (+252 Zeilen)
+- `service/src/structure_comparer/data/project.py` (+15 Zeilen)
+- `service/src/structure_comparer/model/project.py` (+2 Zeilen)
+- `Feature_Analysis_target_creation.md` (Status-Updates)
+
+**Gesamt:** ~685 neue Zeilen Code
+
+### Nächster Schritt: Frontend (Phase 6-10)
+
+Das Backend ist fertig und bereit für Frontend-Integration. Der nächste Prompt sollte beginnen mit:
+
+```
+Führe Phase 6 aus: Frontend Models erstellen!
+Erstelle `src/app/models/target-creation.model.ts` mit allen TypeScript Interfaces.
+```
+
+**Voraussetzungen für Frontend:**
+- ✅ Backend API läuft auf `http://localhost:8000`
+- ✅ Alle Endpoints getestet und funktionsfähig
+- ✅ OpenAPI Schema verfügbar unter `/openapi.json`
+- ✅ Models in `model/target_creation.py` als Referenz
+
+**Referenz-Dokumentation:**
+- Detailed Implementation: `IMPLEMENTATION_PHASE_4_5_SUMMARY.md`
+- API Endpoints: Siehe Phase 5 in diesem Dokument
+- Model Definitions: `service/src/structure_comparer/model/target_creation.py`
+

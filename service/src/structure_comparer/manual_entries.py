@@ -7,6 +7,7 @@ import yaml
 from .errors import NotInitialized
 from .model.manual_entries import ManualEntries as ManualEntriesModel
 from .model.manual_entries import ManualEntriesMapping as ManualEntriesMappingModel
+from .model.manual_entries import ManualEntriesTargetCreation as ManualEntriesTargetCreationModel
 from .model.manual_entries import ManualEntriesTransformation as ManualEntriesTransformationModel
 
 logger = logging.getLogger(__name__)
@@ -65,6 +66,9 @@ class ManualEntries:
                 data["mapping_entries"] = []
             if "transformation_entries" not in data or data["transformation_entries"] is None:
                 data["transformation_entries"] = []
+            # Phase 2.2: Support target_creation_entries
+            if "target_creation_entries" not in data or data["target_creation_entries"] is None:
+                data["target_creation_entries"] = []
             self._data = ManualEntriesModel.model_validate(data)
         else:
             # unbekanntes Format – defensiv: leeres Modell
@@ -109,8 +113,16 @@ class ManualEntries:
             output_data.pop("mapping_entries", None)
         if not self._data.transformation_entries:
             output_data.pop("transformation_entries", None)
+        # Phase 2.2: Handle target_creation_entries in output
+        if not self._data.target_creation_entries:
+            output_data.pop("target_creation_entries", None)
         # Remove empty legacy entries only if using new format
-        if (self._data.mapping_entries or self._data.transformation_entries) and not self._data.entries:
+        has_new_format_entries = (
+            self._data.mapping_entries or
+            self._data.transformation_entries or
+            self._data.target_creation_entries
+        )
+        if has_new_format_entries and not self._data.entries:
             output_data.pop("entries", None)
 
         content = None
@@ -146,6 +158,35 @@ class ManualEntries:
         if self._data is None:
             raise NotInitialized("ManualEntries data was not initialized")
         return self._data.remove_transformation(transformation_id)
+
+    # === TARGET CREATION METHODS ===
+    # Phase 2, Step 2.2: Manual Entries erweitern ✅
+    # Created: 2025-12-03
+
+    @property
+    def target_creation_entries(self) -> list[ManualEntriesTargetCreationModel]:
+        """Get all target creation entries."""
+        if self._data is None:
+            raise NotInitialized("ManualEntries data was not initialized")
+        return self._data.target_creation_entries
+
+    def get_target_creation(self, key) -> ManualEntriesTargetCreationModel | None:
+        """Get a target creation entry by ID."""
+        if self._data is None:
+            raise NotInitialized("ManualEntries data was not initialized")
+        return self._data.get_target_creation(key)
+
+    def set_target_creation(self, target_creation: ManualEntriesTargetCreationModel) -> None:
+        """Add or update a target creation entry."""
+        if self._data is None:
+            raise NotInitialized("ManualEntries data was not initialized")
+        self._data.set_target_creation(target_creation)
+
+    def remove_target_creation(self, target_creation_id: str) -> bool:
+        """Remove a target creation entry."""
+        if self._data is None:
+            raise NotInitialized("ManualEntries data was not initialized")
+        return self._data.remove_target_creation(target_creation_id)
 
     def __getitem__(self, key) -> ManualEntriesMappingModel:
         return next((e for e in self.entries if e.id == key))

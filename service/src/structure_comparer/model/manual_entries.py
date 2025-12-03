@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from .mapping import MappingFieldBase
+from .target_creation import TargetCreationFieldBase
 from .transformation import TransformationFieldBase
 
 
@@ -92,10 +93,65 @@ class ManualEntriesTransformation(BaseModel):
         return any(f.name == key for f in self.fields)
 
 
+class ManualEntriesTargetCreation(BaseModel):
+    """Manual entries for a Target Creation (target-only profile definition).
+
+    Target Creation fields only support 'manual' and 'fixed' actions.
+    No 'other' field since copy_from/copy_to is not allowed.
+    """
+    id: str
+    fields: list[TargetCreationFieldBase] = []
+
+    def get(self, key, default=None) -> TargetCreationFieldBase | None:
+        return next((f for f in self.fields if f.name == key), default)
+
+    def get_field(self, name: str) -> TargetCreationFieldBase | None:
+        """Get a field by name."""
+        return next((f for f in self.fields if f.name == name), None)
+
+    def set_field(self, field: TargetCreationFieldBase) -> None:
+        """Set or update a field."""
+        i = next((i for i, f in enumerate(self.fields) if f.name == field.name), None)
+        if i is not None:
+            self.fields[i] = field
+        else:
+            self.fields.append(field)
+
+    def remove_field(self, name: str) -> bool:
+        """Remove a field by name. Returns True if removed."""
+        i = next((i for i, f in enumerate(self.fields) if f.name == name), None)
+        if i is not None:
+            del self.fields[i]
+            return True
+        return False
+
+    def __getitem__(self, key) -> TargetCreationFieldBase:
+        field = next((f for f in self.fields if f.name == key), None)
+        if field is None:
+            raise KeyError(key)
+        return field
+
+    def __setitem__(self, key, value) -> None:
+        i = next((i for i, field in enumerate(self.fields) if field.name == key), None)
+        if i is not None:
+            self.fields[i] = value
+        else:
+            self.fields.append(value)
+
+    def __delitem__(self, key):
+        del_i = next((i for i, f in enumerate(self.fields) if f.name == key), None)
+        if del_i is not None:
+            del self.fields[del_i]
+
+    def __contains__(self, key) -> bool:
+        return any(f.name == key for f in self.fields)
+
+
 class ManualEntries(BaseModel):
     """Container for all manual entries in a project.
 
-    Supports both legacy format (entries) and new format (mapping_entries + transformation_entries).
+    Supports legacy format (entries) and new format with explicit separation:
+    mapping_entries, transformation_entries, and target_creation_entries.
     """
     # Legacy format - kept for backwards compatibility
     entries: list[ManualEntriesMapping] = []
@@ -103,6 +159,7 @@ class ManualEntries(BaseModel):
     # New format - explicit separation
     mapping_entries: list[ManualEntriesMapping] = []
     transformation_entries: list[ManualEntriesTransformation] = []
+    target_creation_entries: list[ManualEntriesTargetCreation] = []
 
     @property
     def all_mapping_entries(self) -> list[ManualEntriesMapping]:
@@ -142,5 +199,37 @@ class ManualEntries(BaseModel):
         )
         if i is not None:
             del self.transformation_entries[i]
+            return True
+        return False
+
+    # Target Creation methods
+    def get_target_creation(self, target_creation_id: str) -> ManualEntriesTargetCreation | None:
+        """Get manual entries for a specific target creation."""
+        return next(
+            (tc for tc in self.target_creation_entries if tc.id == target_creation_id),
+            None
+        )
+
+    def set_target_creation(self, target_creation: ManualEntriesTargetCreation) -> None:
+        """Add or update a target creation entry."""
+        i = next(
+            (i for i, tc in enumerate(self.target_creation_entries)
+             if tc.id == target_creation.id),
+            None
+        )
+        if i is not None:
+            self.target_creation_entries[i] = target_creation
+        else:
+            self.target_creation_entries.append(target_creation)
+
+    def remove_target_creation(self, target_creation_id: str) -> bool:
+        """Remove a target creation entry. Returns True if removed."""
+        i = next(
+            (i for i, tc in enumerate(self.target_creation_entries)
+             if tc.id == target_creation_id),
+            None
+        )
+        if i is not None:
+            del self.target_creation_entries[i]
             return True
         return False
