@@ -62,6 +62,24 @@ class MappingHandler:
 
         return field.to_model()
 
+    def delete(self, project_key: str, mapping_id: str) -> None:
+        proj = self.project_handler._get(project_key)
+
+        # Check if mapping exists
+        if mapping_id not in proj.mappings:
+            raise MappingNotFound()
+
+        # delete mapping from config and write
+        proj.config.mappings = [c for c in proj.config.mappings if c.id != mapping_id]
+        proj.config.write()
+        # Remove mapping from project's mappings
+        del proj.mappings[mapping_id]
+
+        # Clean up manual entries for this mapping if they exist
+        if mapping_id in proj.manual_entries:
+            del proj.manual_entries[mapping_id]
+            proj.manual_entries.write()
+
     def set_field(
         self,
         project_key: str,
