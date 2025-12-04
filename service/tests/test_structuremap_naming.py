@@ -78,11 +78,11 @@ def test_single_source_structuremap_uses_profile_name_and_canonical_url() -> Non
     assert len(package.artifacts) == 1
 
     structure_map = json.loads(package.artifacts[0].content)
-    assert structure_map["id"] == "SourceAlpha-Map"
-    assert structure_map["name"] == "SourceAlpha-Map"
+    assert structure_map["id"] == "SourceAlphaMap"
+    assert structure_map["name"] == "SourceAlphaMap"
     assert (
         structure_map["url"]
-        == "https://gematik.de/fhir/structure-comparer/StructureMap/SourceAlpha-Map"
+        == "https://gematik.de/fhir/structure-comparer/StructureMap/SourceAlphaMap"
     )
 
 
@@ -91,11 +91,18 @@ def test_router_structuremap_uses_target_name_and_children_inherit_source_names(
     assert len(package.artifacts) == 3  # router + two child maps
 
     router_map = json.loads(package.artifacts[0].content)
-    assert router_map["id"] == "TargetProfile-Map"
+    assert router_map["id"] == "TargetProfileMap"
     assert (
         router_map["url"]
-        == "https://gematik.de/fhir/structure-comparer/StructureMap/TargetProfile-Map"
+        == "https://gematik.de/fhir/structure-comparer/StructureMap/TargetProfileMap"
     )
 
     child_ids = {json.loads(artifact.content)["id"] for artifact in package.artifacts[1:]}
-    assert child_ids == {"Alpha-Map", "Beta-Map"}
+    assert child_ids == {"AlphaMap", "BetaMap"}
+
+    route_rules = router_map["group"][0]["rule"]
+    conditions = [rule["source"][0]["condition"] for rule in route_rules]
+    assert conditions == [
+        "meta.profile.where($this.contains('Alpha')).exists()",
+        "meta.profile.where($this.contains('Beta')).exists()",
+    ]

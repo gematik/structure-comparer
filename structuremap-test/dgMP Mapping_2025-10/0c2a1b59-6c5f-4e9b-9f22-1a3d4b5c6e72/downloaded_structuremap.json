@@ -1,11 +1,11 @@
 {
   "resourceType": "StructureMap",
-  "id": "F0c2a1b596c5f4e9b9f221a3d4b5c6e72Structuremap9294f00a",
-  "url": "https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory/StructureMap/F0c2a1b596c5f4e9b9f221a3d4b5c6e72Structuremap",
-  "name": "F0c2a1b596c5f4e9b9f221a3d4b5c6e72Structuremap",
+  "id": "KBVPrForOrganizationMap",
+  "url": "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrForOrganizationMap",
+  "name": "KBVPrForOrganizationMap",
   "status": "active",
   "version": "1.0",
-  "date": "2025-11-24",
+  "date": "2025-12-02",
   "description": "Auto-generated StructureMap for KBV_PR_FOR_Organization|1.2.0 -> OrganizationDirectory|0.11.25",
   "structure": [
     {
@@ -21,7 +21,7 @@
   ],
   "group": [
     {
-      "name": "F0c2a1b596c5f4e9b9f221a3d4b5c6e72Structuremap",
+      "name": "KBVPrForOrganizationMap",
       "typeMode": "types",
       "documentation": "Mapping generated for KBV_PR_FOR_Organization|1.2.0 -> OrganizationDirectory|0.11.25",
       "input": [

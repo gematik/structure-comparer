@@ -227,14 +227,36 @@ def _validate_structuremaps(structure_map_paths: list[Path], project_key: str) -
 
 
 def _project_ig_sources(project_key: str) -> list[str]:
+    sources = _project_ig_entries(project_key)
+    return [_as_repo_relative(src.path) for src in sources if src.path]
+
+
+def _project_ig_package_specs(project_key: str) -> list[str]:
+    sources = _project_ig_entries(project_key)
+    specs: list[str] = []
+    for src in sources:
+        if src.package_spec:
+            specs.append(src.package_spec)
+        elif src.path:
+            specs.append(_as_repo_relative(src.path))
+    return specs
+
+
+@dataclass(frozen=True)
+class ProjectIGSource:
+    package_spec: str | None
+    path: Path | None
+
+
+def _project_ig_entries(project_key: str) -> list[ProjectIGSource]:
     data_dir = PROJECTS_DIR / project_key / "data"
-    igs: list[str] = []
+    sources: list[ProjectIGSource] = []
     if not data_dir.is_dir():
-        return igs
+        return sources
 
     for entry in sorted(data_dir.iterdir()):
         if entry.is_file() and entry.suffix == ".tgz":
-            igs.append(_as_repo_relative(entry))
+            sources.append(ProjectIGSource(_package_spec_from_name(entry.name), entry))
             continue
 
         if not entry.is_dir():
@@ -243,9 +265,23 @@ def _project_ig_sources(project_key: str) -> list[str]:
         package_dir = entry / "package"
         target_dir = package_dir if package_dir.is_dir() else entry
         if (target_dir / "package.json").exists():
-            igs.append(_as_repo_relative(target_dir))
+            sources.append(ProjectIGSource(_package_spec_from_name(entry.name), target_dir))
 
-    return igs
+    return sources
+
+
+def _package_spec_from_name(name: str) -> str | None:
+    cleaned = name
+    if cleaned.endswith(".tar.gz"):
+        cleaned = cleaned[: -len(".tar.gz")]
+    elif cleaned.endswith(".tgz"):
+        cleaned = cleaned[: -len(".tgz")]
+    elif cleaned.endswith(".tar"):
+        cleaned = cleaned[: -len(".tar")]
+    elif cleaned.endswith(".zip"):
+        cleaned = cleaned[: -len(".zip")]
+
+    return cleaned if "#" in cleaned else None
 
 
 def _validate_transformed_output(
@@ -279,12 +315,21 @@ def _validate_transformed_output(
         "error",
         "-version",
         FHIR_VERSION,
-        "-ig",
-        _as_repo_relative(target_package_dir),
     ]
+    ig_args = [_as_repo_relative(target_package_dir)]
+    ig_args.extend(_project_ig_package_specs(project_key))
+    ig_args.extend(str(ig) for ig in EXTRA_IG_SOURCES)
+
+    seen_igs: set[str] = set()
+    for ig in ig_args:
+        if not ig or ig in seen_igs:
+            continue
+        seen_igs.add(ig)
+        cmd.extend(["-ig", ig])
 
     _print_step(
-        f"[{project_key}/{mapping_id}] Validating output-{resource_type}.json against {_as_repo_relative(target_package_dir)}"
+        f"[{project_key}/{mapping_id}] Validating output-{resource_type}.json against "
+        f"{_as_repo_relative(target_package_dir)} + project IGs"
     )
     try:
         subprocess.run(cmd, cwd=REPO_ROOT, check=True)
@@ -347,7 +392,8 @@ def _process_structuremap_zip(content_bytes: bytes, destination: Path) -> Downlo
         manifest = json.loads(zf.read(manifest_name).decode("utf-8"))
         package_root = manifest.get("packageRoot") or Path(manifest_name).parent.as_posix()
         extract_root = destination.parent / package_root
-        if extract_root.exists():
+        remove_root = extract_root.exists() and extract_root != destination.parent
+        if remove_root:
             shutil.rmtree(extract_root)
         zf.extractall(destination.parent)
 

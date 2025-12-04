@@ -1,11 +1,11 @@
 {
   "resourceType": "StructureMap",
-  "id": "F3b4c5d6e7f814b92A3c42d3e4f5a6702Structuremap3eb859b5",
-  "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request/StructureMap/F3b4c5d6e7f814b92A3c42d3e4f5a6702Structuremap",
-  "name": "F3b4c5d6e7f814b92A3c42d3e4f5a6702Structuremap",
+  "id": "KBVPrErpPrescriptionMap",
+  "url": "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpPrescriptionMap",
+  "name": "KBVPrErpPrescriptionMap",
   "status": "active",
   "version": "1.0",
-  "date": "2025-11-24",
+  "date": "2025-12-02",
   "description": "Auto-generated StructureMap for KBV_PR_ERP_Prescription|1.3.2 -> EPAMedicationRequest|1.0.6-2",
   "structure": [
     {
@@ -21,7 +21,7 @@
   ],
   "group": [
     {
-      "name": "F3b4c5d6e7f814b92A3c42d3e4f5a6702Structuremap",
+      "name": "KBVPrErpPrescriptionMap",
       "typeMode": "types",
       "documentation": "Mapping generated for KBV_PR_ERP_Prescription|1.3.2 -> EPAMedicationRequest|1.0.6-2",
       "input": [

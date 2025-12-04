@@ -1,11 +1,11 @@
 {
   "resourceType": "StructureMap",
-  "id": "E64f9b0a2a2a4f8f9b867b6f8f4d2d31Structuremap87afa9d1",
-  "url": "https://gematik.de/fhir/directory/StructureDefinition/PractitionerDirectory/StructureMap/E64f9b0a2a2a4f8f9b867b6f8f4d2d31Structuremap",
-  "name": "E64f9b0a2a2a4f8f9b867b6f8f4d2d31Structuremap",
+  "id": "KBVPrForPractitionerMap",
+  "url": "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrForPractitionerMap",
+  "name": "KBVPrForPractitionerMap",
   "status": "active",
   "version": "1.0",
-  "date": "2025-11-24",
+  "date": "2025-12-02",
   "description": "Auto-generated StructureMap for KBV_PR_FOR_Practitioner|1.2.0 -> PractitionerDirectory|0.11.25",
   "structure": [
     {
@@ -21,7 +21,7 @@
   ],
   "group": [
     {
-      "name": "E64f9b0a2a2a4f8f9b867b6f8f4d2d31Structuremap",
+      "name": "KBVPrForPractitionerMap",
       "typeMode": "types",
       "documentation": "Mapping generated for KBV_PR_FOR_Practitioner|1.2.0 -> PractitionerDirectory|0.11.25",
       "input": [
@@ -82,31 +82,6 @@
               "parameter": [
                 {
                   "valueId": "srcKBVPRFORPractitionerIdentifierd46d78b7"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "PractitionerIdentifierLanrdad549a6",
-          "documentation": "Copied from 'Practitioner.identifier:ANR'",
-          "source": [
-            {
-              "context": "KBVPRFORPractitioner",
-              "element": "identifier",
-              "variable": "srcKBVPRFORPractitionerIdentifierAnr3c836155"
-            }
-          ],
-          "target": [
-            {
-              "context": "PractitionerDirectory",
-              "contextType": "variable",
-              "element": "identifier",
-              "variable": "tgtPractitionerDirectoryIdentifierLanrc79324c3",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcKBVPRFORPractitionerIdentifierAnr3c836155"
                 }
               ]
             }

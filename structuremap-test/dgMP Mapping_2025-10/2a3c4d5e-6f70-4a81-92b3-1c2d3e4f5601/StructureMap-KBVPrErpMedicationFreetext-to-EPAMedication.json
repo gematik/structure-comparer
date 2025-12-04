@@ -1,11 +1,11 @@
 {
   "resourceType": "StructureMap",
-  "id": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMed4300f865",
-  "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationF",
-  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationF",
+  "id": "KBVPrErpMedicationFreetextMap",
+  "url": "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpMedicationFreetextMap",
+  "name": "KBVPrErpMedicationFreetextMap",
   "status": "active",
   "version": "1.1",
-  "date": "2025-11-24",
+  "date": "2025-12-02",
   "description": "Auto-generated StructureMap for KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2",
   "structure": [
     {
@@ -21,7 +21,7 @@
   ],
   "group": [
     {
-      "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationF",
+      "name": "KBVPrErpMedicationFreetextMap",
       "typeMode": "types",
       "documentation": "Mapping generated for KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2",
       "input": [
@@ -366,69 +366,6 @@
             }
           ],
           "documentation": "Automatic copy"
-        },
-        {
-          "name": "MedicationExtensionIsvaccine98c25b06",
-          "documentation": "Copied from 'Medication.extension:Impfstoff'",
-          "source": [
-            {
-              "context": "KBVPRERPMedicationCompounding",
-              "element": "extension",
-              "variable": "srcKBVPRERPMedicationCompoundingExtensionImpfstoffb07a0850",
-              "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine' and url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine'"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "extension",
-              "variable": "tgtEPAMedicationExtensionIsvaccinea7742b5a",
-              "transform": "create",
-              "parameter": [
-                {
-                  "valueString": "Extension"
-                }
-              ]
-            },
-            {
-              "context": "tgtEPAMedicationExtensionIsvaccinea7742b5a",
-              "contextType": "variable",
-              "element": "url",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension"
-                }
-              ]
-            }
-          ],
-          "rule": [
-            {
-              "name": "MedicationExtensionIsvaccineIdb9468475",
-              "source": [
-                {
-                  "context": "srcKBVPRERPMedicationCompoundingExtensionImpfstoffb07a0850",
-                  "element": "id",
-                  "variable": "srcMedicationExtensionIsvaccineIdb9468475"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationExtensionIsvaccinea7742b5a",
-                  "contextType": "variable",
-                  "element": "id",
-                  "variable": "tgtMedicationExtensionIsvaccineIdb9468475",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationExtensionIsvaccineIdb9468475"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
         },
         {
           "name": "MedicationFormCodingEdqmCode122b7318",
@@ -1946,61 +1883,6 @@
               "source": [
                 {
                   "context": "KBVPRERPMedicationCompounding"
-                }
-              ]
-            }
-          ],
-          "source": [
-            {
-              "context": "KBVPRERPMedicationCompounding"
-            }
-          ],
-          "documentation": "Automatic copy"
-        },
-        {
-          "name": "MedicationFormExtension4520fac8",
-          "target": [
-            {
-              "context": "EPAMedication",
-              "element": "form",
-              "variable": "tgtEPAMedicationForm691ed321",
-              "contextType": "variable"
-            }
-          ],
-          "rule": [
-            {
-              "name": "MedicationFormExtension4520fac8",
-              "source": [
-                {
-                  "context": "KBVPRERPMedicationCompounding",
-                  "element": "form",
-                  "variable": "srcKBVPRERPMedicationCompoundingFormc5146e0b"
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationFormExtension4520fac8",
-                  "source": [
-                    {
-                      "context": "srcKBVPRERPMedicationCompoundingFormc5146e0b",
-                      "element": "extension",
-                      "variable": "srcKBVPRERPMedicationCompoundingFormExtensionbb014f54"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtEPAMedicationForm691ed321",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtEPAMedicationFormExtension03f15678",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcKBVPRERPMedicationCompoundingFormExtensionbb014f54"
-                        }
-                      ]
-                    }
-                  ]
                 }
               ]
             }

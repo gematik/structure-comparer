@@ -12,7 +12,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
-import re
 from typing import TYPE_CHECKING, Iterable, Literal, Sequence
 
 from structure_comparer.model.mapping_action_models import ActionInfo
@@ -126,30 +125,21 @@ def _unique_filename(base: str, registry: dict[str, int]) -> str:
     return f"{base}{suffix}.json"
 
 
-_STRUCTUREMAP_NAME_CHARS = re.compile(r"[^A-Za-z0-9\-.]+")
-
-
-def _sanitize_structuremap_label(label: str, fallback: str) -> str:
-    cleaned = _STRUCTUREMAP_NAME_CHARS.sub("-", label or "")
-    cleaned = re.sub(r"-+", "-", cleaned).strip("-.")
-    return cleaned or fallback
-
-
 def _unique_structuremap_name(base_name: str, registry: dict[str, int]) -> str:
-    base = base_name or "StructureMap-Map"
+    base = base_name or "StructureMapMap"
     counter = registry.get(base, 0)
     registry[base] = counter + 1
     if counter == 0:
-        candidate = base
+        candidate = base[:64]
     else:
-        suffix = f"-{counter + 1}"
+        suffix = f"{counter + 1}"
         max_base_len = max(1, 64 - len(suffix))
         candidate = f"{base[:max_base_len]}{suffix}"
 
-    if candidate[0].isdigit():
+    if candidate and candidate[0].isdigit():
         candidate = f"F{candidate[:-1]}" if len(candidate) == 64 else f"F{candidate}"
 
-    return candidate[:64]
+    return candidate[:64] or "StructureMap"
 
 
 def _structuremap_name_from_profile(
@@ -158,11 +148,9 @@ def _structuremap_name_from_profile(
     fallback: str,
     registry: dict[str, int],
 ) -> str:
-    label = _profile_label(profile, fallback)
-    sanitized = _sanitize_structuremap_label(label, fallback)
-    max_base_len = max(1, 64 - len("-Map"))
-    sanitized = sanitized[:max_base_len]
-    base_name = f"{sanitized}-Map"
+    base_label = _profile_slug(profile, fallback)
+    max_base_len = max(1, 64 - len("Map"))
+    base_name = f"{base_label[:max_base_len]}Map"
     return _unique_structuremap_name(base_name, registry)
 
 
@@ -172,21 +160,17 @@ def _structuremap_name_for_router(
     registry: dict[str, int],
     fallback: str | None = None,
 ) -> str:
-    target_label = _profile_label(getattr(mapping, "target", None), fallback or getattr(mapping, "name", "Router"))
-    sanitized = _sanitize_structuremap_label(target_label, "Router")
-    max_base_len = max(1, 64 - len("-Map"))
-    base = f"{sanitized[:max_base_len]}-Map"
+    target_label = _profile_slug(getattr(mapping, "target", None), fallback or getattr(mapping, "name", "Router"))
+    max_base_len = max(1, 64 - len("Map"))
+    base = f"{target_label[:max_base_len]}Map"
     return _unique_structuremap_name(base, registry)
 
 
 def _ensure_valid_structuremap_name(name: str) -> str:
-    sanitized = _sanitize_structuremap_label(name or "StructureMap", "StructureMap")
-    sanitized = sanitized[:64]
+    sanitized = slug(name or "StructureMap", suffix="")
     if not sanitized:
         sanitized = "StructureMap"
-    if sanitized[0].isdigit():
-        sanitized = f"F{sanitized[:-1]}" if len(sanitized) == 64 else f"F{sanitized}"
-    return sanitized
+    return sanitized[:64]
 
 
 
@@ -622,7 +606,7 @@ def _build_router_rule(
     source_input_type: str | None = None,
 ) -> dict:
     profile_name = getattr(profile, "name", None) or profile.url
-    condition = f"meta.profile.exists(p | p = '{profile.url}')"
+    condition = _router_condition_for_profile(profile)
     route_rule_name = normalize_ruleset_name(f"route_{profile_name}")
     invoke_rule_name = normalize_ruleset_name(f"call_{child_ruleset_name}")
     typed_variable = slug(f"{source_alias}_{profile_name or 'source'}", suffix="Routed")
@@ -652,6 +636,32 @@ def _build_router_rule(
             }
         ],
     }
+
+
+def _router_condition_for_profile(profile: "Profile") -> str:
+    match_value = _profile_match_fragment(profile)
+    escaped_value = _escape_fhirpath_string(match_value)
+    return f"meta.profile.where($this.contains('{escaped_value}')).exists()"
+
+
+def _profile_match_fragment(profile: "Profile") -> str:
+    url = getattr(profile, "url", "") or ""
+    fragment = url
+    if url:
+        fragment = url.split("|", 1)[0]
+        if "/" in fragment:
+            fragment = fragment.rsplit("/", 1)[-1] or fragment
+
+    if not fragment:
+        fragment = getattr(profile, "name", None) or getattr(profile, "key", None) or url
+
+    return fragment or "profile"
+
+
+def _escape_fhirpath_string(value: str) -> str:
+    if not value:
+        return value
+    return value.replace("\\", "\\\\").replace("'", "\\'")
 
 
 def _shared_resource_type(profiles: Iterable["Profile"] | None) -> str | None:

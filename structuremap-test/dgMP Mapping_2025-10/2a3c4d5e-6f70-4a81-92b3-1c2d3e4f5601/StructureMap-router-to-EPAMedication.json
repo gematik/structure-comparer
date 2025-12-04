@@ -1,11 +1,11 @@
 {
   "resourceType": "StructureMap",
-  "id": "F2a3c4d5e6f704a8192b31c2d3e4f5601Structuremap29ddbcee",
-  "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601Structuremap",
-  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601Structuremap",
+  "id": "EPAMedicationMap",
+  "url": "https://gematik.de/fhir/structure-comparer/StructureMap/EPAMedicationMap",
+  "name": "EPAMedicationMap",
   "status": "active",
   "version": "1.1",
-  "date": "2025-11-24",
+  "date": "2025-12-02",
   "description": "Router StructureMap for KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2",
   "structure": [
     {
@@ -21,7 +21,7 @@
   ],
   "group": [
     {
-      "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601Structuremap",
+      "name": "EPAMedicationMap",
       "typeMode": "none",
       "documentation": "Router StructureMap for KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2",
       "input": [
@@ -43,14 +43,14 @@
           "source": [
             {
               "context": "KBVPRERPMedicationCompounding",
-              "condition": "meta.profile.exists(p | p = 'https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding')",
+              "condition": "meta.profile.where($this.contains('KBV_PR_ERP_Medication_Compounding')).exists()",
               "type": "Medication",
               "variable": "KBVPRERPMedicationCompoundingKbvPrErpMedicationCompoundingRouted"
             }
           ],
           "rule": [
             {
-              "name": "CallF2a3c4d5e6f704a8192b31c2d3e4f5601structuremapkbvprerpmedicat",
+              "name": "CallKbvprerpmedicationcompoundingmap",
               "source": [
                 {
                   "context": "KBVPRERPMedicationCompoundingKbvPrErpMedicationCompoundingRouted"
@@ -58,7 +58,7 @@
               ],
               "dependent": [
                 {
-                  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationC",
+                  "name": "KBVPrErpMedicationCompoundingMap",
                   "variable": [
                     "KBVPRERPMedicationCompoundingKbvPrErpMedicationCompoundingRouted",
                     "EPAMedication"
@@ -74,14 +74,14 @@
           "source": [
             {
               "context": "KBVPRERPMedicationCompounding",
-              "condition": "meta.profile.exists(p | p = 'https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_FreeText')",
+              "condition": "meta.profile.where($this.contains('KBV_PR_ERP_Medication_FreeText')).exists()",
               "type": "Medication",
               "variable": "KBVPRERPMedicationCompoundingKbvPrErpMedicationFreetextRouted"
             }
           ],
           "rule": [
             {
-              "name": "CallF2a3c4d5e6f704a8192b31c2d3e4f5601structuremapkbvprerpmedicat",
+              "name": "CallKbvprerpmedicationfreetextmap",
               "source": [
                 {
                   "context": "KBVPRERPMedicationCompoundingKbvPrErpMedicationFreetextRouted"
@@ -89,7 +89,7 @@
               ],
               "dependent": [
                 {
-                  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationF",
+                  "name": "KBVPrErpMedicationFreetextMap",
                   "variable": [
                     "KBVPRERPMedicationCompoundingKbvPrErpMedicationFreetextRouted",
                     "EPAMedication"
@@ -105,14 +105,14 @@
           "source": [
             {
               "context": "KBVPRERPMedicationCompounding",
-              "condition": "meta.profile.exists(p | p = 'https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Ingredient')",
+              "condition": "meta.profile.where($this.contains('KBV_PR_ERP_Medication_Ingredient')).exists()",
               "type": "Medication",
               "variable": "KBVPRERPMedicationCompoundingKbvPrErpMedicationIngredientRouted"
             }
           ],
           "rule": [
             {
-              "name": "CallF2a3c4d5e6f704a8192b31c2d3e4f5601structuremapkbvprerpmedicat",
+              "name": "CallKbvprerpmedicationingredientmap",
               "source": [
                 {
                   "context": "KBVPRERPMedicationCompoundingKbvPrErpMedicationIngredientRouted"
@@ -120,7 +120,7 @@
               ],
               "dependent": [
                 {
-                  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationI",
+                  "name": "KBVPrErpMedicationIngredientMap",
                   "variable": [
                     "KBVPRERPMedicationCompoundingKbvPrErpMedicationIngredientRouted",
                     "EPAMedication"
@@ -136,14 +136,14 @@
           "source": [
             {
               "context": "KBVPRERPMedicationCompounding",
-              "condition": "meta.profile.exists(p | p = 'https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_PZN')",
+              "condition": "meta.profile.where($this.contains('KBV_PR_ERP_Medication_PZN')).exists()",
               "type": "Medication",
               "variable": "KBVPRERPMedicationCompoundingKbvPrErpMedicationPznRouted"
             }
           ],
           "rule": [
             {
-              "name": "CallF2a3c4d5e6f704a8192b31c2d3e4f5601structuremapkbvprerpmedicat",
+              "name": "CallKbvprerpmedicationpznmap",
               "source": [
                 {
                   "context": "KBVPRERPMedicationCompoundingKbvPrErpMedicationPznRouted"
@@ -151,7 +151,7 @@
               ],
               "dependent": [
                 {
-                  "name": "F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationP",
+                  "name": "KBVPrErpMedicationPznMap",
                   "variable": [
                     "KBVPRERPMedicationCompoundingKbvPrErpMedicationPznRouted",
                     "EPAMedication"
@@ -165,9 +165,9 @@
     }
   ],
   "import": [
-    "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationC",
-    "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationF",
-    "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationI",
-    "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication/StructureMap/F2a3c4d5e6f704a8192b31c2d3e4f5601StructuremapKbvPrErpMedicationP"
+    "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpMedicationCompoundingMap",
+    "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpMedicationFreetextMap",
+    "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpMedicationIngredientMap",
+    "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpMedicationPznMap"
   ]
 }

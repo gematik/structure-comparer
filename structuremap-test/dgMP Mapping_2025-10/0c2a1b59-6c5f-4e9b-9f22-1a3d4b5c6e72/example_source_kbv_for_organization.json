@@ -5,24 +5,24 @@
       "type": {
         "coding": [
           {
-            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-            "code": "BSNR"
+            "code": "BSNR",
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0203"
           }
         ]
       },
       "value": "721111100"
     }
   ],
-  "id": "5d3f4ac0-2b44-4d48-b363-e63efa72973b",
+  "name": "MVZ",
+  "resourceType": "Organization",
+  "meta": {
+    "profile": [
+      "https://fhir.kbv.de/StructureDefinition/KBV_PR_FOR_Organization|1.2"
+    ]
+  },
   "address": [
     {
-      "type": "both",
-      "postalCode": "10623",
-      "line": [
-        "Herbert-Lewin-Platz 2"
-      ],
       "country": "D",
-      "city": "Berlin",
       "_line": [
         {
           "extension": [
@@ -36,28 +36,28 @@
             }
           ]
         }
-      ]
+      ],
+      "postalCode": "10623",
+      "type": "both",
+      "line": [
+        "Herbert-Lewin-Platz 2"
+      ],
+      "city": "Berlin"
     }
   ],
-  "resourceType": "Organization",
-  "name": "MVZ",
-  "meta": {
-    "profile": [
-      "https://fhir.kbv.de/StructureDefinition/KBV_PR_FOR_Organization|1.2"
-    ]
-  },
   "telecom": [
     {
-      "system": "phone",
-      "value": "0301234567"
+      "value": "0301234567",
+      "system": "phone"
     },
     {
-      "system": "fax",
-      "value": "030123456789"
+      "value": "030123456789",
+      "system": "fax"
     },
     {
-      "system": "email",
-      "value": "mvz@e-mail.de"
+      "value": "mvz@e-mail.de",
+      "system": "email"
     }
-  ]
+  ],
+  "id": "5d3f4ac0-2b44-4d48-b363-e63efa72973b"
 }
