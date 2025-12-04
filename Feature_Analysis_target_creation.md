@@ -24,7 +24,7 @@
 | 9 | 9.1-9.3 | ✅ | Breadcrumb Integration & Testing |
 | 10 | 10.1-10.2 | ✅ | Shared Components Wiederverwendung (in Phase 8 integriert) |
 | 11 | 11.1-11.2 | ⬜ | Optional Enhancements (YAML Export, Update Dialog) |
-| 12 | 12.1-12.5 | ⬜ | Transformation-Integration |
+| 12 | 12.1-12.5 | ✅ | Transformation-Integration (Backend + Frontend Services) |
 
 ---
 
