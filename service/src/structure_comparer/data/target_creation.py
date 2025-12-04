@@ -70,6 +70,10 @@ class TargetCreationField:
         self.action: TargetCreationAction | None = None
         self.fixed: str | None = None
         self.remark: str | None = None
+        
+        # Action info and evaluation (populated by evaluation engine)
+        self.action_info = None
+        self.evaluation = None
 
     @property
     def is_required(self) -> bool:
@@ -96,8 +100,8 @@ class TargetCreationField:
             action=self.action,
             fixed=self.fixed,
             remark=self.remark,
-            action_info=None,  # Populated by actions engine
-            evaluation=None,   # Populated by evaluation engine
+            action_info=self.action_info,
+            evaluation=self.evaluation,
         )
 
 
@@ -256,11 +260,31 @@ class TargetCreation:
             package=metadata.get("package"),
         )
 
-        # Convert fields to models
+        # Compute actions and evaluations for all fields
+        from ..evaluation.target_creation_evaluation import (
+            compute_target_creation_actions,
+            evaluate_target_creation,
+            TargetCreationStatusAggregator
+        )
+        
+        # Get manual entries for this target creation
+        manual_entry = self._project.manual_entries.get_target_creation(self.id)
+        
+        # Compute action info
+        action_map = compute_target_creation_actions(self, manual_entry)
+        
+        # Evaluate fields
+        evaluation_map = evaluate_target_creation(self, action_map)
+        
+        # Update fields with action_info and evaluation
+        for field in self.fields.values():
+            field.action_info = action_map.get(field.name)
+            field.evaluation = evaluation_map.get(field.name)
+        
+        # Convert fields to models (now with action_info and evaluation)
         field_models = [f.to_model() for f in self.fields.values()]
 
-        # Calculate status counts
-        from ..evaluation.target_creation_evaluation import TargetCreationStatusAggregator
+        # Calculate status counts based on evaluations
         status_counts = TargetCreationStatusAggregator.build_status_summary(self.fields)
 
         return TargetCreationDetailsModel(
