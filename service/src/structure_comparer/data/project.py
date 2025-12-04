@@ -9,6 +9,7 @@ from .config import PackageConfig, ProjectConfig
 from .mapping import Mapping
 from .package import Package
 from .transformation import Transformation
+from .target_creation import TargetCreation
 
 
 class Project:
@@ -19,6 +20,7 @@ class Project:
         self.mappings: Dict[str, Mapping]
         self.comparisons: Dict[str, Comparison]
         self.transformations: Dict[str, Transformation]
+        self.target_creations: Dict[str, TargetCreation]
         self.manual_entries: ManualEntries
 
         self.pkgs: list[Package]
@@ -31,6 +33,7 @@ class Project:
         self.load_mappings()
         self.__read_manual_entries()
         self.load_transformations()
+        self.load_target_creations()
 
     def _ensure_structure(self) -> None:
         """
@@ -98,6 +101,17 @@ class Project:
         self.transformations = {
             t.id: Transformation(t, self).init_ext()
             for t in self.config.transformations
+        }
+
+    def load_target_creations(self):
+        """Load all target creations from config."""
+        if not self.config.target_creations:
+            self.target_creations = {}
+            return
+
+        self.target_creations = {
+            tc.id: TargetCreation(tc, self).init_ext()
+            for tc in self.config.target_creations
         }
 
     def __read_manual_entries(self):
@@ -182,6 +196,7 @@ class Project:
         pkgs = [p.to_model() for p in self.pkgs]
         comparisons = [c.to_overview_model() for c in self.comparisons.values()]
         transformations = [t.to_base_model() for t in self.transformations.values()]
+        target_creations = [tc.to_base_model() for tc in self.target_creations.values()]
 
         return ProjectModel(
             name=self.name,
@@ -190,6 +205,7 @@ class Project:
             mappings=mappings,
             comparisons=comparisons,
             transformations=transformations,
+            target_creations=target_creations,
             packages=pkgs
         )
 

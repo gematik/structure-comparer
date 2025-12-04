@@ -58,6 +58,27 @@ class TransformationConfig(BaseModel):
     )
 
 
+class TargetCreationConfig(BaseModel):
+    """Configuration for a Target Creation.
+    
+    Target Creations define how to populate a target profile without source data.
+    Unlike Mappings, they have NO source profiles - only a target profile.
+    
+    Only 'manual' and 'fixed' actions are allowed.
+    
+    === IMPLEMENTATION STATUS ===
+    Phase 2, Step 2.1: TargetCreation Config ✅
+    Created: 2025-12-03
+    """
+    id: str
+    version: str
+    status: str = "draft"
+    targetprofile: ComparisonProfileConfig = None  # Only target, no source profiles
+    last_updated: str = (datetime.now(timezone.utc) + timedelta(hours=2)).strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+
 class ProjectConfig(BaseModel):
     name: str | None = None
     version: str | None = None
@@ -67,7 +88,8 @@ class ProjectConfig(BaseModel):
     html_output_dir: str = "docs"
     packages: list[PackageConfig] = []
     comparisons: list[ComparisonConfig] = []
-    transformations: list[TransformationConfig] = []  # NEW: meta-level mappings
+    transformations: list[TransformationConfig] = []  # Meta-level mappings
+    target_creations: list[TargetCreationConfig] = []  # NEW: Target-only definitions (Phase 2.1)
     mapping_output_file: str = "mapping.json"
     mappings: list[MappingConfig] = []
     show_remarks: bool = True

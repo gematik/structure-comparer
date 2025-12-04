@@ -61,6 +61,53 @@ entries:
     other: null
     remark: null
   id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+- fields:
+  - action: manual
+    fixed: null
+    name: Organization.identifier:TelematikID
+    other: null
+    remark: idNummer → aus dem ACCESS_TOKEN der Anfrage
+  - action: manual
+    fixed: null
+    name: Organization.name
+    other: null
+    remark: organizationName → aus dem ACCESS_TOKEN der Anfrage
+  - action: manual
+    fixed: null
+    name: Organization.type:profession
+    other: null
+    remark: professionOID → aus dem ACCESS_TOKEN der Anfrage
+  - action: fixed
+    fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
+    name: Organization.meta.tag:Origin.system
+    other: null
+    remark: null
+  - action: fixed
+    fixed: ldap
+    name: Organization.meta.tag:Origin.code
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.address:Strassenanschrift.line.extension:Postfach
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.extension:ergaenzende_Angaben
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.address:Strassenanschrift.extension
+    other: null
+    remark: null
+  id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
 mapping_entries:
 - fields:
   - action: use
@@ -533,14 +580,14 @@ transformation_entries:
     remark: null
   - action: use
     fixed: null
-    map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
-    name: Bundle.entry:RezeptierdatenFreitextverordnung.resource
-    other: .parameter:rxPrescription.part:medication.resource
-    remark: null
-  - action: use
-    fixed: null
     map: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
     name: Bundle.entry:Einrichtung.resource
     other: .parameter:rxPrescription.part:organization.resource
+    remark: null
+  - action: use
+    fixed: null
+    map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+    name: Bundle.entry:RezeptierdatenFreitextverordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
     remark: null
   id: 837f9230-c28e-426e-a32e-268702d6e853

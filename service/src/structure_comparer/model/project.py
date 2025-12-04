@@ -4,6 +4,7 @@ from .comparison import ComparisonOverview
 from .mapping import MappingBase
 from .package import Package
 from .transformation import TransformationBase
+from .target_creation import TargetCreationBase
 
 
 class Project(BaseModel):
@@ -13,6 +14,7 @@ class Project(BaseModel):
     mappings: list[MappingBase]
     comparisons: list[ComparisonOverview]
     transformations: list[TransformationBase] = []
+    target_creations: list[TargetCreationBase] = []
     packages: list[Package]
 
 
