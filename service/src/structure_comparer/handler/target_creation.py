@@ -190,6 +190,11 @@ class TargetCreationHandler:
             proj.manual_entries.write()
             logger.debug("Finished writing manual_entries")
             
+            # IMPORTANT: Clear the action on the in-memory field object
+            field.action = None
+            field.fixed = None
+            field.remark = None
+            
             # Return a response indicating removal
             return TargetCreationFieldBaseModel(name=field.name, action=None)
         
@@ -221,7 +226,12 @@ class TargetCreationHandler:
         # Add the new entry
         manual_entries.fields.append(new_entry)
         
+        # Write to disk
         proj.manual_entries.write()
+        
+        # IMPORTANT: Apply the manual entry to the in-memory field object
+        # so that subsequent API calls see the updated action without requiring a server restart
+        field.apply_manual_entry(new_entry)
         
         return new_entry
 

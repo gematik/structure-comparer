@@ -2353,6 +2353,68 @@ async def unlink_mapping_from_transformation_field(
         return ErrorModel.from_except(e)
 
 
+@app.post(
+    "/project/{project_key}/transformation/{transformation_id}/field/{field_name:path}/link-target-creation",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def link_target_creation_to_transformation_field(
+    project_key: str,
+    transformation_id: str,
+    field_name: str,
+    target_creation_id: str,
+    response: Response,
+) -> TransformationFieldModel | ErrorModel:
+    """
+    Link a target creation to a transformation field.
+    This creates a reference from the transformation field to a target creation.
+    
+    Body should be a string containing the target creation ID.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.link_target_creation(
+            project_key, transformation_id, field_name, target_creation_id
+        )
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except (FieldNotFound, TargetCreationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.delete(
+    "/project/{project_key}/transformation/{transformation_id}/field/{field_name:path}/link-target-creation",
+    tags=["Transformations"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def unlink_target_creation_from_transformation_field(
+    project_key: str,
+    transformation_id: str,
+    field_name: str,
+    response: Response,
+) -> TransformationFieldModel | ErrorModel:
+    """
+    Remove a target creation link from a transformation field.
+    """
+    global transformation_handler
+    try:
+        return transformation_handler.unlink_target_creation(
+            project_key, transformation_id, field_name
+        )
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except FieldNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
 # ============================================================================
 # TARGET CREATION ENDPOINTS
 # Phase 5, Step 5.1: Router erstellen ✅

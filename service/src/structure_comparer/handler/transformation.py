@@ -27,6 +27,7 @@ from ..errors import (
     MappingValueMissing,
     ProjectNotFound,
 )
+from .target_creation import TargetCreationNotFound
 from ..model.manual_entries import ManualEntriesTransformation
 from ..model.transformation import (
     TransformationBase as TransformationBaseModel,
@@ -307,6 +308,97 @@ class TransformationHandler:
             if existing_entry:
                 # Remove the entry completely instead of just clearing the map
                 manual_entries.remove_field(field_name)
+                proj.manual_entries.write()
+
+        # Reload transformations to apply the updated manual entries
+        proj.load_transformations()
+
+        # Return the updated field
+        transformation = self._get_transformation(project_key, transformation_id, proj)
+        updated_field = self._get_field_by_name(transformation, field_name)
+        return updated_field.to_model()
+
+    def link_target_creation(
+        self,
+        project_key: str,
+        transformation_id: str,
+        field_name: str,
+        target_creation_id: str,
+    ) -> TransformationFieldModel:
+        """Link a target creation to a transformation field."""
+        proj = self.project_handler._get(project_key)
+        if proj is None:
+            raise ProjectNotFound()
+
+        transformation = self._get_transformation(project_key, transformation_id, proj)
+        field = self._get_field_by_name(transformation, field_name)
+
+        if field is None:
+            raise FieldNotFound()
+
+        # Verify target creation exists
+        target_creation = proj.target_creations.get(target_creation_id)
+        if target_creation is None:
+            raise TargetCreationNotFound(f"Target Creation '{target_creation_id}' not found")
+
+        # Get or create manual entries
+        manual_entries = proj.manual_entries.get_transformation(transformation_id)
+        if manual_entries is None:
+            manual_entries = ManualEntriesTransformation(id=transformation_id)
+            proj.manual_entries.set_transformation(manual_entries)
+
+        # Create or update the field entry with the target creation link
+        existing_entry = manual_entries.get_field(field_name)
+        if existing_entry:
+            existing_entry.target_creation = target_creation_id
+            manual_entries.set_field(existing_entry)
+        else:
+            new_entry = TransformationFieldBaseModel(
+                name=field_name,
+                action=Action.USE,
+                target_creation=target_creation_id,
+            )
+            manual_entries.set_field(new_entry)
+
+        proj.manual_entries.write()
+
+        # Reload transformations to apply the updated manual entries
+        proj.load_transformations()
+
+        # Return the updated field
+        transformation = self._get_transformation(project_key, transformation_id, proj)
+        updated_field = self._get_field_by_name(transformation, field_name)
+        return updated_field.to_model()
+
+    def unlink_target_creation(
+        self,
+        project_key: str,
+        transformation_id: str,
+        field_name: str,
+    ) -> TransformationFieldModel:
+        """Remove a target creation link from a transformation field."""
+        proj = self.project_handler._get(project_key)
+        if proj is None:
+            raise ProjectNotFound()
+
+        transformation = self._get_transformation(project_key, transformation_id, proj)
+        field = self._get_field_by_name(transformation, field_name)
+
+        if field is None:
+            raise FieldNotFound()
+
+        # Get manual entries and remove the target_creation reference
+        manual_entries = proj.manual_entries.get_transformation(transformation_id)
+        if manual_entries:
+            existing_entry = manual_entries.get_field(field_name)
+            if existing_entry and existing_entry.target_creation:
+                # If there's nothing else in the entry, remove it completely
+                if not existing_entry.map and not existing_entry.fixed and not existing_entry.other:
+                    manual_entries.remove_field(field_name)
+                else:
+                    # Otherwise just clear the target_creation
+                    existing_entry.target_creation = None
+                    manual_entries.set_field(existing_entry)
                 proj.manual_entries.write()
 
         # Reload transformations to apply the updated manual entries

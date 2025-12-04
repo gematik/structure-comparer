@@ -55,6 +55,8 @@ class TransformationField(ComparisonField):
         self.remark: str | None = None
         self.map: str | None = None  # Reference to Mapping ID
         self.map_name: str | None = None  # Resolved Mapping name
+        self.target_creation: str | None = None  # Reference to Target Creation ID
+        self.target_creation_name: str | None = None  # Resolved Target Creation name
         self.actions_allowed: List[Action] = []
         self.action_info: ActionInfo | None = None
         self.evaluation: EvaluationResult | None = None
@@ -90,6 +92,7 @@ class TransformationField(ComparisonField):
         self.fixed = entry.fixed
         self.remark = entry.remark
         self.map = entry.map
+        self.target_creation = entry.target_creation
 
     def to_model(self) -> TransformationFieldModel:
         """Convert to Pydantic model for API response."""
@@ -127,6 +130,8 @@ class TransformationField(ComparisonField):
             remark=self.remark,
             map=self.map,
             map_name=self.map_name,
+            target_creation=self.target_creation,
+            target_creation_name=self.target_creation_name,
             actions_allowed=self.actions_allowed,
             action_info=self.action_info,
             evaluation=self.evaluation,
@@ -213,6 +218,11 @@ class Transformation(Comparison):
                     mapping = self._project.mappings.get(manual_field.map)
                     if mapping:
                         field.map_name = mapping.name
+                if manual_field.target_creation:
+                    # Resolve target creation name
+                    target_creation = self._project.target_creations.get(manual_field.target_creation)
+                    if target_creation:
+                        field.target_creation_name = target_creation.name
 
     def get_linked_mappings(self) -> List["Mapping"]:
         """Returns all Mapping objects linked to this Transformation."""

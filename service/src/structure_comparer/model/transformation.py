@@ -8,8 +8,9 @@ FHIR Bundle (e.g., KBV_PR_ERP_Bundle) is transformed into another format
 
 Hierarchy:
 - Transformation: Bundle → Parameters (meta-level)
-  - TransformationField: References child Mappings via 'map' field
-    - Mapping: Profile → Profile (detail-level)
+  - TransformationField: Can reference either:
+    - Mapping via 'map' field: Transformation WITH source data
+    - Target Creation via 'target_creation' field: Creation WITHOUT source data
 """
 
 from pydantic import BaseModel
@@ -22,13 +23,16 @@ from .profile import Profile
 class TransformationFieldMinimal(BaseModel):
     """Minimal payload accepted when updating a transformation field.
     
-    Fields have action='transform' and reference a child mapping via 'map'.
+    Fields can reference either:
+    - A Mapping via 'map' (transformation with source data)
+    - A Target Creation via 'target_creation' (creation without source data)
     """
     action: Action | None
     other: str | None = None
     fixed: str | None = None
     remark: str | None = None
     map: str | None = None  # Reference to a Mapping ID
+    target_creation: str | None = None  # Reference to a Target Creation ID
 
 
 class TransformationFieldBase(TransformationFieldMinimal):
@@ -40,7 +44,9 @@ class TransformationField(BaseModel):
     """Full transformation field representation returned to clients.
     
     A TransformationField describes how a specific element from the source Bundle
-    maps to the target structure, potentially using a referenced Mapping.
+    maps to the target structure, potentially using either:
+    - A referenced Mapping (for transformations with source data)
+    - A referenced Target Creation (for creating data without source)
     """
     name: str
     path: str
@@ -50,6 +56,8 @@ class TransformationField(BaseModel):
     remark: str | None = None
     map: str | None = None  # Reference to Mapping ID
     map_name: str | None = None  # Resolved Mapping name for display
+    target_creation: str | None = None  # Reference to Target Creation ID
+    target_creation_name: str | None = None  # Resolved Target Creation name for display
     actions_allowed: list[Action] = []
     action_info: ActionInfo | None = None
     evaluation: EvaluationResult | None = None
