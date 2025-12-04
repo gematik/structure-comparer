@@ -219,7 +219,7 @@ class MappingHandler:
         # Build the entry that should be created/updated
         new_entry = MappingFieldBaseModel(name=field.name, action=input.action)
         target: MappingField | None = None
-        if new_entry.action == Action.COPY_FROM or new_entry.action == Action.COPY_TO:
+        if new_entry.action in [Action.COPY_FROM, Action.COPY_TO, Action.EXTENSION]:
             if target_id := input.other:
                 target = get_field_by_name(mapping, target_id)
 
@@ -238,9 +238,9 @@ class MappingHandler:
         if input.remark:
             new_entry.remark = input.remark
 
-        # Clean up existing COPY_FROM/COPY_TO partners when changing action
+        # Clean up existing COPY_FROM/COPY_TO/EXTENSION partners when changing action
         if (manual_entry := manual_entries.get(field.name)) and (
-            manual_entry.action in [Action.COPY_FROM, Action.COPY_TO]
+            manual_entry.action in [Action.COPY_FROM, Action.COPY_TO, Action.EXTENSION]
         ):
             other_name = manual_entry.other
             if other_name:

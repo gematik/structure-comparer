@@ -107,6 +107,11 @@ entries:
     name: Organization.address:Strassenanschrift.extension
     other: null
     remark: null
+  - action: extension
+    fixed: null
+    name: Organization.address:Strassenanschrift.line
+    other: Organization.address.line
+    remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
 mapping_entries:
 - fields:
@@ -558,6 +563,21 @@ mapping_entries:
     other: Practitioner.identifier:LANR.assigner.display
     remark: null
   id: e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31
+target_creation_entries:
+- fields:
+  - action: manual
+    fixed: null
+    name: Organization.id
+    remark: Test
+  - action: fixed
+    fixed: dsdsds
+    name: Organization.meta
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.meta.extension
+    remark: Test 3
+  id: b4169753-5230-4366-b5a0-e32e6b73ffc9
 transformation_entries:
 - fields:
   - action: use
@@ -566,28 +586,33 @@ transformation_entries:
     name: Bundle.entry:RezeptierdatenPZNVerordnung.resource
     other: .parameter:rxPrescription.part:medication.resource
     remark: null
+    target_creation: null
   - action: use
     fixed: null
     map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
     name: Bundle.entry:RezeptierdatenWirkstoffverordnung.resource
     other: .parameter:rxPrescription.part:medication.resource
     remark: null
+    target_creation: null
   - action: use
     fixed: null
     map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
     name: Bundle.entry:RezeptierdatenRezepturverordnung.resource
     other: .parameter:rxPrescription.part:medication.resource
     remark: null
+    target_creation: null
   - action: use
     fixed: null
     map: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
     name: Bundle.entry:Einrichtung.resource
     other: .parameter:rxPrescription.part:organization.resource
     remark: null
+    target_creation: null
   - action: use
     fixed: null
     map: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
     name: Bundle.entry:RezeptierdatenFreitextverordnung.resource
     other: .parameter:rxPrescription.part:medication.resource
     remark: null
+    target_creation: null
   id: 837f9230-c28e-426e-a32e-268702d6e853

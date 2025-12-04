@@ -23,6 +23,7 @@ class ActionType(str, Enum):
     COPY_TO = "copy_to"
     FIXED = "fixed"
     MANUAL = "manual"  # User provides free-text implementation instructions in remark field
+    EXTENSION = "extension"  # For source extensions to be copied to any target field
 
 
 class ActionSource(str, Enum):

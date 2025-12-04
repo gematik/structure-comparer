@@ -30,6 +30,7 @@ _ACTIONTYPE_TO_LEGACY: dict[ActionType, Action] = {
     ActionType.COPY_TO: Action.COPY_TO,
     ActionType.FIXED: Action.FIXED,
     ActionType.MANUAL: Action.MANUAL,
+    ActionType.EXTENSION: Action.EXTENSION,
     # Note: action=None indicates no action has been selected yet (user must decide)
 }
 

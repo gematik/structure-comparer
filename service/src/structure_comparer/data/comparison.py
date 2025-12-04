@@ -244,7 +244,6 @@ class Comparison:
         for field_name, field in self.fields.items():
             target_field = field.profiles.get(target_key)
             if target_field is not None and target_field.max_num == 0:
-                logger.debug(f"Removing field with max=0 in target: {field_name}")
                 fields_to_remove.append(field_name)
         
         for field_name in fields_to_remove:
