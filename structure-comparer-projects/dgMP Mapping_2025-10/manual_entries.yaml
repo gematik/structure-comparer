@@ -109,8 +109,8 @@ entries:
     remark: null
   - action: extension
     fixed: null
-    name: Organization.address:Strassenanschrift.line
-    other: Organization.address.line
+    name: Organization.address:Strassenanschrift.line.extension
+    other: Organization.address:Strassenanschrift.line.extension
     remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
 mapping_entries:

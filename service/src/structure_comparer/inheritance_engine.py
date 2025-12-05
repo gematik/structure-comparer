@@ -172,21 +172,22 @@ class InheritanceEngine:
             ActionType.USE_RECURSIVE,
             ActionType.COPY_FROM,
             ActionType.COPY_TO,
+            ActionType.EXTENSION,  # Extension actions should be inherited to child fields
         }
         return action_type in inheritable_actions
 
     def is_copy_action(self, action_type: Optional[ActionType]) -> bool:
-        """Check if an action type is a copy action (copy_from or copy_to).
+        """Check if an action type is a copy action (copy_from, copy_to, or extension).
         
         Args:
             action_type: The action type to check
             
         Returns:
-            True if the action is copy_from or copy_to, False otherwise
+            True if the action is copy_from, copy_to, or extension, False otherwise
         """
         if action_type is None:
             return False
-        return action_type in {ActionType.COPY_FROM, ActionType.COPY_TO}
+        return action_type in {ActionType.COPY_FROM, ActionType.COPY_TO, ActionType.EXTENSION}
 
     def create_inherited_recommendation(
         self,
@@ -194,7 +195,7 @@ class InheritanceEngine:
         parent_field_name: str,
         parent_action: ActionInfo,
     ) -> Optional[ActionInfo]:
-        """Create an inherited recommendation for copy_from/copy_to actions.
+        """Create an inherited recommendation for copy_from/copy_to/extension actions.
         
         Args:
             field_name: The child field name

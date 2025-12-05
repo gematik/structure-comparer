@@ -1,8 +1,10 @@
 """Status propagation from children to parents."""
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 from ..field_hierarchy.field_navigator import FieldHierarchyNavigator
 from ..model.mapping_action_models import (
+    ActionInfo,
+    ActionSource,
     EvaluationResult,
     EvaluationReason,
     EvaluationSeverity,
@@ -13,14 +15,21 @@ from ..model.mapping_action_models import (
 class StatusPropagator:
     """Propagates incompatible status from children to parents."""
     
-    def __init__(self, fields: Dict[str, any], evaluations: Dict[str, EvaluationResult]):
+    def __init__(
+        self,
+        fields: Dict[str, any],
+        evaluations: Dict[str, EvaluationResult],
+        actions: Optional[Dict[str, ActionInfo]] = None
+    ):
         """
         Args:
             fields: Mapping of field names to field objects
             evaluations: Current evaluation results for all fields
+            actions: Optional mapping of field names to ActionInfo (to check for manual actions)
         """
         self.navigator = FieldHierarchyNavigator(fields)
         self.evaluations = evaluations
+        self.actions = actions or {}
         self.propagated_statuses: Dict[str, MappingStatus] = {}
     
     def propagate_incompatible_to_parents(self) -> Dict[str, EvaluationResult]:
@@ -40,8 +49,8 @@ class StatusPropagator:
         return updated_evaluations
     
     def _check_and_propagate(
-        self, 
-        field_name: str, 
+        self,
+        field_name: str,
         evaluations: Dict[str, EvaluationResult]
     ) -> None:
         """Check if field has incompatible children and propagate status."""
@@ -56,12 +65,19 @@ class StatusPropagator:
         incompatible_children = [
             child_name
             for child_name in children
-            if evaluations.get(child_name) and 
-               evaluations[child_name].mapping_status == MappingStatus.INCOMPATIBLE
+            if evaluations.get(child_name) and
+            evaluations[child_name].mapping_status == MappingStatus.INCOMPATIBLE
         ]
         
         if not incompatible_children:
             return  # All children are compatible
+        
+        # Check if parent has a manual action - if yes, don't propagate
+        # The user has already taken action on this field, so it should not be
+        # automatically marked as incompatible due to children
+        parent_action = self.actions.get(field_name)
+        if parent_action and parent_action.source == ActionSource.MANUAL:
+            return  # Parent has manual action - don't override with inherited incompatible
         
         # Parent has incompatible children - update status
         current_eval = evaluations.get(field_name)
@@ -71,7 +87,7 @@ class StatusPropagator:
             if current_eval.mapping_status != MappingStatus.INCOMPATIBLE:
                 # Create updated evaluation with inherited incompatible status
                 updated_eval = self._create_inherited_incompatible_evaluation(
-                    current_eval, 
+                    current_eval,
                     field_name,
                     incompatible_children
                 )

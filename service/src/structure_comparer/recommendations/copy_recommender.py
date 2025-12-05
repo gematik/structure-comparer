@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class CopyRecommender:
-    """Generates inherited copy_from/copy_to recommendations."""
+    """Generates inherited copy_from/copy_to/extension recommendations."""
 
     def __init__(
         self,
@@ -43,10 +43,10 @@ class CopyRecommender:
         self.type_incompatible_fields: Dict[str, str] = {}
 
     def compute_recommendations(self) -> Dict[str, list[ActionInfo]]:
-        """Compute inherited recommendations for copy_from/copy_to actions.
+        """Compute inherited recommendations for copy_from/copy_to/extension actions.
         
         GREEDY BEHAVIOR:
-        When a parent field has copy_from or copy_to action, ALL child fields
+        When a parent field has copy_from, copy_to, or extension action, ALL child fields
         (not just direct children of manually set parents, but recursively)
         should receive recommendations with adjusted other_value.
         
@@ -138,6 +138,6 @@ class CopyRecommender:
             return recommendation
         
         return self.inherited_recommender.compute_inherited_recommendations(
-            action_types={ActionType.COPY_FROM, ActionType.COPY_TO},
+            action_types={ActionType.COPY_FROM, ActionType.COPY_TO, ActionType.EXTENSION},
             recommendation_factory=recommendation_factory_with_conflict_check
         )

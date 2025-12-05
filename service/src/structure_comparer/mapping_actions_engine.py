@@ -28,6 +28,7 @@ _INHERITABLE_ACTIONS = {
     ActionType.USE_RECURSIVE,
     ActionType.COPY_FROM,
     ActionType.COPY_TO,
+    ActionType.EXTENSION,  # Extension actions should be inherited to child fields
 }
 
 
@@ -173,15 +174,16 @@ def _inherit_or_default(
     if field_parent_name:
         parent_info = result.get(field_parent_name)
         if parent_info and parent_info.action in _INHERITABLE_ACTIONS:
-            # For copy_from/copy_to: DON'T inherit as active action anymore
+            # For copy_from/copy_to/extension: DON'T inherit as active action anymore
             # These will be handled as recommendations instead
             is_copy_action = parent_info.action in {
                 ActionType.COPY_FROM,
                 ActionType.COPY_TO,
+                ActionType.EXTENSION,  # Extension actions also handled as recommendations
             }
             
             if is_copy_action:
-                # Skip inheritance for copy actions, fall through to default
+                # Skip inheritance for copy and extension actions, fall through to default
                 # These fields will get recommendations instead of active inherited actions
                 pass
             else:

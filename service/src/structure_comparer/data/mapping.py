@@ -177,8 +177,9 @@ class Mapping(Comparison):
         evaluation_map = evaluate_mapping(self, action_info_map)
         
         # NEW: Propagate incompatible status from children to parents
+        # Pass action_info_map so propagator can check for manual actions
         from ..evaluation import StatusPropagator
-        propagator = StatusPropagator(self.fields, evaluation_map)
+        propagator = StatusPropagator(self.fields, evaluation_map, action_info_map)
         evaluation_map = propagator.propagate_incompatible_to_parents()
         
         self._evaluation_map = evaluation_map
