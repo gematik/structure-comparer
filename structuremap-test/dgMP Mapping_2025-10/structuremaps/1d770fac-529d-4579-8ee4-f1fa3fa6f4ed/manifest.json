@@ -1,0 +1,23 @@
+{
+  "packageVersion": 1,
+  "generatedAt": "2025-12-05T08:26:38.931680+00:00",
+  "mappingId": "1d770fac-529d-4579-8ee4-f1fa3fa6f4ed",
+  "projectKey": "dgMP Mapping_2025-10",
+  "rulesetName": "1d770fac_529d_4579_8ee4_f1fa3fa6f4ed_structuremap",
+  "packageRoot": ".",
+  "artifacts": [
+    {
+      "name": "GEMErpPrMedicationMap",
+      "filename": "StructureMap-GEMErpPrMedication-to-EPAMedication.json",
+      "kind": "mapping",
+      "structureMapUrl": "https://gematik.de/fhir/structure-comparer/StructureMap/GEMErpPrMedicationMap",
+      "mappingId": "1d770fac-529d-4579-8ee4-f1fa3fa6f4ed",
+      "mappingName": "GEM_ERP_PR_Medication|1.5.2 -> EPAMedication|1.0.6-2",
+      "rulesetName": "GEMErpPrMedicationMap",
+      "sourceProfileUrl": "https://gematik.de/fhir/erp/StructureDefinition/GEM_ERP_PR_Medication",
+      "sourceProfileName": "GEM_ERP_PR_Medication",
+      "targetProfileUrl": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication",
+      "targetProfileName": "EPAMedication"
+    }
+  ]
+}

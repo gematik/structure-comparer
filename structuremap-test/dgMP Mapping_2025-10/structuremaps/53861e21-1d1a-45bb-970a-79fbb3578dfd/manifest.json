@@ -1,0 +1,23 @@
+{
+  "packageVersion": 1,
+  "generatedAt": "2025-12-05T08:26:39.655500+00:00",
+  "projectKey": "dgMP Mapping_2025-10",
+  "transformationId": "53861e21-1d1a-45bb-970a-79fbb3578dfd",
+  "rulesetName": "F53861e211d1a45bb970a79fbb3578dfdStructuremap",
+  "packageRoot": ".",
+  "artifacts": [
+    {
+      "name": "F53861e211d1a45bb970a79fbb3578dfdStructuremap",
+      "filename": "StructureMap-transformation-GEMErpPrParCloseoperationInput152Epaopprovidedispensationerpinpu.json",
+      "kind": "transformation",
+      "structureMapUrl": "https://gematik.de/fhir/structure-comparer/StructureMap/F53861e211d1a45bb970a79fbb3578dfdStructuremap",
+      "mappingId": "53861e21-1d1a-45bb-970a-79fbb3578dfd",
+      "mappingName": "GEM_ERP_PR_PAR_CloseOperation_Input|1.5.2 -> EPAOpProvideDispensationERPInputParameters|1.0.6-2",
+      "rulesetName": "F53861e211d1a45bb970a79fbb3578dfdStructuremap",
+      "sourceProfileUrl": null,
+      "sourceProfileName": null,
+      "targetProfileUrl": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-dispensation-erp-input-parameters",
+      "targetProfileName": "EPAOpProvideDispensationERPInputParameters"
+    }
+  ]
+}

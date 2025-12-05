@@ -93,6 +93,14 @@ class StructureMapPackage:
         }
 
 
+@dataclass(frozen=True)
+class _StructureMapReference:
+    """Stable reference (name + url) for a mapping's StructureMap group."""
+
+    ruleset_name: str
+    url: str
+
+
 def _profile_label(profile: "Profile" | None, fallback: str) -> str:
     if profile is None:
         return fallback
@@ -713,14 +721,19 @@ class _TransformationFieldRuleBuilder:
         mapping: "Mapping",
         source_alias: str,
         target_alias: str,
+        child_ruleset_name: str | None = None,
+        structure_map_url: str | None = None,
     ) -> None:
         self._field = field
         self._mapping = mapping
         self._source_alias = source_alias or "source"
         self._target_alias = target_alias or "target"
-        ruleset = f"{mapping.id.replace('-', '_')}_structuremap"
-        self._child_ruleset_name = _ensure_valid_structuremap_name(ruleset)
-        self.structure_map_url = f"{STRUCTUREMAP_URL_PREFIX}{self._child_ruleset_name}"
+        if child_ruleset_name:
+            self._child_ruleset_name = _ensure_valid_structuremap_name(child_ruleset_name)
+        else:
+            ruleset = f"{mapping.id.replace('-', '_')}_structuremap"
+            self._child_ruleset_name = _ensure_valid_structuremap_name(ruleset)
+        self.structure_map_url = structure_map_url or f"{STRUCTUREMAP_URL_PREFIX}{self._child_ruleset_name}"
 
     def build(self) -> dict | None:
         if not self._field.other:
@@ -766,13 +779,18 @@ class _TransformationFieldRuleBuilder:
         rule_children = [*target_plan.name_rules, call_rule]
         documentation = f"{self._field.name} -> {self._field.other} using {getattr(self._mapping, 'name', self._mapping.id)}"
 
-        return {
+        rule = {
             "name": normalize_ruleset_name(f"{self._field.name or 'field'}_{stable_id(self._field.other or 'target')}")[:64],
             "documentation": documentation,
-            "source": source_clauses,
+            "source": [dict(source_clauses[-1])] if source_clauses else [{"context": self._source_alias}],
             "target": target_plan.container_entries,
             "rule": rule_children,
         }
+
+        if len(source_clauses) > 1:
+            rule = self._wrap_with_source_chain(rule, source_clauses[:-1])
+
+        return rule
 
     def _build_source_clauses(
         self,
@@ -807,6 +825,22 @@ class _TransformationFieldRuleBuilder:
 
         return clauses, final_var, first_var or final_var
 
+    def _wrap_with_source_chain(self, rule: dict, clauses: list[dict]) -> dict:
+        if not clauses:
+            return rule
+
+        documentation = rule.pop("documentation", None)
+        wrapped = rule
+        for clause in reversed(clauses):
+            wrapped = {
+                "name": wrapped.get("name"),
+                "source": [dict(clause)],
+                "rule": [wrapped],
+            }
+        if documentation:
+            wrapped["documentation"] = documentation
+        return wrapped
+
 
 class _TransformationStructureMapBuilder:
     def __init__(
@@ -826,11 +860,14 @@ class _TransformationStructureMapBuilder:
         self._source_aliases = self._build_source_aliases()
         self._default_source_alias = next(iter(self._source_aliases.values()), "source")
         self._imports: set[str] = set()
+        self._structuremap_reference_cache: dict[str, _StructureMapReference] = {}
 
     def build(self) -> dict:
         structure_entries = self._build_structure_section()
         inputs = self._build_inputs_section()
         rules = self._build_rules()
+        if not rules:
+            rules = [self._build_placeholder_rule()]
 
         result: dict = {
             "resourceType": "StructureMap",
@@ -880,10 +917,10 @@ class _TransformationStructureMapBuilder:
         if self._source_profiles:
             for profile in self._source_profiles:
                 alias = self._source_aliases.get(profile.key, self._default_source_alias)
-                inputs.append({"name": alias, "type": _structuremap_input_type(profile), "mode": "source"})
+                inputs.append({"name": alias, "type": _structuremap_input_type(profile, alias=alias), "mode": "source"})
         else:
             inputs.append({"name": self._default_source_alias, "type": "Resource", "mode": "source"})
-        inputs.append({"name": self._target_alias, "type": _structuremap_input_type(self._target_profile), "mode": "target"})
+        inputs.append({"name": self._target_alias, "type": _structuremap_input_type(self._target_profile, alias=self._target_alias), "mode": "target"})
         return inputs
 
     def _build_rules(self) -> list[dict]:
@@ -895,17 +932,19 @@ class _TransformationStructureMapBuilder:
             if mapping is None:
                 continue
             source_alias = self._resolve_source_alias(field)
+            reference = self._get_structuremap_reference(field.map, mapping)
             builder = _TransformationFieldRuleBuilder(
                 field=field,
                 mapping=mapping,
                 source_alias=source_alias,
                 target_alias=self._target_alias,
+                child_ruleset_name=reference.ruleset_name,
+                structure_map_url=reference.url,
             )
             rule = builder.build()
             if rule:
                 rules.append(rule)
-                if builder.structure_map_url:
-                    self._imports.add(builder.structure_map_url)
+                self._imports.add(reference.url)
         return rules
 
     def _resolve_source_alias(self, field: "TransformationField") -> str:
@@ -913,6 +952,20 @@ class _TransformationStructureMapBuilder:
             if field.profiles.get(profile.key):
                 return self._source_aliases.get(profile.key, self._default_source_alias)
         return self._default_source_alias
+
+    def _get_structuremap_reference(self, mapping_id: str, mapping: "Mapping") -> _StructureMapReference:
+        reference = self._structuremap_reference_cache.get(mapping_id)
+        if reference is None:
+            reference = _structuremap_reference_for_mapping(mapping)
+            self._structuremap_reference_cache[mapping_id] = reference
+        return reference
+
+    def _build_placeholder_rule(self) -> dict:
+        return {
+            "name": normalize_ruleset_name("noop_rule"),
+            "documentation": "Placeholder rule because no transformation field references a mapping yet",
+            "source": [{"context": self._default_source_alias}],
+        }
 
 def _build_router_structuremap(
     *,
@@ -1057,4 +1110,20 @@ def _canonical_url_for_resource_type(resource_type: str | None) -> str | None:
     if not resource_type:
         return None
     return f"http://hl7.org/fhir/StructureDefinition/{resource_type}"
+
+
+def _structuremap_reference_for_mapping(mapping: "Mapping") -> _StructureMapReference:
+    """Derive the ruleset name + canonical URL for a mapping's StructureMap."""
+
+    requested = f"{mapping.id.replace('-', '_')}_structuremap"
+    registry: dict[str, int] = {}
+    sources = list(getattr(mapping, "sources", []) or [])
+    if len(sources) <= 1:
+        profile = sources[0] if sources else getattr(mapping, "target", None)
+        name = _structuremap_name_from_profile(profile, fallback=requested, registry=registry)
+    else:
+        name = _structuremap_name_for_router(mapping, registry=registry, fallback=requested)
+
+    url = f"{STRUCTUREMAP_URL_PREFIX}{name}"
+    return _StructureMapReference(ruleset_name=name, url=url)
 
