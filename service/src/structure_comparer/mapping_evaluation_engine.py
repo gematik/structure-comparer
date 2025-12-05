@@ -134,6 +134,7 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
     if classification == "incompatible":
         # Check if user has made an explicit decision (manual/inherited action)
         # OR if system has auto-detected a solution (e.g., FIXED value)
+        # EXTENSION actions are also considered as resolving incompatibility
         has_action = (
             action_info.action is not None
             and action_info.source in (
