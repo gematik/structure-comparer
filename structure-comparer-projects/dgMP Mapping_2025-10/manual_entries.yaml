@@ -112,7 +112,441 @@ entries:
     name: Organization.address:Strassenanschrift.line.extension
     other: Organization.address:Strassenanschrift.line.extension
     remark: null
+  - action: empty
+    fixed: null
+    name: Organization.meta.profile:forProfile
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Organization.meta.tag:Origin
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.language
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.text
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.contained
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.extension
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.extension:organizationVisibility
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.extension:ncpehCountryEx
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Organization.modifierExtension
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.meta.versionId
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.meta.lastUpdated
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.meta.source
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.meta.security
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.meta.tag
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Organization.meta
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Organization.id
+    other: null
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.identifier
+    other: null
+    remark: Wird aus `idNummer` aus dem AccessToken übernommen, s. A_25947
+  - action: extension
+    fixed: null
+    name: Organization.type.coding:IHE-Code
+    other: Organization.type.coding
+    remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
+- fields:
+  - action: not_use
+    fixed: null
+    name: Medication.meta.profile
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Medication.meta.profile:workflowProfile
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.id
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.meta
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.implicitRules
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.language
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.text
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.contained
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.extension
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.modifierExtension
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.identifier
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.code
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.status
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.manufacturer
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.form
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.amount
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.batch
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.id
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.ingredient.extension
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.modifierExtension
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: Medication.ingredient.isActive
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: Medication.ingredient.strength
+    other: null
+    remark: null
+  id: 1d770fac-529d-4579-8ee4-f1fa3fa6f4ed
+- fields:
+  - action: use
+    fixed: null
+    name: MedicationDispense.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.meta.profile:workflowProfile
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: MedicationDispense.identifier:prescriptionID
+    other: MedicationDispense.identifier
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationDispense.performer.actor
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.id
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.extension
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.reference
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.type
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.identifier
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: MedicationDispense.performer.actor.display
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.medication[x]
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: MedicationDispense.meta
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.implicitRules
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.language
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.text
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.contained
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: MedicationDispense.extension
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.modifierExtension
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: MedicationDispense.identifier:RxOriginatorProcessIdentifier
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.partOf
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.status
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.statusReason[x]
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.category
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: MedicationDispense.subject
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.context
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.supportingInformation
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: MedicationDispense.performer
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.location
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: MedicationDispense.authorizingPrescription
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.type
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.quantity
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.daysSupply
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.whenPrepared
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.whenHandedOver
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.destination
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.receiver
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.note
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: MedicationDispense.dosageInstruction
+    other: null
+    remark: null
+  - action: use_recursive
+    fixed: null
+    name: MedicationDispense.substitution
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.detectedIssue
+    other: null
+    remark: null
+  - action: use
+    fixed: null
+    name: MedicationDispense.eventHistory
+    other: null
+    remark: null
+  id: 7d370a3d-3366-436d-8121-6d0fd50ec0f0
 mapping_entries:
 - fields:
   - action: use
