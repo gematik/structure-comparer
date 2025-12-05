@@ -130,10 +130,20 @@ def _base_filename(
     return f"StructureMap-{source_slug}-to-{target_slug}"
 
 
+def _transformation_primary_source(transformation: "Transformation") -> "Profile" | None:
+    sources = list(getattr(transformation, "sources", []) or [])
+    return sources[0] if sources else None
+
+
 def _transformation_filename(transformation: "Transformation") -> str:
-    label = transformation.name or transformation.id or "transformation"
-    clean_label = slug(label, suffix="") or "Transformation"
-    return f"StructureMap-transformation-{clean_label}.json"
+    source_profile = _transformation_primary_source(transformation)
+    target_profile = getattr(transformation, "target", None)
+    base = _base_filename(
+        source_profile=source_profile,
+        target_profile=target_profile,
+        kind="mapping",
+    )
+    return f"{base}.json"
 
 
 def _unique_filename(base: str, registry: dict[str, int]) -> str:
@@ -189,6 +199,17 @@ def _ensure_valid_structuremap_name(name: str) -> str:
     if not sanitized:
         sanitized = "StructureMap"
     return sanitized[:64]
+
+
+def _transformation_ruleset_name(
+    transformation: "Transformation",
+    *,
+    requested: str | None = None,
+) -> str:
+    naming_profile = _transformation_primary_source(transformation) or getattr(transformation, "target", None)
+    fallback = requested or transformation.name or transformation.id or "TransformationMap"
+    registry: dict[str, int] = {}
+    return _structuremap_name_from_profile(naming_profile, fallback=fallback, registry=registry)
 
 
 def _structuremap_input_type(profile: "Profile" | None, *, alias: str | None = None) -> str:
@@ -853,7 +874,7 @@ class _TransformationStructureMapBuilder:
         self._transformation = transformation
         self._project = project
         requested = ruleset_name or transformation.name or transformation.id or "TransformationMap"
-        self._ruleset_name = _ensure_valid_structuremap_name(requested)
+        self._ruleset_name = _transformation_ruleset_name(transformation, requested=requested)
         self._target_profile = getattr(transformation, "target", None)
         self._target_alias = alias_from_profile(self._target_profile, "target")
         self._source_profiles = list(getattr(transformation, "sources", []) or [])

@@ -45,7 +45,7 @@
               "context": "KBVPRFOROrganization",
               "element": "address",
               "variable": "srcKBVPRFOROrganizationAddressb2458a6a",
-              "condition": "url != 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-postBox' and url != 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-precinct'"
+              "condition": "url != 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-precinct' and url != 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-postBox'"
             }
           ],
           "target": [

@@ -1,8 +1,8 @@
 {
   "resourceType": "StructureMap",
-  "id": "F837f9230C28e426eA32e268702d6e853Structuremap",
-  "url": "https://gematik.de/fhir/structure-comparer/StructureMap/F837f9230C28e426eA32e268702d6e853Structuremap",
-  "name": "F837f9230C28e426eA32e268702d6e853Structuremap",
+  "id": "KBVPrErpBundleMap",
+  "url": "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpBundleMap",
+  "name": "KBVPrErpBundleMap",
   "status": "draft",
   "version": "1.0",
   "date": "2025-12-05",
@@ -21,7 +21,7 @@
   ],
   "group": [
     {
-      "name": "F837f9230C28e426eA32e268702d6e853Structuremap",
+      "name": "KBVPrErpBundleMap",
       "typeMode": "types",
       "documentation": "Transformation generated for KBV_PR_ERP_Bundle|1.3.2 -> EPAOpProvidePrescriptionERPInputParameters|1.0.6-2",
       "input": [
