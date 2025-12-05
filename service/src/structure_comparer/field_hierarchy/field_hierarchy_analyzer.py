@@ -236,16 +236,18 @@ def _has_manual_action(field_name: str, action_info_map: Dict[str, Any]) -> bool
     A field has a manual action if:
     - It exists in action_info_map, AND
     - Its action is not None, AND
-    - Its source is MANUAL (not inherited or system default)
+    - Its source is MANUAL (not inherited or system default), AND
+    - The action is NOT FIXED (FIXED values are auto-detected constraints,
+      not manual mapping decisions, so they should not block USE_RECURSIVE)
     
     Args:
         field_name: The field name to check
         action_info_map: Dictionary mapping field names to ActionInfo objects
         
     Returns:
-        True if the field has a manual action, False otherwise
+        True if the field has a manual action (excluding FIXED), False otherwise
     """
-    from ..model.mapping_action_models import ActionSource
+    from ..model.mapping_action_models import ActionSource, ActionType
     
     action_info = action_info_map.get(field_name)
     if action_info is None:
@@ -254,6 +256,11 @@ def _has_manual_action(field_name: str, action_info_map: Dict[str, Any]) -> bool
     # Check if action is set (not None)
     action = getattr(action_info, 'action', None)
     if action is None:
+        return False
+    
+    # FIXED actions should NOT count as manual actions for USE_RECURSIVE purposes
+    # FIXED values are constraints (either auto-detected or specified), not mapping decisions
+    if action == ActionType.FIXED or str(action) == "fixed":
         return False
     
     # Check if source is MANUAL
