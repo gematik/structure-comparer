@@ -9,10 +9,11 @@ per-source StructureMaps when a mapping references multiple source profiles.
 
 from __future__ import annotations
 
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
-from typing import TYPE_CHECKING, Iterable, Literal, Sequence
+from typing import TYPE_CHECKING, Iterable, Literal, Sequence, Optional
 
 from structure_comparer.model.mapping_action_models import ActionInfo
 
@@ -20,10 +21,13 @@ from .naming import normalize_ruleset_name, slug, stable_id, var_name
 from .nodes import FieldNode
 from .rule_builder import StructureMapRuleBuilder
 from .tree_builder import FieldTreeBuilder
+from ..utils.structuremap_helpers import alias_from_profile
 
 if TYPE_CHECKING:  # pragma: no cover - only used for type checking
     from structure_comparer.data.mapping import Mapping
     from structure_comparer.data.profile import Profile
+    from structure_comparer.data.transformation import Transformation, TransformationField
+    from structure_comparer.data.project import Project
 
 
 STRUCTUREMAP_PACKAGE_VERSION = 1
@@ -37,7 +41,7 @@ class StructureMapArtifact:
     name: str
     filename: str
     content: str
-    kind: Literal["router", "mapping"]
+    kind: Literal["router", "mapping", "transformation"]
     structure_map_url: str | None
     mapping_id: str
     mapping_name: str | None
@@ -118,6 +122,12 @@ def _base_filename(
     return f"StructureMap-{source_slug}-to-{target_slug}"
 
 
+def _transformation_filename(transformation: "Transformation") -> str:
+    label = transformation.name or transformation.id or "transformation"
+    clean_label = slug(label, suffix="") or "Transformation"
+    return f"StructureMap-transformation-{clean_label}.json"
+
+
 def _unique_filename(base: str, registry: dict[str, int]) -> str:
     counter = registry.get(base, 0)
     registry[base] = counter + 1
@@ -171,6 +181,23 @@ def _ensure_valid_structuremap_name(name: str) -> str:
     if not sanitized:
         sanitized = "StructureMap"
     return sanitized[:64]
+
+
+def _structuremap_input_type(profile: "Profile" | None, *, alias: str | None = None) -> str:
+    if alias:
+        return alias
+    if profile is None:
+        return "Resource"
+    resource_type = getattr(profile, "resource_type", None)
+    if resource_type:
+        return resource_type
+    canonical = getattr(profile, "url", None)
+    version = getattr(profile, "version", None)
+    if canonical:
+        return f"{canonical}|{version}" if version else canonical
+    if getattr(profile, "name", None):
+        return profile.name
+    return "Resource"
 
 
 
@@ -363,6 +390,37 @@ def build_structuremap_package(
     return StructureMapPackage(artifacts=artifacts)
 
 
+def build_transformation_structuremap_artifact(
+    *,
+    transformation: "Transformation",
+    project: "Project",
+    ruleset_name: str | None = None,
+) -> StructureMapArtifact:
+    """Build a StructureMap artifact for a Transformation definition."""
+
+    builder = _TransformationStructureMapBuilder(
+        transformation=transformation,
+        project=project,
+        ruleset_name=ruleset_name,
+    )
+    structure_map = builder.build()
+    filename = _transformation_filename(transformation)
+    target_profile = getattr(transformation, "target", None)
+
+    return StructureMapArtifact(
+        name=structure_map["name"],
+        filename=filename,
+        content=json.dumps(structure_map, indent=2, ensure_ascii=False),
+        kind="transformation",
+        structure_map_url=structure_map.get("url"),
+        mapping_id=transformation.id,
+        mapping_name=getattr(transformation, "name", None),
+        ruleset_name=structure_map["name"],
+        target_profile_url=getattr(target_profile, "url", None),
+        target_profile_name=getattr(target_profile, "name", None),
+    )
+
+
 class _StructureMapBuilder:
     """Internal helper that assembles a StructureMap dict."""
 
@@ -509,20 +567,7 @@ class _StructureMapBuilder:
         }
 
     def _input_type_for_profile(self, profile, *, alias: str | None = None) -> str:
-        if alias:
-            return alias
-        if profile is None:
-            return "Resource"
-        resource_type = getattr(profile, "resource_type", None)
-        if resource_type:
-            return resource_type
-        canonical = getattr(profile, "url", None)
-        version = getattr(profile, "version", None)
-        if canonical:
-            return f"{canonical}|{version}" if version else canonical
-        if getattr(profile, "name", None):
-            return profile.name
-        return "Resource"
+        return _structuremap_input_type(profile, alias=alias)
 
     def _first_field_path(self) -> str | None:
         try:
@@ -533,6 +578,341 @@ class _StructureMapBuilder:
     def _alias_from_name(self, name: str) -> str:
         return slug(name or "source", suffix="")
 
+
+@dataclass(frozen=True)
+class _TransformationPathSegment:
+    name: str
+    slice_name: str | None = None
+
+
+@dataclass(frozen=True)
+class _TransformationPath:
+    raw: str
+    root: str | None
+    segments: list[_TransformationPathSegment]
+
+    @classmethod
+    def parse(cls, path: str | None) -> "_TransformationPath":
+        if not path:
+            return cls(raw="", root=None, segments=[])
+        cleaned = path.strip()
+        if not cleaned:
+            return cls(raw="", root=None, segments=[])
+        root = None
+        remainder = cleaned
+        if cleaned.startswith("."):
+            remainder = cleaned[1:]
+        elif "." in cleaned:
+            root, remainder = cleaned.split(".", 1)
+        else:
+            root = cleaned
+            remainder = ""
+
+        segments: list[_TransformationPathSegment] = []
+        if remainder:
+            for part in remainder.split('.'):
+                token = part.strip()
+                if not token:
+                    continue
+                if ":" in token:
+                    name, slice_name = token.split(":", 1)
+                else:
+                    name, slice_name = token, None
+                segments.append(_TransformationPathSegment(name=name or "segment", slice_name=slice_name or None))
+
+        return cls(raw=cleaned, root=root, segments=segments)
+
+    def last_segment(self) -> _TransformationPathSegment | None:
+        return self.segments[-1] if self.segments else None
+
+
+@dataclass(frozen=True)
+class _TransformationTargetPlan:
+    container_entries: list[dict]
+    name_rules: list[dict]
+    resource_parent: str
+    resource_variable: str
+    resource_parameters: list[dict]
+
+
+class _TransformationTargetBuilder:
+    def __init__(
+        self,
+        *,
+        target_alias: str,
+        target_path: _TransformationPath,
+        mapping: "Mapping",
+        default_source_context: str,
+    ) -> None:
+        self._target_alias = target_alias or "target"
+        self._target_path = target_path
+        self._mapping = mapping
+        self._default_source_context = default_source_context or self._target_alias
+
+    def build(self) -> _TransformationTargetPlan | None:
+        if not self._target_path.segments:
+            return None
+        if self._target_path.last_segment() is None:
+            return None
+
+        *container_segments, resource_segment = self._target_path.segments
+        if resource_segment.name != "resource":
+            return None
+
+        container_entries: list[dict] = []
+        name_rules: list[dict] = []
+        context = self._target_alias
+        for idx, segment in enumerate(container_segments):
+            element = segment.name or "element"
+            variable = var_name("target", f"{self._target_path.raw}_{idx}_{element}")
+            entry = {
+                "context": context,
+                "contextType": "variable",
+                "element": element,
+                "variable": variable,
+            }
+            container_entries.append(entry)
+            if segment.slice_name:
+                rule_name = normalize_ruleset_name(f"set_{element}_{segment.slice_name}_name")
+                name_rules.append(
+                    {
+                        "name": rule_name,
+                        "source": [{"context": self._default_source_context}],
+                        "target": [
+                            {
+                                "context": variable,
+                                "contextType": "variable",
+                                "element": "name",
+                                "transform": "copy",
+                                "parameter": [{"valueString": segment.slice_name}],
+                            }
+                        ],
+                    }
+                )
+            context = variable
+
+        resource_parent = context
+        resource_variable = var_name("target", f"{self._target_path.raw}_resource")
+        target_profile = getattr(self._mapping.target, "url", None) or getattr(self._mapping.target, "resource_type", None) or "Resource"
+        resource_parameters = [{"valueString": target_profile}]
+
+        return _TransformationTargetPlan(
+            container_entries=container_entries,
+            name_rules=name_rules,
+            resource_parent=resource_parent,
+            resource_variable=resource_variable,
+            resource_parameters=resource_parameters,
+        )
+
+
+class _TransformationFieldRuleBuilder:
+    def __init__(
+        self,
+        *,
+        field: "TransformationField",
+        mapping: "Mapping",
+        source_alias: str,
+        target_alias: str,
+    ) -> None:
+        self._field = field
+        self._mapping = mapping
+        self._source_alias = source_alias or "source"
+        self._target_alias = target_alias or "target"
+        ruleset = f"{mapping.id.replace('-', '_')}_structuremap"
+        self._child_ruleset_name = _ensure_valid_structuremap_name(ruleset)
+        self.structure_map_url = f"{STRUCTUREMAP_URL_PREFIX}{self._child_ruleset_name}"
+
+    def build(self) -> dict | None:
+        if not self._field.other:
+            return None
+        source_path = _TransformationPath.parse(self._field.name)
+        target_path = _TransformationPath.parse(self._field.other)
+
+        source_clauses, source_var, first_source_var = self._build_source_clauses(source_path)
+        if source_var is None:
+            return None
+
+        target_builder = _TransformationTargetBuilder(
+            target_alias=self._target_alias,
+            target_path=target_path,
+            mapping=self._mapping,
+            default_source_context=first_source_var or source_var,
+        )
+        target_plan = target_builder.build()
+        if target_plan is None:
+            return None
+
+        resource_entry = {
+            "context": target_plan.resource_parent,
+            "contextType": "variable",
+            "element": "resource",
+            "variable": target_plan.resource_variable,
+            "transform": "create",
+            "parameter": target_plan.resource_parameters,
+        }
+
+        call_rule = {
+            "name": normalize_ruleset_name(f"call_{self._child_ruleset_name}"),
+            "source": [{"context": source_var}],
+            "target": [resource_entry],
+            "dependent": [
+                {
+                    "name": self._child_ruleset_name,
+                    "variable": [source_var, target_plan.resource_variable],
+                }
+            ],
+        }
+
+        rule_children = [*target_plan.name_rules, call_rule]
+        documentation = f"{self._field.name} -> {self._field.other} using {getattr(self._mapping, 'name', self._mapping.id)}"
+
+        return {
+            "name": normalize_ruleset_name(f"{self._field.name or 'field'}_{stable_id(self._field.other or 'target')}")[:64],
+            "documentation": documentation,
+            "source": source_clauses,
+            "target": target_plan.container_entries,
+            "rule": rule_children,
+        }
+
+    def _build_source_clauses(
+        self,
+        path: _TransformationPath,
+    ) -> tuple[list[dict], str | None, str | None]:
+        clauses: list[dict] = []
+        context = self._source_alias
+        final_var: str | None = None
+        first_var: str | None = None
+
+        if not path.segments:
+            variable = var_name("source", self._field.name or self._mapping.id)
+            clauses.append({"context": context, "variable": variable})
+            return clauses, variable, variable
+
+        segments = path.segments
+        for idx, segment in enumerate(segments):
+            element = segment.name.split(":", 1)[0] if segment.name else "element"
+            variable = var_name("source", f"{self._field.name}_{idx}_{element}")
+            clause: dict[str, str] = {"context": context, "variable": variable}
+            if element:
+                clause["element"] = element
+            if segment.slice_name and element == "entry" and idx + 1 < len(segments) and segments[idx + 1].name == "resource":
+                source_type = self._mapping.sources[0].resource_type if self._mapping.sources else None
+                if source_type:
+                    clause["condition"] = f"resource is {source_type}"
+            clauses.append(clause)
+            context = variable
+            final_var = variable
+            if first_var is None:
+                first_var = variable
+
+        return clauses, final_var, first_var or final_var
+
+
+class _TransformationStructureMapBuilder:
+    def __init__(
+        self,
+        *,
+        transformation: "Transformation",
+        project: "Project",
+        ruleset_name: str | None,
+    ) -> None:
+        self._transformation = transformation
+        self._project = project
+        requested = ruleset_name or transformation.name or transformation.id or "TransformationMap"
+        self._ruleset_name = _ensure_valid_structuremap_name(requested)
+        self._target_profile = getattr(transformation, "target", None)
+        self._target_alias = alias_from_profile(self._target_profile, "target")
+        self._source_profiles = list(getattr(transformation, "sources", []) or [])
+        self._source_aliases = self._build_source_aliases()
+        self._default_source_alias = next(iter(self._source_aliases.values()), "source")
+        self._imports: set[str] = set()
+
+    def build(self) -> dict:
+        structure_entries = self._build_structure_section()
+        inputs = self._build_inputs_section()
+        rules = self._build_rules()
+
+        result: dict = {
+            "resourceType": "StructureMap",
+            "id": self._ruleset_name,
+            "url": f"{STRUCTUREMAP_URL_PREFIX}{self._ruleset_name}",
+            "name": self._ruleset_name,
+            "status": getattr(self._transformation, "status", None) or "draft",
+            "version": getattr(self._transformation, "version", None),
+            "date": datetime.now(timezone.utc).date().isoformat(),
+            "description": f"Auto-generated StructureMap for transformation {getattr(self._transformation, 'name', self._transformation.id)}",
+            "structure": structure_entries,
+            "group": [
+                {
+                    "name": self._ruleset_name,
+                    "typeMode": "types" if all(item.get("type") for item in inputs) else "none",
+                    "documentation": f"Transformation generated for {getattr(self._transformation, 'name', self._transformation.id)}",
+                    "input": inputs,
+                    "rule": rules,
+                }
+            ],
+        }
+        if self._imports:
+            result["import"] = sorted(self._imports)
+        return result
+
+    def _build_source_aliases(self) -> dict[str, str]:
+        aliases: dict[str, str] = {}
+        for idx, profile in enumerate(self._source_profiles):
+            if profile and getattr(profile, "key", None):
+                aliases[profile.key] = alias_from_profile(profile, f"source{idx + 1}")
+        if not aliases:
+            aliases["__default__"] = "source"
+        return aliases
+
+    def _build_structure_section(self) -> list[dict]:
+        entries: list[dict] = []
+        for profile in self._source_profiles:
+            if getattr(profile, "url", None):
+                alias = self._source_aliases.get(profile.key, self._default_source_alias)
+                entries.append({"url": profile.url, "mode": "source", "alias": alias})
+        if getattr(self._target_profile, "url", None):
+            entries.append({"url": self._target_profile.url, "mode": "target", "alias": self._target_alias})
+        return entries
+
+    def _build_inputs_section(self) -> list[dict]:
+        inputs: list[dict] = []
+        if self._source_profiles:
+            for profile in self._source_profiles:
+                alias = self._source_aliases.get(profile.key, self._default_source_alias)
+                inputs.append({"name": alias, "type": _structuremap_input_type(profile), "mode": "source"})
+        else:
+            inputs.append({"name": self._default_source_alias, "type": "Resource", "mode": "source"})
+        inputs.append({"name": self._target_alias, "type": _structuremap_input_type(self._target_profile), "mode": "target"})
+        return inputs
+
+    def _build_rules(self) -> list[dict]:
+        rules: list[dict] = []
+        for field in getattr(self._transformation, "fields", {}).values():
+            if not getattr(field, "map", None):
+                continue
+            mapping = getattr(self._project, "mappings", {}).get(field.map)
+            if mapping is None:
+                continue
+            source_alias = self._resolve_source_alias(field)
+            builder = _TransformationFieldRuleBuilder(
+                field=field,
+                mapping=mapping,
+                source_alias=source_alias,
+                target_alias=self._target_alias,
+            )
+            rule = builder.build()
+            if rule:
+                rules.append(rule)
+                if builder.structure_map_url:
+                    self._imports.add(builder.structure_map_url)
+        return rules
+
+    def _resolve_source_alias(self, field: "TransformationField") -> str:
+        for profile in self._source_profiles:
+            if field.profiles.get(profile.key):
+                return self._source_aliases.get(profile.key, self._default_source_alias)
+        return self._default_source_alias
 
 def _build_router_structuremap(
     *,

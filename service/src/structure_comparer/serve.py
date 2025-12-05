@@ -99,10 +99,12 @@ from .manual_entries import ManualEntries
 from .fshMappingGenerator.fsh_mapping_main import (
   STRUCTUREMAP_PACKAGE_VERSION,
   build_structuremap_package,
+  build_transformation_structuremap_artifact,
 )
 from .utils.structuremap_helpers import (
   get_safe_mapping_filename,
   get_safe_project_filename,
+  sanitize_folder_name,
   alias_from_profile,
 )
 
@@ -1059,17 +1061,17 @@ async def download_project_structuremaps(
     response: Response,
 ):
     """
-    Download all FHIR StructureMaps for all mappings in a project.
+    Download all FHIR StructureMaps for every mapping and transformation in a project.
     
-    Returns a ZIP file containing StructureMap packages for each mapping.
-    The archive stores all StructureMap JSON files in the root alongside a
-    single manifest.json entry.
+    Returns a ZIP file containing StructureMap packages for each mapping and
+    standalone artifacts for each transformation. The archive stores all
+    StructureMap JSON files in the root alongside a single manifest.json entry.
     
     Args:
         project_key: The project identifier
         
     Returns:
-        ZIP file containing all StructureMap packages with Content-Disposition header for download
+        ZIP file containing all StructureMap artifacts with Content-Disposition header for download
         
     Raises:
         404: Project not found
@@ -1085,6 +1087,8 @@ async def download_project_structuremaps(
         used_filenames: set[str] = set()
         successful_mappings = 0
         failed_mappings: list[str] = []
+        successful_transformations = 0
+        failed_transformations: list[str] = []
 
         with ZipFile(master_buffer, mode="w", compression=ZIP_DEFLATED) as master_zip:
           for mapping_id in project.mappings.keys():
@@ -1118,18 +1122,42 @@ async def download_project_structuremaps(
               failed_mappings.append(mapping_id)
               continue
 
+          transformations = getattr(project, "transformations", {}) or {}
+          for transformation_id, transformation in transformations.items():
+            try:
+              artifact = build_transformation_structuremap_artifact(
+                transformation=transformation,
+                project=project,
+                ruleset_name=f"{transformation_id.replace('-', '_')}_structuremap",
+              )
+              filename = _ensure_unique_filename(artifact.filename, used_filenames)
+              master_zip.writestr(filename, artifact.content)
+              aggregated_entries.append(artifact.manifest_entry(filename=filename))
+              successful_transformations += 1
+            except Exception as e:
+              logging.warning(
+                "Failed to generate StructureMap for transformation %s: %s",
+                transformation_id,
+                str(e),
+              )
+              failed_transformations.append(transformation_id)
+
           combined_manifest = {
             "packageVersion": STRUCTUREMAP_PACKAGE_VERSION,
             "generatedAt": datetime.now(timezone.utc).isoformat(),
             "projectKey": project_key,
             "mappingCount": successful_mappings,
+            "transformationCount": successful_transformations,
             "artifactCount": len(aggregated_entries),
             "failedMappings": failed_mappings or None,
+            "failedTransformations": failed_transformations or None,
             "packageRoot": ".",
             "artifacts": aggregated_entries,
           }
           if combined_manifest["failedMappings"] is None:
             combined_manifest.pop("failedMappings")
+          if combined_manifest["failedTransformations"] is None:
+            combined_manifest.pop("failedTransformations")
 
           master_zip.writestr("manifest.json", json.dumps(combined_manifest, indent=2, ensure_ascii=False))
 
@@ -2141,6 +2169,60 @@ async def get_transformation(
     except (ProjectNotFound, TransformationNotFound) as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/transformation/{transformation_id}/structuremap",
+    tags=["Transformations", "StructureMap Export"],
+    responses={404: {"model": ErrorModel}},
+)
+async def download_transformation_structuremap(
+    project_key: str,
+    transformation_id: str,
+    response: Response,
+):
+    """Download a StructureMap ZIP for a transformation."""
+
+    global transformation_handler
+    try:
+        project = transformation_handler.project_handler._get(project_key)
+        transformation = transformation_handler._get_transformation(project_key, transformation_id, project)
+
+        ruleset_name = f"{transformation_id.replace('-', '_')}_structuremap"
+        artifact = build_transformation_structuremap_artifact(
+            transformation=transformation,
+            project=project,
+            ruleset_name=ruleset_name,
+        )
+
+        manifest = {
+            "packageVersion": STRUCTUREMAP_PACKAGE_VERSION,
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
+            "projectKey": project_key,
+            "transformationId": transformation_id,
+            "rulesetName": artifact.ruleset_name,
+            "packageRoot": ".",
+            "artifacts": [artifact.manifest_entry()],
+        }
+
+        buffer = io.BytesIO()
+        with ZipFile(buffer, mode="w", compression=ZIP_DEFLATED) as zf:
+            zf.writestr("manifest.json", json.dumps(manifest, indent=2, ensure_ascii=False))
+            zf.writestr(artifact.filename, artifact.content)
+
+        buffer.seek(0)
+        safe_name = sanitize_folder_name(getattr(transformation, "name", None) or transformation_id)
+        filename = f"{safe_name}_transformation_structuremap.zip"
+        headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
+        return Response(content=buffer.read(), media_type="application/zip", headers=headers)
+
+    except (ProjectNotFound, TransformationNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except Exception as exc:  # noqa: BLE001 - log unexpected export errors
+        logging.exception("Error generating transformation StructureMap export: %s", exc)
+        response.status_code = 500
+        return ErrorModel(error=f"Transformation StructureMap export failed: {str(exc)}")
 
 
 @app.post(
