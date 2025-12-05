@@ -107,6 +107,11 @@ entries:
     name: Organization.address:Strassenanschrift.extension
     other: null
     remark: null
+  - action: extension
+    fixed: null
+    name: Organization.address:Strassenanschrift.line
+    other: Organization.address.line
+    remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
 mapping_entries:
 - fields:
@@ -558,6 +563,21 @@ mapping_entries:
     other: Practitioner.identifier:LANR.assigner.display
     remark: null
   id: e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31
+target_creation_entries:
+- fields:
+  - action: manual
+    fixed: null
+    name: Organization.id
+    remark: Test
+  - action: fixed
+    fixed: dsdsds
+    name: Organization.meta
+    remark: null
+  - action: manual
+    fixed: null
+    name: Organization.meta.extension
+    remark: Test 3
+  id: b4169753-5230-4366-b5a0-e32e6b73ffc9
 transformation_entries:
 - fields:
   - action: use

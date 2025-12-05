@@ -238,6 +238,17 @@ class Comparison:
                 # Store reference to the Profile object
                 self.fields[field_name]._profile_objects[profile.key] = profile
 
+        # Remove fields that have max: 0 in the target profile
+        target_key = self.target.key
+        fields_to_remove = []
+        for field_name, field in self.fields.items():
+            target_field = field.profiles.get(target_key)
+            if target_field is not None and target_field.max_num == 0:
+                fields_to_remove.append(field_name)
+        
+        for field_name in fields_to_remove:
+            del self.fields[field_name]
+
         # Fill the absent profiles
         all_profiles_keys = [profile.key for profile in all_profiles]
         for field in self.fields.values():
