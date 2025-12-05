@@ -13,7 +13,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
-from typing import TYPE_CHECKING, Iterable, Literal, Sequence, Optional
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Sequence, Optional
 
 from structure_comparer.model.mapping_action_models import ActionInfo
 
@@ -664,6 +664,15 @@ class _TransformationTargetPlan:
     resource_parameters: list[dict]
 
 
+@dataclass(frozen=True)
+class _TransformationFieldContext:
+    field: "TransformationField"
+    mapping: "Mapping"
+    target_path: _TransformationPath
+    source_alias: str
+    reference: _StructureMapReference
+
+
 class _TransformationTargetBuilder:
     def __init__(
         self,
@@ -744,11 +753,13 @@ class _TransformationFieldRuleBuilder:
         target_alias: str,
         child_ruleset_name: str | None = None,
         structure_map_url: str | None = None,
+        target_path_override: _TransformationPath | None = None,
     ) -> None:
         self._field = field
         self._mapping = mapping
         self._source_alias = source_alias or "source"
         self._target_alias = target_alias or "target"
+        self._target_path_override = target_path_override
         if child_ruleset_name:
             self._child_ruleset_name = _ensure_valid_structuremap_name(child_ruleset_name)
         else:
@@ -760,7 +771,7 @@ class _TransformationFieldRuleBuilder:
         if not self._field.other:
             return None
         source_path = _TransformationPath.parse(self._field.name)
-        target_path = _TransformationPath.parse(self._field.other)
+        target_path = self._target_path_override or _TransformationPath.parse(self._field.other)
 
         source_clauses, source_var, first_source_var = self._build_source_clauses(source_path)
         if source_var is None:
@@ -804,9 +815,11 @@ class _TransformationFieldRuleBuilder:
             "name": normalize_ruleset_name(f"{self._field.name or 'field'}_{stable_id(self._field.other or 'target')}")[:64],
             "documentation": documentation,
             "source": [dict(source_clauses[-1])] if source_clauses else [{"context": self._source_alias}],
-            "target": target_plan.container_entries,
             "rule": rule_children,
         }
+
+        if target_plan.container_entries:
+            rule["target"] = target_plan.container_entries
 
         if len(source_clauses) > 1:
             rule = self._wrap_with_source_chain(rule, source_clauses[:-1])
@@ -945,28 +958,224 @@ class _TransformationStructureMapBuilder:
         return inputs
 
     def _build_rules(self) -> list[dict]:
-        rules: list[dict] = []
+        contexts: list[_TransformationFieldContext] = []
         for field in getattr(self._transformation, "fields", {}).values():
             if not getattr(field, "map", None):
                 continue
             mapping = getattr(self._project, "mappings", {}).get(field.map)
             if mapping is None:
                 continue
+            target_path = _TransformationPath.parse(getattr(field, "other", None))
+            if not target_path.segments:
+                continue
             source_alias = self._resolve_source_alias(field)
             reference = self._get_structuremap_reference(field.map, mapping)
-            builder = _TransformationFieldRuleBuilder(
-                field=field,
-                mapping=mapping,
-                source_alias=source_alias,
-                target_alias=self._target_alias,
-                child_ruleset_name=reference.ruleset_name,
-                structure_map_url=reference.url,
+            contexts.append(
+                _TransformationFieldContext(
+                    field=field,
+                    mapping=mapping,
+                    target_path=target_path,
+                    source_alias=source_alias,
+                    reference=reference,
+                )
             )
-            rule = builder.build()
+            self._imports.add(reference.url)
+
+        parameter_groups: dict[str, list[_TransformationFieldContext]] = {}
+        standalone_contexts: list[_TransformationFieldContext] = []
+        for ctx in contexts:
+            first_segment = ctx.target_path.segments[0] if ctx.target_path.segments else None
+            if first_segment and first_segment.name == "parameter" and first_segment.slice_name:
+                key = f"{first_segment.name}:{first_segment.slice_name}"
+                parameter_groups.setdefault(key, []).append(ctx)
+            else:
+                standalone_contexts.append(ctx)
+
+        rules: list[dict] = []
+        for key in sorted(parameter_groups):
+            first_segment = parameter_groups[key][0].target_path.segments[0]
+            parameter_rule = self._build_parameter_group_rule(first_segment, parameter_groups[key])
+            if parameter_rule:
+                rules.append(parameter_rule)
+
+        for ctx in standalone_contexts:
+            rule = self._build_field_rule(ctx)
             if rule:
                 rules.append(rule)
-                self._imports.add(reference.url)
+
         return rules
+
+    def _build_field_rule(
+        self,
+        ctx: _TransformationFieldContext,
+        *,
+        target_alias: str | None = None,
+        target_path_override: _TransformationPath | None = None,
+    ) -> dict | None:
+        builder = _TransformationFieldRuleBuilder(
+            field=ctx.field,
+            mapping=ctx.mapping,
+            source_alias=ctx.source_alias,
+            target_alias=target_alias or self._target_alias,
+            child_ruleset_name=ctx.reference.ruleset_name,
+            structure_map_url=ctx.reference.url,
+            target_path_override=target_path_override,
+        )
+        return builder.build()
+
+    def _build_parameter_group_rule(
+        self,
+        segment: _TransformationPathSegment,
+        contexts: list[_TransformationFieldContext],
+    ) -> dict | None:
+        if not contexts:
+            return None
+
+        parameter_variable = var_name("target", f"{segment.name}_{segment.slice_name}_parameter")
+        parameter_target_entry = {
+            "context": self._target_alias,
+            "contextType": "variable",
+            "element": segment.name,
+            "variable": parameter_variable,
+        }
+        name_rule = {
+            "name": normalize_ruleset_name(f"set_{segment.name}_{segment.slice_name}_name"),
+            "source": [{"context": self._default_source_alias}],
+            "target": [
+                {
+                    "context": parameter_variable,
+                    "contextType": "variable",
+                    "element": "name",
+                    "transform": "copy",
+                    "parameter": [{"valueString": segment.slice_name}],
+                }
+            ],
+        }
+
+        child_rules = self._build_parameter_child_rules(parameter_variable, contexts)
+        if not child_rules:
+            return None
+
+        rule_name = normalize_ruleset_name(f"{segment.name}_{segment.slice_name}_container")
+        documentation = (
+            f"Creates {segment.name}:{segment.slice_name} parameter container aggregating {len(child_rules)} part(s)"
+        )
+        return {
+            "name": rule_name,
+            "documentation": documentation,
+            "source": [{"context": self._default_source_alias}],
+            "target": [parameter_target_entry],
+            "rule": [name_rule, *child_rules],
+        }
+
+    def _build_parameter_child_rules(
+        self,
+        parameter_variable: str,
+        contexts: list[_TransformationFieldContext],
+    ) -> list[dict]:
+        grouped: dict[str, dict[str, Any]] = {}
+        fallback_rules: list[dict] = []
+
+        for ctx in sorted(contexts, key=lambda c: c.field.other or ""):
+            remaining_segments = ctx.target_path.segments[1:]
+            if not remaining_segments:
+                continue
+            first = remaining_segments[0]
+            if first.name == "part" and first.slice_name:
+                key = f"{first.name}:{first.slice_name}"
+                bucket = grouped.setdefault(
+                    key,
+                    {
+                        "segment": first,
+                        "items": [],
+                    },
+                )
+                items_list: list[tuple[_TransformationFieldContext, list[_TransformationPathSegment]]] = bucket["items"]
+                items_list.append((ctx, remaining_segments[1:]))
+                continue
+
+            truncated_path = _TransformationPath(
+                raw=ctx.target_path.raw,
+                root=ctx.target_path.root,
+                segments=remaining_segments,
+            )
+            rule = self._build_field_rule(
+                ctx,
+                target_alias=parameter_variable,
+                target_path_override=truncated_path,
+            )
+            if rule:
+                fallback_rules.append(rule)
+
+        part_rules: list[dict] = []
+        for key in sorted(grouped):
+            segment = grouped[key]["segment"]
+            items = grouped[key]["items"]
+            rule = self._build_part_group_rule(parameter_variable, segment, items)
+            if rule:
+                part_rules.append(rule)
+
+        return [*part_rules, *fallback_rules]
+
+    def _build_part_group_rule(
+        self,
+        parameter_variable: str,
+        segment: _TransformationPathSegment,
+        items: list[tuple[_TransformationFieldContext, list[_TransformationPathSegment]]],
+    ) -> dict | None:
+        if not items:
+            return None
+
+        part_variable = var_name("target", f"{segment.name}_{segment.slice_name}_part")
+        part_target_entry = {
+            "context": parameter_variable,
+            "contextType": "variable",
+            "element": segment.name,
+            "variable": part_variable,
+        }
+        name_rule = {
+            "name": normalize_ruleset_name(f"set_{segment.name}_{segment.slice_name}_name"),
+            "source": [{"context": self._default_source_alias}],
+            "target": [
+                {
+                    "context": part_variable,
+                    "contextType": "variable",
+                    "element": "name",
+                    "transform": "copy",
+                    "parameter": [{"valueString": segment.slice_name}],
+                }
+            ],
+        }
+
+        child_rules: list[dict] = []
+        for ctx, remaining_segments in sorted(items, key=lambda item: item[0].field.other or ""):
+            truncated_path = _TransformationPath(
+                raw=ctx.target_path.raw,
+                root=ctx.target_path.root,
+                segments=remaining_segments,
+            )
+            rule = self._build_field_rule(
+                ctx,
+                target_alias=part_variable,
+                target_path_override=truncated_path,
+            )
+            if rule:
+                child_rules.append(rule)
+
+        if not child_rules:
+            return None
+
+        rule_name = normalize_ruleset_name(f"{segment.name}_{segment.slice_name}_part_container")
+        documentation = (
+            f"Creates {segment.name}:{segment.slice_name} part container aggregating {len(child_rules)} child rule(s)"
+        )
+        return {
+            "name": rule_name,
+            "documentation": documentation,
+            "source": [{"context": self._default_source_alias}],
+            "target": [part_target_entry],
+            "rule": [name_rule, *child_rules],
+        }
 
     def _resolve_source_alias(self, field: "TransformationField") -> str:
         for profile in self._source_profiles:

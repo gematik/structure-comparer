@@ -30,7 +30,7 @@ FHIR_VERSION = "4.0.1"
 VALIDATE_STRUCTUREMAPS = True
 RUN_TRANSFORMATIONS = True  # Enable to run example transformations via validator -transform
 PROJECT_FILTER: list[str] = ["dgMP Mapping_2025-10"]  # Leave empty to process every project that exists in the projects dir.
-MAPPING_FILTER: list[str] = []  # Optional list of mapping UUIDs to limit the run.
+MAPPING_FILTER: list[str] = ["837f9230-c28e-426e-a32e-268702d6e853"]  # Optional list of mapping UUIDs to limit the run.
 TRANSFORMATION_FILTER: list[str] = []  # Optional list of transformation UUIDs to limit the run.
 EXAMPLE_FILTER: list[str] = []  # Optional list of example descriptor suffixes (text after the UUID in the filename).
 EXTRA_IG_SOURCES: list[str | Path] = []  # Additional -ig arguments besides the mapping test folder itself.
@@ -80,6 +80,7 @@ class TransformJob:
     structuremap_dir: Path
     structure_map_url: str
     target_package_dir: Path | None
+    target_profile_url: str | None
     example_files: list[Path]
     output_dir: Path
     dependency_dirs: tuple[Path, ...] = tuple()
@@ -159,6 +160,7 @@ def main() -> None:
                     structuremap_dir=artifacts.directory,
                     structure_map_url=router_url,
                     target_package_dir=_profile_package_dir(target_profile),
+                    target_profile_url=getattr(target_profile, "url", None),
                     example_files=example_index.get(mapping_id, []),
                     output_dir=paths.outputs,
                 )
@@ -192,6 +194,7 @@ def main() -> None:
                     structuremap_dir=artifacts.directory,
                     structure_map_url=router_url,
                     target_package_dir=_profile_package_dir(getattr(transformation, "target", None)),
+                    target_profile_url=getattr(getattr(transformation, "target", None), "url", None),
                     example_files=example_index.get(transformation_id, []),
                     output_dir=paths.outputs,
                     dependency_dirs=dependency_dirs,
@@ -274,6 +277,7 @@ def _run_transform_job(job: TransformJob) -> None:
                 identifier=job.identifier,
                 resource_type=descriptor,
                 target_package_dir=job.target_package_dir,
+                target_profile_url=job.target_profile_url,
             )
         else:
             print(
@@ -489,16 +493,11 @@ def _validate_transformed_output(
     identifier: str,
     resource_type: str,
     target_package_dir: Path | None,
+    target_profile_url: str | None,
 ) -> None:
-    if target_package_dir is None:
+    if not JAVA_VALIDATOR_JAR.exists():
         print(
-            f"[{project_key}/{identifier}] Target package not available; skipping validation for output-{resource_type}.json"
-        )
-        return
-
-    if not target_package_dir.exists():
-        print(
-            f"[{project_key}/{identifier}] Target package path {target_package_dir} does not exist; skipping validation"
+            f"[{project_key}/{identifier}] Validator jar not found at {JAVA_VALIDATOR_JAR}; skipping validation for output-{resource_type}.json"
         )
         return
 
@@ -514,7 +513,14 @@ def _validate_transformed_output(
         "-version",
         FHIR_VERSION,
     ]
-    ig_args = [_as_repo_relative(target_package_dir)]
+    ig_args: list[str] = []
+    if target_package_dir is not None:
+        if target_package_dir.exists():
+            ig_args.append(_as_repo_relative(target_package_dir))
+        else:
+            print(
+                f"[{project_key}/{identifier}] Target package path {target_package_dir} does not exist; continuing without it"
+            )
     ig_args.extend(_project_ig_package_specs(project_key))
     ig_args.extend(str(ig) for ig in EXTRA_IG_SOURCES)
 
@@ -525,9 +531,12 @@ def _validate_transformed_output(
         seen_igs.add(ig)
         cmd.extend(["-ig", ig])
 
+    if target_profile_url:
+        cmd.extend(["-profile", target_profile_url])
+
     _print_step(
         f"[{project_key}/{identifier}] Validating {output_file.name} against "
-        f"{_as_repo_relative(target_package_dir)} + project IGs"
+        f"target profile {target_profile_url or 'Resource'} using Java validator"
     )
     try:
         subprocess.run(cmd, cwd=REPO_ROOT, check=True)
