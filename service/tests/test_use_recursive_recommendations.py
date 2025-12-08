@@ -405,3 +405,57 @@ def test_use_recursive_recommended_for_deeply_nested_compatible_tree():
         assert (
             ActionType.USE_RECURSIVE in actions
         ), f"USE_RECURSIVE should be recommended for {field_name}"
+
+
+def test_use_recursive_recommended_when_some_descendants_have_fixed_values():
+    """Test USE_RECURSIVE is recommended when some descendants have FIXED actions.
+
+    Scenario:
+    - Root: Medication (classification=compatible)
+    - Child 1: Medication.code (classification=compatible)
+    - Child 2: Medication.extension.url (classification=compatible, has FIXED value)
+    - Child 3: Medication.identifier (classification=compatible)
+
+    Expected:
+    - Recommendations for Medication contain both USE and USE_RECURSIVE
+    - FIXED values should NOT prevent USE_RECURSIVE from being recommended
+    - USE_RECURSIVE will apply to children without manual actions
+    """
+    mapping = _MockMapping(
+        [
+            _MockField("Medication", classification="compatible"),
+            _MockField("Medication.code", classification="compatible"),
+            _MockField("Medication.extension.url", classification="compatible"),
+            _MockField("Medication.identifier", classification="compatible"),
+        ]
+    )
+
+    # One child has a FIXED value annotation
+    manual_entries = {
+        "Medication.extension.url": {
+            "action": "fixed",
+            "fixed": "http://example.com/extension",
+            "remark": "Fixed extension URL",
+        }
+    }
+
+    # Compute recommendations
+    engine = RecommendationEngine(mapping, manual_entries)
+    recommendations = engine.compute_all_recommendations()
+
+    # Verify recommendations for root field
+    root_recs = recommendations.get("Medication", [])
+    actions = {rec.action for rec in root_recs}
+
+    assert ActionType.USE in actions, "USE should be recommended for compatible field"
+    assert (
+        ActionType.USE_RECURSIVE in actions
+    ), "USE_RECURSIVE should be recommended even when some descendants have FIXED values"
+    
+    # Verify the remark mentions this works for fields without manual actions
+    use_recursive_rec = next(
+        (rec for rec in root_recs if rec.action == ActionType.USE_RECURSIVE), None
+    )
+    assert use_recursive_rec is not None
+    assert use_recursive_rec.source == ActionSource.SYSTEM_DEFAULT
+    assert use_recursive_rec.auto_generated is True

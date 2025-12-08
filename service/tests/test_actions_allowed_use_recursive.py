@@ -831,3 +831,170 @@ def test_use_recursive_with_action_none_not_counted_as_manual():
     assert Action.USE_RECURSIVE not in patient_field.actions_allowed, \
         "Parent should NOT have use_recursive when child has action=None"
 
+
+def test_use_recursive_allowed_when_children_have_fixed_values():
+    """
+    Parent with children where some have FIXED actions.
+    
+    Scenario:
+    - Root field: compatible
+    - Child 1: compatible, has FIXED action
+    - Child 2: compatible, NO action
+    
+    Expected: use_recursive IS allowed because FIXED actions should NOT
+    prevent use_recursive from being applied to other children without manual actions.
+    FIXED values are auto-detected constraints, not manual mapping decisions.
+    """
+    from structure_comparer.model.mapping_action_models import ActionInfo, ActionSource, ActionType
+    
+    fields = create_field_mapping([
+        ("Medication", ComparisonClassification.COMPAT),
+        ("Medication.extension.url", ComparisonClassification.COMPAT),
+        ("Medication.code", ComparisonClassification.COMPAT),
+    ])
+    
+    # One child has FIXED action (from manual_entries or auto-detected)
+    action_info_map = {
+        "Medication.extension.url": ActionInfo(
+            action=ActionType.FIXED,
+            source=ActionSource.MANUAL,  # FIXED can come from manual_entries
+            fixed_value="http://example.com"
+        )
+    }
+    
+    # Evaluation map
+    evaluation_map = {
+        "Medication.extension.url": EvaluationResult(
+            status=EvaluationStatus.RESOLVED,
+            mapping_status=MappingStatus.SOLVED
+        ),
+        "Medication.code": EvaluationResult(
+            status=EvaluationStatus.OK,
+            mapping_status=MappingStatus.COMPATIBLE
+        )
+    }
+    
+    fill_actions_for_all_fields(fields, evaluation_map, action_info_map)
+    
+    medication_field = fields["Medication"]
+    assert Action.USE_RECURSIVE in medication_field.actions_allowed, \
+        "Parent should have use_recursive when children have FIXED values (FIXED doesn't block use_recursive)"
+
+
+def test_use_recursive_not_allowed_when_all_children_have_fixed_and_manual():
+    """
+    Parent where children have FIXED and other manual actions.
+    
+    Scenario:
+    - Root field: compatible
+    - Child 1: compatible, has FIXED action
+    - Child 2: compatible, NO action
+    
+    Expected: use_recursive IS allowed because FIXED actions don't count as
+    manual actions, and child 2 has no action at all.
+    
+    Updated based on requirement: FIXED values should NOT prevent use_recursive.
+    """
+    from structure_comparer.model.mapping_action_models import ActionInfo, ActionSource, ActionType
+    
+    fields = create_field_mapping([
+        ("Medication", ComparisonClassification.COMPAT),
+        ("Medication.extension", ComparisonClassification.COMPAT),
+        ("Medication.code", ComparisonClassification.COMPAT),
+    ])
+    
+    # Child 1 has FIXED, child 2 has no action
+    action_info_map = {
+        "Medication.extension": ActionInfo(
+            action=ActionType.FIXED,
+            source=ActionSource.MANUAL,
+            fixed_value="http://example.com"
+        )
+    }
+    
+    # Evaluation map
+    evaluation_map = {
+        "Medication.extension": EvaluationResult(
+            status=EvaluationStatus.RESOLVED,
+            mapping_status=MappingStatus.SOLVED
+        ),
+        "Medication.code": EvaluationResult(
+            status=EvaluationStatus.OK,
+            mapping_status=MappingStatus.COMPATIBLE
+        )
+    }
+    
+    fill_actions_for_all_fields(fields, evaluation_map, action_info_map)
+    
+    medication_field = fields["Medication"]
+    # FIXED should NOT block use_recursive - child with FIXED can still be processed by use_recursive
+    assert Action.USE_RECURSIVE in medication_field.actions_allowed, \
+        "Parent should have use_recursive when some children have FIXED values (FIXED doesn't count as manual action)"
+
+
+def test_use_recursive_not_allowed_when_all_non_fixed_children_have_manual_actions():
+    """
+    Parent where some children have FIXED and other children have manual actions.
+    
+    Scenario:
+    - Root field: compatible
+    - Child 1: compatible, has FIXED action
+    - Child 2: incompatible, has MANUAL action
+    - Child 3: compatible, has COPY_FROM action
+    
+    Expected: use_recursive IS allowed because child 1 has FIXED (which doesn't
+    count as a manual action). USE_RECURSIVE can still apply to child 1, even though
+    children 2 and 3 have manual actions.
+    
+    This demonstrates that FIXED values can benefit from USE_RECURSIVE.
+    """
+    from structure_comparer.model.mapping_action_models import ActionInfo, ActionSource, ActionType
+    
+    fields = create_field_mapping([
+        ("Medication", ComparisonClassification.COMPAT),
+        ("Medication.extension", ComparisonClassification.COMPAT),
+        ("Medication.code", ComparisonClassification.INCOMPAT),
+        ("Medication.identifier", ComparisonClassification.COMPAT),
+    ])
+    
+    # All children have actions: FIXED, MANUAL, COPY_FROM
+    action_info_map = {
+        "Medication.extension": ActionInfo(
+            action=ActionType.FIXED,
+            source=ActionSource.MANUAL,
+            fixed_value="http://example.com"
+        ),
+        "Medication.code": ActionInfo(
+            action=ActionType.NOT_USE,
+            source=ActionSource.MANUAL
+        ),
+        "Medication.identifier": ActionInfo(
+            action=ActionType.COPY_FROM,
+            source=ActionSource.MANUAL,
+            copy_from="Patient.identifier"
+        )
+    }
+    
+    # Evaluation map
+    evaluation_map = {
+        "Medication.extension": EvaluationResult(
+            status=EvaluationStatus.RESOLVED,
+            mapping_status=MappingStatus.SOLVED
+        ),
+        "Medication.code": EvaluationResult(
+            status=EvaluationStatus.RESOLVED,
+            mapping_status=MappingStatus.SOLVED
+        ),
+        "Medication.identifier": EvaluationResult(
+            status=EvaluationStatus.RESOLVED,
+            mapping_status=MappingStatus.SOLVED
+        )
+    }
+    
+    fill_actions_for_all_fields(fields, evaluation_map, action_info_map)
+    
+    medication_field = fields["Medication"]
+    # Child 1 with FIXED can still benefit from use_recursive
+    assert Action.USE_RECURSIVE in medication_field.actions_allowed, \
+        "Parent should have use_recursive when children with FIXED exist (FIXED doesn't count as blocking)"
+
