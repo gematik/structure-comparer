@@ -76,11 +76,20 @@ class InheritanceEngine:
                 target_exists = True
 
         # Fallback for sliced fields
-        if not target_exists and ":" in parent_other_value:
-            # Check if parent is also a sliced field
-            parent_is_sliced = ":" in parent_field_name
+        if not target_exists and ":" in parent_field_name:
+            # Source field is sliced (e.g., Organization.telecom:telefon)
+            # Check if parent target is NOT sliced (e.g., Organization.telecom)
+            target_is_not_sliced = ":" not in parent_other_value
             
-            if parent_is_sliced:
+            if target_is_not_sliced:
+                # Mapping from sliced source to non-sliced target
+                # If the source child exists, the target child should be structurally valid
+                # even if not explicitly defined (target inherits from base FHIR type)
+                if field_name in self.all_fields:
+                    # Source child exists, so target child should be structurally compatible
+                    target_exists = True
+                    is_implicit_slice = True
+            elif ":" in parent_other_value:
                 # Both parent and target are slices of the same base type
                 # Check if the parent slice itself exists and has this child
                 if parent_field_name in self.all_fields and field_name in self.all_fields:

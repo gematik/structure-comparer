@@ -45,6 +45,8 @@ class MappingField(ComparisonField):
         self.action_info: ActionInfo | None = None
         self.evaluation = None
         self.recommendations: List[ActionInfo] = []  # List of suggested actions, not yet applied
+        self.inherited_from: str | None = None
+        self.auto_generated: bool = False
 
     @property
     def name_child(self) -> str:
@@ -126,6 +128,8 @@ class MappingField(ComparisonField):
             action_info=self.action_info,
             evaluation=self.evaluation,
             recommendations=self.recommendations,
+            inherited_from=self.inherited_from,
+            auto_generated=self.auto_generated,
         )
 
 
@@ -192,6 +196,9 @@ class Mapping(Comparison):
             info = action_info_map.get(field_name)
             if info is not None:
                 field.apply_action_info(info)
+                # Copy inherited_from and auto_generated from action_info
+                field.inherited_from = info.inherited_from
+                field.auto_generated = info.auto_generated
             else:
                 # No manual entry and no automatic action - leave as None (user must decide)
                 fallback = ActionInfo(action=None, source=ActionSource.SYSTEM_DEFAULT)

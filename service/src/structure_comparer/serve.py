@@ -1672,6 +1672,72 @@ async def apply_recommendation(
         return ErrorModel.from_except(e)
 
 
+@app.post(
+    "/project/{project_key}/mapping/{mapping_id}/field/{field_name}/apply-all-children-recommendations",
+    tags=["mapping"],
+    response_model=list[MappingFieldModel],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={400: {}, 404: {}},
+)
+async def apply_all_children_recommendations(
+    project_key: str,
+    mapping_id: str,
+    field_name: str,
+    response: Response = None,
+) -> list[MappingFieldModel] | ErrorModel:
+    """
+    Apply all recommendations for all children of a parent field.
+    
+    This endpoint:
+    - Gets all descendant fields of the parent
+    - For each descendant that has recommendations, applies the first one
+    - Persists all changes in manual_entries.yaml
+    - Re-evaluates the mapping
+    - Returns list of all updated fields
+    
+    This is useful when setting an extension action on a parent field
+    and wanting to automatically apply the inherited recommendations
+    to all children.
+    
+    ---
+    parameters:
+      - in: path
+        name: project_key
+        type: string
+        required: true
+        description: The project key
+      - in: path
+        name: mapping_id
+        type: string
+        required: true
+        description: The id of the mapping
+      - in: path
+        name: field_name
+        type: string
+        required: true
+        description: The parent field name
+    responses:
+      200:
+        description: Recommendations were successfully applied to children
+      404:
+        description: Project, mapping, or field not found
+      400:
+        description: Invalid request
+    """
+    global mapping_handler
+    try:
+        return mapping_handler.apply_all_children_recommendations(project_key, mapping_id, field_name)
+
+    except (ProjectNotFound, MappingNotFound, FieldNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except Exception as e:
+        response.status_code = 400
+        return ErrorModel.from_except(e)
+
+
 @app.get(
     "/project/{project_key}/mapping/{mapping_id}/evaluation",
     tags=["Mappings", "Evaluation"],

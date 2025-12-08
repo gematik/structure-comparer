@@ -342,6 +342,114 @@ class MappingHandler:
 
         return updated_field.to_model()
 
+    def apply_all_children_recommendations(
+        self,
+        project_key: str,
+        mapping_id: str,
+        parent_field_name: str,
+    ) -> List[MappingFieldModel]:
+        """Apply all recommendations for all children of a parent field.
+        
+        This method:
+        1. Reloads the mapping to ensure recommendations are up-to-date
+        2. Gets all descendant fields of the parent
+        3. For each descendant that has recommendations, applies the first one
+        4. Persists all changes in manual_entries.yaml
+        5. Re-evaluates the mapping
+        6. Returns list of all updated fields
+        
+        Args:
+            project_key: The project key
+            mapping_id: The mapping ID
+            parent_field_name: The parent field name whose children should be updated
+            
+        Returns:
+            List of updated field models
+        """
+        from ..field_hierarchy import FieldHierarchyNavigator
+        
+        proj = self.project_handler._get(project_key)
+        if proj is None:
+            raise ProjectNotFound()
+
+        # IMPORTANT: Reload mapping to ensure recommendations are regenerated
+        # after the parent action was saved
+        mapping = self.__get(project_key, mapping_id, proj)
+        
+        # Get all fields
+        fields = getattr(mapping, "fields", {}) or {}
+        if not fields:
+            return []
+        
+        # Create navigator to find all descendants
+        navigator = FieldHierarchyNavigator(fields)
+        all_descendants = navigator.get_all_descendants(parent_field_name)
+        
+        if not all_descendants:
+            return []
+        
+        # Get manual entries
+        manual_entries = proj.manual_entries.get(mapping_id)
+        if manual_entries is None:
+            manual_entries = ManualEntriesMapping(id=mapping_id)
+            proj.manual_entries[mapping_id] = manual_entries
+        
+        updated_fields = []
+        
+        # Process each descendant
+        for field_name in all_descendants:
+            field = fields.get(field_name)
+            if not field:
+                continue
+            
+            # Check if field has recommendations
+            if not hasattr(field, 'recommendations') or not field.recommendations:
+                continue
+            
+            # Get the first recommendation
+            recommendation = field.recommendations[0]
+            
+            if recommendation.action is None:
+                continue
+            
+            # Convert recommendation to manual action
+            converted_action = Action(recommendation.action.value) if recommendation.action else None
+            
+            new_entry = MappingFieldBaseModel(
+                name=field.name,
+                action=converted_action,
+                inherited_from=parent_field_name,
+                auto_generated=False,  # User explicitly requested these, so they should be persisted
+            )
+            
+            # Copy values from recommendation if present
+            if recommendation.fixed_value and isinstance(recommendation.fixed_value, str):
+                new_entry.fixed = recommendation.fixed_value
+            if recommendation.other_value and isinstance(recommendation.other_value, str):
+                new_entry.other = recommendation.other_value
+            if recommendation.user_remark:
+                new_entry.remark = recommendation.user_remark
+            
+            # Save to manual entries
+            manual_entries[field.name] = new_entry
+            updated_fields.append(field_name)
+        
+        # Save all changes at once
+        if updated_fields:
+            proj.manual_entries.write()
+        
+        # Reload mapping to get updated fields
+        mapping = self.__get(project_key, mapping_id, proj)
+        
+        # Return all updated field models
+        result = []
+        for field_name in updated_fields:
+            updated_field = get_field_by_name(mapping, field_name)
+            if updated_field:
+                result.append(updated_field.to_model())
+        
+        return result
+
     def update(
         self, project_key: str, mapping_id: str, update_data: MappingUpdateModel
     ) -> MappingDetailsModel:

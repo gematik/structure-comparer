@@ -115,8 +115,8 @@ def _normalise_manual_entries(
             # This enables users to resolve warnings by explicitly setting an action
             if payload.get("auto_generated"):
                 continue
-            payload.pop("auto_generated", None)
-            payload.pop("inherited_from", None)
+            # Keep auto_generated and inherited_from in the payload
+            # They are used to determine the action source
             normalised[name] = payload
         return normalised
 
@@ -147,10 +147,11 @@ def _action_from_manual(
 
     if auto_generated and inherited_from:
         source = ActionSource.INHERITED
+    elif inherited_from:
+        # Manually applied but inherited (e.g., user clicked "apply to children")
+        source = ActionSource.INHERITED
     else:
         source = ActionSource.MANUAL
-        auto_generated = False
-        inherited_from = None
 
     info = ActionInfo(
         action=action,

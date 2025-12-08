@@ -24,6 +24,8 @@ class MappingFieldBase(MappingFieldMinimal):
     """Manual-entry representation of a field (persisted in YAML/JSON)."""
 
     name: str
+    inherited_from: str | None = None
+    auto_generated: bool = False
 
 
 class MappingField(ComparisonField):
@@ -50,6 +52,8 @@ class MappingField(ComparisonField):
     action_info: ActionInfo | None = None
     evaluation: EvaluationResult | None = None
     recommendations: list[ActionInfo] = []
+    inherited_from: str | None = None
+    auto_generated: bool = False
 
 
 class MappingBase(BaseModel):

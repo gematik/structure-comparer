@@ -177,10 +177,8 @@ def create_results_html(
         content = template.render(**data)
 
         # HOTFIX: prevent filenames to contain '|' but use '#' instead
-        html_file = (
-            results_folder
-            / f"{comp.name.replace("|", "#").replace(" -> ", "_to_")}.html"
-        )
+        filename = comp.name.replace("|", "#").replace(" -> ", "_to_")
+        html_file = results_folder / f"{filename}.html"
         html_file.write_text(content, encoding="utf-8")
 
         return str(html_file)
