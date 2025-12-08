@@ -62,10 +62,10 @@ def test_manual_action_overrides_everything():
 
 
 def test_parent_not_use_is_inherited_by_children():
-    """Test that NOT_USE creates recommendations (not inherited actions) for children.
+    """Test that NOT_USE with MANUAL source creates inherited actions for direct children.
     
-    Note: NOT_USE is no longer in _INHERITABLE_ACTIONS, so it creates recommendations
-    instead of active inherited actions.
+    Note: When a parent has NOT_USE with source=MANUAL, direct children automatically
+    receive NOT_USE with source=INHERITED (new behavior as of auto-inherit feature).
     """
     mapping = StubMapping([
         "Patient.identifier",
@@ -78,7 +78,6 @@ def test_parent_not_use_is_inherited_by_children():
     }
 
     actions = compute_mapping_actions(mapping, manual_entries)
-    recommendations = compute_recommendations(mapping, manual_entries)
 
     parent_info = actions["Patient.identifier"]
     child_info = actions["Patient.identifier.system"]
@@ -86,15 +85,11 @@ def test_parent_not_use_is_inherited_by_children():
     assert parent_info.action == ActionType.NOT_USE
     assert parent_info.source == ActionSource.MANUAL
 
-    # Child should NOT have inherited NOT_USE as active action (new behavior)
-    assert child_info.action is None
-    assert child_info.source == ActionSource.SYSTEM_DEFAULT
-    
-    # Child should have NOT_USE as recommendation
-    assert "Patient.identifier.system" in recommendations
-    recs = recommendations["Patient.identifier.system"]
-    not_use_recs = [r for r in recs if r.action == ActionType.NOT_USE]
-    assert len(not_use_recs) == 1
+    # Child SHOULD have inherited NOT_USE as active action (new auto-inherit behavior)
+    assert child_info.action == ActionType.NOT_USE
+    assert child_info.source == ActionSource.INHERITED
+    assert child_info.inherited_from == "Patient.identifier"
+    assert "Automatically inherited NOT_USE from parent field" in child_info.system_remark
 
 
 def test_system_default_action_fills_missing_entries():

@@ -257,7 +257,11 @@ def test_polymorphic_value_field_no_recommendation():
 
 
 def test_not_use_action_still_inherits():
-    """Test that NOT_USE action creates recommendations for children (not active actions)."""
+    """Test that NOT_USE action creates active inherited actions for direct children.
+    
+    Note: With the auto-inherit feature, NOT_USE with source=MANUAL now creates
+    active inherited actions for direct children (not just recommendations).
+    """
     mapping = StubMapping([
         "Medication.meta",
         "Medication.meta.profile",
@@ -270,18 +274,11 @@ def test_not_use_action_still_inherits():
     }
     
     actions = compute_mapping_actions(mapping, manual_entries)
-    recommendations = compute_recommendations(mapping, manual_entries)
-    
+
     # Parent has NOT_USE
     assert actions["Medication.meta"].action == ActionType.NOT_USE
     
-    # Child should NOT inherit NOT_USE as active action anymore (new behavior)
-    # Instead, it should have no action until user accepts the recommendation
-    assert actions["Medication.meta.profile"].action is None
-    assert actions["Medication.meta.profile"].source == ActionSource.SYSTEM_DEFAULT
-    
-    # Child SHOULD have NOT_USE as recommendation
-    assert "Medication.meta.profile" in recommendations
-    recs = recommendations["Medication.meta.profile"]
-    not_use_recs = [r for r in recs if r.action == ActionType.NOT_USE]
-    assert len(not_use_recs) == 1
+    # Child SHOULD inherit NOT_USE as active action (new auto-inherit behavior)
+    assert actions["Medication.meta.profile"].action == ActionType.NOT_USE
+    assert actions["Medication.meta.profile"].source == ActionSource.INHERITED
+    assert actions["Medication.meta.profile"].inherited_from == "Medication.meta"
