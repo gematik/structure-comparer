@@ -183,7 +183,11 @@ def test_not_use_action_creates_recommendations_for_all_children():
 
 
 def test_not_use_does_not_create_active_inherited_actions():
-    """Test that NOT_USE does NOT create active inherited actions, only recommendations."""
+    """Test that NOT_USE creates active inherited actions for direct children.
+    
+    Note: With the auto-inherit feature, NOT_USE with source=MANUAL now creates
+    active inherited actions for direct children automatically.
+    """
     mapping = StubMapping([
         "Medication.meta",
         "Medication.meta.profile",
@@ -200,11 +204,11 @@ def test_not_use_does_not_create_active_inherited_actions():
     # Parent has NOT_USE
     assert actions["Medication.meta"].action == ActionType.NOT_USE
     
-    # Child should NOT have inherited NOT_USE as active action
-    # (This is the new behavior - NOT_USE is now recommendation only)
+    # Child SHOULD have inherited NOT_USE as active action (new auto-inherit behavior)
     child_action = actions["Medication.meta.profile"]
-    assert child_action.action is None
-    assert child_action.source == ActionSource.SYSTEM_DEFAULT
+    assert child_action.action == ActionType.NOT_USE
+    assert child_action.source == ActionSource.INHERITED
+    assert child_action.inherited_from == "Medication.meta"
 
 
 def test_not_use_manual_child_overrides_recommendation():

@@ -63,6 +63,9 @@ def compute_mapping_actions(
 
         result[field_name] = info
 
+    # Propagate NOT_USE from parent fields to direct children
+    _propagate_not_use_to_direct_children(mapping, result)
+
     return result
 
 
@@ -161,6 +164,54 @@ def _action_from_manual(
     )
 
     return info
+
+
+def _propagate_not_use_to_direct_children(
+    mapping, action_info_map: Dict[str, ActionInfo]
+) -> None:
+    """Automatically propagate NOT_USE action from parent to direct children.
+    
+    When a field has NOT_USE with source=MANUAL, all its direct children
+    without manual actions receive NOT_USE with source=INHERITED.
+    
+    Args:
+        mapping: The mapping object containing fields
+        action_info_map: Dictionary mapping field names to ActionInfo objects.
+                         This is modified in-place.
+    """
+    fields = getattr(mapping, "fields", {}) or {}
+    if not fields:
+        return
+    
+    navigator = FieldHierarchyNavigator(fields)
+    
+    # Collect all fields with manual NOT_USE
+    fields_with_manual_not_use = [
+        (field_name, action_info)
+        for field_name, action_info in action_info_map.items()
+        if action_info.action == ActionType.NOT_USE
+        and action_info.source == ActionSource.MANUAL
+    ]
+    
+    # For each parent with manual NOT_USE
+    for parent_field_name, parent_action in fields_with_manual_not_use:
+        direct_children = navigator.get_direct_children(parent_field_name)
+        
+        for child_field_name in direct_children:
+            # Check if child already has a manual action
+            child_action = action_info_map.get(child_field_name)
+            if child_action and child_action.source == ActionSource.MANUAL:
+                # Don't override manual actions
+                continue
+            
+            # Set NOT_USE on child
+            action_info_map[child_field_name] = ActionInfo(
+                action=ActionType.NOT_USE,
+                source=ActionSource.INHERITED,
+                inherited_from=parent_field_name,
+                system_remark=f"Automatically inherited NOT_USE from parent field {parent_field_name}",
+                auto_generated=True
+            )
 
 
 def _inherit_or_default(
