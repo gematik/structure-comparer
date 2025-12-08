@@ -45,7 +45,7 @@
               "context": "KBVPRFOROrganization",
               "element": "address",
               "variable": "srcKBVPRFOROrganizationAddressb2458a6a",
-              "condition": "url != 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-precinct' and url != 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-postBox'"
+              "condition": "url != 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-postBox' and url != 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-precinct'"
             }
           ],
           "target": [
@@ -90,24 +90,149 @@
         },
         {
           "name": "OrganizationIdentifiercd09dff1",
+          "documentation": "Manual action required | Wird aus `idNummer` aus dem AccessToken übernommen, s. A_25947",
+          "source": [
+            {
+              "context": "KBVPRFOROrganization"
+            }
+          ]
+        },
+        {
+          "name": "OrganizationMetaTagOriginCodeae7288a8",
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "element": "meta",
+              "variable": "tgtOrganizationDirectoryMetacbe6e64f",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "OrganizationMetaTagOriginCodeae7288a8",
+              "target": [
+                {
+                  "context": "tgtOrganizationDirectoryMetacbe6e64f",
+                  "element": "tag",
+                  "variable": "tgtOrganizationDirectoryMetaTagOrigin615a7476",
+                  "contextType": "variable"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "OrganizationMetaTagOriginCodeae7288a8",
+                  "source": [
+                    {
+                      "context": "KBVPRFOROrganization"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtOrganizationDirectoryMetaTagOrigin615a7476",
+                      "contextType": "variable",
+                      "element": "code",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "ldap"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "source": [
+                {
+                  "context": "KBVPRFOROrganization"
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRFOROrganization"
+            }
+          ],
+          "documentation": "Fixed value 'ldap'"
+        },
+        {
+          "name": "OrganizationMetaTagOriginSystem681676f7",
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "element": "meta",
+              "variable": "tgtOrganizationDirectoryMetacbe6e64f",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "OrganizationMetaTagOriginSystem681676f7",
+              "target": [
+                {
+                  "context": "tgtOrganizationDirectoryMetacbe6e64f",
+                  "element": "tag",
+                  "variable": "tgtOrganizationDirectoryMetaTagOrigin615a7476",
+                  "contextType": "variable"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "OrganizationMetaTagOriginSystem681676f7",
+                  "source": [
+                    {
+                      "context": "KBVPRFOROrganization"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtOrganizationDirectoryMetaTagOrigin615a7476",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "https://gematik.de/fhir/directory/CodeSystem/Origin"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "source": [
+                {
+                  "context": "KBVPRFOROrganization"
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRFOROrganization"
+            }
+          ],
+          "documentation": "Fixed value 'https://gematik.de/fhir/directory/CodeSystem/Origin'"
+        },
+        {
+          "name": "OrganizationModifierextension94bb10c7",
           "documentation": "Automatic copy",
           "source": [
             {
               "context": "KBVPRFOROrganization",
-              "element": "identifier",
-              "variable": "srcKBVPRFOROrganizationIdentifier520cdc39"
+              "element": "modifierExtension",
+              "variable": "srcKBVPRFOROrganizationModifierextensionb26e1635"
             }
           ],
           "target": [
             {
               "context": "OrganizationDirectory",
               "contextType": "variable",
-              "element": "identifier",
-              "variable": "tgtOrganizationDirectoryIdentifierb9fb6742",
+              "element": "modifierExtension",
+              "variable": "tgtOrganizationDirectoryModifierextensionf13c3dbf",
               "transform": "copy",
               "parameter": [
                 {
-                  "valueId": "srcKBVPRFOROrganizationIdentifier520cdc39"
+                  "valueId": "srcKBVPRFOROrganizationModifierextensionb26e1635"
                 }
               ]
             }

@@ -99,8 +99,18 @@ class FieldTreeBuilder:
         if not relative:
             return False
         if relative.startswith("meta"):
-            return True
+            return not self._is_allowed_meta_field(path)
         if "[x]" in relative and ":" not in relative and not self._can_resolve_choice_field(path):
+            return True
+        return False
+
+    def _is_allowed_meta_field(self, path: str) -> bool:
+        info = self._actions.get(path)
+        if info is None:
+            return False
+        if info.action == ActionType.FIXED:
+            return True
+        if info.action == ActionType.MANUAL and info.fixed_value:
             return True
         return False
 
