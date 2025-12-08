@@ -275,9 +275,54 @@ class FieldTreeBuilder:
 
                 if (child.can_collapse and child.depth >= 2) or is_extension_slice:
                     self._nodes_to_emit.append(child)
+                elif self._should_force_container(child):
+                    child.force_container = True
+                    self._nodes_to_emit.append(child)
                 else:
                     self._collect_nodes(child)
                 continue
 
             if child.depth >= 2:
                 self._nodes_to_emit.append(child)
+            else:
+                self._collect_nodes(child)
+
+    def _should_force_container(self, node: FieldNode) -> bool:
+        if node.depth < 2:
+            return False
+        if not node.children:
+            return False
+        return self._is_repeating_field(node.path)
+
+    def _is_repeating_field(self, path: str | None) -> bool:
+        if not path:
+            return False
+        field = self._mapping.fields.get(path)
+        if not field:
+            return False
+
+        profile_candidates: list[str] = []
+        if self._target_profile_key:
+            profile_candidates.append(self._target_profile_key)
+        profile_candidates.extend(self._source_profile_keys or [])
+
+        profile_field = None
+        for key in profile_candidates:
+            if not key:
+                continue
+            candidate = field.profiles.get(key)
+            if candidate is not None:
+                profile_field = candidate
+                break
+
+        if profile_field is None:
+            return False
+
+        max_num = getattr(profile_field, "max_num", None)
+        if max_num is None:
+            return False
+
+        try:
+            return float(max_num) > 1
+        except (TypeError, ValueError):
+            return False

@@ -67,11 +67,11 @@ entries:
     name: Organization.identifier:TelematikID
     other: null
     remark: idNummer → aus dem ACCESS_TOKEN der Anfrage
-  - action: manual
+  - action: copy_from
     fixed: null
     name: Organization.name
-    other: null
-    remark: organizationName → aus dem ACCESS_TOKEN der Anfrage
+    other: Organization.name
+    remark: Kopiert den Namen aus der KBV-Organisation
   - action: manual
     fixed: null
     name: Organization.type:profession
@@ -1061,6 +1061,20 @@ transformation_entries:
     map: e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31
     name: Bundle.entry:AusstellendeVerschreibendeVerantwortlichePerson.resource
     other: .parameter:rxPrescription.part:practitioner.resource
+    remark: null
+    target_creation: null
+  - action: copy_to
+    fixed: null
+    map: null
+    name: Bundle.identifier
+    other: .parameter:rxPrescription.part:prescriptionId.valueIdentifier
+    remark: null
+    target_creation: null
+  - action: copy_to
+    fixed: null
+    map: null
+    name: Bundle.timestamp
+    other: .parameter:rxPrescription.part:authoredOn.valueDateTime
     remark: null
     target_creation: null
   id: 837f9230-c28e-426e-a32e-268702d6e853

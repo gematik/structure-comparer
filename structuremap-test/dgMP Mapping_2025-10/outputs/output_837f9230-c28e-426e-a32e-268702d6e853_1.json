@@ -26,42 +26,22 @@
             "code" : "PFT"
           },
           {
+            "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM",
             "code" : "PFT"
-          },
-          {
-            "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM"
           }]
         },
         "ingredient" : [{
           "itemCodeableConcept" : {
             "text" : "Rotigotin"
-          }
-        },
-        {
-          "strength" : {
-            "denominator" : {
-              "unit" : "Stück"
-            }
-          }
-        },
-        {
-          "strength" : {
-            "denominator" : {
-              "value" : 1
-            }
-          }
-        },
-        {
+          },
           "strength" : {
             "numerator" : {
+              "value" : 8,
               "unit" : "mg/24 h"
-            }
-          }
-        },
-        {
-          "strength" : {
-            "numerator" : {
-              "value" : 8
+            },
+            "denominator" : {
+              "value" : 1,
+              "unit" : "Stück"
             }
           }
         }]
@@ -111,6 +91,7 @@
             "system" : "https://gematik.de/fhir/directory/CodeSystem/Origin"
           }]
         },
+        "name" : "Hausarztpraxis",
         "telecom" : [{
           "system" : "phone",
           "value" : "030321654987"
@@ -148,6 +129,14 @@
           "given" : ["Ben"]
         }],
         "qualification" : [{
+          "code" : {
+            "coding" : [{
+              "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_FOR_Qualification_Type",
+              "code" : "00"
+            }]
+          }
+        },
+        {
           "code" : {
             "coding" : [{
               "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_FOR_Berufsbezeichnung",

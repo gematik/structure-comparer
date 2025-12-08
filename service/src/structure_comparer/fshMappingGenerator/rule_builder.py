@@ -337,6 +337,7 @@ class StructureMapRuleBuilder:
         if node.intent in {"copy", "copy_other", "copy_to"}:
             leaf_source = source_chain[-1]
             leaf_target = target_chain[-1]
+            container_only = getattr(node, "force_container", False)
 
             is_extension = is_extension_path(node.path)
             use_create = is_extension and bool(node.children)
@@ -349,7 +350,9 @@ class StructureMapRuleBuilder:
                 target_url = get_extension_url(self._mapping, tgt_p, self._target_profile_key)
                 source_url = get_extension_url(self._mapping, src_p, self._source_profile_keys)
 
-            if use_create:
+            if container_only:
+                rule["target"] = [self._build_container_target_entry(leaf_target, node.path)]
+            elif use_create:
                 create_type = "Extension"
                 rule["target"] = [
                     {
@@ -373,7 +376,7 @@ class StructureMapRuleBuilder:
                     }
                 ]
 
-            if is_extension:
+            if not container_only and is_extension:
                 if target_url and (use_create or (source_url and target_url != source_url)):
                     rule["target"].append(
                         {
@@ -426,6 +429,19 @@ class StructureMapRuleBuilder:
         if node.intent == "copy_other" and node.other_path:
             return node.other_path
         return node.path
+
+    def _build_container_target_entry(self, target_leaf: dict[str, Any], path: str) -> dict[str, Any]:
+        entry: dict[str, Any] = {
+            "context": target_leaf["context"],
+            "contextType": "variable",
+            "element": target_leaf["element"],
+            "variable": target_leaf["variable"],
+            "transform": "create",
+        }
+        type_hint = target_leaf.get("create_type") or target_leaf.get("type") or self._resolve_target_type(path)
+        if type_hint:
+            entry["parameter"] = [{"valueString": type_hint}]
+        return entry
 
     def _build_path_chain(
         self,

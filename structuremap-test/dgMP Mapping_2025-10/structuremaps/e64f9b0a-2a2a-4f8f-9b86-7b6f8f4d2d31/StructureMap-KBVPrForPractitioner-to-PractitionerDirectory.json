@@ -5,7 +5,7 @@
   "name": "KBVPrForPractitionerMap",
   "status": "active",
   "version": "1.0",
-  "date": "2025-12-05",
+  "date": "2025-12-08",
   "description": "Auto-generated StructureMap for KBV_PR_FOR_Practitioner|1.2.0 -> PractitionerDirectory|0.11.25",
   "structure": [
     {
@@ -113,13 +113,27 @@
           ]
         },
         {
-          "name": "PractitionerQualificationCode37012069",
+          "name": "PractitionerQualificationb6a27549",
+          "documentation": "Automatic copy",
+          "source": [
+            {
+              "context": "KBVPRFORPractitioner",
+              "element": "qualification",
+              "variable": "srcKBVPRFORPractitionerQualificationeae165c6"
+            }
+          ],
           "target": [
             {
               "context": "PractitionerDirectory",
+              "contextType": "variable",
               "element": "qualification",
               "variable": "tgtPractitionerDirectoryQualification6da58337",
-              "contextType": "variable"
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "BackboneElement"
+                }
+              ]
             }
           ],
           "rule": [
@@ -127,265 +141,123 @@
               "name": "PractitionerQualificationCode37012069",
               "source": [
                 {
-                  "context": "KBVPRFORPractitioner",
-                  "element": "qualification",
-                  "variable": "srcKBVPRFORPractitionerQualificationeae165c6"
+                  "context": "srcKBVPRFORPractitionerQualificationeae165c6",
+                  "element": "code",
+                  "variable": "srcPractitionerQualificationCode37012069"
                 }
               ],
-              "rule": [
+              "target": [
                 {
-                  "name": "PractitionerQualificationCode37012069",
-                  "source": [
+                  "context": "tgtPractitionerDirectoryQualification6da58337",
+                  "contextType": "variable",
+                  "element": "code",
+                  "variable": "tgtPractitionerQualificationCode37012069",
+                  "transform": "copy",
+                  "parameter": [
                     {
-                      "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                      "element": "code",
-                      "variable": "srcKBVPRFORPractitionerQualificationCodef2f76d4d"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtPractitionerDirectoryQualification6da58337",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtPractitionerDirectoryQualificationCodef1bbc2f9",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcKBVPRFORPractitionerQualificationCodef2f76d4d"
-                        }
-                      ]
+                      "valueId": "srcPractitionerQualificationCode37012069"
                     }
                   ]
                 }
               ]
-            }
-          ],
-          "source": [
-            {
-              "context": "KBVPRFORPractitioner"
-            }
-          ],
-          "documentation": "Automatic copy"
-        },
-        {
-          "name": "PractitionerQualificationIdbd899a43",
-          "target": [
-            {
-              "context": "PractitionerDirectory",
-              "element": "qualification",
-              "variable": "tgtPractitionerDirectoryQualification6da58337",
-              "contextType": "variable"
-            }
-          ],
-          "rule": [
+            },
             {
               "name": "PractitionerQualificationIdbd899a43",
               "source": [
                 {
-                  "context": "KBVPRFORPractitioner",
-                  "element": "qualification",
-                  "variable": "srcKBVPRFORPractitionerQualificationeae165c6"
+                  "context": "srcKBVPRFORPractitionerQualificationeae165c6",
+                  "element": "id",
+                  "variable": "srcPractitionerQualificationIdbd899a43"
                 }
               ],
-              "rule": [
+              "target": [
                 {
-                  "name": "PractitionerQualificationIdbd899a43",
-                  "source": [
+                  "context": "tgtPractitionerDirectoryQualification6da58337",
+                  "contextType": "variable",
+                  "element": "id",
+                  "variable": "tgtPractitionerQualificationIdbd899a43",
+                  "transform": "copy",
+                  "parameter": [
                     {
-                      "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                      "element": "id",
-                      "variable": "srcKBVPRFORPractitionerQualificationId7baeda55"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtPractitionerDirectoryQualification6da58337",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtPractitionerDirectoryQualificationId39aa13c5",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcKBVPRFORPractitionerQualificationId7baeda55"
-                        }
-                      ]
+                      "valueId": "srcPractitionerQualificationIdbd899a43"
                     }
                   ]
                 }
               ]
-            }
-          ],
-          "source": [
-            {
-              "context": "KBVPRFORPractitioner"
-            }
-          ],
-          "documentation": "Automatic copy"
-        },
-        {
-          "name": "PractitionerQualificationIdentifiera0f351ca",
-          "target": [
-            {
-              "context": "PractitionerDirectory",
-              "element": "qualification",
-              "variable": "tgtPractitionerDirectoryQualification6da58337",
-              "contextType": "variable"
-            }
-          ],
-          "rule": [
+            },
             {
               "name": "PractitionerQualificationIdentifiera0f351ca",
               "source": [
                 {
-                  "context": "KBVPRFORPractitioner",
-                  "element": "qualification",
-                  "variable": "srcKBVPRFORPractitionerQualificationeae165c6"
+                  "context": "srcKBVPRFORPractitionerQualificationeae165c6",
+                  "element": "identifier",
+                  "variable": "srcPractitionerQualificationIdentifiera0f351ca"
                 }
               ],
-              "rule": [
+              "target": [
                 {
-                  "name": "PractitionerQualificationIdentifiera0f351ca",
-                  "source": [
+                  "context": "tgtPractitionerDirectoryQualification6da58337",
+                  "contextType": "variable",
+                  "element": "identifier",
+                  "variable": "tgtPractitionerQualificationIdentifiera0f351ca",
+                  "transform": "copy",
+                  "parameter": [
                     {
-                      "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                      "element": "identifier",
-                      "variable": "srcKBVPRFORPractitionerQualificationIdentifier1076d039"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtPractitionerDirectoryQualification6da58337",
-                      "contextType": "variable",
-                      "element": "identifier",
-                      "variable": "tgtPractitionerDirectoryQualificationIdentifier0aec3baa",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcKBVPRFORPractitionerQualificationIdentifier1076d039"
-                        }
-                      ]
+                      "valueId": "srcPractitionerQualificationIdentifiera0f351ca"
                     }
                   ]
                 }
               ]
-            }
-          ],
-          "source": [
-            {
-              "context": "KBVPRFORPractitioner"
-            }
-          ],
-          "documentation": "Automatic copy"
-        },
-        {
-          "name": "PractitionerQualificationIssuer16de1a10",
-          "target": [
-            {
-              "context": "PractitionerDirectory",
-              "element": "qualification",
-              "variable": "tgtPractitionerDirectoryQualification6da58337",
-              "contextType": "variable"
-            }
-          ],
-          "rule": [
+            },
             {
               "name": "PractitionerQualificationIssuer16de1a10",
               "source": [
                 {
-                  "context": "KBVPRFORPractitioner",
-                  "element": "qualification",
-                  "variable": "srcKBVPRFORPractitionerQualificationeae165c6"
+                  "context": "srcKBVPRFORPractitionerQualificationeae165c6",
+                  "element": "issuer",
+                  "variable": "srcPractitionerQualificationIssuer16de1a10"
                 }
               ],
-              "rule": [
+              "target": [
                 {
-                  "name": "PractitionerQualificationIssuer16de1a10",
-                  "source": [
+                  "context": "tgtPractitionerDirectoryQualification6da58337",
+                  "contextType": "variable",
+                  "element": "issuer",
+                  "variable": "tgtPractitionerQualificationIssuer16de1a10",
+                  "transform": "copy",
+                  "parameter": [
                     {
-                      "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                      "element": "issuer",
-                      "variable": "srcKBVPRFORPractitionerQualificationIssuerd9537450"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtPractitionerDirectoryQualification6da58337",
-                      "contextType": "variable",
-                      "element": "issuer",
-                      "variable": "tgtPractitionerDirectoryQualificationIssuer3e73c633",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcKBVPRFORPractitionerQualificationIssuerd9537450"
-                        }
-                      ]
+                      "valueId": "srcPractitionerQualificationIssuer16de1a10"
                     }
                   ]
                 }
               ]
-            }
-          ],
-          "source": [
-            {
-              "context": "KBVPRFORPractitioner"
-            }
-          ],
-          "documentation": "Automatic copy"
-        },
-        {
-          "name": "PractitionerQualificationPeriode7fc59e2",
-          "target": [
-            {
-              "context": "PractitionerDirectory",
-              "element": "qualification",
-              "variable": "tgtPractitionerDirectoryQualification6da58337",
-              "contextType": "variable"
-            }
-          ],
-          "rule": [
+            },
             {
               "name": "PractitionerQualificationPeriode7fc59e2",
               "source": [
                 {
-                  "context": "KBVPRFORPractitioner",
-                  "element": "qualification",
-                  "variable": "srcKBVPRFORPractitionerQualificationeae165c6"
+                  "context": "srcKBVPRFORPractitionerQualificationeae165c6",
+                  "element": "period",
+                  "variable": "srcPractitionerQualificationPeriode7fc59e2"
                 }
               ],
-              "rule": [
+              "target": [
                 {
-                  "name": "PractitionerQualificationPeriode7fc59e2",
-                  "source": [
+                  "context": "tgtPractitionerDirectoryQualification6da58337",
+                  "contextType": "variable",
+                  "element": "period",
+                  "variable": "tgtPractitionerQualificationPeriode7fc59e2",
+                  "transform": "copy",
+                  "parameter": [
                     {
-                      "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                      "element": "period",
-                      "variable": "srcKBVPRFORPractitionerQualificationPeriod6a8b5dbb"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtPractitionerDirectoryQualification6da58337",
-                      "contextType": "variable",
-                      "element": "period",
-                      "variable": "tgtPractitionerDirectoryQualificationPerioda5a689a9",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcKBVPRFORPractitionerQualificationPeriod6a8b5dbb"
-                        }
-                      ]
+                      "valueId": "srcPractitionerQualificationPeriode7fc59e2"
                     }
                   ]
                 }
               ]
             }
-          ],
-          "source": [
-            {
-              "context": "KBVPRFORPractitioner"
-            }
-          ],
-          "documentation": "Automatic copy"
+          ]
         }
       ]
     }

@@ -19,6 +19,7 @@ class FieldNode:
     intent: str = "copy"  # copy | copy_other | fixed | manual | skip
     collapse_kind: tuple[str, str | None] | None = None
     can_collapse: bool = False
+    force_container: bool = False
     children: dict[str, "FieldNode"] = field(default_factory=dict)
 
     @property
