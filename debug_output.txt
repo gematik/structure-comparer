@@ -6,230 +6,6 @@
 [0;39m[39m  Jurisdiction: United States of America
 [0;39m[39mLoading
 [0;39m[39m  Loading FHIR v4.0 from hl7.fhir.r4.core#4.0.1
-[0;39m[39m  Load hl7.terminology.r4#6.2.0 - 4288 resources (00:04.532)
-[0;39m[39m  Load hl7.fhir.uv.extensions.r4#5.2.0 - 759 resources (00:01.014)
-[0;39m[39m  Loaded FHIR - 8265 resources (00:00.000)
-[0;39m[39m  Terminology server null - Version n/a: No Terminology Server (00:00.000)
-[0;39m[39m  Load hl7.fhir.uv.extensions.r5#5.2.0 - 759 resources (00:00.965)
-[0;39m[39m  Load hl7.terminology#7.0.0 - 4066 resources (00:00.412)
-[0;39m[39m  Load hl7.terminology.r5#6.5.0 - 4357 resources (00:00.607)
-[0;39m[39m  Load hl7.fhir.uv.extensions#5.3.0-ballot-tc1 - 823 resources (00:00.018)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.epa.medication#1.0.6-2/package - 37 resources (00:00.205)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.erezept-workflow.r4#1.5.2/package - 57 resources (00:00.278)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.fhir.directory#0.11.25/package - 76 resources (00:00.122)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/kbv.ita.erp#1.3.2/package - 26 resources (00:00.118)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/kbv.ita.for#1.2.0/package - 20 resources (00:00.084)
-[0;39m[39m  Package Summary: [hl7.fhir.r4.core#4.0.1, hl7.fhir.xver-extensions#0.1.0, hl7.terminology.r4#6.2.0, hl7.fhir.uv.extensions.r4#5.2.0, hl7.fhir.uv.extensions.r5#5.2.0, hl7.terminology#7.0.0, hl7.terminology.r5#6.5.0, hl7.fhir.uv.extensions#5.3.0-ballot-tc1]
-[0;39m[39m  Terminology Cache at /var/folders/j_/plh8yt0n069g_4787ynny2vm0000gn/T/default-tx-cache
-[0;39m[39m  Get set... 
-[0;39m[39m  ...go! (00:01.580)
-[0;39m[39mCached new session. Cache size = 1
-[0;39m[39mValidating
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72/StructureMap-KBVPrForOrganization-to-OrganizationDirectory.json
-[0;39m[39m 00:00.183
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/1d770fac-529d-4579-8ee4-f1fa3fa6f4ed/StructureMap-GEMErpPrMedication-to-EPAMedication.json
-[0;39m[39m 00:00.240
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationCompounding-to-EPAMedication.json
-[0;39m[39m 00:00.100
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationFreetext-to-EPAMedication.json
-[0;39m[39m 00:00.088
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationIngredient-to-EPAMedication.json
-[0;39m[39m 00:00.093
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationPzn-to-EPAMedication.json
-[0;39m[39m 00:00.083
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-router-to-EPAMedication.json
-[0;39m[39m 00:00.023
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702/StructureMap-KBVPrErpPrescription-to-EPAMedicationRequest.json
-[0;39m[39m 00:00.046
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/53861e21-1d1a-45bb-970a-79fbb3578dfd/StructureMap-GEMErpPrParCloseoperationInput-to-EPAOpProvideDispensationERPInputParameters.json
-[0;39m[39m 00:00.023
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/7d370a3d-3366-436d-8121-6d0fd50ec0f0/StructureMap-GEMErpPrMedicationdispense-to-EPAMedicationDispense.json
-[0;39m[39m 00:00.046
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/837f9230-c28e-426e-a32e-268702d6e853/StructureMap-KBVPrErpBundle-to-EPAOpProvidePrescriptionERPInputParameters.json
-[0;39m[39m 00:00.029
-[0;39m[39m  Validate /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31/StructureMap-KBVPrForPractitioner-to-PractitionerDirectory.json
-[0;39m[39m 00:00.022
-[0;39m[39mDone. Times: Loading: 00:09.957, validation: 00:00.985 (#12). Memory = 697Mb
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72/StructureMap-KBVPrForOrganization-to-OrganizationDirectory.json -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/1d770fac-529d-4579-8ee4-f1fa3fa6f4ed/StructureMap-GEMErpPrMedication-to-EPAMedication.json ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationCompounding-to-EPAMedication.json --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationFreetext-to-EPAMedication.json -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationIngredient-to-EPAMedication.json -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationPzn-to-EPAMedication.json ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-router-to-EPAMedication.json ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702/StructureMap-KBVPrErpPrescription-to-EPAMedicationRequest.json ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/53861e21-1d1a-45bb-970a-79fbb3578dfd/StructureMap-GEMErpPrParCloseoperationInput-to-EPAOpProvideDispensationERPInputParameters.json --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/7d370a3d-3366-436d-8121-6d0fd50ec0f0/StructureMap-GEMErpPrMedicationdispense-to-EPAMedicationDispense.json -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m*FAILURE*: 1 errors, 0 warnings, 0 notes
-[0;39m[39m  Error @ StructureMap.group[0].rule[2].target[0] (line 247, col14): The type 'srcGEMERPPRMedicationDispenseContained2be3294a' is not known
-[0;39m[39m----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/837f9230-c28e-426e-a32e-268702d6e853/StructureMap-KBVPrErpBundle-to-EPAOpProvidePrescriptionERPInputParameters.json ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39m-- /Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31/StructureMap-KBVPrForPractitioner-to-PractitionerDirectory.json -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39mSuccess: 0 errors, 0 warnings, 1 notes
-[0;39m[39m  Information: All OK
-[0;39m[39m----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[0;39m[39m
-[0;39m[39mDone. Times: Loading: 00:09.957, validation: 00:00.985 (#12). Max Memory = 4Gb
-[0;39m[39mFHIR Validation tool Version 6.7.7 (Git# 2d8d8912f9cc). Built 2025-11-06T08:04:31.494Z (32 days old)
-[0;39m[39m  Java:   21.0.7 from /Users/gematik/.sdkman/candidates/java/21.0.7-tem on aarch64 (64bit). 4096MB available
-[0;39m[39m  Paths:  Current = /Users/gematik/dev/tools/structure-comparer, Package Cache = /Users/gematik/.fhir/packages
-[0;39m[39m  Params: "structuremap-test/dgMP Mapping_2025-10/input_examples/example_837f9230-c28e-426e-a32e-268702d6e853_1.json" -transform https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpBundleMap -version 4.0.1 -output "structuremap-test/dgMP Mapping_2025-10/outputs/output_837f9230-c28e-426e-a32e-268702d6e853_1.json" -ig "structuremap-test/dgMP Mapping_2025-10/structuremaps/837f9230-c28e-426e-a32e-268702d6e853" -ig "structuremap-test/dgMP Mapping_2025-10/structuremaps/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72" -ig "structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601" -ig "structuremap-test/dgMP Mapping_2025-10/structuremaps/3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702" -ig "structuremap-test/dgMP Mapping_2025-10/structuremaps/e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31" -ig "structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.epa.medication#1.0.6-2/package" -ig "structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.erezept-workflow.r4#1.5.2/package" -ig "structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.fhir.directory#0.11.25/package" -ig "structure-comparer-projects/dgMP Mapping_2025-10/data/kbv.ita.erp#1.3.2/package" -ig "structure-comparer-projects/dgMP Mapping_2025-10/data/kbv.ita.for#1.2.0/package"
-[0;39m[39m  Locale: United States/US
-[0;39m[39m  Jurisdiction: United States of America
-[0;39m[39mLoading
-[0;39m[39m  Loading FHIR v4.0 from hl7.fhir.r4.core#4.0.1
-[0;39m[39m  Load hl7.terminology.r4#6.2.0 - 4288 resources (00:03.612)
-[0;39m[39m  Load hl7.fhir.uv.extensions.r4#5.2.0 - 759 resources (00:00.940)
-[0;39m[39m  Loaded FHIR - 8265 resources (00:00.000)
-[0;39m[39m  Terminology server http://tx.fhir.org - Version Connected to Terminology Server at http://tx.fhir.org (00:02.513)
-[0;39m[39m  Load hl7.fhir.uv.extensions.r5#5.2.0 - 759 resources (00:00.755)
-[0;39m[39m  Load hl7.terminology#7.0.0 - 4066 resources (00:00.346)
-[0;39m[39m  Load hl7.terminology.r5#6.5.0 - 4357 resources (00:00.712)
-[0;39m[39m  Load hl7.fhir.uv.extensions#5.3.0-ballot-tc1 - 823 resources (00:00.013)
-[0;39m[1;31m* load file: manifest.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[1;31m* load file: transformation.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[39m  Load structuremap-test/dgMP Mapping_2025-10/structuremaps/837f9230-c28e-426e-a32e-268702d6e853 - 1 resources (00:00.015)
-[0;39m[1;31m* load file: manifest.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[1;31m* load file: mapping.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[39m  Load structuremap-test/dgMP Mapping_2025-10/structuremaps/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72 - 1 resources (00:00.010)
-[0;39m[1;31m* load file: manifest.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[1;31m* load file: mapping.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[39m  Load structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601 - 5 resources (00:00.012)
-[0;39m[1;31m* load file: manifest.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[1;31m* load file: mapping.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[39m  Load structuremap-test/dgMP Mapping_2025-10/structuremaps/3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702 - 1 resources (00:00.003)
-[0;39m[1;31m* load file: manifest.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[1;31m* load file: mapping.json - ignored due to error: Unable to find resource type - maybe not a FHIR resource?
-[0;39m[39m  Load structuremap-test/dgMP Mapping_2025-10/structuremaps/e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31 - 1 resources (00:00.003)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.epa.medication#1.0.6-2/package - 37 resources (00:00.128)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.erezept-workflow.r4#1.5.2/package - 57 resources (00:00.106)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.fhir.directory#0.11.25/package - 76 resources (00:00.055)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/kbv.ita.erp#1.3.2/package - 26 resources (00:00.100)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/kbv.ita.for#1.2.0/package - 20 resources (00:00.078)
-[0;39m[39m  Package Summary: [hl7.fhir.r4.core#4.0.1, hl7.fhir.xver-extensions#0.1.0, hl7.terminology.r4#6.2.0, hl7.fhir.uv.extensions.r4#5.2.0, hl7.fhir.uv.extensions.r5#5.2.0, hl7.terminology#7.0.0, hl7.terminology.r5#6.5.0, hl7.fhir.uv.extensions#5.3.0-ballot-tc1]
-[0;39m[39m  Terminology Cache at /var/folders/j_/plh8yt0n069g_4787ynny2vm0000gn/T/default-tx-cache
-[0;39m[39m  Get set... 
-[0;39m[39m  ...go! (00:01.512)
-[0;39m[39mCached new session. Cache size = 1
-[0;39m[39m ...success
-[0;39m[39mDone. Times: Loading: 00:10.933. Max Memory = 4Gb
-[0;39m[39mFHIR Validation tool Version 6.7.7 (Git# 2d8d8912f9cc). Built 2025-11-06T08:04:31.494Z (32 days old)
-[0;39m[39m  Java:   21.0.7 from /Users/gematik/.sdkman/candidates/java/21.0.7-tem on aarch64 (64bit). 4096MB available
-[0;39m[39m  Paths:  Current = /Users/gematik/dev/tools/structure-comparer, Package Cache = /Users/gematik/.fhir/packages
-[0;39m[39m  Params: "structuremap-test/dgMP Mapping_2025-10/outputs/output_837f9230-c28e-426e-a32e-268702d6e853_1.json" -tx n/a -level error -version 4.0.1 -ig "structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.epa.medication#1.0.6-2/package" -ig de.gematik.epa.medication#1.0.6-2 -ig de.gematik.erezept-workflow.r4#1.5.2 -ig de.gematik.fhir.directory#0.11.25 -ig kbv.ita.erp#1.3.2 -ig kbv.ita.for#1.2.0 -profile https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters
-[0;39m[39m  Locale: United States/US
-[0;39m[39m  Jurisdiction: United States of America
-[0;39m[39mLoading
-[0;39m[39m  Loading FHIR v4.0 from hl7.fhir.r4.core#4.0.1
-[0;39m[39m  Load hl7.terminology.r4#6.2.0 - 4288 resources (00:03.718)
-[0;39m[39m  Load hl7.fhir.uv.extensions.r4#5.2.0 - 759 resources (00:00.983)
-[0;39m[39m  Loaded FHIR - 8265 resources (00:00.000)
-[0;39m[39m  Terminology server null - Version n/a: No Terminology Server (00:00.000)
-[0;39m[39m  Load hl7.fhir.uv.extensions.r5#5.2.0 - 759 resources (00:00.874)
-[0;39m[39m  Load hl7.terminology#7.0.0 - 4066 resources (00:00.312)
-[0;39m[39m  Load hl7.terminology.r5#6.5.0 - 4357 resources (00:00.575)
-[0;39m[39m  Load hl7.fhir.uv.extensions#5.3.0-ballot-tc1 - 823 resources (00:00.012)
-[0;39m[39m  Load structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.epa.medication#1.0.6-2/package - 37 resources (00:00.132)
-[0;39m[39m  Load hl7.terminology.r4#6.3.0 - 4339 resources (00:01.056)
-[0;39m[1;31mProblem constructing IG for de.basisprofil.r4#1.5.2: No IG canonical can be determined for package: de.basisprofil.r4#1.5.2
-[0;39m[39m  Load de.basisprofil.r4#1.5.2 - 185 resources (00:00.046)
-[0;39m[39m  Load de.ihe-d.terminology#3.0.1 - 32 resources (00:00.019)
-[0;39m[1;31mProblem constructing IG for de.gematik.fhir.directory#0.11.25: No IG canonical can be determined for package: de.gematik.fhir.directory#0.11.25
-[0;39m[39m  Load de.gematik.fhir.directory#0.11.25 - 76 resources (00:00.001)
-[0;39m[39m  Load de.gematik.terminology#1.0.5-4 - 41 resources (00:00.009)
-[0;39m[39m  Load de.gematik.ti#1.0.1 - 5 resources (00:00.002)
-[0;39m[39m  Load de.gematik.epa#1.0.6-2 - 21 resources (00:00.002)
-[0;39m[39m  Load de.gematik.epa.medication#1.0.6-2 - 37 resources (00:00.000)
-[0;39m[1;31mProblem constructing IG for de.gematik.erezept-workflow.r4#1.5.2: No IG canonical can be determined for package: de.gematik.erezept-workflow.r4#1.5.2
-[0;39m[39m  Load de.gematik.erezept-workflow.r4#1.5.2 - 57 resources (00:00.006)
-[0;39m[39m  Load de.gematik.fhir.directory#0.11.25 - 0 resources (00:00.002)
-[0;39m[1;31mProblem constructing IG for kbv.basis#1.7.0: No IG canonical can be determined for package: kbv.basis#1.7.0
-[0;39m[39m  Load kbv.basis#1.7.0 - 156 resources (00:00.017)
-[0;39m[1;31mProblem constructing IG for kbv.ita.for#1.2.0: No IG canonical can be determined for package: kbv.ita.for#1.2.0
-[0;39m[39m  Load kbv.ita.for#1.2.0 - 20 resources (00:00.006)
-[0;39m[1;31mProblem constructing IG for kbv.ita.erp#1.3.2: No IG canonical can be determined for package: kbv.ita.erp#1.3.2
-[0;39m[39m  Load kbv.ita.erp#1.3.2 - 26 resources (00:00.000)
-[0;39m[39m  Load kbv.ita.for#1.2.0 - 0 resources (00:00.001)
-[0;39m[39m  Package Summary: [hl7.fhir.r4.core#4.0.1, hl7.fhir.xver-extensions#0.1.0, hl7.terminology.r4#6.2.0, hl7.fhir.uv.extensions.r4#5.2.0, hl7.fhir.uv.extensions.r5#5.2.0, hl7.terminology#7.0.0, hl7.terminology.r5#6.5.0, hl7.fhir.uv.extensions#5.3.0-ballot-tc1, hl7.terminology.r4#6.3.0, de.basisprofil.r4#1.5.2, de.ihe-d.terminology#3.0.1, de.gematik.fhir.directory#0.11.25, de.gematik.terminology#1.0.5-4, de.gematik.ti#1.0.1, de.gematik.epa#1.0.6-2, de.gematik.epa.medication#1.0.6-2, de.gematik.erezept-workflow.r4#1.5.2, kbv.basis#1.7.0, kbv.ita.for#1.2.0, kbv.ita.erp#1.3.2]
-[0;39m[39m  Terminology Cache at /var/folders/j_/plh8yt0n069g_4787ynny2vm0000gn/T/default-tx-cache
-[0;39m[39m  Get set... 
-[0;39m[39m  ...go! (00:02.419)
-[0;39m[39mCached new session. Cache size = 1
-[0;39m[39mValidating
-[0;39m[39m  Profiles: [https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters]
-[0;39m[39m  Validate structuremap-test/dgMP Mapping_2025-10/outputs/output_837f9230-c28e-426e-a32e-268702d6e853_1.json
-[0;39m[39m 00:01.429
-[0;39m[39mDone. Times: Loading: 00:10.213, validation: 00:01.429. Memory = 1Gb
-[0;39m[39m
-[0;39m[39m*FAILURE*: 15 errors, 10 warnings, 0 notes
-[0;39m[39m  Error @ Parameters.parameter[0] (line 3, col4): Parameters.parameter:rxPrescription.part: minimum required = 6, but only found 4 (from https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters|1.0.6-2)
-[0;39m[39m  Error @ Parameters.parameter[0] (line 3, col4): Slice 'Parameters.parameter:rxPrescription.part:prescriptionId': a matching slice is required, but not found (from https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters|1.0.6-2). Note that other slices are allowed in addition to this required slice
-[0;39m[39m  Error @ Parameters.parameter[0] (line 3, col4): Slice 'Parameters.parameter:rxPrescription.part:authoredOn': a matching slice is required, but not found (from https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters|1.0.6-2). Note that other slices are allowed in addition to this required slice
-[0;39m[39m  Warning @ Parameters.parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.code.coding[0].system (line 10, col10): A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated
-[0;39m[39m  Warning @ Parameters.parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.code.coding[1] (line 10, col10): Coding has no system. A code with no system has no defined meaning, and it cannot be validated. A system should be provided
-[0;39m[39m  Warning @ Parameters.parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.code.coding[2].system (line 10, col10): A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated
-[0;39m[39m  Error @ Parameters.parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.code (line 10, col10): Medication.code.coding:pzn: max allowed = 1, but found 2 (from https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication|1.0.6-2)
-[0;39m[39m  Error @ Parameters.parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.code.coding[2] (line 18, col12): Medication.code.coding:pzn.code: minimum required = 1, but only found 0 (from https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication|1.0.6-2)
-[0;39m[39m  Warning @ Parameters.parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.form.coding[0].system (line 23, col10): A definition for CodeSystem 'https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM' could not be found, so the code cannot be validated
-[0;39m[39m  Warning @ Parameters.parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.form.coding[1].system (line 23, col10): A definition for CodeSystem 'https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM' could not be found, so the code cannot be validated
-[0;39m[39m  Error @ Parameters.parameter[0].part[1].resource/*MedicationRequest/43c2b7ae-ad11-4387-910a-e6b7a3c38d4f*/.subject (line 73, col10): MedicationRequest.subject.identifier: minimum required = 1, but only found 0 (from https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request|1.0.6-2)
-[0;39m[39m  Error @ Parameters.parameter[0].part[1].resource/*MedicationRequest/43c2b7ae-ad11-4387-910a-e6b7a3c38d4f*/.dispenseRequest.quantity (line 68, col12): MedicationRequest.dispenseRequest.quantity.system: minimum required = 1, but only found 0 (from https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request|1.0.6-2)
-[0;39m[39m  Error @ Parameters.parameter[0].part[1].resource/*MedicationRequest/43c2b7ae-ad11-4387-910a-e6b7a3c38d4f*/.dispenseRequest.quantity (line 68, col12): MedicationRequest.dispenseRequest.quantity.code: minimum required = 1, but only found 0 (from https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request|1.0.6-2)
-[0;39m[39m  Error @ Parameters.parameter[0].part[2].resource/*Organization/2a555cd3-0543-483c-88b3-f68647620962*/ (line 83, col8): Organization.identifier: minimum required = 1, but only found 0 (from https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory|0.11.25)
-[0;39m[39m  Error @ Parameters.parameter[0].part[2].resource/*Organization/2a555cd3-0543-483c-88b3-f68647620962*/ (line 83, col8): Slice 'Organization.identifier:TelematikID': a matching slice is required, but not found (from https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory|0.11.25). Note that other slices are allowed in addition to this required slice
-[0;39m[39m  Error @ Parameters.parameter[0].part[2].resource/*Organization/2a555cd3-0543-483c-88b3-f68647620962*/ (line 83, col8): Organization.type: minimum required = 1, but only found 0 (from https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory|0.11.25)
-[0;39m[39m  Error @ Parameters.parameter[0].part[3].resource/*Practitioner/d6f3b55d-3095-4655-96dc-da3bec21271c*/ (line 107, col8): Slice 'Practitioner.identifier:TelematikID': a matching slice is required, but not found (from https://gematik.de/fhir/directory/StructureDefinition/PractitionerDirectory|0.11.25). Note that other slices are allowed in addition to this required slice
-[0;39m[39m  Error @ Parameters.parameter[0].part[3].resource/*Practitioner/d6f3b55d-3095-4655-96dc-da3bec21271c*/.name[0] (line 120, col10): Practitioner.name.text: minimum required = 1, but only found 0 (from https://gematik.de/fhir/directory/StructureDefinition/PractitionerDirectory|0.11.25)
-[0;39m[39m  Error @ Parameters.parameter[0].part[3].resource/*Practitioner/d6f3b55d-3095-4655-96dc-da3bec21271c*/.qualification[0].code (line 132, col12): None of the codings provided are in the value set 'PractitionerQualificationVS' (https://gematik.de/fhir/directory/ValueSet/PractitionerQualificationVS|0.11.25), and a coding from this value set is required) (codes = https://fhir.kbv.de/CodeSystem/KBV_CS_FOR_Qualification_Type#00)
-[0;39m[39m  Error @ Parameters.parameter[0].part[3].resource/*Practitioner/d6f3b55d-3095-4655-96dc-da3bec21271c*/.qualification[1].code (line 140, col12): None of the codings provided are in the value set 'PractitionerQualificationVS' (https://gematik.de/fhir/directory/ValueSet/PractitionerQualificationVS|0.11.25), and a coding from this value set is required) (codes = https://fhir.kbv.de/CodeSystem/KBV_CS_FOR_Berufsbezeichnung#Berufsbezeichnung)
-[0;39m[39m  Warning @ Parameters.parameter[0].part[1].resource/*MedicationRequest/43c2b7ae-ad11-4387-910a-e6b7a3c38d4f*/.medication.ofType(Reference).parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.code.coding[0].system (line 10, col10): A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated
-[0;39m[39m  Warning @ Parameters.parameter[0].part[1].resource/*MedicationRequest/43c2b7ae-ad11-4387-910a-e6b7a3c38d4f*/.medication.ofType(Reference).parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.code.coding[1] (line 10, col10): Coding has no system. A code with no system has no defined meaning, and it cannot be validated. A system should be provided
-[0;39m[39m  Warning @ Parameters.parameter[0].part[1].resource/*MedicationRequest/43c2b7ae-ad11-4387-910a-e6b7a3c38d4f*/.medication.ofType(Reference).parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.code.coding[2].system (line 10, col10): A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated
-[0;39m[39m  Warning @ Parameters.parameter[0].part[1].resource/*MedicationRequest/43c2b7ae-ad11-4387-910a-e6b7a3c38d4f*/.medication.ofType(Reference).parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.form.coding[0].system (line 23, col10): A definition for CodeSystem 'https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM' could not be found, so the code cannot be validated
-[0;39m[39m  Warning @ Parameters.parameter[0].part[1].resource/*MedicationRequest/43c2b7ae-ad11-4387-910a-e6b7a3c38d4f*/.medication.ofType(Reference).parameter[0].part[0].resource/*Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31*/.form.coding[1].system (line 23, col10): A definition for CodeSystem 'https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM' could not be found, so the code cannot be validated
-[0;39m[39mDone. Times: Loading: 00:10.213, validation: 00:01.429. Max Memory = 4Gb
 [0;39m[95m[dgMP Mapping_2025-10/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72] Downloading StructureMap from http://127.0.0.1:8000/project/dgMP%20Mapping_2025-10/mapping/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72/structuremap[0m
 [95m[dgMP Mapping_2025-10/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72] Downloading Mapping from http://127.0.0.1:8000/project/dgMP%20Mapping_2025-10/mapping/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72[0m
 [95m[dgMP Mapping_2025-10/1d770fac-529d-4579-8ee4-f1fa3fa6f4ed] Downloading StructureMap from http://127.0.0.1:8000/project/dgMP%20Mapping_2025-10/mapping/1d770fac-529d-4579-8ee4-f1fa3fa6f4ed/structuremap[0m
@@ -247,11 +23,28 @@
 [95m[dgMP Mapping_2025-10/837f9230-c28e-426e-a32e-268702d6e853] Downloading StructureMap from http://127.0.0.1:8000/project/dgMP%20Mapping_2025-10/transformation/837f9230-c28e-426e-a32e-268702d6e853/structuremap[0m
 [95m[dgMP Mapping_2025-10/837f9230-c28e-426e-a32e-268702d6e853] Downloading Transformation from http://127.0.0.1:8000/project/dgMP%20Mapping_2025-10/transformation/837f9230-c28e-426e-a32e-268702d6e853[0m
 [95m[dgMP Mapping_2025-10] Validating 12 StructureMap(s)[0m
-[dgMP Mapping_2025-10] StructureMap validation failed: Command '['java', '-jar', '/Users/gematik/dev/validators/current_hapi_validator.jar', '-tx', 'n/a', '-level', 'error', '-ig', 'hl7.fhir.r4.core#4.0.1', '-ig', 'structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.epa.medication#1.0.6-2/package', '-ig', 'structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.erezept-workflow.r4#1.5.2/package', '-ig', 'structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.fhir.directory#0.11.25/package', '-ig', 'structure-comparer-projects/dgMP Mapping_2025-10/data/kbv.ita.erp#1.3.2/package', '-ig', 'structure-comparer-projects/dgMP Mapping_2025-10/data/kbv.ita.for#1.2.0/package', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72/StructureMap-KBVPrForOrganization-to-OrganizationDirectory.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/1d770fac-529d-4579-8ee4-f1fa3fa6f4ed/StructureMap-GEMErpPrMedication-to-EPAMedication.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationCompounding-to-EPAMedication.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationFreetext-to-EPAMedication.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationIngredient-to-EPAMedication.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-KBVPrErpMedicationPzn-to-EPAMedication.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601/StructureMap-router-to-EPAMedication.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702/StructureMap-KBVPrErpPrescription-to-EPAMedicationRequest.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/53861e21-1d1a-45bb-970a-79fbb3578dfd/StructureMap-GEMErpPrParCloseoperationInput-to-EPAOpProvideDispensationERPInputParameters.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/7d370a3d-3366-436d-8121-6d0fd50ec0f0/StructureMap-GEMErpPrMedicationdispense-to-EPAMedicationDispense.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/837f9230-c28e-426e-a32e-268702d6e853/StructureMap-KBVPrErpBundle-to-EPAOpProvidePrescriptionERPInputParameters.json', '/Users/gematik/dev/tools/structure-comparer/structuremap-test/dgMP Mapping_2025-10/structuremaps/e64f9b0a-2a2a-4f8f-9b86-7b6f8f4d2d31/StructureMap-KBVPrForPractitioner-to-PractitionerDirectory.json']' returned non-zero exit status 1.
-[dgMP Mapping_2025-10] Continuing with transformations despite validation errors; see validator output above
-[95m[dgMP Mapping_2025-10] Running StructureMap transformations[0m
-[dgMP Mapping_2025-10/53861e21-1d1a-45bb-970a-79fbb3578dfd] No example input files found
-[95m[dgMP Mapping_2025-10/837f9230-c28e-426e-a32e-268702d6e853] Transforming example_837f9230-c28e-426e-a32e-268702d6e853_1.json via StructureMap[0m
-[95m[dgMP Mapping_2025-10/837f9230-c28e-426e-a32e-268702d6e853] Output written to structuremap-test/dgMP Mapping_2025-10/outputs/output_837f9230-c28e-426e-a32e-268702d6e853_1.json[0m
-[95m[dgMP Mapping_2025-10/837f9230-c28e-426e-a32e-268702d6e853] Validating output_837f9230-c28e-426e-a32e-268702d6e853_1.json against target profile https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters using Java validator[0m
-[dgMP Mapping_2025-10/837f9230-c28e-426e-a32e-268702d6e853] Output validation failed for output-1.json: Command '['java', '-jar', '/Users/gematik/dev/validators/current_hapi_validator.jar', 'structuremap-test/dgMP Mapping_2025-10/outputs/output_837f9230-c28e-426e-a32e-268702d6e853_1.json', '-tx', 'n/a', '-level', 'error', '-version', '4.0.1', '-ig', 'structure-comparer-projects/dgMP Mapping_2025-10/data/de.gematik.epa.medication#1.0.6-2/package', '-ig', 'de.gematik.epa.medication#1.0.6-2', '-ig', 'de.gematik.erezept-workflow.r4#1.5.2', '-ig', 'de.gematik.fhir.directory#0.11.25', '-ig', 'kbv.ita.erp#1.3.2', '-ig', 'kbv.ita.for#1.2.0', '-profile', 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-provide-prescription-erp-input-parameters']' returned non-zero exit status 1.
+Traceback (most recent call last):
+  File "/Users/gematik/dev/tools/structure-comparer/structuremap-test/run_structuremap_examples.py", line 805, in <module>
+    main()
+    ~~~~^^
+  File "/Users/gematik/dev/tools/structure-comparer/structuremap-test/run_structuremap_examples.py", line 204, in main
+    validation_ok = _validate_structuremaps(sorted(structure_map_paths), project_key)
+  File "/Users/gematik/dev/tools/structure-comparer/structuremap-test/run_structuremap_examples.py", line 422, in _validate_structuremaps
+    subprocess.run(cmd, cwd=REPO_ROOT, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.0_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 556, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.0_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1212, in communicate
+    self.wait()
+    ~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.0_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1278, in wait
+    return self._wait(timeout=timeout)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.0_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 2064, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ~~~~~~~~~~~~~~^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.0_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 2022, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

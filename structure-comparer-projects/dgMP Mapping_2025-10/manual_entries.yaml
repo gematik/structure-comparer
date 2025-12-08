@@ -202,10 +202,410 @@ entries:
     name: Organization.identifier
     other: null
     remark: Wird aus `idNummer` aus dem AccessToken übernommen, s. A_25947
-  - action: extension
+  - action: empty
     fixed: null
     name: Organization.type.coding:IHE-Code
-    other: Organization.type.coding
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.type.coding:HL7-Fachschluesselgruppe
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.type.coding:HL7-Fachschluesselgruppe-erweitert
+    other: null
+    remark: null
+  - action: not_use
+    fixed: null
+    name: Organization.type
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address
+    other: Organization.contact.address
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.id
+    other: Organization.contact.address.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.extension
+    other: Organization.contact.address.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.use
+    other: Organization.contact.address.use
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.type
+    other: Organization.contact.address.type
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.text
+    other: Organization.contact.address.text
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.line
+    other: Organization.contact.address.line
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.city
+    other: Organization.contact.address.city
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.district
+    other: Organization.contact.address.district
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.state
+    other: Organization.contact.address.state
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.postalCode
+    other: Organization.contact.address.postalCode
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.country
+    other: Organization.contact.address.country
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.contact.address.period
+    other: Organization.contact.address.period
+    remark: null
+  - action: extension
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen
+    other: Organization.identifier:IKNR
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.id
+    other: Organization.identifier:IKNR.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.extension
+    other: Organization.identifier:IKNR.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.use
+    other: Organization.identifier:IKNR.use
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type
+    other: Organization.identifier:IKNR.type
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type.id
+    other: Organization.identifier:IKNR.type.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type.extension
+    other: Organization.identifier:IKNR.type.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type.coding
+    other: Organization.identifier:IKNR.type.coding
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type.coding.id
+    other: Organization.identifier:IKNR.type.coding.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type.coding.extension
+    other: Organization.identifier:IKNR.type.coding.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type.coding.system
+    other: Organization.identifier:IKNR.type.coding.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type.coding.code
+    other: Organization.identifier:IKNR.type.coding.code
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.system
+    other: Organization.identifier:IKNR.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.value
+    other: Organization.identifier:IKNR.value
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.identifier:Institutionskennzeichen.type.coding.display
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer
+    other: Organization.identifier:BSNR
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.id
+    other: Organization.identifier:BSNR.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.extension
+    other: Organization.identifier:BSNR.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.use
+    other: Organization.identifier:BSNR.use
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type
+    other: Organization.identifier:BSNR.type
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type.id
+    other: Organization.identifier:BSNR.type.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type.extension
+    other: Organization.identifier:BSNR.type.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type.coding
+    other: Organization.identifier:BSNR.type.coding
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type.coding.id
+    other: Organization.identifier:BSNR.type.coding.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type.coding.extension
+    other: Organization.identifier:BSNR.type.coding.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type.coding.system
+    other: Organization.identifier:BSNR.type.coding.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type.coding.code
+    other: Organization.identifier:BSNR.type.coding.code
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.type.coding.display
+    other: null
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.assigner
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.system
+    other: Organization.identifier:BSNR.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Betriebsstaettennummer.value
+    other: Organization.identifier:BSNR.value
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.identifier:VKNR
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer
+    other: Organization.identifier:KZVA
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.id
+    other: Organization.identifier:KZVA.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.extension
+    other: Organization.identifier:KZVA.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.use
+    other: Organization.identifier:KZVA.use
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type
+    other: Organization.identifier:KZVA.type
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type.id
+    other: Organization.identifier:KZVA.type.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type.extension
+    other: Organization.identifier:KZVA.type.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type.coding
+    other: Organization.identifier:KZVA.type.coding
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type.coding.id
+    other: Organization.identifier:KZVA.type.coding.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type.coding.extension
+    other: Organization.identifier:KZVA.type.coding.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type.coding.system
+    other: Organization.identifier:KZVA.type.coding.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type.coding.code
+    other: Organization.identifier:KZVA.type.coding.code
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.type.coding.display
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.system
+    other: Organization.identifier:KZVA.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.value
+    other: Organization.identifier:KZVA.value
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.identifier:KZV-Abrechnungsnummer.assigner
+    other: null
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID
+    other: Organization.identifier:TelematikID
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.id
+    other: Organization.identifier:TelematikID.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.extension
+    other: Organization.identifier:TelematikID.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.use
+    other: Organization.identifier:TelematikID.use
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.type
+    other: Organization.identifier:TelematikID.type
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.type.id
+    other: Organization.identifier:TelematikID.type.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.type.extension
+    other: Organization.identifier:TelematikID.type.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.type.coding
+    other: Organization.identifier:TelematikID.type.coding
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.type.coding.id
+    other: Organization.identifier:TelematikID.type.coding.id
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.type.coding.extension
+    other: Organization.identifier:TelematikID.type.coding.extension
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.type.coding.system
+    other: Organization.identifier:TelematikID.type.coding.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.type.coding.code
+    other: Organization.identifier:TelematikID.type.coding.code
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.system
+    other: Organization.identifier:TelematikID.system
+    remark: null
+  - action: copy_to
+    fixed: null
+    name: Organization.identifier:Telematik-ID.value
+    other: Organization.identifier:TelematikID.value
+    remark: null
+  - action: empty
+    fixed: null
+    name: Organization.identifier:Standortnummer
+    other: null
+    remark: null
+  - action: extension
+    fixed: null
+    name: Organization.telecom:telefon
+    other: Organization.telecom
     remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
 - fields:

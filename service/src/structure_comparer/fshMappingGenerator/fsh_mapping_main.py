@@ -15,11 +15,11 @@ from datetime import datetime, timezone
 import json
 from typing import TYPE_CHECKING, Any, Iterable, Literal, Sequence, Optional
 
-from structure_comparer.model.mapping_action_models import ActionInfo
+from structure_comparer.model.mapping_action_models import ActionInfo, ActionType
 
 from .naming import normalize_ruleset_name, slug, stable_id, var_name
 from .nodes import FieldNode
-from .rule_builder import StructureMapRuleBuilder
+from .rule_builder import CHOICE_TYPE_SUFFIXES, StructureMapRuleBuilder
 from .tree_builder import FieldTreeBuilder
 from ..utils.structuremap_helpers import alias_from_profile
 
@@ -667,10 +667,10 @@ class _TransformationTargetPlan:
 @dataclass(frozen=True)
 class _TransformationFieldContext:
     field: "TransformationField"
-    mapping: "Mapping"
+    mapping: "Mapping" | None
     target_path: _TransformationPath
     source_alias: str
-    reference: _StructureMapReference
+    reference: _StructureMapReference | None
 
 
 class _TransformationTargetBuilder:
@@ -876,6 +876,180 @@ class _TransformationFieldRuleBuilder:
         return wrapped
 
 
+class _TransformationInlineFieldRuleBuilder:
+    def __init__(
+        self,
+        *,
+        field: "TransformationField",
+        source_alias: str,
+        target_alias: str,
+        target_path_override: _TransformationPath | None = None,
+    ) -> None:
+        self._field = field
+        self._source_alias = source_alias or "source"
+        self._target_alias = target_alias or "target"
+        self._target_path_override = target_path_override
+
+    def build(self) -> dict | None:
+        if not self._field.other:
+            return None
+
+        target_path = self._target_path_override or _TransformationPath.parse(self._field.other)
+        if not target_path.segments:
+            return None
+
+        action = getattr(self._field, "action", None)
+        requires_source = self._action_needs_source(action)
+        source_chain: list[dict]
+
+        if requires_source:
+            if not self._field.name:
+                return None
+            source_path = _TransformationPath.parse(self._field.name)
+            source_chain = self._build_source_chain(source_path)
+            if not source_chain:
+                return None
+        else:
+            source_chain = []
+
+        target_chain = self._build_target_chain(target_path)
+        if len(target_chain) != 1:
+            return None
+
+        rule_name = normalize_ruleset_name(
+            f"inline_{self._field.name or 'field'}_{stable_id(self._field.other or 'target')}"
+        )[:64]
+        documentation = self._build_documentation(action)
+
+        rule: dict = {"name": rule_name}
+        if documentation:
+            rule["documentation"] = documentation
+
+        if source_chain:
+            leaf_source = source_chain[-1]
+            source_entry = {
+                "context": leaf_source["context"],
+                "variable": leaf_source["variable"],
+            }
+            if leaf_source.get("element"):
+                source_entry["element"] = leaf_source["element"]
+            if leaf_source.get("condition"):
+                source_entry["condition"] = leaf_source["condition"]
+            rule["source"] = [source_entry]
+        else:
+            rule["source"] = [{"context": self._source_alias}]
+
+        leaf_target = target_chain[-1]
+        target_entry = {
+            "context": leaf_target["context"],
+            "contextType": "variable",
+            "element": leaf_target["element"],
+            "variable": leaf_target["variable"],
+            "transform": "copy",
+        }
+
+        if not requires_source:
+            target_entry["parameter"] = [{"valueString": self._field.fixed or ""}]
+        elif action == ActionType.FIXED:
+            target_entry["parameter"] = [{"valueString": self._field.fixed or ""}]
+        else:
+            target_entry["parameter"] = [{"valueId": source_chain[-1]["variable"]}]
+
+        rule["target"] = [target_entry]
+
+        if source_chain:
+            rule = self._wrap_with_source_chain(rule, source_chain[:-1])
+
+        return rule
+
+    def _action_needs_source(self, action: ActionType | None) -> bool:
+        if action is None:
+            return True
+        if action in {ActionType.EMPTY, ActionType.NOT_USE}:
+            return False
+        if action == ActionType.FIXED:
+            return False
+        if action == ActionType.MANUAL and getattr(self._field, "fixed", None):
+            return False
+        return True
+
+    def _build_source_chain(self, path: _TransformationPath) -> list[dict]:
+        clauses: list[dict] = []
+        context = self._source_alias
+
+        if not path.segments:
+            variable = var_name("inline_source", self._field.name or "source")
+            clauses.append({"context": context, "variable": variable})
+            return clauses
+
+        for idx, segment in enumerate(path.segments):
+            element = segment.name.split(":", 1)[0] if segment.name else "element"
+            variable = var_name("inline_source", f"{self._field.name}_{idx}_{element}")
+            clause: dict[str, str] = {"context": context, "variable": variable}
+            if element:
+                clause["element"] = element
+            clauses.append(clause)
+            context = variable
+
+        return clauses
+
+    def _build_target_chain(self, path: _TransformationPath) -> list[dict]:
+        entries: list[dict] = []
+        context = self._target_alias
+        for idx, segment in enumerate(path.segments):
+            element = segment.name.split(":", 1)[0] if segment.name else "element"
+            if element.endswith("[x]"):
+                element = element[:-3]
+            element = self._normalize_choice_element(element)
+            variable = var_name("inline_target", f"{path.raw or 'target'}_{idx}_{element}")
+            entries.append(
+                {
+                    "context": context,
+                    "element": element,
+                    "variable": variable,
+                }
+            )
+            context = variable
+        return entries
+
+    def _normalize_choice_element(self, element: str) -> str:
+        if not element.startswith("value"):
+            return element
+        suffix = element[len("value") :]
+        if not suffix:
+            return element
+        if suffix in CHOICE_TYPE_SUFFIXES:
+            return "value"
+        return element
+
+    def _wrap_with_source_chain(self, rule: dict, clauses: list[dict]) -> dict:
+        if not clauses:
+            return rule
+
+        documentation = rule.pop("documentation", None)
+        wrapped = rule
+        for clause in reversed(clauses):
+            wrapped = {
+                "name": wrapped.get("name"),
+                "source": [dict(clause)],
+                "rule": [wrapped],
+            }
+        if documentation:
+            wrapped["documentation"] = documentation
+        return wrapped
+
+    def _build_documentation(self, action: ActionType | None) -> str | None:
+        if action is None:
+            return None
+        descriptions = {
+            ActionType.COPY_TO: "Automatic copy",
+            ActionType.USE: "Automatic copy",
+            ActionType.FIXED: f"Fixed value '{self._field.fixed or ''}'",
+            ActionType.MANUAL: "Manual action required",
+        }
+        return descriptions.get(action)
+
+
 class _TransformationStructureMapBuilder:
     def __init__(
         self,
@@ -960,16 +1134,15 @@ class _TransformationStructureMapBuilder:
     def _build_rules(self) -> list[dict]:
         contexts: list[_TransformationFieldContext] = []
         for field in getattr(self._transformation, "fields", {}).values():
-            if not getattr(field, "map", None):
-                continue
-            mapping = getattr(self._project, "mappings", {}).get(field.map)
-            if mapping is None:
-                continue
             target_path = _TransformationPath.parse(getattr(field, "other", None))
             if not target_path.segments:
                 continue
+            map_id = getattr(field, "map", None)
+            mapping = getattr(self._project, "mappings", {}).get(map_id) if map_id else None
+            if map_id and mapping is None:
+                continue
             source_alias = self._resolve_source_alias(field)
-            reference = self._get_structuremap_reference(field.map, mapping)
+            reference = self._get_structuremap_reference(map_id, mapping) if mapping and map_id else None
             contexts.append(
                 _TransformationFieldContext(
                     field=field,
@@ -979,7 +1152,8 @@ class _TransformationStructureMapBuilder:
                     reference=reference,
                 )
             )
-            self._imports.add(reference.url)
+            if reference is not None:
+                self._imports.add(reference.url)
 
         parameter_groups: dict[str, list[_TransformationFieldContext]] = {}
         standalone_contexts: list[_TransformationFieldContext] = []
@@ -1012,6 +1186,15 @@ class _TransformationStructureMapBuilder:
         target_alias: str | None = None,
         target_path_override: _TransformationPath | None = None,
     ) -> dict | None:
+        if ctx.mapping is None or ctx.reference is None:
+            inline_builder = _TransformationInlineFieldRuleBuilder(
+                field=ctx.field,
+                source_alias=ctx.source_alias,
+                target_alias=target_alias or self._target_alias,
+                target_path_override=target_path_override,
+            )
+            return inline_builder.build()
+
         builder = _TransformationFieldRuleBuilder(
             field=ctx.field,
             mapping=ctx.mapping,

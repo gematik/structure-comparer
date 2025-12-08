@@ -98,6 +98,81 @@
           ]
         },
         {
+          "name": "OrganizationIdentifierBsnr085e94ac",
+          "documentation": "Copied from 'Organization.identifier:Betriebsstaettennummer'",
+          "source": [
+            {
+              "context": "KBVPRFOROrganization",
+              "element": "identifier",
+              "variable": "srcKBVPRFOROrganizationIdentifierBetriebsstaettennummer10bcc9e5"
+            }
+          ],
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "contextType": "variable",
+              "element": "identifier",
+              "variable": "tgtOrganizationDirectoryIdentifierBsnr5530a72d",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "srcKBVPRFOROrganizationIdentifierBetriebsstaettennummer10bcc9e5"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "OrganizationIdentifierIknr180282bd",
+          "documentation": "Copied from 'Organization.identifier:Institutionskennzeichen'",
+          "source": [
+            {
+              "context": "KBVPRFOROrganization",
+              "element": "identifier",
+              "variable": "srcKBVPRFOROrganizationIdentifierInstitutionskennzeichenf4e9068e"
+            }
+          ],
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "contextType": "variable",
+              "element": "identifier",
+              "variable": "tgtOrganizationDirectoryIdentifierIknr272d4c4d",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "srcKBVPRFOROrganizationIdentifierInstitutionskennzeichenf4e9068e"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "OrganizationIdentifierKzva468eb3ee",
+          "documentation": "Copied from 'Organization.identifier:KZV-Abrechnungsnummer'",
+          "source": [
+            {
+              "context": "KBVPRFOROrganization",
+              "element": "identifier",
+              "variable": "srcKBVPRFOROrganizationIdentifierKzvAbrechnungsnummerd991d7ce"
+            }
+          ],
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "contextType": "variable",
+              "element": "identifier",
+              "variable": "tgtOrganizationDirectoryIdentifierKzvac903ff4f",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "srcKBVPRFOROrganizationIdentifierKzvAbrechnungsnummerd991d7ce"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "OrganizationMetaTagOriginCodeae7288a8",
           "target": [
             {
