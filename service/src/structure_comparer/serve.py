@@ -37,6 +37,7 @@ from .errors import (
     ProjectNotFound,
 )
 from .handler.comparison import ComparisonHandler
+from .handler.dependency import DependencyHandler
 from .handler.mapping import MappingHandler
 from .handler.transformation import TransformationHandler, TransformationNotFound
 from .handler.target_creation import TargetCreationHandler, TargetCreationNotFound
@@ -87,6 +88,14 @@ from .evaluation import StatusAggregator
 from .model.package import Package as PackageModel
 from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
+from .model.package import PackageDownloadRequest as PackageDownloadRequestModel
+from .model.package import PackageDownloadResult as PackageDownloadResultModel
+from .model.package import BatchDownloadRequest as BatchDownloadRequestModel
+from .model.package import BatchDownloadResult as BatchDownloadResultModel
+from .model.package_dependency import (
+    DependencyAnalysisResult as DependencyAnalysisResultModel,
+    PackageDependencyInfo as PackageDependencyInfoModel,
+)
 from .model.profile import ProfileList as ProfileListModel
 from .model.profile import ProfileDetails as ProfileDetailsModel
 from .model.profile import ResolvedProfileFieldsResponse as ResolvedProfileFieldsResponseModel
@@ -365,6 +374,91 @@ async def update_package(
     return pkg
 
 
+@app.post(
+    "/project/{project_key}/package/download",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={400: {"error": {}}, 404: {"error": {}}, 502: {"error": {}}},
+)
+async def download_package_from_registry(
+    project_key: str,
+    request: PackageDownloadRequestModel,
+    response: Response,
+) -> PackageDownloadResultModel | ErrorModel:
+    """
+    Download a package from FHIR registries and add it to the project.
+    
+    The package will be downloaded from one of the following registries:
+    - packages.fhir.org
+    - packages2.fhir.org
+    - packages.simplifier.net
+    
+    The package must contain StructureDefinitions with snapshots.
+    After successful download, the project should be reloaded.
+    """
+    global package_handler
+    try:
+        from .errors import PackageDownloadFailed, PackageNotFoundInRegistry
+        
+        result = package_handler.download_from_registry(
+            project_key=project_key,
+            package_name=request.package_name,
+            version=request.version,
+        )
+        return result
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except PackageNotFoundInRegistry as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except PackageDownloadFailed as e:
+        response.status_code = 502
+        return ErrorModel.from_except(e)
+
+    except NotAllowed as e:
+        response.status_code = 400
+        return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/package/download-batch",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def download_packages_batch(
+    project_key: str,
+    request: BatchDownloadRequestModel,
+    response: Response,
+) -> BatchDownloadResultModel | ErrorModel:
+    """
+    Download multiple packages from FHIR registries and add them to the project.
+    
+    Useful for downloading all missing dependencies at once.
+    After successful download, the project should be reloaded.
+    """
+    global package_handler
+    try:
+        packages_to_download = [
+            (pkg.package_name, pkg.version) for pkg in request.packages
+        ]
+        result = package_handler.download_multiple_from_registry(
+            project_key=project_key,
+            packages=packages_to_download,
+        )
+        return result
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
 @app.get(
     "/project/{project_key}/profile",
     tags=["Profiles"],
@@ -440,6 +534,85 @@ async def get_resolved_profile_fields(
     global package_handler
     try:
         result = package_handler.get_resolved_profile_fields(project_key, profile_ids)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except PackageNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return result
+
+
+# ============================================================================
+# Dependencies Endpoints
+# ============================================================================
+
+
+@app.get(
+    "/project/{project_key}/dependencies/analyze",
+    tags=["Dependencies"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def analyze_dependencies(
+    project_key: str, response: Response
+) -> DependencyAnalysisResultModel | ErrorModel:
+    """
+    Analyzes package dependencies recursively for a project.
+
+    This endpoint:
+    1. Parses the dependencies from each package's package.json
+    2. Recursively resolves transitive dependencies
+    3. Identifies missing packages (direct and transitive)
+    4. Detects version conflicts where different packages require different versions
+
+    Returns:
+    - packages: List of all packages with their direct and transitive dependencies
+    - missing_dependencies: List of required packages not loaded in the project
+    - version_mismatches: List of packages with conflicting version requirements
+    """
+    global project_handler
+    try:
+        project = project_handler._get(project_key)
+        handler = DependencyHandler(project)
+        result = handler.analyze_dependencies()
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return result
+
+
+@app.get(
+    "/project/{project_key}/package/{package_id}/dependencies",
+    tags=["Dependencies"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def get_package_dependencies(
+    project_key: str, package_id: str, response: Response
+) -> PackageDependencyInfoModel | ErrorModel:
+    """
+    Returns dependency information for a single package.
+
+    This endpoint:
+    1. Parses the dependencies from the package's package.json
+    2. Recursively resolves transitive dependencies
+    3. Returns both direct and all (including transitive) dependencies
+    """
+    global project_handler
+    try:
+        project = project_handler._get(project_key)
+        handler = DependencyHandler(project)
+        result = handler.get_package_dependencies(package_id)
+
+        if result is None:
+            raise PackageNotFound()
 
     except ProjectNotFound as e:
         response.status_code = 404

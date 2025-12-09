@@ -82,3 +82,13 @@ class PackageNoSnapshots(Exception):
 class PackageAlreadyExists(Exception):
     def __init__(self, msg="Package already exists", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
+
+
+class PackageDownloadFailed(Exception):
+    def __init__(self, msg="Failed to download package from registry", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class PackageNotFoundInRegistry(Exception):
+    def __init__(self, msg="Package not found in any FHIR registry", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)

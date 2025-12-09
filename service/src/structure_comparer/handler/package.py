@@ -5,7 +5,9 @@ import tarfile
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Dict, List, Set, Any, Tuple
+from io import BytesIO
 
+import httpx
 from fastapi import UploadFile
 
 from ..data.package import Package
@@ -16,10 +18,13 @@ from ..errors import (
     PackageCorrupted,
     PackageNoSnapshots,
     PackageNotFound,
+    PackageDownloadFailed,
+    PackageNotFoundInRegistry,
 )
 from ..model.package import Package as PackageModel
 from ..model.package import PackageInput as PackageInputModel
 from ..model.package import PackageList as PackageListModel
+from ..model.package import PackageDownloadResult as PackageDownloadResultModel
 from ..model.profile import ProfileList as ProfileListModel
 from ..model.profile import ProfileDetails as ProfileDetailsModel
 from ..model.profile import ResolvedProfileField, ResolvedProfileFieldsResponse
@@ -27,6 +32,12 @@ from .project import ProjectsHandler
 
 logger = logging.getLogger(__name__)
 
+# FHIR Package Registries - order matters (first successful wins)
+FHIR_REGISTRIES = [
+    "https://packages.fhir.org",
+    "https://packages2.fhir.org", 
+    "https://packages.simplifier.net",
+]
 
 # Non-recursive FHIR resource types that don't have fields to load
 NON_RECURSIVE_PATTERNS = [
@@ -415,3 +426,213 @@ class PackageHandler:
         proj.pkgs.append(pkg)
 
         return pkg.to_model()
+
+    def download_from_registry(
+        self, proj_key: str, package_name: str, version: str
+    ) -> PackageDownloadResultModel:
+        """
+        Download a FHIR package from official registries and add it to the project.
+
+        Tries multiple registries in order until one succeeds.
+        The package must contain snapshots for StructureDefinitions.
+
+        Args:
+            proj_key: Project key to add the package to
+            package_name: FHIR package name (e.g., "kbv.basis")
+            version: Package version (e.g., "1.7.0")
+
+        Returns:
+            PackageDownloadResult with success status and details
+        """
+        package_key = f"{package_name}#{version}"
+        proj = self.project_handler._get(proj_key)
+
+        # Check if package already exists
+        existing_pkg = proj.get_package(package_key)
+        if existing_pkg:
+            return PackageDownloadResultModel(
+                success=False,
+                package_key=package_key,
+                message=f"Package {package_key} already exists in project",
+                registry_url=None,
+                package=existing_pkg.to_model(),
+            )
+
+        # Try each registry until one succeeds
+        last_error = None
+        for registry_url in FHIR_REGISTRIES:
+            try:
+                result = self._download_from_single_registry(
+                    proj, package_name, version, registry_url
+                )
+                if result.success:
+                    return result
+            except Exception as e:
+                last_error = e
+                logger.warning(
+                    f"Failed to download {package_key} from {registry_url}: {e}"
+                )
+                continue
+
+        # All registries failed
+        error_msg = f"Package {package_key} not found in any registry"
+        if last_error:
+            error_msg += f": {last_error}"
+
+        return PackageDownloadResultModel(
+            success=False,
+            package_key=package_key,
+            message=error_msg,
+            registry_url=None,
+            package=None,
+        )
+
+    def _download_from_single_registry(
+        self,
+        proj,
+        package_name: str,
+        version: str,
+        registry_url: str,
+    ) -> PackageDownloadResultModel:
+        """
+        Download a package from a single registry.
+
+        Args:
+            proj: Project to add the package to
+            package_name: Package name
+            version: Package version
+            registry_url: Registry base URL
+
+        Returns:
+            PackageDownloadResult
+        """
+        package_key = f"{package_name}#{version}"
+        download_url = f"{registry_url}/{package_name}/{version}"
+
+        logger.info(f"Attempting to download {package_key} from {download_url}")
+
+        # Download the package tarball
+        with httpx.Client(timeout=60.0, follow_redirects=True) as client:
+            response = client.get(download_url)
+
+            if response.status_code == 404:
+                return PackageDownloadResultModel(
+                    success=False,
+                    package_key=package_key,
+                    message=f"Package not found at {registry_url}",
+                    registry_url=registry_url,
+                    package=None,
+                )
+
+            if response.status_code != 200:
+                return PackageDownloadResultModel(
+                    success=False,
+                    package_key=package_key,
+                    message=f"HTTP {response.status_code} from {registry_url}",
+                    registry_url=registry_url,
+                    package=None,
+                )
+
+            package_data = response.content
+
+        # Process the downloaded tarball
+        with TemporaryDirectory() as tmp_dir:
+            tmp = Path(tmp_dir)
+            tmp_pkg_file = tmp / "package.tgz"
+            tmp_pkg_file.write_bytes(package_data)
+
+            try:
+                with tarfile.open(tmp_pkg_file) as tar_file:
+                    tar_file.extractall(tmp)
+            except tarfile.TarError as e:
+                return PackageDownloadResultModel(
+                    success=False,
+                    package_key=package_key,
+                    message=f"Failed to extract package: {e}",
+                    registry_url=registry_url,
+                    package=None,
+                )
+
+            pkg_info_file = tmp / "package/package.json"
+            if not pkg_info_file.exists():
+                return PackageDownloadResultModel(
+                    success=False,
+                    package_key=package_key,
+                    message="Package is corrupted (missing package.json)",
+                    registry_url=registry_url,
+                    package=None,
+                )
+
+            pkg_info = json.loads(pkg_info_file.read_text(encoding="utf-8"))
+
+            # Check for snapshots in StructureDefinitions
+            has_structure_definitions = False
+            missing_snapshots = False
+            for f in (tmp / "package").glob("**/*.json"):
+                try:
+                    content = json.loads(f.read_text(encoding="utf-8"))
+                    if content.get("resourceType") == "StructureDefinition":
+                        has_structure_definitions = True
+                        if not content.get("snapshot"):
+                            missing_snapshots = True
+                            break
+                except json.JSONDecodeError:
+                    continue
+
+            if has_structure_definitions and missing_snapshots:
+                return PackageDownloadResultModel(
+                    success=False,
+                    package_key=package_key,
+                    message="Package does not contain snapshots for StructureDefinitions",
+                    registry_url=registry_url,
+                    package=None,
+                )
+
+            # Create package directory
+            pkg_dir = Path(proj.data_dir) / f"{pkg_info['name']}#{pkg_info['version']}"
+
+            if pkg_dir.exists():
+                return PackageDownloadResultModel(
+                    success=False,
+                    package_key=package_key,
+                    message="Package directory already exists",
+                    registry_url=registry_url,
+                    package=None,
+                )
+
+            pkg_dir.mkdir()
+            shutil.copytree(tmp / "package", pkg_dir / "package")
+
+        # Create Package object and add to project
+        pkg = Package(pkg_dir, proj)
+        proj.pkgs.append(pkg)
+
+        logger.info(f"Successfully downloaded and installed {package_key} from {registry_url}")
+
+        return PackageDownloadResultModel(
+            success=True,
+            package_key=package_key,
+            message=f"Successfully downloaded from {registry_url}",
+            registry_url=registry_url,
+            package=pkg.to_model(),
+        )
+
+    def download_multiple_from_registry(
+        self, proj_key: str, packages: list[tuple[str, str]]
+    ) -> list[PackageDownloadResultModel]:
+        """
+        Download multiple packages from registries.
+
+        Args:
+            proj_key: Project key
+            packages: List of (package_name, version) tuples
+
+        Returns:
+            List of download results
+        """
+        results = []
+        for package_name, version in packages:
+            result = self.download_from_registry(proj_key, package_name, version)
+            results.append(result)
+        return results
+
