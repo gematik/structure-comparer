@@ -23,7 +23,6 @@ from ..errors import (
     FieldNotFound,
     MappingNotFound,
     MappingTargetMissing,
-    MappingTargetNotFound,
     MappingValueMissing,
     ProjectNotFound,
 )
@@ -151,13 +150,14 @@ class TransformationHandler:
             action=input.action
         )
 
-        # Handle COPY_FROM/COPY_TO actions - validate target field exists
+        # Handle COPY_FROM/COPY_TO actions - store the other field path
+        # Note: For COPY_FROM, 'other' is a source profile field path
+        # For COPY_TO, 'other' is a target profile field path
+        # We don't validate if the field exists as it may reference source profile fields
+        # that are not part of this transformation's target fields
         if input.action in [Action.COPY_FROM, Action.COPY_TO]:
             if target_id := input.other:
-                target = self._get_field_by_name(transformation, target_id)
-                if target is None:
-                    raise MappingTargetNotFound()
-                new_entry.other = target.name
+                new_entry.other = target_id
             else:
                 raise MappingTargetMissing()
         # For other actions, just pass through the 'other' field value (target profile field path)
