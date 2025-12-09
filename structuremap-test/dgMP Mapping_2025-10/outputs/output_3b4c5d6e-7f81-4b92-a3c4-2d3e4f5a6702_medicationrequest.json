@@ -3,6 +3,9 @@
   "id" : "000abe24-f690-481e-9a9f-1cd0eb434e2f",
   "status" : "active",
   "intent" : "order",
+  "subject" : {
+    "reference" : "urn:uuid:93866fdc-3e50-4902-a7e9-891b54737b5e"
+  },
   "medicationReference" : {
     "reference" : "urn:uuid:47076fb4-dc5c-4f75-85f6-b200033b3280"
   },
@@ -18,9 +21,6 @@
       "value" : 1,
       "unit" : "Packung"
     }
-  },
-  "subject" : {
-    "reference" : "urn:uuid:93866fdc-3e50-4902-a7e9-891b54737b5e"
   },
   "substitution" : {
     "allowedBoolean" : true

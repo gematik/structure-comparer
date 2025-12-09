@@ -46,6 +46,7 @@ class FieldTreeBuilder:
         self._build_tree()
         self._annotate_tree(self._root)
         self._propagate_requires_source(self._root)
+        self._apply_container_flags(self._root)
         self._collect_nodes(self._root)
         return FieldTreeResult(
             root=self._root,
@@ -285,6 +286,15 @@ class FieldTreeBuilder:
         node.requires_source = requires_source
         return requires_source
 
+    def _apply_container_flags(self, node: FieldNode) -> None:
+        for child in node.children.values():
+            self._apply_container_flags(child)
+
+        if self._needs_container_node(node):
+            node.force_container = True
+            if all(not child.requires_source for child in node.children.values()):
+                node.requires_source = False
+
     def _determine_intent(self, node: FieldNode) -> str:
         action = node.action
         if action is None and is_extension_path(node.path):
@@ -311,19 +321,31 @@ class FieldTreeBuilder:
         return "copy"
 
     def _collect_nodes(self, node: FieldNode) -> None:
+        slice_bases = self._collect_special_slice_bases(node)
         for child in sorted(node.children.values(), key=lambda item: item.path):
             if child.intent == "skip":
                 self._collect_nodes(child)
                 continue
 
+            if ":" not in child.segment and child.intent in {"copy", "copy_other", "copy_to"}:
+                base_name = child.segment
+                if base_name in slice_bases:
+                    continue
+
             if child.intent in {"copy", "copy_other", "copy_to"}:
                 is_extension_slice = is_extension_path(child.path) and ":" in child.path.split(".")[-1]
+                needs_container = self._needs_container_node(child)
 
                 if (child.can_collapse and child.depth >= 2) or is_extension_slice:
                     self._nodes_to_emit.append(child)
                 elif self._should_force_container(child):
                     child.force_container = True
                     self._nodes_to_emit.append(child)
+                elif needs_container:
+                    if child.depth >= 2:
+                        self._nodes_to_emit.append(child)
+                    else:
+                        self._collect_nodes(child)
                 else:
                     self._collect_nodes(child)
                 continue
@@ -341,6 +363,27 @@ class FieldTreeBuilder:
         if node.action == ActionType.USE_RECURSIVE:
             return True
         return self._is_repeating_field(node.path)
+
+    def _collect_special_slice_bases(self, node: FieldNode) -> set[str]:
+        bases: set[str] = set()
+        for child in node.children.values():
+            if ":" not in child.segment:
+                continue
+            if not self._needs_container_node(child):
+                continue
+            base = child.segment.split(":", 1)[0]
+            bases.add(base)
+        return bases
+
+    def _needs_container_node(self, node: FieldNode) -> bool:
+        if not node.children:
+            return False
+        if node.intent not in {"copy", "copy_other", "copy_to"}:
+            return False
+        for child in node.children.values():
+            if child.intent not in {"copy", "copy_other", "copy_to"}:
+                return True
+        return False
 
     def _is_repeating_field(self, path: str | None) -> bool:
         if not path:

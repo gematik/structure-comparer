@@ -17,10 +17,8 @@
             "code" : "07765007"
           },
           {
+            "system" : "http://fhir.de/CodeSystem/ifa/pzn",
             "code" : "07765007"
-          },
-          {
-            "system" : "http://fhir.de/CodeSystem/ifa/pzn"
           }],
           "text" : "NEUPRO 8MG/24H PFT 7 ST"
         },
@@ -58,6 +56,9 @@
         "id" : "43c2b7ae-ad11-4387-910a-e6b7a3c38d4f",
         "status" : "active",
         "intent" : "order",
+        "subject" : {
+          "reference" : "Patient/93866fdc-3e50-4902-a7e9-891b54737b5e"
+        },
         "medicationReference" : {
           "reference" : "Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31"
         },
@@ -74,9 +75,6 @@
             "unit" : "Packung"
           }
         },
-        "subject" : {
-          "reference" : "Patient/93866fdc-3e50-4902-a7e9-891b54737b5e"
-        },
         "substitution" : {
           "allowedBoolean" : true
         }
@@ -87,12 +85,6 @@
       "resource" : {
         "resourceType" : "Organization",
         "id" : "2a555cd3-0543-483c-88b3-f68647620962",
-        "meta" : {
-          "tag" : [{
-            "system" : "https://gematik.de/fhir/directory/CodeSystem/Origin",
-            "code" : "ldap"
-          }]
-        },
         "identifier" : [{
           "type" : {
             "coding" : [{
@@ -102,18 +94,13 @@
           },
           "system" : "https://fhir.kbv.de/NamingSystem/KBV_NS_Base_BSNR",
           "value" : "724444400"
-        },
-        {
-          "type" : {
-            "coding" : [{
-              "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
-              "code" : "BSNR"
-            }]
-          },
-          "system" : "https://fhir.kbv.de/NamingSystem/KBV_NS_Base_BSNR",
-          "value" : "724444400"
         }],
-        "name" : "Hausarztpraxis",
+        "meta" : {
+          "tag" : [{
+            "system" : "https://gematik.de/fhir/directory/CodeSystem/Origin",
+            "code" : "ldap"
+          }]
+        },
         "telecom" : [{
           "system" : "phone",
           "value" : "030321654987"

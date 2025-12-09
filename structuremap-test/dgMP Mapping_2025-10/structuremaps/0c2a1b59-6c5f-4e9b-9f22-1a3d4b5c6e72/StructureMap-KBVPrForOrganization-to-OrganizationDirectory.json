@@ -5,7 +5,7 @@
   "name": "KBVPrForOrganizationMap",
   "status": "active",
   "version": "1.0",
-  "date": "2025-12-08",
+  "date": "2025-12-09",
   "description": "Auto-generated StructureMap for KBV_PR_FOR_Organization|1.2.0 -> OrganizationDirectory|0.11.25",
   "structure": [
     {
@@ -90,83 +90,37 @@
         },
         {
           "name": "OrganizationIdentifiercd09dff1",
-          "documentation": "Manual action required | Wird aus `idNummer` aus dem AccessToken übernommen, s. A_25947",
-          "source": [
-            {
-              "context": "KBVPRFOROrganization"
-            }
-          ]
-        },
-        {
-          "name": "OrganizationIdentifierBsnr085e94ac",
-          "documentation": "Copied from 'Organization.identifier:Betriebsstaettennummer'",
-          "source": [
-            {
-              "context": "KBVPRFOROrganization",
-              "element": "identifier",
-              "variable": "srcKBVPRFOROrganizationIdentifierBetriebsstaettennummer10bcc9e5"
-            }
-          ],
-          "target": [
-            {
-              "context": "OrganizationDirectory",
-              "contextType": "variable",
-              "element": "identifier",
-              "variable": "tgtOrganizationDirectoryIdentifierBsnr5530a72d",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcKBVPRFOROrganizationIdentifierBetriebsstaettennummer10bcc9e5"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "OrganizationIdentifierKzva468eb3ee",
-          "documentation": "Copied from 'Organization.identifier:KZV-Abrechnungsnummer'",
-          "source": [
-            {
-              "context": "KBVPRFOROrganization",
-              "element": "identifier",
-              "variable": "srcKBVPRFOROrganizationIdentifierKzvAbrechnungsnummerd991d7ce"
-            }
-          ],
-          "target": [
-            {
-              "context": "OrganizationDirectory",
-              "contextType": "variable",
-              "element": "identifier",
-              "variable": "tgtOrganizationDirectoryIdentifierKzvac903ff4f",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcKBVPRFOROrganizationIdentifierKzvAbrechnungsnummerd991d7ce"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "OrganizationMeta89bf012b",
           "documentation": "Automatic copy",
           "source": [
             {
-              "context": "KBVPRFOROrganization"
+              "context": "KBVPRFOROrganization",
+              "element": "identifier",
+              "variable": "srcKBVPRFOROrganizationIdentifier520cdc39"
             }
           ],
           "target": [
             {
               "context": "OrganizationDirectory",
               "contextType": "variable",
-              "element": "meta",
-              "variable": "tgtOrganizationDirectoryMetacbe6e64f",
-              "transform": "create",
+              "element": "identifier",
+              "variable": "tgtOrganizationDirectoryIdentifierb9fb6742",
+              "transform": "copy",
               "parameter": [
                 {
-                  "valueString": "Meta"
+                  "valueId": "srcKBVPRFOROrganizationIdentifier520cdc39"
                 }
               ]
+            }
+          ]
+        },
+        {
+          "name": "OrganizationMetaTagOrigin65e28a80",
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "element": "meta",
+              "variable": "tgtOrganizationDirectoryMetacbe6e64f",
+              "contextType": "variable"
             }
           ],
           "rule": [
@@ -174,8 +128,7 @@
               "name": "OrganizationMetaTagOrigin65e28a80",
               "source": [
                 {
-                  "context": "KBVPRFOROrganization",
-                  "variable": "srcOrganizationMetaTagOrigin65e28a80"
+                  "context": "KBVPRFOROrganization"
                 }
               ],
               "target": [
@@ -183,7 +136,7 @@
                   "context": "tgtOrganizationDirectoryMetacbe6e64f",
                   "contextType": "variable",
                   "element": "tag",
-                  "variable": "tgtOrganizationMetaTagOrigin65e28a80",
+                  "variable": "tgtOrganizationDirectoryMetaTagOrigin615a7476",
                   "transform": "create",
                   "parameter": [
                     {
@@ -197,13 +150,13 @@
                   "name": "OrganizationMetaTagOriginCodeae7288a8",
                   "source": [
                     {
-                      "context": "srcOrganizationMetaTagOrigin65e28a80",
+                      "context": "KBVPRFOROrganization",
                       "variable": "srcOrganizationMetaTagOriginCodeae7288a8"
                     }
                   ],
                   "target": [
                     {
-                      "context": "tgtOrganizationMetaTagOrigin65e28a80",
+                      "context": "tgtOrganizationDirectoryMetaTagOrigin615a7476",
                       "contextType": "variable",
                       "element": "code",
                       "variable": "tgtOrganizationMetaTagOriginCodeae7288a8",
@@ -220,13 +173,13 @@
                   "name": "OrganizationMetaTagOriginSystem681676f7",
                   "source": [
                     {
-                      "context": "srcOrganizationMetaTagOrigin65e28a80",
+                      "context": "KBVPRFOROrganization",
                       "variable": "srcOrganizationMetaTagOriginSystem681676f7"
                     }
                   ],
                   "target": [
                     {
-                      "context": "tgtOrganizationMetaTagOrigin65e28a80",
+                      "context": "tgtOrganizationDirectoryMetaTagOrigin615a7476",
                       "contextType": "variable",
                       "element": "system",
                       "variable": "tgtOrganizationMetaTagOriginSystem681676f7",
@@ -241,55 +194,20 @@
                 }
               ]
             }
-          ]
-        },
-        {
-          "name": "OrganizationModifierextension94bb10c7",
-          "documentation": "Automatic copy",
+          ],
           "source": [
             {
-              "context": "KBVPRFOROrganization",
-              "element": "modifierExtension",
-              "variable": "srcKBVPRFOROrganizationModifierextensionb26e1635"
+              "context": "KBVPRFOROrganization"
             }
           ],
-          "target": [
-            {
-              "context": "OrganizationDirectory",
-              "contextType": "variable",
-              "element": "modifierExtension",
-              "variable": "tgtOrganizationDirectoryModifierextensionf13c3dbf",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcKBVPRFOROrganizationModifierextensionb26e1635"
-                }
-              ]
-            }
-          ]
+          "documentation": "Automatic copy"
         },
         {
           "name": "OrganizationName61d5a4f1",
-          "documentation": "Copied from 'Organization.name' | Kopiert den Namen aus der KBV-Organisation",
+          "documentation": "Manual action required | Kopiert den Namen aus der KBV-Organisation",
           "source": [
             {
-              "context": "KBVPRFOROrganization",
-              "element": "name",
-              "variable": "srcKBVPRFOROrganizationNameabbbdc85"
-            }
-          ],
-          "target": [
-            {
-              "context": "OrganizationDirectory",
-              "contextType": "variable",
-              "element": "name",
-              "variable": "tgtOrganizationDirectoryName0e007323",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcKBVPRFOROrganizationNameabbbdc85"
-                }
-              ]
+              "context": "KBVPRFOROrganization"
             }
           ]
         },
