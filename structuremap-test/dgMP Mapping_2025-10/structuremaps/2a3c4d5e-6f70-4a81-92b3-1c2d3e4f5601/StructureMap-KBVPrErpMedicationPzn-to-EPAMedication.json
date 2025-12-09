@@ -848,44 +848,18 @@
                   "name": "MedicationCodeCodingPznSystemdba2db89",
                   "source": [
                     {
-                      "context": "KBVPRERPMedicationCompounding",
-                      "element": "code",
-                      "variable": "srcKBVPRERPMedicationCompoundingCode19fc48cb"
+                      "context": "KBVPRERPMedicationCompounding"
                     }
                   ],
-                  "rule": [
+                  "target": [
                     {
-                      "name": "MedicationCodeCodingPznSystemdba2db89",
-                      "source": [
+                      "context": "tgtEPAMedicationCodeCodingPzn873c9e79",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
                         {
-                          "context": "srcKBVPRERPMedicationCompoundingCode19fc48cb",
-                          "element": "coding",
-                          "variable": "srcKBVPRERPMedicationCompoundingCodeCodingPzndb2f764b"
-                        }
-                      ],
-                      "rule": [
-                        {
-                          "name": "MedicationCodeCodingPznSystemdba2db89",
-                          "source": [
-                            {
-                              "context": "srcKBVPRERPMedicationCompoundingCodeCodingPzndb2f764b",
-                              "element": "system",
-                              "variable": "srcKBVPRERPMedicationCompoundingCodeCodingPznSystem1781e308"
-                            }
-                          ],
-                          "target": [
-                            {
-                              "context": "tgtEPAMedicationCodeCodingPzn873c9e79",
-                              "contextType": "variable",
-                              "element": "system",
-                              "transform": "copy",
-                              "parameter": [
-                                {
-                                  "valueString": "http://fhir.de/CodeSystem/ifa/pzn"
-                                }
-                              ]
-                            }
-                          ]
+                          "valueString": "http://fhir.de/CodeSystem/ifa/pzn"
                         }
                       ]
                     }
@@ -1121,8 +1095,8 @@
                       "source": [
                         {
                           "context": "srcKBVPRERPMedicationCompoundingFormCodingKbvdarreichungsfo8ae7e",
-                          "element": "code",
-                          "variable": "srcMedicationFormCodingKbvdarreichungsformCode174f9b5d"
+                          "variable": "srcMedicationFormCodingKbvdarreichungsformCode174f9b5d",
+                          "element": "code"
                         }
                       ],
                       "target": [
@@ -1145,8 +1119,8 @@
                       "source": [
                         {
                           "context": "srcKBVPRERPMedicationCompoundingFormCodingKbvdarreichungsfo8ae7e",
-                          "element": "display",
-                          "variable": "srcMedicationFormCodingKbvdarreichungsformDisplay682d1abe"
+                          "variable": "srcMedicationFormCodingKbvdarreichungsformDisplay682d1abe",
+                          "element": "display"
                         }
                       ],
                       "target": [
@@ -1169,8 +1143,8 @@
                       "source": [
                         {
                           "context": "srcKBVPRERPMedicationCompoundingFormCodingKbvdarreichungsfo8ae7e",
-                          "element": "id",
-                          "variable": "srcMedicationFormCodingKbvdarreichungsformId5c3a5dfc"
+                          "variable": "srcMedicationFormCodingKbvdarreichungsformId5c3a5dfc",
+                          "element": "id"
                         }
                       ],
                       "target": [
@@ -1193,7 +1167,6 @@
                       "source": [
                         {
                           "context": "srcKBVPRERPMedicationCompoundingFormCodingKbvdarreichungsfo8ae7e",
-                          "element": "system",
                           "variable": "srcMedicationFormCodingKbvdarreichungsformSystem24f022bc"
                         }
                       ],
@@ -1334,8 +1307,8 @@
               "source": [
                 {
                   "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
-                  "element": "id",
-                  "variable": "srcMedicationIngredientId69411acf"
+                  "variable": "srcMedicationIngredientId69411acf",
+                  "element": "id"
                 }
               ],
               "target": [
@@ -1358,8 +1331,8 @@
               "source": [
                 {
                   "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
-                  "element": "item",
-                  "variable": "srcMedicationIngredientItemXItemcodeableconcept79498202"
+                  "variable": "srcMedicationIngredientItemXItemcodeableconcept79498202",
+                  "element": "item"
                 }
               ],
               "target": [
@@ -1382,8 +1355,8 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "coding",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473"
+                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
+                      "element": "coding"
                     }
                   ],
                   "target": [
@@ -1406,8 +1379,8 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "coding",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc"
+                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                      "element": "coding"
                     }
                   ],
                   "target": [
@@ -1430,8 +1403,8 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "code",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e"
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e",
+                          "element": "code"
                         }
                       ],
                       "target": [
@@ -1454,8 +1427,8 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "id",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44"
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44",
+                          "element": "id"
                         }
                       ],
                       "target": [
@@ -1478,7 +1451,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "system",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a"
                         }
                       ],
@@ -1504,8 +1476,8 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "id",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptId1a42460f"
+                      "variable": "srcMedicationIngredientItemXItemcodeableconceptId1a42460f",
+                      "element": "id"
                     }
                   ],
                   "target": [
@@ -1528,8 +1500,8 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "text",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4"
+                      "variable": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4",
+                      "element": "text"
                     }
                   ],
                   "target": [
@@ -1554,8 +1526,8 @@
               "source": [
                 {
                   "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
-                  "element": "strength",
-                  "variable": "srcMedicationIngredientStrengthc9e22fc0"
+                  "variable": "srcMedicationIngredientStrengthc9e22fc0",
+                  "element": "strength"
                 }
               ],
               "target": [
@@ -1578,8 +1550,8 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "element": "denominator",
-                      "variable": "srcMedicationIngredientStrengthDenominatorde24b47d"
+                      "variable": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                      "element": "denominator"
                     }
                   ],
                   "target": [
@@ -1602,8 +1574,8 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "id",
-                          "variable": "srcMedicationIngredientStrengthDenominatorId0d7266f8"
+                          "variable": "srcMedicationIngredientStrengthDenominatorId0d7266f8",
+                          "element": "id"
                         }
                       ],
                       "target": [
@@ -1626,8 +1598,8 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "unit",
-                          "variable": "srcMedicationIngredientStrengthDenominatorUnite34c7ede"
+                          "variable": "srcMedicationIngredientStrengthDenominatorUnite34c7ede",
+                          "element": "unit"
                         }
                       ],
                       "target": [
@@ -1650,8 +1622,8 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "value",
-                          "variable": "srcMedicationIngredientStrengthDenominatorValuedc89d810"
+                          "variable": "srcMedicationIngredientStrengthDenominatorValuedc89d810",
+                          "element": "value"
                         }
                       ],
                       "target": [
@@ -1676,8 +1648,8 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "element": "id",
-                      "variable": "srcMedicationIngredientStrengthId4189648d"
+                      "variable": "srcMedicationIngredientStrengthId4189648d",
+                      "element": "id"
                     }
                   ],
                   "target": [
@@ -1700,8 +1672,8 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "element": "numerator",
-                      "variable": "srcMedicationIngredientStrengthNumerator70e21324"
+                      "variable": "srcMedicationIngredientStrengthNumerator70e21324",
+                      "element": "numerator"
                     }
                   ],
                   "target": [
@@ -1724,8 +1696,8 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "id",
-                          "variable": "srcMedicationIngredientStrengthNumeratorId4e9e18d4"
+                          "variable": "srcMedicationIngredientStrengthNumeratorId4e9e18d4",
+                          "element": "id"
                         }
                       ],
                       "target": [
@@ -1748,8 +1720,8 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "unit",
-                          "variable": "srcMedicationIngredientStrengthNumeratorUnit84581745"
+                          "variable": "srcMedicationIngredientStrengthNumeratorUnit84581745",
+                          "element": "unit"
                         }
                       ],
                       "target": [
@@ -1772,8 +1744,8 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "value",
-                          "variable": "srcMedicationIngredientStrengthNumeratorValue18459ad9"
+                          "variable": "srcMedicationIngredientStrengthNumeratorValue18459ad9",
+                          "element": "value"
                         }
                       ],
                       "target": [

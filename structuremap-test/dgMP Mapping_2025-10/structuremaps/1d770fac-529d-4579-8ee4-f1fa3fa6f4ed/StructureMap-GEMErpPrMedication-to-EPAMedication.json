@@ -38,1687 +38,6 @@
       ],
       "rule": [
         {
-          "name": "MedicationAmountac45bfbc",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "amount",
-              "variable": "srcGEMERPPRMedicationAmountf8a17419"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "amount",
-              "variable": "tgtEPAMedicationAmount30d45c22",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationAmountf8a17419"
-                }
-              ]
-            }
-          ],
-          "rule": [
-            {
-              "name": "MedicationAmountDenominator9360de0f",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationAmountf8a17419",
-                  "element": "denominator",
-                  "variable": "srcMedicationAmountDenominator9360de0f"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationAmount30d45c22",
-                  "contextType": "variable",
-                  "element": "denominator",
-                  "variable": "tgtMedicationAmountDenominator9360de0f",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Quantity"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationAmountDenominatorCode7b59c04b",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "element": "code",
-                      "variable": "srcMedicationAmountDenominatorCode7b59c04b"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationAmountDenominatorCode7b59c04b",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorCode7b59c04b"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountDenominatorComparatorbdf89a1f",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "element": "comparator",
-                      "variable": "srcMedicationAmountDenominatorComparatorbdf89a1f"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "comparator",
-                      "variable": "tgtMedicationAmountDenominatorComparatorbdf89a1f",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorComparatorbdf89a1f"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountDenominatorExtension00e02263",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "element": "extension",
-                      "variable": "srcMedicationAmountDenominatorExtension00e02263"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationAmountDenominatorExtension00e02263",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorExtension00e02263"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountDenominatorId76f03ade",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "element": "id",
-                      "variable": "srcMedicationAmountDenominatorId76f03ade"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationAmountDenominatorId76f03ade",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorId76f03ade"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountDenominatorSystembc6187f7",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "element": "system",
-                      "variable": "srcMedicationAmountDenominatorSystembc6187f7"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationAmountDenominatorSystembc6187f7",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorSystembc6187f7"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountDenominatorUnitd986f8f7",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "element": "unit",
-                      "variable": "srcMedicationAmountDenominatorUnitd986f8f7"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "unit",
-                      "variable": "tgtMedicationAmountDenominatorUnitd986f8f7",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorUnitd986f8f7"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountDenominatorValue23e41913",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "element": "value",
-                      "variable": "srcMedicationAmountDenominatorValue23e41913"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "value",
-                      "variable": "tgtMedicationAmountDenominatorValue23e41913",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorValue23e41913"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationAmountExtension41b016a4",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationAmountf8a17419",
-                  "element": "extension",
-                  "variable": "srcMedicationAmountExtension41b016a4"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationAmount30d45c22",
-                  "contextType": "variable",
-                  "element": "extension",
-                  "variable": "tgtMedicationAmountExtension41b016a4",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationAmountExtension41b016a4"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationAmountIde2069892",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationAmountf8a17419",
-                  "element": "id",
-                  "variable": "srcMedicationAmountIde2069892"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationAmount30d45c22",
-                  "contextType": "variable",
-                  "element": "id",
-                  "variable": "tgtMedicationAmountIde2069892",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationAmountIde2069892"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationAmountNumeratore3b2d8b0",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationAmountf8a17419",
-                  "element": "numerator",
-                  "variable": "srcMedicationAmountNumeratore3b2d8b0"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationAmount30d45c22",
-                  "contextType": "variable",
-                  "element": "numerator",
-                  "variable": "tgtMedicationAmountNumeratore3b2d8b0",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Quantity"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationAmountNumeratorCode438233e4",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "code",
-                      "variable": "srcMedicationAmountNumeratorCode438233e4"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationAmountNumeratorCode438233e4",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountNumeratorCode438233e4"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountNumeratorComparator22abf0d9",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "comparator",
-                      "variable": "srcMedicationAmountNumeratorComparator22abf0d9"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "comparator",
-                      "variable": "tgtMedicationAmountNumeratorComparator22abf0d9",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountNumeratorComparator22abf0d9"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountNumeratorExtension987f175e",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "extension",
-                      "variable": "srcMedicationAmountNumeratorExtension987f175e"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationAmountNumeratorExtension987f175e",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountNumeratorExtension987f175e"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountNumeratorExtensionPackagingsizef6b3096b",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "extension",
-                      "variable": "srcMedicationAmountNumeratorExtensionPackagingsizef6b3096b",
-                      "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-packaging-size-extension'"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationAmountNumeratorExtensionPackagingsizef6b3096b",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Extension"
-                        }
-                      ]
-                    },
-                    {
-                      "context": "tgtMedicationAmountNumeratorExtensionPackagingsizef6b3096b",
-                      "contextType": "variable",
-                      "element": "url",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-packaging-size-extension"
-                        }
-                      ]
-                    }
-                  ],
-                  "rule": [
-                    {
-                      "name": "MedicationAmountNumeratorExtensionPackagingsizeId78577ffc",
-                      "source": [
-                        {
-                          "context": "srcMedicationAmountNumeratorExtensionPackagingsizef6b3096b",
-                          "element": "id",
-                          "variable": "srcMedicationAmountNumeratorExtensionPackagingsizeId78577ffc"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationAmountNumeratorExtensionPackagingsizef6b3096b",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationAmountNumeratorExtensionPackagingsizeId78577ffc",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationAmountNumeratorExtensionPackagingsizeId78577ffc"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "name": "MedicationAmountNumeratorExtensionPackagingsizeValueX13e917f5",
-                      "source": [
-                        {
-                          "context": "srcMedicationAmountNumeratorExtensionPackagingsizef6b3096b",
-                          "element": "value",
-                          "variable": "srcMedicationAmountNumeratorExtensionPackagingsizeValueX13e917f5"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationAmountNumeratorExtensionPackagingsizef6b3096b",
-                          "contextType": "variable",
-                          "element": "value",
-                          "variable": "tgtMedicationAmountNumeratorExtensionPackagingsizeValueX13e917f5",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationAmountNumeratorExtensionPackagingsizeValueX13e917f5"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountNumeratorExtensionTotalquantitya5d82ef2",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "extension",
-                      "variable": "srcMedicationAmountNumeratorExtensionTotalquantitya5d82ef2",
-                      "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-total-quantity-formulation-extension'"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationAmountNumeratorExtensionTotalquantitya5d82ef2",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Extension"
-                        }
-                      ]
-                    },
-                    {
-                      "context": "tgtMedicationAmountNumeratorExtensionTotalquantitya5d82ef2",
-                      "contextType": "variable",
-                      "element": "url",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-total-quantity-formulation-extension"
-                        }
-                      ]
-                    }
-                  ],
-                  "rule": [
-                    {
-                      "name": "MedicationAmountNumeratorExtensionTotalquantityId2395ba1e",
-                      "source": [
-                        {
-                          "context": "srcMedicationAmountNumeratorExtensionTotalquantitya5d82ef2",
-                          "element": "id",
-                          "variable": "srcMedicationAmountNumeratorExtensionTotalquantityId2395ba1e"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationAmountNumeratorExtensionTotalquantitya5d82ef2",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationAmountNumeratorExtensionTotalquantityId2395ba1e",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationAmountNumeratorExtensionTotalquantityId2395ba1e"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "name": "MedicationAmountNumeratorExtensionTotalquantityValueXb909612c",
-                      "source": [
-                        {
-                          "context": "srcMedicationAmountNumeratorExtensionTotalquantitya5d82ef2",
-                          "element": "value",
-                          "variable": "srcMedicationAmountNumeratorExtensionTotalquantityValueXb909612c"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationAmountNumeratorExtensionTotalquantitya5d82ef2",
-                          "contextType": "variable",
-                          "element": "value",
-                          "variable": "tgtMedicationAmountNumeratorExtensionTotalquantityValueXb909612c",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationAmountNumeratorExtensionTotalquantityValueXb909612c"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountNumeratorIdf1d79fc7",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "id",
-                      "variable": "srcMedicationAmountNumeratorIdf1d79fc7"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationAmountNumeratorIdf1d79fc7",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountNumeratorIdf1d79fc7"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountNumeratorSystembc3063c9",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "system",
-                      "variable": "srcMedicationAmountNumeratorSystembc3063c9"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationAmountNumeratorSystembc3063c9",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountNumeratorSystembc3063c9"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountNumeratorUnit56268718",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "unit",
-                      "variable": "srcMedicationAmountNumeratorUnit56268718"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "unit",
-                      "variable": "tgtMedicationAmountNumeratorUnit56268718",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountNumeratorUnit56268718"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationAmountNumeratorValue61e6da12",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "element": "value",
-                      "variable": "srcMedicationAmountNumeratorValue61e6da12"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "value",
-                      "variable": "tgtMedicationAmountNumeratorValue61e6da12",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountNumeratorValue61e6da12"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationBatch235a7d75",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "batch",
-              "variable": "srcGEMERPPRMedicationBatchfd0322f4"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "batch",
-              "variable": "tgtEPAMedicationBatch90ce2ac1",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationBatchfd0322f4"
-                }
-              ]
-            }
-          ],
-          "rule": [
-            {
-              "name": "MedicationBatchExpirationdate7b923bc0",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationBatchfd0322f4",
-                  "element": "expirationDate",
-                  "variable": "srcMedicationBatchExpirationdate7b923bc0"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationBatch90ce2ac1",
-                  "contextType": "variable",
-                  "element": "expirationDate",
-                  "variable": "tgtMedicationBatchExpirationdate7b923bc0",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationBatchExpirationdate7b923bc0"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationBatchExtension56629e71",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationBatchfd0322f4",
-                  "element": "extension",
-                  "variable": "srcMedicationBatchExtension56629e71"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationBatch90ce2ac1",
-                  "contextType": "variable",
-                  "element": "extension",
-                  "variable": "tgtMedicationBatchExtension56629e71",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationBatchExtension56629e71"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationBatchIdb8d14759",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationBatchfd0322f4",
-                  "element": "id",
-                  "variable": "srcMedicationBatchIdb8d14759"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationBatch90ce2ac1",
-                  "contextType": "variable",
-                  "element": "id",
-                  "variable": "tgtMedicationBatchIdb8d14759",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationBatchIdb8d14759"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationBatchLotnumber690d6ea8",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationBatchfd0322f4",
-                  "element": "lotNumber",
-                  "variable": "srcMedicationBatchLotnumber690d6ea8"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationBatch90ce2ac1",
-                  "contextType": "variable",
-                  "element": "lotNumber",
-                  "variable": "tgtMedicationBatchLotnumber690d6ea8",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationBatchLotnumber690d6ea8"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationBatchModifierextensionaacdb268",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationBatchfd0322f4",
-                  "element": "modifierExtension",
-                  "variable": "srcMedicationBatchModifierextensionaacdb268"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationBatch90ce2ac1",
-                  "contextType": "variable",
-                  "element": "modifierExtension",
-                  "variable": "tgtMedicationBatchModifierextensionaacdb268",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationBatchModifierextensionaacdb268"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationCoded98e85bf",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "code",
-              "variable": "srcGEMERPPRMedicationCodee631168b"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "code",
-              "variable": "tgtEPAMedicationCodea6251800",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationCodee631168b"
-                }
-              ]
-            }
-          ],
-          "rule": [
-            {
-              "name": "MedicationCodeCoding9b1e4117",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationCodee631168b",
-                  "element": "coding",
-                  "variable": "srcMedicationCodeCoding9b1e4117"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationCodeCoding9b1e4117",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationCodeCoding9b1e4117"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationCodeCodingAskff818b7d",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationCodee631168b",
-                  "element": "coding",
-                  "variable": "srcMedicationCodeCodingAskff818b7d"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationCodeCodingAskff818b7d",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Coding"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationCodeCodingAskCodedf242711",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAskff818b7d",
-                      "element": "code",
-                      "variable": "srcMedicationCodeCodingAskCodedf242711"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAskff818b7d",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationCodeCodingAskCodedf242711",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAskCodedf242711"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAskDisplay0a1539bf",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAskff818b7d",
-                      "element": "display",
-                      "variable": "srcMedicationCodeCodingAskDisplay0a1539bf"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAskff818b7d",
-                      "contextType": "variable",
-                      "element": "display",
-                      "variable": "tgtMedicationCodeCodingAskDisplay0a1539bf",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAskDisplay0a1539bf"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAskExtension58ae0a89",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAskff818b7d",
-                      "element": "extension",
-                      "variable": "srcMedicationCodeCodingAskExtension58ae0a89"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAskff818b7d",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationCodeCodingAskExtension58ae0a89",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAskExtension58ae0a89"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAskId62dcde56",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAskff818b7d",
-                      "element": "id",
-                      "variable": "srcMedicationCodeCodingAskId62dcde56"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAskff818b7d",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationCodeCodingAskId62dcde56",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAskId62dcde56"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAskSystem81c3c970",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAskff818b7d",
-                      "element": "system",
-                      "variable": "srcMedicationCodeCodingAskSystem81c3c970"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAskff818b7d",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationCodeCodingAskSystem81c3c970",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAskSystem81c3c970"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAskUserselected09083201",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAskff818b7d",
-                      "element": "userSelected",
-                      "variable": "srcMedicationCodeCodingAskUserselected09083201"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAskff818b7d",
-                      "contextType": "variable",
-                      "element": "userSelected",
-                      "variable": "tgtMedicationCodeCodingAskUserselected09083201",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAskUserselected09083201"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAskVersion5cc35b12",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAskff818b7d",
-                      "element": "version",
-                      "variable": "srcMedicationCodeCodingAskVersion5cc35b12"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAskff818b7d",
-                      "contextType": "variable",
-                      "element": "version",
-                      "variable": "tgtMedicationCodeCodingAskVersion5cc35b12",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAskVersion5cc35b12"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationCodeCodingAtcDe6dd56a8e",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationCodee631168b",
-                  "element": "coding",
-                  "variable": "srcMedicationCodeCodingAtcDe6dd56a8e"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationCodeCodingAtcDe6dd56a8e",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Coding"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationCodeCodingAtcDeCode5d63d51a",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAtcDe6dd56a8e",
-                      "element": "code",
-                      "variable": "srcMedicationCodeCodingAtcDeCode5d63d51a"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAtcDe6dd56a8e",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationCodeCodingAtcDeCode5d63d51a",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAtcDeCode5d63d51a"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAtcDeDisplayf066410b",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAtcDe6dd56a8e",
-                      "element": "display",
-                      "variable": "srcMedicationCodeCodingAtcDeDisplayf066410b"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAtcDe6dd56a8e",
-                      "contextType": "variable",
-                      "element": "display",
-                      "variable": "tgtMedicationCodeCodingAtcDeDisplayf066410b",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAtcDeDisplayf066410b"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAtcDeExtension775b4cef",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAtcDe6dd56a8e",
-                      "element": "extension",
-                      "variable": "srcMedicationCodeCodingAtcDeExtension775b4cef"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAtcDe6dd56a8e",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationCodeCodingAtcDeExtension775b4cef",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAtcDeExtension775b4cef"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAtcDeIdd10a056f",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAtcDe6dd56a8e",
-                      "element": "id",
-                      "variable": "srcMedicationCodeCodingAtcDeIdd10a056f"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAtcDe6dd56a8e",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationCodeCodingAtcDeIdd10a056f",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAtcDeIdd10a056f"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAtcDeSystem3066dab5",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAtcDe6dd56a8e",
-                      "element": "system",
-                      "variable": "srcMedicationCodeCodingAtcDeSystem3066dab5"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAtcDe6dd56a8e",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationCodeCodingAtcDeSystem3066dab5",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAtcDeSystem3066dab5"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAtcDeUserselected8e222707",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAtcDe6dd56a8e",
-                      "element": "userSelected",
-                      "variable": "srcMedicationCodeCodingAtcDeUserselected8e222707"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAtcDe6dd56a8e",
-                      "contextType": "variable",
-                      "element": "userSelected",
-                      "variable": "tgtMedicationCodeCodingAtcDeUserselected8e222707",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAtcDeUserselected8e222707"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingAtcDeVersion47666c2c",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingAtcDe6dd56a8e",
-                      "element": "version",
-                      "variable": "srcMedicationCodeCodingAtcDeVersion47666c2c"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingAtcDe6dd56a8e",
-                      "contextType": "variable",
-                      "element": "version",
-                      "variable": "tgtMedicationCodeCodingAtcDeVersion47666c2c",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingAtcDeVersion47666c2c"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationCodeCodingPzn518bd133",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationCodee631168b",
-                  "element": "coding",
-                  "variable": "srcMedicationCodeCodingPzn518bd133"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationCodeCodingPzn518bd133",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Coding"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationCodeCodingPznCodef33b18f6",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingPzn518bd133",
-                      "element": "code",
-                      "variable": "srcMedicationCodeCodingPznCodef33b18f6"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingPzn518bd133",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationCodeCodingPznCodef33b18f6",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingPznCodef33b18f6"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingPznDisplay0e48110b",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingPzn518bd133",
-                      "element": "display",
-                      "variable": "srcMedicationCodeCodingPznDisplay0e48110b"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingPzn518bd133",
-                      "contextType": "variable",
-                      "element": "display",
-                      "variable": "tgtMedicationCodeCodingPznDisplay0e48110b",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingPznDisplay0e48110b"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingPznExtensiondcd23a60",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingPzn518bd133",
-                      "element": "extension",
-                      "variable": "srcMedicationCodeCodingPznExtensiondcd23a60"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingPzn518bd133",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationCodeCodingPznExtensiondcd23a60",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingPznExtensiondcd23a60"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingPznId3a4d4bf8",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingPzn518bd133",
-                      "element": "id",
-                      "variable": "srcMedicationCodeCodingPznId3a4d4bf8"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingPzn518bd133",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationCodeCodingPznId3a4d4bf8",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingPznId3a4d4bf8"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingPznSystemdba2db89",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingPzn518bd133",
-                      "element": "system",
-                      "variable": "srcMedicationCodeCodingPznSystemdba2db89"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingPzn518bd133",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationCodeCodingPznSystemdba2db89",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingPznSystemdba2db89"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingPznUserselected443d6959",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingPzn518bd133",
-                      "element": "userSelected",
-                      "variable": "srcMedicationCodeCodingPznUserselected443d6959"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingPzn518bd133",
-                      "contextType": "variable",
-                      "element": "userSelected",
-                      "variable": "tgtMedicationCodeCodingPznUserselected443d6959",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingPznUserselected443d6959"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingPznVersionb1b87917",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingPzn518bd133",
-                      "element": "version",
-                      "variable": "srcMedicationCodeCodingPznVersionb1b87917"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingPzn518bd133",
-                      "contextType": "variable",
-                      "element": "version",
-                      "variable": "tgtMedicationCodeCodingPznVersionb1b87917",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingPznVersionb1b87917"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationCodeCodingSnomed1403d64c",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationCodee631168b",
-                  "element": "coding",
-                  "variable": "srcMedicationCodeCodingSnomed1403d64c"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationCodeCodingSnomed1403d64c",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Coding"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationCodeCodingSnomedCode21a6dbf3",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingSnomed1403d64c",
-                      "element": "code",
-                      "variable": "srcMedicationCodeCodingSnomedCode21a6dbf3"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingSnomed1403d64c",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationCodeCodingSnomedCode21a6dbf3",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingSnomedCode21a6dbf3"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingSnomedDisplay5af0eaef",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingSnomed1403d64c",
-                      "element": "display",
-                      "variable": "srcMedicationCodeCodingSnomedDisplay5af0eaef"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingSnomed1403d64c",
-                      "contextType": "variable",
-                      "element": "display",
-                      "variable": "tgtMedicationCodeCodingSnomedDisplay5af0eaef",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingSnomedDisplay5af0eaef"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingSnomedExtension17298e07",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingSnomed1403d64c",
-                      "element": "extension",
-                      "variable": "srcMedicationCodeCodingSnomedExtension17298e07"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingSnomed1403d64c",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationCodeCodingSnomedExtension17298e07",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingSnomedExtension17298e07"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingSnomedIdc76ab076",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingSnomed1403d64c",
-                      "element": "id",
-                      "variable": "srcMedicationCodeCodingSnomedIdc76ab076"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingSnomed1403d64c",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationCodeCodingSnomedIdc76ab076",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingSnomedIdc76ab076"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingSnomedSystemc2fc6c9c",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingSnomed1403d64c",
-                      "element": "system",
-                      "variable": "srcMedicationCodeCodingSnomedSystemc2fc6c9c"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingSnomed1403d64c",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationCodeCodingSnomedSystemc2fc6c9c",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingSnomedSystemc2fc6c9c"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingSnomedUserselected02a870d2",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingSnomed1403d64c",
-                      "element": "userSelected",
-                      "variable": "srcMedicationCodeCodingSnomedUserselected02a870d2"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingSnomed1403d64c",
-                      "contextType": "variable",
-                      "element": "userSelected",
-                      "variable": "tgtMedicationCodeCodingSnomedUserselected02a870d2",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingSnomedUserselected02a870d2"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationCodeCodingSnomedVersiona02f9147",
-                  "source": [
-                    {
-                      "context": "srcMedicationCodeCodingSnomed1403d64c",
-                      "element": "version",
-                      "variable": "srcMedicationCodeCodingSnomedVersiona02f9147"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationCodeCodingSnomed1403d64c",
-                      "contextType": "variable",
-                      "element": "version",
-                      "variable": "tgtMedicationCodeCodingSnomedVersiona02f9147",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationCodeCodingSnomedVersiona02f9147"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationCodeExtension8124f966",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationCodee631168b",
-                  "element": "extension",
-                  "variable": "srcMedicationCodeExtension8124f966"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "extension",
-                  "variable": "tgtMedicationCodeExtension8124f966",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationCodeExtension8124f966"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationCodeIdae69aeee",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationCodee631168b",
-                  "element": "id",
-                  "variable": "srcMedicationCodeIdae69aeee"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "id",
-                  "variable": "tgtMedicationCodeIdae69aeee",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationCodeIdae69aeee"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationCodeText75c8453e",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationCodee631168b",
-                  "element": "text",
-                  "variable": "srcMedicationCodeText75c8453e"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "text",
-                  "variable": "tgtMedicationCodeText75c8453e",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationCodeText75c8453e"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
           "name": "MedicationContainedadc2ca88",
           "documentation": "Automatic copy",
           "source": [
@@ -1744,39 +63,11 @@
           ]
         },
         {
-          "name": "MedicationExtension9f8d5121",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtension58cce3e7"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "extension",
-              "variable": "tgtEPAMedicationExtension59cd7688",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationExtension58cce3e7"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "name": "MedicationExtensionDrugcategorye963e601",
           "documentation": "Automatic copy | Inherited from Medication.extension",
           "source": [
             {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtensionDrugcategory9fa6bf64",
-              "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension' and url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension'"
+              "context": "GEMERPPRMedication"
             }
           ],
           "target": [
@@ -1809,8 +100,7 @@
               "name": "MedicationExtensionDrugcategoryIde021cb8d",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionDrugcategory9fa6bf64",
-                  "element": "id",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionDrugcategoryIde021cb8d"
                 }
               ],
@@ -1833,8 +123,7 @@
               "name": "MedicationExtensionDrugcategoryValueXbd04993e",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionDrugcategory9fa6bf64",
-                  "element": "value",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionDrugcategoryValueXbd04993e"
                 }
               ],
@@ -1858,7 +147,6 @@
                   "source": [
                     {
                       "context": "srcMedicationExtensionDrugcategoryValueXbd04993e",
-                      "element": "code",
                       "variable": "srcMedicationExtensionDrugcategoryValueXCodec72163f2"
                     }
                   ],
@@ -1882,7 +170,6 @@
                   "source": [
                     {
                       "context": "srcMedicationExtensionDrugcategoryValueXbd04993e",
-                      "element": "display",
                       "variable": "srcMedicationExtensionDrugcategoryValueXDisplay3216339d"
                     }
                   ],
@@ -1906,7 +193,6 @@
                   "source": [
                     {
                       "context": "srcMedicationExtensionDrugcategoryValueXbd04993e",
-                      "element": "extension",
                       "variable": "srcMedicationExtensionDrugcategoryValueXExtension1c97a27f"
                     }
                   ],
@@ -1930,7 +216,6 @@
                   "source": [
                     {
                       "context": "srcMedicationExtensionDrugcategoryValueXbd04993e",
-                      "element": "id",
                       "variable": "srcMedicationExtensionDrugcategoryValueXId1219e057"
                     }
                   ],
@@ -1954,7 +239,6 @@
                   "source": [
                     {
                       "context": "srcMedicationExtensionDrugcategoryValueXbd04993e",
-                      "element": "system",
                       "variable": "srcMedicationExtensionDrugcategoryValueXSystem2cf01aef"
                     }
                   ],
@@ -1978,7 +262,6 @@
                   "source": [
                     {
                       "context": "srcMedicationExtensionDrugcategoryValueXbd04993e",
-                      "element": "userSelected",
                       "variable": "srcMedicationExtensionDrugcategoryValueXUserselected626c2fc0"
                     }
                   ],
@@ -2002,7 +285,6 @@
                   "source": [
                     {
                       "context": "srcMedicationExtensionDrugcategoryValueXbd04993e",
-                      "element": "version",
                       "variable": "srcMedicationExtensionDrugcategoryValueXVersion3b9696cc"
                     }
                   ],
@@ -2030,10 +312,7 @@
           "documentation": "Automatic copy | Inherited from Medication.extension",
           "source": [
             {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtensionIsvaccine0334830f",
-              "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension' and url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension'"
+              "context": "GEMERPPRMedication"
             }
           ],
           "target": [
@@ -2066,8 +345,7 @@
               "name": "MedicationExtensionIsvaccineIdb9468475",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionIsvaccine0334830f",
-                  "element": "id",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionIsvaccineIdb9468475"
                 }
               ],
@@ -2090,8 +368,7 @@
               "name": "MedicationExtensionIsvaccineValueXac9b8b1e",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionIsvaccine0334830f",
-                  "element": "value",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionIsvaccineValueXac9b8b1e"
                 }
               ],
@@ -2117,10 +394,7 @@
           "documentation": "Automatic copy | Inherited from Medication.extension",
           "source": [
             {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtensionManufacturinginstructionsb0e0a82c",
-              "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension' and url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension'"
+              "context": "GEMERPPRMedication"
             }
           ],
           "target": [
@@ -2153,8 +427,7 @@
               "name": "MedicationExtensionManufacturinginstructionsId4ebe2ef1",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionManufacturinginstructionsb0e0a82c",
-                  "element": "id",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionManufacturinginstructionsId4ebe2ef1"
                 }
               ],
@@ -2177,8 +450,7 @@
               "name": "MedicationExtensionManufacturinginstructionsValueXb1e426a8",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionManufacturinginstructionsb0e0a82c",
-                  "element": "value",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionManufacturinginstructionsValueXb1e426a8"
                 }
               ],
@@ -2204,10 +476,7 @@
           "documentation": "Automatic copy | Inherited from Medication.extension",
           "source": [
             {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtensionNormsizecoded2051849",
-              "condition": "url = 'http://fhir.de/StructureDefinition/normgroesse' and url = 'http://fhir.de/StructureDefinition/normgroesse'"
+              "context": "GEMERPPRMedication"
             }
           ],
           "target": [
@@ -2240,8 +509,7 @@
               "name": "MedicationExtensionNormsizecodeId6cd6154b",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionNormsizecoded2051849",
-                  "element": "id",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionNormsizecodeId6cd6154b"
                 }
               ],
@@ -2264,8 +532,7 @@
               "name": "MedicationExtensionNormsizecodeValueX145c1bd0",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionNormsizecoded2051849",
-                  "element": "value",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionNormsizecodeValueX145c1bd0"
                 }
               ],
@@ -2291,10 +558,7 @@
           "documentation": "Automatic copy | Inherited from Medication.extension",
           "source": [
             {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtensionPackaging4f44148e",
-              "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension' and url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension'"
+              "context": "GEMERPPRMedication"
             }
           ],
           "target": [
@@ -2327,8 +591,7 @@
               "name": "MedicationExtensionPackagingIdcf5bb798",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionPackaging4f44148e",
-                  "element": "id",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionPackagingIdcf5bb798"
                 }
               ],
@@ -2351,8 +614,7 @@
               "name": "MedicationExtensionPackagingValueX38da2ad0",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationExtensionPackaging4f44148e",
-                  "element": "value",
+                  "context": "GEMERPPRMedication",
                   "variable": "srcMedicationExtensionPackagingValueX38da2ad0"
                 }
               ],
@@ -2366,763 +628,6 @@
                   "parameter": [
                     {
                       "valueId": "srcMedicationExtensionPackagingValueX38da2ad0"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationExtensionRxprescriptionprocessidentifierc854df8e",
-          "documentation": "Automatic copy | Inherited from Medication.extension",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtensionRxprescriptionprocessidentifi167cb",
-              "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier-extension' and url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier-extension'"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "extension",
-              "variable": "tgtEPAMedicationExtensionRxprescriptionprocessidentifier9f8cad06",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationExtensionRxprescriptionprocessidentifi167cb"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationExtensionType61374588",
-          "documentation": "Automatic copy | Inherited from Medication.extension",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtensionTypeee167fd8",
-              "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-type-extension' and url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-type-extension'"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "extension",
-              "variable": "tgtEPAMedicationExtensionType1a2ef415",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationExtensionTypeee167fd8"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationForm5a0bbd5f",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "form",
-              "variable": "srcGEMERPPRMedicationForm31b31e80"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "form",
-              "variable": "tgtEPAMedicationForm691ed321",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationForm31b31e80"
-                }
-              ]
-            }
-          ],
-          "rule": [
-            {
-              "name": "MedicationFormCoding8cc715fa",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationForm31b31e80",
-                  "element": "coding",
-                  "variable": "srcMedicationFormCoding8cc715fa"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationForm691ed321",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationFormCoding8cc715fa",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationFormCoding8cc715fa"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationFormCodingEdqm8037629d",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationForm31b31e80",
-                  "element": "coding",
-                  "variable": "srcMedicationFormCodingEdqm8037629d"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationForm691ed321",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationFormCodingEdqm8037629d",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Coding"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationFormCodingEdqmCode122b7318",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingEdqm8037629d",
-                      "element": "code",
-                      "variable": "srcMedicationFormCodingEdqmCode122b7318"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingEdqm8037629d",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationFormCodingEdqmCode122b7318",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingEdqmCode122b7318"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingEdqmDisplaya28b19fe",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingEdqm8037629d",
-                      "element": "display",
-                      "variable": "srcMedicationFormCodingEdqmDisplaya28b19fe"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingEdqm8037629d",
-                      "contextType": "variable",
-                      "element": "display",
-                      "variable": "tgtMedicationFormCodingEdqmDisplaya28b19fe",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingEdqmDisplaya28b19fe"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingEdqmExtension8f1f29c2",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingEdqm8037629d",
-                      "element": "extension",
-                      "variable": "srcMedicationFormCodingEdqmExtension8f1f29c2"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingEdqm8037629d",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationFormCodingEdqmExtension8f1f29c2",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingEdqmExtension8f1f29c2"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingEdqmIdacadef7a",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingEdqm8037629d",
-                      "element": "id",
-                      "variable": "srcMedicationFormCodingEdqmIdacadef7a"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingEdqm8037629d",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationFormCodingEdqmIdacadef7a",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingEdqmIdacadef7a"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingEdqmSystemd4f0f067",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingEdqm8037629d",
-                      "element": "system",
-                      "variable": "srcMedicationFormCodingEdqmSystemd4f0f067"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingEdqm8037629d",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationFormCodingEdqmSystemd4f0f067",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingEdqmSystemd4f0f067"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingEdqmUserselected68fcb4dc",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingEdqm8037629d",
-                      "element": "userSelected",
-                      "variable": "srcMedicationFormCodingEdqmUserselected68fcb4dc"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingEdqm8037629d",
-                      "contextType": "variable",
-                      "element": "userSelected",
-                      "variable": "tgtMedicationFormCodingEdqmUserselected68fcb4dc",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingEdqmUserselected68fcb4dc"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingEdqmVersionfa7a3cbe",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingEdqm8037629d",
-                      "element": "version",
-                      "variable": "srcMedicationFormCodingEdqmVersionfa7a3cbe"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingEdqm8037629d",
-                      "contextType": "variable",
-                      "element": "version",
-                      "variable": "tgtMedicationFormCodingEdqmVersionfa7a3cbe",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingEdqmVersionfa7a3cbe"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationFormCodingKbvdarreichungsforme32ce40b",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationForm31b31e80",
-                  "element": "coding",
-                  "variable": "srcMedicationFormCodingKbvdarreichungsforme32ce40b"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationForm691ed321",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationFormCodingKbvdarreichungsforme32ce40b",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Coding"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationFormCodingKbvdarreichungsformCode174f9b5d",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "element": "code",
-                      "variable": "srcMedicationFormCodingKbvdarreichungsformCode174f9b5d"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationFormCodingKbvdarreichungsformCode174f9b5d",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingKbvdarreichungsformCode174f9b5d"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingKbvdarreichungsformDisplay682d1abe",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "element": "display",
-                      "variable": "srcMedicationFormCodingKbvdarreichungsformDisplay682d1abe"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "contextType": "variable",
-                      "element": "display",
-                      "variable": "tgtMedicationFormCodingKbvdarreichungsformDisplay682d1abe",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingKbvdarreichungsformDisplay682d1abe"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingKbvdarreichungsformExtension666bc7fd",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "element": "extension",
-                      "variable": "srcMedicationFormCodingKbvdarreichungsformExtension666bc7fd"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationFormCodingKbvdarreichungsformExtension666bc7fd",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingKbvdarreichungsformExtension666bc7fd"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingKbvdarreichungsformId5c3a5dfc",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "element": "id",
-                      "variable": "srcMedicationFormCodingKbvdarreichungsformId5c3a5dfc"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationFormCodingKbvdarreichungsformId5c3a5dfc",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingKbvdarreichungsformId5c3a5dfc"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingKbvdarreichungsformSystem24f022bc",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "element": "system",
-                      "variable": "srcMedicationFormCodingKbvdarreichungsformSystem24f022bc"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationFormCodingKbvdarreichungsformSystem24f022bc",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingKbvdarreichungsformSystem24f022bc"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingKbvdarreichungsformUserselectedde379a25",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "element": "userSelected",
-                      "variable": "srcMedicationFormCodingKbvdarreichungsformUserselectedde379a25"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "contextType": "variable",
-                      "element": "userSelected",
-                      "variable": "tgtMedicationFormCodingKbvdarreichungsformUserselectedde379a25",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingKbvdarreichungsformUserselectedde379a25"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingKbvdarreichungsformVersion5c1a3f46",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "element": "version",
-                      "variable": "srcMedicationFormCodingKbvdarreichungsformVersion5c1a3f46"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingKbvdarreichungsforme32ce40b",
-                      "contextType": "variable",
-                      "element": "version",
-                      "variable": "tgtMedicationFormCodingKbvdarreichungsformVersion5c1a3f46",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingKbvdarreichungsformVersion5c1a3f46"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationFormCodingSnomed953e60c9",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationForm31b31e80",
-                  "element": "coding",
-                  "variable": "srcMedicationFormCodingSnomed953e60c9"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationForm691ed321",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationFormCodingSnomed953e60c9",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Coding"
-                    }
-                  ]
-                }
-              ],
-              "rule": [
-                {
-                  "name": "MedicationFormCodingSnomedCode51fd4f1d",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingSnomed953e60c9",
-                      "element": "code",
-                      "variable": "srcMedicationFormCodingSnomedCode51fd4f1d"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingSnomed953e60c9",
-                      "contextType": "variable",
-                      "element": "code",
-                      "variable": "tgtMedicationFormCodingSnomedCode51fd4f1d",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingSnomedCode51fd4f1d"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingSnomedDisplay17c0c5c0",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingSnomed953e60c9",
-                      "element": "display",
-                      "variable": "srcMedicationFormCodingSnomedDisplay17c0c5c0"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingSnomed953e60c9",
-                      "contextType": "variable",
-                      "element": "display",
-                      "variable": "tgtMedicationFormCodingSnomedDisplay17c0c5c0",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingSnomedDisplay17c0c5c0"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingSnomedExtension712c5007",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingSnomed953e60c9",
-                      "element": "extension",
-                      "variable": "srcMedicationFormCodingSnomedExtension712c5007"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingSnomed953e60c9",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationFormCodingSnomedExtension712c5007",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingSnomedExtension712c5007"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingSnomedId4fcf3578",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingSnomed953e60c9",
-                      "element": "id",
-                      "variable": "srcMedicationFormCodingSnomedId4fcf3578"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingSnomed953e60c9",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationFormCodingSnomedId4fcf3578",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingSnomedId4fcf3578"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingSnomedSystem14c3392a",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingSnomed953e60c9",
-                      "element": "system",
-                      "variable": "srcMedicationFormCodingSnomedSystem14c3392a"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingSnomed953e60c9",
-                      "contextType": "variable",
-                      "element": "system",
-                      "variable": "tgtMedicationFormCodingSnomedSystem14c3392a",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingSnomedSystem14c3392a"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingSnomedUserselectede6846c06",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingSnomed953e60c9",
-                      "element": "userSelected",
-                      "variable": "srcMedicationFormCodingSnomedUserselectede6846c06"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingSnomed953e60c9",
-                      "contextType": "variable",
-                      "element": "userSelected",
-                      "variable": "tgtMedicationFormCodingSnomedUserselectede6846c06",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingSnomedUserselectede6846c06"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationFormCodingSnomedVersionf2c08b93",
-                  "source": [
-                    {
-                      "context": "srcMedicationFormCodingSnomed953e60c9",
-                      "element": "version",
-                      "variable": "srcMedicationFormCodingSnomedVersionf2c08b93"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationFormCodingSnomed953e60c9",
-                      "contextType": "variable",
-                      "element": "version",
-                      "variable": "tgtMedicationFormCodingSnomedVersionf2c08b93",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationFormCodingSnomedVersionf2c08b93"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationFormExtension4520fac8",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationForm31b31e80",
-                  "element": "extension",
-                  "variable": "srcMedicationFormExtension4520fac8"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationForm691ed321",
-                  "contextType": "variable",
-                  "element": "extension",
-                  "variable": "tgtMedicationFormExtension4520fac8",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationFormExtension4520fac8"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationFormId893b4834",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationForm31b31e80",
-                  "element": "id",
-                  "variable": "srcMedicationFormId893b4834"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationForm691ed321",
-                  "contextType": "variable",
-                  "element": "id",
-                  "variable": "tgtMedicationFormId893b4834",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationFormId893b4834"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationFormTexta60d9090",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationForm31b31e80",
-                  "element": "text",
-                  "variable": "srcMedicationFormTexta60d9090"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationForm691ed321",
-                  "contextType": "variable",
-                  "element": "text",
-                  "variable": "tgtMedicationFormTexta60d9090",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationFormTexta60d9090"
                     }
                   ]
                 }
@@ -3150,81 +655,6 @@
               "parameter": [
                 {
                   "valueId": "srcGEMERPPRMedicationId0d17bfdd"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationIdentifierbc52a118",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "identifier",
-              "variable": "srcGEMERPPRMedicationIdentifier33ceebe6"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "identifier",
-              "variable": "tgtEPAMedicationIdentifierfb628b57",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationIdentifier33ceebe6"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationIdentifierEpamedicationuniqueidentifier1413d3e8",
-          "documentation": "Automatic copy | Inherited from Medication.identifier",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "identifier",
-              "variable": "srcGEMERPPRMedicationIdentifierEpamedicationuniqueidentifiedb521"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "identifier",
-              "variable": "tgtEPAMedicationIdentifierEpamedicationuniqueidentifier6a2d51fc",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationIdentifierEpamedicationuniqueidentifiedb521"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationIdentifierRxoriginatorprocessidentifierbd5d62bc",
-          "documentation": "Automatic copy | Inherited from Medication.identifier",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "identifier",
-              "variable": "srcGEMERPPRMedicationIdentifierRxoriginatorprocessidentifie43b0b"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "identifier",
-              "variable": "tgtEPAMedicationIdentifierRxoriginatorprocessidentifier9c155626",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationIdentifierRxoriginatorprocessidentifie43b0b"
                 }
               ]
             }
@@ -3285,7 +715,6 @@
               "source": [
                 {
                   "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "element": "extension",
                   "variable": "srcMedicationIngredientExtensionc6131219"
                 }
               ],
@@ -3309,9 +738,7 @@
               "source": [
                 {
                   "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "element": "extension",
-                  "variable": "srcMedicationIngredientExtensionDarreichungsform3870feb0",
-                  "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension'"
+                  "variable": "srcMedicationIngredientExtensionDarreichungsform3870feb0"
                 }
               ],
               "target": [
@@ -3334,8 +761,8 @@
               "source": [
                 {
                   "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "element": "id",
-                  "variable": "srcMedicationIngredientId69411acf"
+                  "variable": "srcMedicationIngredientId69411acf",
+                  "element": "id"
                 }
               ],
               "target": [
@@ -3358,8 +785,8 @@
               "source": [
                 {
                   "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "element": "isActive",
-                  "variable": "srcMedicationIngredientIsactive2d24fcb2"
+                  "variable": "srcMedicationIngredientIsactive2d24fcb2",
+                  "element": "isActive"
                 }
               ],
               "target": [
@@ -3382,7 +809,6 @@
               "source": [
                 {
                   "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "element": "item",
                   "variable": "srcMedicationIngredientItemXItemcodeableconcept79498202"
                 }
               ],
@@ -3406,7 +832,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "coding",
                       "variable": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473"
                     }
                   ],
@@ -3430,7 +855,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "coding",
                       "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc"
                     }
                   ],
@@ -3454,7 +878,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "code",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e"
                         }
                       ],
@@ -3478,7 +901,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "display",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskDisa3775"
                         }
                       ],
@@ -3502,7 +924,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "extension",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d8"
                         }
                       ],
@@ -3526,7 +947,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "id",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44"
                         }
                       ],
@@ -3550,7 +970,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "system",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a"
                         }
                       ],
@@ -3574,7 +993,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "userSelected",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskUse6639b"
                         }
                       ],
@@ -3598,7 +1016,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "element": "version",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskVerf0648"
                         }
                       ],
@@ -3624,7 +1041,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "coding",
                       "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72"
                     }
                   ],
@@ -3648,7 +1064,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "element": "code",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3"
                         }
                       ],
@@ -3672,7 +1087,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "element": "display",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0"
                         }
                       ],
@@ -3696,7 +1110,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "element": "extension",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536"
                         }
                       ],
@@ -3720,7 +1133,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "element": "id",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb70"
                         }
                       ],
@@ -3744,7 +1156,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "element": "system",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbf"
                         }
                       ],
@@ -3768,7 +1179,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "element": "userSelected",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384"
                         }
                       ],
@@ -3792,7 +1202,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "element": "version",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826"
                         }
                       ],
@@ -3818,7 +1227,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "coding",
                       "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650"
                     }
                   ],
@@ -3842,7 +1250,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "element": "code",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6"
                         }
                       ],
@@ -3866,7 +1273,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "element": "display",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznDisa01da"
                         }
                       ],
@@ -3890,7 +1296,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "element": "extension",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3"
                         }
                       ],
@@ -3914,7 +1319,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "element": "id",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2"
                         }
                       ],
@@ -3938,7 +1342,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "element": "system",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2"
                         }
                       ],
@@ -3962,7 +1365,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "element": "userSelected",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznUseb020b"
                         }
                       ],
@@ -3986,7 +1388,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "element": "version",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznVer4c462"
                         }
                       ],
@@ -4012,7 +1413,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "coding",
                       "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941"
                     }
                   ],
@@ -4036,7 +1436,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "element": "code",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda8464"
                         }
                       ],
@@ -4060,7 +1459,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "element": "display",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1"
                         }
                       ],
@@ -4084,7 +1482,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "element": "extension",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead"
                         }
                       ],
@@ -4108,7 +1505,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "element": "id",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7"
                         }
                       ],
@@ -4132,7 +1528,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "element": "system",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedaa919"
                         }
                       ],
@@ -4156,7 +1551,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "element": "userSelected",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2e"
                         }
                       ],
@@ -4180,7 +1574,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "element": "version",
                           "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3"
                         }
                       ],
@@ -4206,7 +1599,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "extension",
                       "variable": "srcMedicationIngredientItemXItemcodeableconceptExtensioncd351c31"
                     }
                   ],
@@ -4230,7 +1622,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "id",
                       "variable": "srcMedicationIngredientItemXItemcodeableconceptId1a42460f"
                     }
                   ],
@@ -4254,7 +1645,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "element": "text",
                       "variable": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4"
                     }
                   ],
@@ -4280,8 +1670,8 @@
               "source": [
                 {
                   "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "element": "item",
-                  "variable": "srcMedicationIngredientItemXItemreferencead13835a"
+                  "variable": "srcMedicationIngredientItemXItemreferencead13835a",
+                  "element": "item"
                 }
               ],
               "target": [
@@ -4304,8 +1694,8 @@
               "source": [
                 {
                   "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "element": "modifierExtension",
-                  "variable": "srcMedicationIngredientModifierextension2d30e92a"
+                  "variable": "srcMedicationIngredientModifierextension2d30e92a",
+                  "element": "modifierExtension"
                 }
               ],
               "target": [
@@ -4328,7 +1718,6 @@
               "source": [
                 {
                   "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "element": "strength",
                   "variable": "srcMedicationIngredientStrengthc9e22fc0"
                 }
               ],
@@ -4352,7 +1741,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "element": "denominator",
                       "variable": "srcMedicationIngredientStrengthDenominatorde24b47d"
                     }
                   ],
@@ -4376,7 +1764,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "code",
                           "variable": "srcMedicationIngredientStrengthDenominatorCode9043cedb"
                         }
                       ],
@@ -4400,7 +1787,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "comparator",
                           "variable": "srcMedicationIngredientStrengthDenominatorComparator4345836d"
                         }
                       ],
@@ -4424,7 +1810,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "extension",
                           "variable": "srcMedicationIngredientStrengthDenominatorExtension1afdd0e3"
                         }
                       ],
@@ -4448,7 +1833,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "id",
                           "variable": "srcMedicationIngredientStrengthDenominatorId0d7266f8"
                         }
                       ],
@@ -4472,7 +1856,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "system",
                           "variable": "srcMedicationIngredientStrengthDenominatorSystem042773cf"
                         }
                       ],
@@ -4496,7 +1879,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "unit",
                           "variable": "srcMedicationIngredientStrengthDenominatorUnite34c7ede"
                         }
                       ],
@@ -4520,7 +1902,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "element": "value",
                           "variable": "srcMedicationIngredientStrengthDenominatorValuedc89d810"
                         }
                       ],
@@ -4546,7 +1927,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "element": "extension",
                       "variable": "srcMedicationIngredientStrengthExtension6c46fd06"
                     }
                   ],
@@ -4570,9 +1950,7 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "element": "extension",
-                      "variable": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                      "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension'"
+                      "variable": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b"
                     }
                   ],
                   "target": [
@@ -4606,7 +1984,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                          "element": "id",
                           "variable": "srcMedicationIngredientStrengthExtensionAmounttextId32b0d583"
                         }
                       ],
@@ -4630,7 +2007,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                          "element": "value",
                           "variable": "srcMedicationIngredientStrengthExtensionAmounttextValueXed73d843"
                         }
                       ],
@@ -4656,7 +2032,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "element": "id",
                       "variable": "srcMedicationIngredientStrengthId4189648d"
                     }
                   ],
@@ -4680,7 +2055,6 @@
                   "source": [
                     {
                       "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "element": "numerator",
                       "variable": "srcMedicationIngredientStrengthNumerator70e21324"
                     }
                   ],
@@ -4704,7 +2078,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "code",
                           "variable": "srcMedicationIngredientStrengthNumeratorCodec38da2e4"
                         }
                       ],
@@ -4728,7 +2101,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "comparator",
                           "variable": "srcMedicationIngredientStrengthNumeratorComparatorc906a444"
                         }
                       ],
@@ -4752,7 +2124,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "extension",
                           "variable": "srcMedicationIngredientStrengthNumeratorExtensione303a23f"
                         }
                       ],
@@ -4776,7 +2147,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "id",
                           "variable": "srcMedicationIngredientStrengthNumeratorId4e9e18d4"
                         }
                       ],
@@ -4800,7 +2170,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "system",
                           "variable": "srcMedicationIngredientStrengthNumeratorSystema1a49a13"
                         }
                       ],
@@ -4824,7 +2193,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "unit",
                           "variable": "srcMedicationIngredientStrengthNumeratorUnit84581745"
                         }
                       ],
@@ -4848,7 +2216,6 @@
                       "source": [
                         {
                           "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "element": "value",
                           "variable": "srcMedicationIngredientStrengthNumeratorValue18459ad9"
                         }
                       ],
@@ -4893,177 +2260,6 @@
               "parameter": [
                 {
                   "valueId": "srcGEMERPPRMedicationLanguage9cb45f67"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationManufacturerda2feff6",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "manufacturer",
-              "variable": "srcGEMERPPRMedicationManufacturer459da2ff"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "manufacturer",
-              "variable": "tgtEPAMedicationManufacturer255fc976",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationManufacturer459da2ff"
-                }
-              ]
-            }
-          ],
-          "rule": [
-            {
-              "name": "MedicationManufacturerDisplayc0e2a4da",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationManufacturer459da2ff",
-                  "element": "display",
-                  "variable": "srcMedicationManufacturerDisplayc0e2a4da"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationManufacturer255fc976",
-                  "contextType": "variable",
-                  "element": "display",
-                  "variable": "tgtMedicationManufacturerDisplayc0e2a4da",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationManufacturerDisplayc0e2a4da"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationManufacturerExtension7e98447b",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationManufacturer459da2ff",
-                  "element": "extension",
-                  "variable": "srcMedicationManufacturerExtension7e98447b"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationManufacturer255fc976",
-                  "contextType": "variable",
-                  "element": "extension",
-                  "variable": "tgtMedicationManufacturerExtension7e98447b",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationManufacturerExtension7e98447b"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationManufacturerId919b5dd7",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationManufacturer459da2ff",
-                  "element": "id",
-                  "variable": "srcMedicationManufacturerId919b5dd7"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationManufacturer255fc976",
-                  "contextType": "variable",
-                  "element": "id",
-                  "variable": "tgtMedicationManufacturerId919b5dd7",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationManufacturerId919b5dd7"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationManufacturerIdentifier69311fc7",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationManufacturer459da2ff",
-                  "element": "identifier",
-                  "variable": "srcMedicationManufacturerIdentifier69311fc7"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationManufacturer255fc976",
-                  "contextType": "variable",
-                  "element": "identifier",
-                  "variable": "tgtMedicationManufacturerIdentifier69311fc7",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationManufacturerIdentifier69311fc7"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationManufacturerReference08819839",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationManufacturer459da2ff",
-                  "element": "reference",
-                  "variable": "srcMedicationManufacturerReference08819839"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationManufacturer255fc976",
-                  "contextType": "variable",
-                  "element": "reference",
-                  "variable": "tgtMedicationManufacturerReference08819839",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationManufacturerReference08819839"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "MedicationManufacturerType06d90453",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationManufacturer459da2ff",
-                  "element": "type",
-                  "variable": "srcMedicationManufacturerType06d90453"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationManufacturer255fc976",
-                  "contextType": "variable",
-                  "element": "type",
-                  "variable": "tgtMedicationManufacturerType06d90453",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationManufacturerType06d90453"
-                    }
-                  ]
                 }
               ]
             }

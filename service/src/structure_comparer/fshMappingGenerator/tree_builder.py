@@ -45,6 +45,7 @@ class FieldTreeBuilder:
     def build(self) -> FieldTreeResult:
         self._build_tree()
         self._annotate_tree(self._root)
+        self._propagate_requires_source(self._root)
         self._collect_nodes(self._root)
         return FieldTreeResult(
             root=self._root,
@@ -163,11 +164,24 @@ class FieldTreeBuilder:
             return True
         if info.action in SKIP_ACTIONS:
             return False
+        if info.action == ActionType.USE_RECURSIVE:
+            return False
         if info.action == ActionType.FIXED:
             return False
         if info.action == ActionType.MANUAL and info.fixed_value:
             return False
         if info.action == ActionType.COPY_FROM:
+            return False
+        return True
+
+    def _action_requires_runtime_source(self, info: ActionInfo | None) -> bool:
+        if info is None:
+            return True
+        if info.action == ActionType.USE_RECURSIVE:
+            return False
+        if info.action == ActionType.FIXED:
+            return False
+        if info.action == ActionType.MANUAL and info.fixed_value:
             return False
         return True
 
@@ -189,16 +203,13 @@ class FieldTreeBuilder:
             if segment not in current.children:
                 current.children[segment] = FieldNode(segment=segment, path=current_path, parent=current)
             current = current.children[segment]
+            interim_info = self._actions.get(current_path)
+            if interim_info is not None:
+                self._apply_action_info(current, interim_info, overwrite=False)
 
         info = self._actions.get(path)
         if info is not None:
-            current.action = info.action
-            current.other_path = info.other_value if isinstance(info.other_value, str) else None
-            fixed_val = info.fixed_value
-            if fixed_val is not None and not isinstance(fixed_val, str):
-                fixed_val = str(fixed_val)
-            current.fixed_value = fixed_val
-            current.remark = info.user_remark or info.system_remark
+            self._apply_action_info(current, info, overwrite=True)
 
         if (
             current.action == ActionType.COPY_FROM
@@ -214,6 +225,32 @@ class FieldTreeBuilder:
             )
 
         return current
+
+    def _apply_action_info(self, node: FieldNode, info: ActionInfo, *, overwrite: bool) -> None:
+        if not overwrite and node.action is not None:
+            return
+
+        node.action = info.action
+
+        needs_source = self._action_requires_runtime_source(info)
+        if not needs_source:
+            node.requires_source = False
+        elif overwrite:
+            node.requires_source = True
+
+        other_path = info.other_value if isinstance(info.other_value, str) else None
+        if overwrite or node.other_path is None:
+            node.other_path = other_path
+
+        fixed_val = info.fixed_value
+        if fixed_val is not None and not isinstance(fixed_val, str):
+            fixed_val = str(fixed_val)
+        if overwrite or (node.fixed_value is None and fixed_val is not None):
+            node.fixed_value = fixed_val
+
+        remark = info.user_remark or info.system_remark
+        if overwrite or (node.remark is None and remark):
+            node.remark = remark
 
     def _annotate_tree(self, node: FieldNode) -> None:
         for child in node.children.values():
@@ -239,6 +276,14 @@ class FieldTreeBuilder:
 
         node.can_collapse = child_matches
         node.collapse_kind = (intent, node.other_path if intent in {"copy_other", "copy_to"} else None)
+
+    def _propagate_requires_source(self, node: FieldNode) -> bool:
+        requires_source = node.requires_source
+        for child in node.children.values():
+            if self._propagate_requires_source(child):
+                requires_source = True
+        node.requires_source = requires_source
+        return requires_source
 
     def _determine_intent(self, node: FieldNode) -> str:
         action = node.action
@@ -268,6 +313,7 @@ class FieldTreeBuilder:
     def _collect_nodes(self, node: FieldNode) -> None:
         for child in sorted(node.children.values(), key=lambda item: item.path):
             if child.intent == "skip":
+                self._collect_nodes(child)
                 continue
 
             if child.intent in {"copy", "copy_other", "copy_to"}:
@@ -292,6 +338,8 @@ class FieldTreeBuilder:
             return False
         if not node.children:
             return False
+        if node.action == ActionType.USE_RECURSIVE:
+            return True
         return self._is_repeating_field(node.path)
 
     def _is_repeating_field(self, path: str | None) -> bool:

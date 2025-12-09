@@ -142,8 +142,8 @@
               "source": [
                 {
                   "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                  "element": "code",
-                  "variable": "srcPractitionerQualificationCode37012069"
+                  "variable": "srcPractitionerQualificationCode37012069",
+                  "element": "code"
                 }
               ],
               "target": [
@@ -166,8 +166,8 @@
               "source": [
                 {
                   "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                  "element": "id",
-                  "variable": "srcPractitionerQualificationIdbd899a43"
+                  "variable": "srcPractitionerQualificationIdbd899a43",
+                  "element": "id"
                 }
               ],
               "target": [
@@ -190,8 +190,8 @@
               "source": [
                 {
                   "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                  "element": "identifier",
-                  "variable": "srcPractitionerQualificationIdentifiera0f351ca"
+                  "variable": "srcPractitionerQualificationIdentifiera0f351ca",
+                  "element": "identifier"
                 }
               ],
               "target": [
@@ -214,8 +214,8 @@
               "source": [
                 {
                   "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                  "element": "issuer",
-                  "variable": "srcPractitionerQualificationIssuer16de1a10"
+                  "variable": "srcPractitionerQualificationIssuer16de1a10",
+                  "element": "issuer"
                 }
               ],
               "target": [
@@ -238,8 +238,8 @@
               "source": [
                 {
                   "context": "srcKBVPRFORPractitionerQualificationeae165c6",
-                  "element": "period",
-                  "variable": "srcPractitionerQualificationPeriode7fc59e2"
+                  "variable": "srcPractitionerQualificationPeriode7fc59e2",
+                  "element": "period"
                 }
               ],
               "target": [

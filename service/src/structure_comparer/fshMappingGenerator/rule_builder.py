@@ -141,31 +141,32 @@ class StructureMapRuleBuilder:
 
         source_entry: dict[str, Any] = {
             "context": parent_src["variable"],
-            "element": src_element,
             "variable": src_var,
         }
+        if node.requires_source:
+            source_entry["element"] = src_element
 
-        skipped_urls = find_skipped_slices(
-            node,
-            self._actions,
-            self._mapping,
-            self._target_profile_key,
-            SKIP_ACTIONS,
-        )
-        source_conditions: list[str] = []
-        source_extension_url = None
-        if source_path and is_extension_path(source_path):
-            source_extension_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
-            if source_extension_url:
-                source_conditions.append(f"url = '{source_extension_url}'")
-        if skipped_urls:
-            source_conditions.extend([f"url != '{url}'" for url in skipped_urls])
-        if source_conditions:
-            condition_str = " and ".join(source_conditions)
-            if "condition" in source_entry:
-                source_entry["condition"] += f" and {condition_str}"
-            else:
-                source_entry["condition"] = condition_str
+            skipped_urls = find_skipped_slices(
+                node,
+                self._actions,
+                self._mapping,
+                self._target_profile_key,
+                SKIP_ACTIONS,
+            )
+            source_conditions: list[str] = []
+            source_extension_url = None
+            if source_path and is_extension_path(source_path):
+                source_extension_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
+                if source_extension_url:
+                    source_conditions.append(f"url = '{source_extension_url}'")
+            if skipped_urls:
+                source_conditions.extend([f"url != '{url}'" for url in skipped_urls])
+            if source_conditions:
+                condition_str = " and ".join(source_conditions)
+                if "condition" in source_entry:
+                    source_entry["condition"] += f" and {condition_str}"
+                else:
+                    source_entry["condition"] = condition_str
 
         target_entry: dict[str, Any] = {
             "context": parent_tgt["variable"],
@@ -258,36 +259,37 @@ class StructureMapRuleBuilder:
                     },
                 )
 
-            source_chain = self._build_path_chain(
-                source_path,
-                alias=self._source_alias,
-                prefix="src",
-                chain_kind="source",
-                profile_keys=self._source_profile_keys,
-            )
-            if not source_chain:
-                return None
+            if node.requires_source:
+                source_chain = self._build_path_chain(
+                    source_path,
+                    alias=self._source_alias,
+                    prefix="src",
+                    chain_kind="source",
+                    profile_keys=self._source_profile_keys,
+                )
+                if not source_chain:
+                    return None
 
-            skipped_urls = find_skipped_slices(
-                node,
-                self._actions,
-                self._mapping,
-                self._target_profile_key,
-                SKIP_ACTIONS,
-            )
-            conditions = [f"url != '{url}'" for url in skipped_urls]
+                skipped_urls = find_skipped_slices(
+                    node,
+                    self._actions,
+                    self._mapping,
+                    self._target_profile_key,
+                    SKIP_ACTIONS,
+                )
+                conditions = [f"url != '{url}'" for url in skipped_urls]
 
-            if is_extension_path(source_path):
-                source_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
-                if source_url:
-                    conditions.append(f"url = '{source_url}'")
+                if is_extension_path(source_path):
+                    source_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
+                    if source_url:
+                        conditions.append(f"url = '{source_url}'")
 
-            if conditions:
-                condition_str = " and ".join(conditions)
-                if "condition" in source_chain[-1]:
-                    source_chain[-1]["condition"] += f" and {condition_str}"
-                else:
-                    source_chain[-1]["condition"] = condition_str
+                if conditions:
+                    condition_str = " and ".join(conditions)
+                    if "condition" in source_chain[-1]:
+                        source_chain[-1]["condition"] += f" and {condition_str}"
+                    else:
+                        source_chain[-1]["condition"] = condition_str
 
             target_chain = self._build_path_chain(
                 target_path,
@@ -308,7 +310,7 @@ class StructureMapRuleBuilder:
             )
             if not target_chain:
                 return None
-            if self._field_source_support.get(node.path, True):
+            if node.requires_source and self._field_source_support.get(node.path, True):
                 source_chain = self._build_path_chain(
                     node.path,
                     alias=self._source_alias,
@@ -335,7 +337,7 @@ class StructureMapRuleBuilder:
             rule["source"] = [{"context": self._source_alias}]
 
         if node.intent in {"copy", "copy_other", "copy_to"}:
-            leaf_source = source_chain[-1]
+            leaf_source = source_chain[-1] if source_chain else {"variable": self._source_alias, "context": self._source_alias}
             leaf_target = target_chain[-1]
             container_only = getattr(node, "force_container", False)
 
@@ -364,6 +366,8 @@ class StructureMapRuleBuilder:
                         "parameter": [{"valueString": create_type}],
                     }
                 ]
+            elif not source_chain:
+                return None
             else:
                 rule["target"] = [
                     {
@@ -401,7 +405,7 @@ class StructureMapRuleBuilder:
             ]
 
         if node.children:
-            leaf_src_var = source_chain[-1]["variable"] if source_chain else None
+            leaf_src_var = source_chain[-1]["variable"] if source_chain else self._source_alias
             leaf_tgt_var = target_chain[-1]["variable"] if target_chain else None
 
             if leaf_src_var and leaf_tgt_var:

@@ -20,6 +20,7 @@ class FieldNode:
     collapse_kind: tuple[str, str | None] | None = None
     can_collapse: bool = False
     force_container: bool = False
+    requires_source: bool = True
     children: dict[str, "FieldNode"] = field(default_factory=dict)
 
     @property
