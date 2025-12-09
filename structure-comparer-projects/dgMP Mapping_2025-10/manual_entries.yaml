@@ -714,3 +714,20 @@ entries:
     other: null
     remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
+transformation_entries:
+- fields:
+  - action: copy_from
+    fixed: null
+    map: null
+    name: Parameters.parameter:rxPrescription.part:prescriptionId.value[x]
+    other: Bundle.identifier.value
+    remark: null
+    target_creation: null
+  - action: copy_from
+    fixed: null
+    map: null
+    name: Parameters.parameter:rxPrescription.part:prescriptionId.value[x]
+    other: Bundle.entry:VerordnungArzneimittel.resource.authoredOn
+    remark: null
+    target_creation: null
+  id: 837f9230-c28e-426e-a32e-268702d6e853
