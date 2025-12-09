@@ -90,7 +90,8 @@ class ManualEntries:
                 if field_payload.pop("auto_generated", False):
                     # Skip auto-generated helper entries entirely
                     continue
-                field_payload.pop("inherited_from", None)
+                # Keep inherited_from for manually applied children (auto_generated=False)
+                # but remove it if it was auto-generated
                 filtered_fields.append(field.__class__.model_validate(field_payload))
             entry.fields = filtered_fields
 
