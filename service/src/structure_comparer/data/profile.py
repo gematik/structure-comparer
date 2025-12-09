@@ -297,6 +297,24 @@ class ProfileField:
         return refs
     
     @property
+    def type_profiles(self) -> list[str]:
+        """Gibt die in den Element-Typen definierten profile URLs zurück (type[].profile[]).
+        
+        Diese werden für .resource-Felder in Bundles verwendet, um das
+        referenzierte Profil zu identifizieren.
+        """
+        profiles: list[str] = []
+        types = getattr(self.__data, "type", None) or []
+
+        for t in types:
+            type_profiles = getattr(t, "profile", None) or []
+            for p in type_profiles:
+                if p and p not in profiles:
+                    profiles.append(p)
+
+        return profiles
+    
+    @property
     def pattern_coding_system(self) -> str | None:
         """Extrahiert das system aus patternCoding, falls vorhanden."""
         return FixedValueExtractor.extract_pattern_coding_system(self.__data)
@@ -375,6 +393,9 @@ class ProfileField:
             max=max_val,
             must_support=self.must_support,
             types=self.types if len(self.types) else None,
+            type_profiles=self.type_profiles if len(self.type_profiles) else None,
             ref_types=self.ref_types if len(self.ref_types) else None,
             cardinality_note=cardinality_note,
+            fixed_value=self.fixed_value,
+            fixed_value_type=self.fixed_value_type,
         )

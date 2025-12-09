@@ -90,6 +90,7 @@ from .model.package import PackageInput as PackageInputModel
 from .model.package import PackageList as PackageListModel
 from .model.profile import ProfileList as ProfileListModel
 from .model.profile import ProfileDetails as ProfileDetailsModel
+from .model.profile import ResolvedProfileFieldsResponse as ResolvedProfileFieldsResponseModel
 from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
@@ -429,6 +430,41 @@ async def get_profile_detail(
         return ErrorModel.from_except(e)
 
     return profile
+
+
+@app.post(
+    "/project/{project_key}/profile/resolve-fields",
+    tags=["Profiles"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def get_resolved_profile_fields(
+    project_key: str, profile_ids: list[str], response: Response
+) -> ResolvedProfileFieldsResponseModel | ErrorModel:
+    """
+    Returns profile fields with recursive resolution of fixedUri/fixedCanonical references.
+
+    This endpoint:
+    1. Loads the specified profiles
+    2. Recursively follows fixedUri/fixedCanonical references to StructureDefinitions
+    3. Categorizes fields into resource fields and value fields
+    4. Reports any unresolved references
+
+    The profile_ids parameter is a list of profile IDs to load (typically source profiles).
+    """
+    global package_handler
+    try:
+        result = package_handler.get_resolved_profile_fields(project_key, profile_ids)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+    except PackageNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    return result
 
 
 @app.get(
