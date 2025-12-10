@@ -192,9 +192,6 @@ class DependencyHandler:
 
             # Check if we've already visited this package (cycle detection)
             if dep.package_key in visited:
-                logger.debug(
-                    f"Cycle detected: {dep.package_key} already in path {' -> '.join(path)}"
-                )
                 continue
 
             # Try to find the dependency package in the project

@@ -344,37 +344,6 @@ async def post_package(
 
 
 @app.post(
-    "/project/{project_key}/package/{package_id}",
-    tags=["Packages"],
-    response_model_exclude_unset=True,
-    response_model_exclude_none=True,
-    responses={400: {"error": {}}, 404: {"error": {}}},
-)
-async def update_package(
-    project_key: str,
-    package_id: str,
-    package_input: PackageInputModel,
-    response: Response,
-) -> PackageModel | ErrorModel:
-    """
-    Update the information of a package
-    """
-    global package_handler
-    try:
-        pkg = package_handler.update(project_key, package_id, package_input)
-
-    except (ProjectNotFound, PackageNotFound) as e:
-        response.status_code = 404
-        return ErrorModel.from_except(e)
-
-    except NotAllowed as e:
-        response.status_code = 400
-        return ErrorModel.from_except(e)
-
-    return pkg
-
-
-@app.post(
     "/project/{project_key}/package/download",
     tags=["Packages"],
     response_model_exclude_unset=True,
@@ -402,7 +371,7 @@ async def download_package_from_registry(
         from .errors import PackageDownloadFailed, PackageNotFoundInRegistry
         
         result = package_handler.download_from_registry(
-            project_key=project_key,
+            proj_key=project_key,
             package_name=request.package_name,
             version=request.version,
         )
@@ -457,6 +426,37 @@ async def download_packages_batch(
     except ProjectNotFound as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/package/{package_id}",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={400: {"error": {}}, 404: {"error": {}}},
+)
+async def update_package(
+    project_key: str,
+    package_id: str,
+    package_input: PackageInputModel,
+    response: Response,
+) -> PackageModel | ErrorModel:
+    """
+    Update the information of a package
+    """
+    global package_handler
+    try:
+        pkg = package_handler.update(project_key, package_id, package_input)
+
+    except (ProjectNotFound, PackageNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except NotAllowed as e:
+        response.status_code = 400
+        return ErrorModel.from_except(e)
+
+    return pkg
 
 
 @app.get(

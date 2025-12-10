@@ -25,14 +25,34 @@ class Profile:
         self.__package = package
 
     @staticmethod
+    def _remove_underscore_fields(obj: Any) -> Any:
+        """
+        Rekursiv alle Felder entfernen, die mit '_' beginnen (z.B. _valueCode).
+        Diese werden von fhir.resources R4B nicht unterstützt.
+        """
+        if isinstance(obj, dict):
+            return {
+                k: Profile._remove_underscore_fields(v)
+                for k, v in obj.items()
+                if not k.startswith("_")
+            }
+        elif isinstance(obj, list):
+            return [Profile._remove_underscore_fields(item) for item in obj]
+        return obj
+
+    @staticmethod
     def _sanitize_structure_definition(sd: Dict[str, Any]) -> Dict[str, Any]:
         """
         Ergänzt fehlende 'base.min'/'base.max'/'base.path' in snapshot.element[*].
+        Entfernt auch '_valueXxx'-Felder, die von fhir.resources nicht unterstützt werden.
         Fallback-Reihenfolge:
           1) base.min/base.max aus Elementfeldern 'min'/'max' übernehmen (falls vorhanden)
           2) andernfalls Defaults setzen: min=0, max="*"
         'base.path' wird aus 'element.path' oder ersatzweise aus 'element.id' (bis ':') abgeleitet.
         """
+        # Entferne problematische _valueXxx Felder rekursiv
+        sd = Profile._remove_underscore_fields(sd)
+        
         try:
             elements = sd.get("snapshot", {}).get("element", [])
             for el in elements:
