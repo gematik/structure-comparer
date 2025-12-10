@@ -12,7 +12,7 @@ DICT_REMOVE = "remove"
 IGNORE_CLASSIFICATIONS = [
     Action.NOT_USE,
     Action.EMPTY,
-    Action.COPY_FROM,
+    Action.COPY_VALUE_FROM,
     Action.MEDICATION_SERVICE,
 ]
 
@@ -50,14 +50,14 @@ def gen_mapping_dict(structured_mapping: Dict[str, Mapping]):
                     action_info = presences.action_info
                     user_remark = action_info.user_remark if action_info else None
                     if (
-                        presences.action in [Action.USE, Action.EXTENSION]
+                        presences.action in [Action.USE, Action.COPY_NODE_TO]
                         and not user_remark
                     ):
                         # Put value in the same field
                         profile_handling[DICT_MAPPINGS][field] = field
 
-                    # If 'copy_to' get the target field from extra field
-                    elif presences.action == Action.COPY_TO:
+                    # If 'copy_value_to' get the target field from extra field
+                    elif presences.action == Action.COPY_VALUE_TO:
                         profile_handling[DICT_MAPPINGS][field] = presences.other
 
                     # Do not handle when classification should be ignored,
@@ -67,8 +67,8 @@ def gen_mapping_dict(structured_mapping: Dict[str, Mapping]):
                             parent_field := mappings.fields.get(parent)
                         ) and parent_field.action in [
                             Action.USE,
-                            Action.EXTENSION,
-                            Action.COPY_TO,
+                            Action.COPY_NODE_TO,
+                            Action.COPY_VALUE_TO,
                         ]:
                             profile_handling[DICT_REMOVE].append(field)
 

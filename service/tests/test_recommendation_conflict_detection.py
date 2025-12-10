@@ -10,13 +10,13 @@ from structure_comparer.model.mapping_action_models import ActionType
 class TestRecommendationConflictDetection(unittest.TestCase):
     """Test that recommendations don't override existing actions."""
 
-    def test_copy_to_recommendation_skipped_when_target_has_fixed_value(self):
+    def test_copy_value_to_recommendation_skipped_when_target_has_fixed_value(self):
         """Test NOT_USE recommendation when target has FIXED action.
         
         Scenario:
         - Source: Medication.extension:Impfstoff.url
         - Target: Medication.extension:isVaccine.url (has FIXED action from system)
-        - Expected: NOT_USE recommendation instead of copy_to
+        - Expected: NOT_USE recommendation instead of copy_value_to
         """
         # Setup mapping
         mapping = Mock()
@@ -41,7 +41,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Medication.extension:Impfstoff.url"
         child_source.classification = "compatible"
-        child_source.actions_allowed = [ActionType.COPY_TO, ActionType.USE, ActionType.NOT_USE]
+        child_source.actions_allowed = [ActionType.COPY_VALUE_TO, ActionType.USE, ActionType.NOT_USE]
         child_source.types = ["uri"]  # Add types for compatibility check
         
         child_source_target = Mock()
@@ -83,10 +83,10 @@ class TestRecommendationConflictDetection(unittest.TestCase):
             "Medication.extension:isVaccine.url": child_target,
         }
         
-        # Manual entry for parent: copy_to
+        # Manual entry for parent: copy_value_to
         manual_entries = {
             "Medication.extension:Impfstoff": {
-                "action": "copy_to",
+                "action": "copy_value_to",
                 "other": "Medication.extension:isVaccine",
                 "remark": "Map vaccine extension",
             }
@@ -106,11 +106,11 @@ class TestRecommendationConflictDetection(unittest.TestCase):
             "Should create NOT_USE recommendation when target has FIXED value"
         )
         
-        # Should NOT have copy_to recommendation
-        copy_to_recs = [r for r in child_recs if r.action == ActionType.COPY_TO]
+        # Should NOT have copy_value_to recommendation
+        copy_value_to_recs = [r for r in child_recs if r.action == ActionType.COPY_VALUE_TO]
         self.assertEqual(
-            len(copy_to_recs), 0,
-            "Should NOT create copy_to recommendation when target has FIXED value"
+            len(copy_value_to_recs), 0,
+            "Should NOT create copy_value_to recommendation when target has FIXED value"
         )
         
         # Verify the remark mentions the fixed value
@@ -125,15 +125,15 @@ class TestRecommendationConflictDetection(unittest.TestCase):
             f"Should mention fixed value in remark. Got: {not_use_rec.system_remarks}"
         )
 
-    def test_copy_to_recommendation_created_when_target_has_no_action(self):
-        """Test that copy_to recommendation IS created when target has no action."""
+    def test_copy_value_to_recommendation_created_when_target_has_no_action(self):
+        """Test that copy_value_to recommendation IS created when target has no action."""
         mapping = Mock()
         target = Mock()
         target.key = "target-profile|1.0.0"
         mapping.target = target
         mapping.sources = []  # Add sources to avoid TypeError
         
-        # Parent with copy_to
+        # Parent with copy_value_to
         parent_source = Mock()
         parent_source.types = []  # Add types for compatibility check
         parent_source.name = "Extension.valueString"
@@ -146,7 +146,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Extension.valueString.id"
         child_source.classification = "compatible"
-        child_source.actions_allowed = [ActionType.COPY_TO]
+        child_source.actions_allowed = [ActionType.COPY_VALUE_TO]
         child_source.profiles = {"target-profile|1.0.0": Mock()}
         
         # Child target (NO action)
@@ -170,7 +170,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         manual_entries = {
             "Extension.valueString": {
-                "action": "copy_to",
+                "action": "copy_value_to",
                 "other": "Extension.valueBoolean",
             }
         }
@@ -182,13 +182,13 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         child_recs = recommendations.get("Extension.valueString.id", [])
         self.assertGreater(
             len(child_recs), 0,
-            "Should create copy_to recommendation when target has no action"
+            "Should create copy_value_to recommendation when target has no action"
         )
-        self.assertEqual(child_recs[0].action, ActionType.COPY_TO)
+        self.assertEqual(child_recs[0].action, ActionType.COPY_VALUE_TO)
         self.assertEqual(child_recs[0].other_value, "Extension.valueBoolean.id")
 
-    def test_copy_to_recommendation_skipped_when_target_has_manual_action(self):
-        """Test that copy_to recommendation is not created when target has manual action."""
+    def test_copy_value_to_recommendation_skipped_when_target_has_manual_action(self):
+        """Test that copy_value_to recommendation is not created when target has manual action."""
         mapping = Mock()
         target = Mock()
         target.key = "target-profile|1.0.0"
@@ -206,7 +206,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Medication.code.coding"
         child_source.classification = "compatible"
-        child_source.actions_allowed = [ActionType.COPY_TO]
+        child_source.actions_allowed = [ActionType.COPY_VALUE_TO]
         child_source.profiles = {"target-profile|1.0.0": Mock()}
         
         child_target = Mock()
@@ -229,7 +229,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         manual_entries = {
             "Medication.code": {
-                "action": "copy_to",
+                "action": "copy_value_to",
                 "other": "Medication.ingredient",
             },
             # Target child has manual USE action
@@ -246,13 +246,13 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         child_recs = recommendations.get("Medication.code.coding", [])
         self.assertEqual(
             len(child_recs), 0,
-            "Should not create copy_to recommendation when target has manual action"
+            "Should not create copy_value_to recommendation when target has manual action"
         )
 
-    def test_copy_from_recommendation_not_affected_by_target(self):
-        """Test that copy_from recommendations are not affected by target field status.
+    def test_copy_value_from_recommendation_not_affected_by_target(self):
+        """Test that copy_value_from recommendations are not affected by target field status.
         
-        copy_from pulls data FROM another field, so the target field's action
+        copy_value_from pulls data FROM another field, so the target field's action
         should not prevent the recommendation (only affects the source field itself).
         """
         mapping = Mock()
@@ -272,7 +272,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Medication.extension:A.url"
         child_source.classification = "compatible"
-        child_source.actions_allowed = [ActionType.COPY_FROM]
+        child_source.actions_allowed = [ActionType.COPY_VALUE_FROM]
         child_source.profiles = {"target-profile|1.0.0": Mock()}
         
         # Other field (copy source) has FIXED value
@@ -296,7 +296,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         
         manual_entries = {
             "Medication.extension:A": {
-                "action": "copy_from",
+                "action": "copy_value_from",
                 "other": "Medication.extension:B",
             }
         }
@@ -304,19 +304,19 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         engine = RecommendationEngine(mapping, manual_entries)
         recommendations = engine.compute_all_recommendations()
         
-        # copy_from should still create recommendation
+        # copy_value_from should still create recommendation
         # (it's pulling FROM B.url, not pushing TO B.url)
         child_recs = recommendations.get("Medication.extension:A.url", [])
         self.assertGreater(
             len(child_recs), 0,
-            "copy_from recommendations should be created regardless of source field status"
+            "copy_value_from recommendations should be created regardless of source field status"
         )
-        self.assertEqual(child_recs[0].action, ActionType.COPY_FROM)
+        self.assertEqual(child_recs[0].action, ActionType.COPY_VALUE_FROM)
 
-    def test_copy_to_recommendation_includes_fixed_value_remark(self):
+    def test_copy_value_to_recommendation_includes_fixed_value_remark(self):
         """Test that NOT_USE recommendation is created when target has FIXED value.
         
-        This test validates that when a parent has copy_to and the child target
+        This test validates that when a parent has copy_value_to and the child target
         has a FIXED value, a NOT_USE recommendation is created for the source field.
         """
         mapping = Mock()
@@ -325,7 +325,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         mapping.target = target
         mapping.sources = []  # Add sources to avoid TypeError
         
-        # Parent with copy_to (manual)
+        # Parent with copy_value_to (manual)
         parent_source = Mock()
         parent_source.types = []  # Add types for compatibility check
         parent_source.name = "Medication.extension:Impfstoff"
@@ -349,7 +349,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         child_source.types = ["uri"]  # Add types for compatibility check
         child_source.name = "Medication.extension:Impfstoff.url"
         child_source.classification = "compatible"
-        child_source.actions_allowed = [ActionType.COPY_TO, ActionType.USE, ActionType.NOT_USE]
+        child_source.actions_allowed = [ActionType.COPY_VALUE_TO, ActionType.USE, ActionType.NOT_USE]
         
         child_source_profile = Mock()
         child_source_profile.fixed_value = None
@@ -378,10 +378,10 @@ class TestRecommendationConflictDetection(unittest.TestCase):
             "Medication.extension:isVaccine.url": child_target,
         }
         
-        # Manual entry: Parent has copy_to, and target parent has USE (to avoid conflict on parent level)
+        # Manual entry: Parent has copy_value_to, and target parent has USE (to avoid conflict on parent level)
         manual_entries = {
             "Medication.extension:Impfstoff": {
-                "action": "copy_to",
+                "action": "copy_value_to",
                 "other": "Medication.extension:isVaccine",
             },
             "Medication.extension:isVaccine": {
@@ -392,7 +392,7 @@ class TestRecommendationConflictDetection(unittest.TestCase):
         engine = RecommendationEngine(mapping, manual_entries)
         recommendations = engine.compute_all_recommendations()
         
-        # The child source should have NOT_USE recommendation (not copy_to)
+        # The child source should have NOT_USE recommendation (not copy_value_to)
         child_recs = recommendations.get("Medication.extension:Impfstoff.url", [])
         
         not_use_recs = [r for r in child_recs if r.action == ActionType.NOT_USE]

@@ -16,8 +16,15 @@ CLASSIFICATION_TO_ACTION = {
     "not_use": "not_use",
     "empty": "empty",
     "fixed": "fixed",
-    "copy_from": "copy_from",
-    "copy_to": "copy_to",
+    # Legacy copy_from/copy_to are migrated to the new names
+    "copy_from": "copy_value_from",
+    "copy_to": "copy_value_to",
+    # New names map to themselves
+    "copy_value_from": "copy_value_from",
+    "copy_value_to": "copy_value_to",
+    # Legacy extension is migrated to copy_node_to
+    "extension": "copy_node_to",
+    "copy_node_to": "copy_node_to",
     "manual": "manual",
     # medication_service is deprecated - migrate to manual
     "medication_service": "manual",
@@ -78,8 +85,8 @@ def _migrate_field(field_name: str, field_config: Dict[str, Any]) -> Dict[str, A
         if classification == "fixed":
             # For FIXED action, extra contains the fixed value
             new_field["fixed"] = extra_value
-        elif classification in ("copy_from", "copy_to"):
-            # For COPY_FROM/COPY_TO actions, extra contains the other field reference
+        elif classification in ("copy_from", "copy_to", "copy_value_from", "copy_value_to", "extension", "copy_node_to"):
+            # For COPY_VALUE_FROM/COPY_VALUE_TO/COPY_NODE_TO actions, extra contains the other field reference
             new_field["other"] = extra_value
         # For other classifications, extra is ignored (as per requirements)
     
@@ -176,3 +183,52 @@ def migrate_manual_entries(legacy_data: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Migration failed: {str(e)}")
         raise ValueError(f"Failed to migrate legacy data: {str(e)}")
+
+
+def migrate_action_values(data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Migrate legacy action values in data that is already in new format.
+    
+    This handles the case where files are in the new format structure but
+    still use old action names like 'copy_from' instead of 'copy_value_from'.
+    
+    Args:
+        data: Dictionary in the new format structure
+        
+    Returns:
+        Dictionary with migrated action values
+    """
+    def migrate_field_action(field: Dict[str, Any]) -> Dict[str, Any]:
+        if "action" in field and field["action"] in CLASSIFICATION_TO_ACTION:
+            old_action = field["action"]
+            new_action = CLASSIFICATION_TO_ACTION[old_action]
+            if old_action != new_action:
+                logger.debug(f"Migrating action '{old_action}' -> '{new_action}'")
+            field["action"] = new_action
+        return field
+    
+    # Migrate entries (old mapping format)
+    if "entries" in data and isinstance(data["entries"], list):
+        for entry in data["entries"]:
+            if isinstance(entry, dict) and "fields" in entry:
+                entry["fields"] = [migrate_field_action(f) for f in entry["fields"]]
+    
+    # Migrate mapping_entries (new format)
+    if "mapping_entries" in data and isinstance(data["mapping_entries"], list):
+        for entry in data["mapping_entries"]:
+            if isinstance(entry, dict) and "fields" in entry:
+                entry["fields"] = [migrate_field_action(f) for f in entry["fields"]]
+    
+    # Migrate transformation_entries
+    if "transformation_entries" in data and isinstance(data["transformation_entries"], list):
+        for entry in data["transformation_entries"]:
+            if isinstance(entry, dict) and "fields" in entry:
+                entry["fields"] = [migrate_field_action(f) for f in entry["fields"]]
+    
+    # Migrate target_creation_entries
+    if "target_creation_entries" in data and isinstance(data["target_creation_entries"], list):
+        for entry in data["target_creation_entries"]:
+            if isinstance(entry, dict) and "fields" in entry:
+                entry["fields"] = [migrate_field_action(f) for f in entry["fields"]]
+    
+    return data

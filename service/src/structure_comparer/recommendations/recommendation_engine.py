@@ -53,7 +53,7 @@ class RecommendationEngine:
         compatible_recs = compatible_recommender.compute_recommendations(evaluation_map)
         self._merge_recommendations(recommendations, compatible_recs)
 
-        # 2. Inherited copy_from/copy_to recommendations (greedy for all children)
+        # 2. Inherited copy_value_from/copy_value_to recommendations (greedy for all children)
         copy_recommender = CopyRecommender(
             self.mapping, self.fields, self.manual_map,
             self.inheritance_engine, self.conflict_detector

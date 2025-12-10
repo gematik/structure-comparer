@@ -119,6 +119,41 @@ entries:
     name: Medication.code.coding:pzn
     other: null
     remark: null
+  - action: copy_value_from
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:packaging
+    other: Medication.id
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:isVaccine
+    other: Medication.id
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.extension:isVaccine
+    name: Medication.extension:isVaccine.id
+    other: Medication.id.id
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.extension:isVaccine
+    name: Medication.extension:isVaccine.url
+    other: Medication.id.url
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.extension:isVaccine
+    name: Medication.extension:isVaccine.value[x]
+    other: Medication.id.value[x]
+    remark: null
   id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
 - fields:
   - action: manual
@@ -184,42 +219,42 @@ entries:
     name: Organization.address:Strassenanschrift.extension
     other: null
     remark: null
-  - action: extension
+  - action: copy_node_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Organization.address:Strassenanschrift.line.extension
     other: Organization.address:Strassenanschrift.line.extension
     remark: null
-  - action: extension
+  - action: copy_node_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Organization.telecom:telefon
     other: Organization.telecom
     remark: null
-  - action: extension
+  - action: copy_node_to
     auto_generated: false
     fixed: null
     inherited_from: Organization.telecom:telefon
     name: Organization.telecom:telefon.id
     other: Organization.telecom.id
     remark: null
-  - action: extension
+  - action: copy_node_to
     auto_generated: false
     fixed: null
     inherited_from: Organization.telecom:telefon
     name: Organization.telecom:telefon.extension
     other: Organization.telecom.extension
     remark: null
-  - action: extension
+  - action: copy_node_to
     auto_generated: false
     fixed: null
     inherited_from: Organization.telecom:telefon
     name: Organization.telecom:telefon.system
     other: Organization.telecom.system
     remark: null
-  - action: extension
+  - action: copy_node_to
     auto_generated: false
     fixed: null
     inherited_from: Organization.telecom:telefon
@@ -250,49 +285,49 @@ mapping_entries:
     name: Medication.form.extension
     other: null
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:Impfstoff
     other: Medication.extension:isVaccine
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:Impfstoff.id
     other: Medication.extension:isVaccine.id
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:Impfstoff.extension
     other: Medication.extension:isVaccine.extension
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:isVaccine.value[x]
     other: Medication.extension:Impfstoff.value[x]
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory
     other: Medication.extension:Arzneimittelkategorie
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:packaging
     other: Medication.extension:Verpackung
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -390,147 +425,147 @@ mapping_entries:
     name: Medication.extension:rxPrescriptionProcessIdentifier
     other: null
     remark: Wird vom Medication Service gesetzt.
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.value[x].code
     other: Medication.extension:Arzneimittelkategorie.value[x].code
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.value[x].system
     other: Medication.extension:Arzneimittelkategorie.value[x].system
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.value[x]
     other: Medication.extension:Arzneimittelkategorie.value[x]
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.id
     other: Medication.extension:Arzneimittelkategorie.id
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.extension
     other: Medication.extension:Arzneimittelkategorie.extension
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.value[x].id
     other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.id
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.value[x].extension
     other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.extension
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.value[x].version
     other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.version
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.value[x].display
     other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.display
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:drugCategory.value[x].userSelected
     other: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.userSelected
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:normSizeCode
     other: Medication.extension:Normgroesse
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:normSizeCode.id
     other: Medication.extension:Normgroesse.id
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:normSizeCode.extension
     other: Medication.extension:Normgroesse.extension
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:normSizeCode.value[x]
     other: Medication.extension:Normgroesse.value[x]
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:packaging.value[x]
     other: Medication.extension:Verpackung.value[x]
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:packaging.id
     other: Medication.extension:Verpackung.id
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:packaging.extension
     other: Medication.extension:Verpackung.extension
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:manufacturingInstructions
     other: Medication.extension:Herstellungsanweisung
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:manufacturingInstructions.id
     other: Medication.extension:Herstellungsanweisung.id
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:manufacturingInstructions.extension
     other: Medication.extension:Herstellungsanweisung.extension
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -565,7 +600,7 @@ mapping_entries:
     name: Medication.identifier:RxOriginatorProcessIdentifier
     other: null
     remark: Wird vom MedicationService gesetzt
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -586,14 +621,14 @@ mapping_entries:
     name: Medication.identifier
     other: null
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Medication.extension:isVaccine.id
     other: Medication.extension:Impfstoff.id
     remark: null
-  - action: copy_from
+  - action: copy_value_from
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -628,7 +663,7 @@ mapping_entries:
     name: Medication.ingredient.item[x]:itemReference
     other: null
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -651,203 +686,203 @@ mapping_entries:
     remark: null
   id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
 - fields:
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR
     other: Practitioner.identifier:LANR
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.id
     other: Practitioner.identifier:LANR.id
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.extension
     other: Practitioner.identifier:LANR.extension
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.use
     other: Practitioner.identifier:LANR.use
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type
     other: Practitioner.identifier:LANR.type
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type.id
     other: Practitioner.identifier:LANR.type.id
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type.extension
     other: Practitioner.identifier:LANR.type.extension
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type.coding
     other: Practitioner.identifier:LANR.type.coding
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type.coding.id
     other: Practitioner.identifier:LANR.type.coding.id
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type.coding.extension
     other: Practitioner.identifier:LANR.type.coding.extension
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type.coding.system
     other: Practitioner.identifier:LANR.type.coding.system
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type.coding.code
     other: Practitioner.identifier:LANR.type.coding.code
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.type.coding.display
     other: Practitioner.identifier:LANR.type.coding.display
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.system
     other: Practitioner.identifier:LANR.system
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.value
     other: Practitioner.identifier:LANR.value
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.id
     other: Practitioner.identifier:LANR.assigner.id
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.extension
     other: Practitioner.identifier:LANR.assigner.extension
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.reference
     other: Practitioner.identifier:LANR.assigner.reference
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.type
     other: Practitioner.identifier:LANR.assigner.type
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier
     other: Practitioner.identifier:LANR.assigner.identifier
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier.id
     other: Practitioner.identifier:LANR.assigner.identifier.id
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier.extension
     other: Practitioner.identifier:LANR.assigner.identifier.extension
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier.use
     other: Practitioner.identifier:LANR.assigner.identifier.use
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier.type
     other: Practitioner.identifier:LANR.assigner.identifier.type
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier.system
     other: Practitioner.identifier:LANR.assigner.identifier.system
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier.value
     other: Practitioner.identifier:LANR.assigner.identifier.value
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier.period
     other: Practitioner.identifier:LANR.assigner.identifier.period
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ANR.assigner.identifier.assigner
     other: Practitioner.identifier:LANR.assigner.identifier.assigner
     remark: null
-  - action: copy_to
+  - action: copy_value_to
     auto_generated: false
     fixed: null
     inherited_from: null

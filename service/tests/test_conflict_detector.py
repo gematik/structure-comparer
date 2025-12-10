@@ -105,7 +105,7 @@ class TestConflictDetector(unittest.TestCase):
         """Test that same copy action with same target is not an override."""
         action_map = {
             "Extension.url": ActionInfo(
-                action=ActionType.COPY_TO,
+                action=ActionType.COPY_VALUE_TO,
                 source=ActionSource.MANUAL,
                 other_value="OtherExtension.url",
             )
@@ -114,7 +114,7 @@ class TestConflictDetector(unittest.TestCase):
         detector = ConflictDetector(action_map)
         self.assertFalse(
             detector.would_override_action(
-                "Extension.url", ActionType.COPY_TO, "OtherExtension.url"
+                "Extension.url", ActionType.COPY_VALUE_TO, "OtherExtension.url"
             )
         )
 
@@ -122,7 +122,7 @@ class TestConflictDetector(unittest.TestCase):
         """Test that same copy action with different target is an override."""
         action_map = {
             "Extension.url": ActionInfo(
-                action=ActionType.COPY_TO,
+                action=ActionType.COPY_VALUE_TO,
                 source=ActionSource.MANUAL,
                 other_value="OtherExtension.url",
             )
@@ -131,7 +131,7 @@ class TestConflictDetector(unittest.TestCase):
         detector = ConflictDetector(action_map)
         self.assertTrue(
             detector.would_override_action(
-                "Extension.url", ActionType.COPY_TO, "DifferentExtension.url"
+                "Extension.url", ActionType.COPY_VALUE_TO, "DifferentExtension.url"
             )
         )
 
@@ -153,7 +153,7 @@ class TestConflictDetector(unittest.TestCase):
         conflict = detector.get_target_field_conflict(
             "Medication.extension:Impfstoff.url",
             "Medication.extension:isVaccine.url",
-            ActionType.COPY_TO,
+            ActionType.COPY_VALUE_TO,
         )
         
         self.assertIsNotNone(conflict)
@@ -174,7 +174,7 @@ class TestConflictDetector(unittest.TestCase):
         conflict = detector.get_target_field_conflict(
             "Medication.code.coding",
             "Medication.code",
-            ActionType.COPY_TO,
+            ActionType.COPY_VALUE_TO,
         )
         
         self.assertIsNotNone(conflict)
@@ -194,13 +194,13 @@ class TestConflictDetector(unittest.TestCase):
         conflict = detector.get_target_field_conflict(
             "Medication.extension:Impfstoff.url",
             "Medication.extension:isVaccine.url",
-            ActionType.COPY_TO,
+            ActionType.COPY_VALUE_TO,
         )
         
         self.assertIsNone(conflict)
 
-    def test_get_target_field_conflict_only_for_copy_to(self):
-        """Test that conflict detection only applies to COPY_TO actions."""
+    def test_get_target_field_conflict_only_for_copy_value_to(self):
+        """Test that conflict detection only applies to COPY_VALUE_TO actions."""
         action_map = {
             "Medication.code": ActionInfo(
                 action=ActionType.FIXED,
@@ -211,7 +211,7 @@ class TestConflictDetector(unittest.TestCase):
         
         detector = ConflictDetector(action_map)
         
-        # Should return None for non-COPY_TO actions
+        # Should return None for non-COPY_VALUE_TO actions
         conflict = detector.get_target_field_conflict(
             "Medication.code",
             "Medication.code.coding",
@@ -233,7 +233,7 @@ class TestConflictDetector(unittest.TestCase):
         )
         
         message = detector.get_conflict_message(
-            "Extension.url", ActionType.COPY_TO, conflicting_action
+            "Extension.url", ActionType.COPY_VALUE_TO, conflicting_action
         )
         
         self.assertIn("system-generated", message)
@@ -267,7 +267,7 @@ class TestConflictDetector(unittest.TestCase):
         conflict = detector.get_target_field_conflict(
             "Medication.extension:A.url",
             "Medication.extension:B.url",
-            ActionType.COPY_TO,
+            ActionType.COPY_VALUE_TO,
         )
         
         self.assertIsNone(conflict)

@@ -1,4 +1,4 @@
-"""Recommender for copy_from/copy_to actions."""
+"""Recommender for copy_value_from/copy_value_to actions."""
 
 import logging
 from typing import Dict, Optional
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class CopyRecommender:
-    """Generates inherited copy_from/copy_to/extension recommendations."""
+    """Generates inherited copy_value_from/copy_value_to/copy_node_to recommendations."""
 
     def __init__(
         self,
@@ -43,15 +43,15 @@ class CopyRecommender:
         self.type_incompatible_fields: Dict[str, str] = {}
 
     def compute_recommendations(self) -> Dict[str, list[ActionInfo]]:
-        """Compute inherited recommendations for copy_from/copy_to/extension actions.
+        """Compute inherited recommendations for copy_value_from/copy_value_to/copy_node_to actions.
         
         GREEDY BEHAVIOR:
-        When a parent field has copy_from, copy_to, or extension action, ALL child fields
+        When a parent field has copy_value_from, copy_value_to, or copy_node_to action, ALL child fields
         (not just direct children of manually set parents, but recursively)
         should receive recommendations with adjusted other_value.
         
         CONFLICT DETECTION:
-        For copy_to recommendations, checks if the target field already has an action.
+        For copy_value_to recommendations, checks if the target field already has an action.
         If the target field has any action (manual or system-generated), the
         recommendation is NOT created to avoid conflicts.
         
@@ -104,8 +104,8 @@ class CopyRecommender:
                         recommendation.system_remarks = []
                     recommendation.system_remarks.append(type_warning)
             
-            # For copy_to actions, check if the target field has a fixed value or would be overridden
-            if recommendation.action == ActionType.COPY_TO and self.conflict_detector:
+            # For copy_value_to actions, check if the target field has a fixed value or would be overridden
+            if recommendation.action == ActionType.COPY_VALUE_TO and self.conflict_detector:
                 if target_field_name:
                     # First check if target field has a fixed value
                     fixed_value = self.conflict_detector.get_target_fixed_value_info(target_field_name)
@@ -118,19 +118,19 @@ class CopyRecommender:
                         )
                         self.type_incompatible_fields[field_name] = reason
                         logger.debug(
-                            f"Skipping copy_to recommendation for {field_name} -> {target_field_name}: "
+                            f"Skipping copy_value_to recommendation for {field_name} -> {target_field_name}: "
                             f"Target has fixed value: {fixed_value}"
                         )
                         return None
                     
                     # Check for other conflicts (manual actions, etc.)
                     conflict = self.conflict_detector.get_target_field_conflict(
-                        field_name, target_field_name, ActionType.COPY_TO
+                        field_name, target_field_name, ActionType.COPY_VALUE_TO
                     )
                     if conflict:
                         # Target has non-FIXED action (manual or other) - skip recommendation entirely
                         logger.debug(
-                            f"Skipping copy_to recommendation for {field_name} -> {target_field_name}: "
+                            f"Skipping copy_value_to recommendation for {field_name} -> {target_field_name}: "
                             f"Target already has {conflict.action.value if conflict.action else 'unknown'} action"
                         )
                         return None
@@ -138,6 +138,6 @@ class CopyRecommender:
             return recommendation
         
         return self.inherited_recommender.compute_inherited_recommendations(
-            action_types={ActionType.COPY_FROM, ActionType.COPY_TO, ActionType.EXTENSION},
+            action_types={ActionType.COPY_VALUE_FROM, ActionType.COPY_VALUE_TO, ActionType.COPY_NODE_TO},
             recommendation_factory=recommendation_factory_with_conflict_check
         )

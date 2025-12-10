@@ -1696,8 +1696,8 @@ async def post_mapping_field_classification_old(
             action:
               type: string
               enum:
-                - copy_from
-                - copy_to
+                - copy_value_from
+                - copy_value_to
                 - fixed
                 - use
                 - not_use
@@ -1787,8 +1787,8 @@ async def post_mapping_field(
             action:
               type: string
               enum:
-                - copy_from
-                - copy_to
+                - copy_value_from
+                - copy_value_to
                 - fixed
                 - use
                 - not_use

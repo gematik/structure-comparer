@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 from .errors import NotInitialized
+from .manual_entries_migration import migrate_action_values, migrate_manual_entries
 from .model.manual_entries import ManualEntries as ManualEntriesModel
 from .model.manual_entries import ManualEntriesMapping as ManualEntriesMappingModel
 from .model.manual_entries import ManualEntriesTargetCreation as ManualEntriesTargetCreationModel
@@ -59,6 +60,11 @@ class ManualEntries:
             data = yaml.safe_load(content)  # kann None sein
             if not isinstance(data, dict):
                 data = {}
+            
+            # Apply migrations for legacy formats and action names
+            data = migrate_manual_entries(data)  # Handles old format structure
+            data = migrate_action_values(data)   # Migrates old action names
+            
             # Mindestschema sicherstellen - support both old and new format
             if "entries" not in data or data["entries"] is None:
                 data["entries"] = []

@@ -10,7 +10,7 @@ from .nodes import FieldNode
 SKIP_ACTIONS: set[ActionType] = {
     ActionType.EMPTY,
     ActionType.NOT_USE,
-    ActionType.COPY_TO,
+    ActionType.COPY_VALUE_TO,
 }
 
 
@@ -85,8 +85,8 @@ class FieldTreeBuilder:
             return False
 
         info = self._actions.get(path)
-        if info and info.action == ActionType.COPY_FROM:
-            return self._copy_from_source_supported(info)
+        if info and info.action == ActionType.COPY_VALUE_FROM:
+            return self._copy_value_from_source_supported(info)
 
         if self._action_needs_source_value(info) and not supports_source:
             self._blocked_prefixes.add(path)
@@ -157,11 +157,11 @@ class FieldTreeBuilder:
             return False
         if info.action == ActionType.MANUAL and info.fixed_value:
             return False
-        if info.action == ActionType.COPY_FROM:
+        if info.action == ActionType.COPY_VALUE_FROM:
             return False
         return True
 
-    def _copy_from_source_supported(self, info: ActionInfo) -> bool:
+    def _copy_value_from_source_supported(self, info: ActionInfo) -> bool:
         other_path = info.other_value if isinstance(info.other_value, str) else None
         if not other_path:
             return False
@@ -191,7 +191,7 @@ class FieldTreeBuilder:
             current.remark = info.user_remark or info.system_remark
 
         if (
-            current.action == ActionType.COPY_FROM
+            current.action == ActionType.COPY_VALUE_FROM
             and is_extension_path(path)
             and not path.endswith(".url")
         ):
@@ -212,7 +212,7 @@ class FieldTreeBuilder:
         intent = self._determine_intent(node)
         node.intent = intent
 
-        if intent not in {"copy", "copy_other", "copy_to"}:
+        if intent not in {"copy", "copy_other", "copy_value_to"}:
             node.can_collapse = False
             node.collapse_kind = None
             return
@@ -222,13 +222,13 @@ class FieldTreeBuilder:
             if not child.can_collapse:
                 child_matches = False
                 break
-            expected = (intent, node.other_path if intent in {"copy_other", "copy_to"} else None)
+            expected = (intent, node.other_path if intent in {"copy_other", "copy_value_to"} else None)
             if child.collapse_kind != expected:
                 child_matches = False
                 break
 
         node.can_collapse = child_matches
-        node.collapse_kind = (intent, node.other_path if intent in {"copy_other", "copy_to"} else None)
+        node.collapse_kind = (intent, node.other_path if intent in {"copy_other", "copy_value_to"} else None)
 
     def _determine_intent(self, node: FieldNode) -> str:
         action = node.action
@@ -241,11 +241,11 @@ class FieldTreeBuilder:
         if action in SKIP_ACTIONS:
             return "skip"
 
-        if action == ActionType.COPY_FROM:
+        if action == ActionType.COPY_VALUE_FROM:
             return "copy_other"
 
-        if action == ActionType.COPY_TO:
-            return "copy_to"
+        if action == ActionType.COPY_VALUE_TO:
+            return "copy_value_to"
 
         if action == ActionType.FIXED:
             return "fixed"
@@ -260,7 +260,7 @@ class FieldTreeBuilder:
             if child.intent == "skip":
                 continue
 
-            if child.intent in {"copy", "copy_other", "copy_to"}:
+            if child.intent in {"copy", "copy_other", "copy_value_to"}:
                 is_extension_slice = is_extension_path(child.path) and ":" in child.path.split(".")[-1]
 
                 if (child.can_collapse and child.depth >= 2) or is_extension_slice:
