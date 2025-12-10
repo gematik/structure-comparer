@@ -283,6 +283,28 @@ async def delete_project(project_key: str, response: Response) -> None:
         return ErrorModel.from_except(e)
 
 
+@app.post(
+    "/project/{project_key}/reload",
+    tags=["Projects"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"model": ErrorModel}},
+)
+async def reload_project(project_key: str, response: Response) -> ProjectModel | ErrorModel:
+    """
+    Reload a project from disk to reflect file system changes.
+    
+    Use this endpoint after manually adding or removing package files
+    to update the in-memory state of the project.
+    """
+    global project_handler
+    try:
+        return project_handler.reload(project_key)
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
 @app.get(
     "/project/{project_key}/package",
     tags=["Packages"],

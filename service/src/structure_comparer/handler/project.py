@@ -104,6 +104,19 @@ class ProjectsHandler:
         # Remove from in-memory cache
         del self.__projs[proj_key]
 
+    def reload(self, proj_key: str) -> ProjectModel:
+        """Reload a project from disk to reflect file system changes."""
+        if proj_key not in self.__projs:
+            raise ProjectNotFound()
+        
+        proj = self.__projs[proj_key]
+        project_path = proj.dir
+        
+        # Re-load the project from disk
+        self.__projs[proj_key] = Project(project_path)
+        
+        return self.__projs[proj_key].to_model()
+
     @staticmethod
     def get_action_options() -> ActionOutputModel:
         return ActionOutputModel.from_enum()
