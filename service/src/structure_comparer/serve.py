@@ -99,6 +99,7 @@ from .model.package_dependency import (
 from .model.profile import ProfileList as ProfileListModel
 from .model.profile import ProfileDetails as ProfileDetailsModel
 from .model.profile import ResolvedProfileFieldsResponse as ResolvedProfileFieldsResponseModel
+from .model.mapping import ResolvedMappingFieldsResponse as ResolvedMappingFieldsResponseModel
 from .model.project import Project as ProjectModel
 from .model.project import ProjectInput as ProjectInputModel
 from .model.project import ProjectList as ProjectListModel
@@ -1492,6 +1493,51 @@ async def get_mapping_fields(
     global mapping_handler
     try:
         return mapping_handler.get_field_list(project_key, mapping_id)
+
+    except (ProjectNotFound, MappingNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.get(
+    "/project/{project_key}/mapping/{mapping_id}/resolved-fields",
+    tags=["Fields"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {}},
+)
+async def get_resolved_mapping_fields(
+    project_key: str,
+    mapping_id: str,
+    response: Response,
+    max_depth: int = 3,
+    include_references: bool = True
+) -> ResolvedMappingFieldsResponseModel | ErrorModel:
+    """
+    Get mapping fields with recursive resolution of profile references.
+
+    This endpoint returns all fields in a mapping, including fields from
+    profiles that are referenced via fixedUri, fixedCanonical, type[].profile[],
+    or type[].targetProfile[]. References are followed recursively up to
+    the specified max_depth.
+
+    Parameters:
+    - max_depth: Maximum recursion depth for resolving references (default: 3)
+    - include_references: Whether to resolve references (default: true)
+
+    Returns:
+    - fields: List of all resolved fields with resolution metadata
+    - unresolved_references: List of references that could not be resolved
+    - resolution_stats: Statistics about the resolution process
+    """
+    global mapping_handler
+    try:
+        return mapping_handler.get_resolved_fields(
+            project_key,
+            mapping_id,
+            max_depth=max_depth,
+            include_references=include_references
+        )
 
     except (ProjectNotFound, MappingNotFound) as e:
         response.status_code = 404

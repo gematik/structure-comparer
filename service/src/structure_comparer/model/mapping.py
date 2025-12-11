@@ -101,3 +101,95 @@ class MappingDetails(MappingBase):
 class MappingFieldsOutput(BaseModel):
     id: str
     fields: list[MappingField]
+
+
+# ============================================================================
+# Models for Recursive Field Resolution (Phase 1)
+# ============================================================================
+
+class ProfileResolutionInfo(BaseModel):
+    """Profile-specific resolution information for a field."""
+    can_be_expanded: bool = False  # Has resolvable references?
+    resolved_profile_id: str | None = None  # ID of the resolved profile
+    type_profiles: list[str] | None = None  # Profile URLs from type[].profile[]
+    ref_types: list[str] | None = None  # Target profiles from type[].targetProfile[]
+
+
+class ResolvedMappingField(BaseModel):
+    """Extended mapping field with resolution context.
+
+    This model represents a field that may have been resolved from a
+    profile reference (fixedUri, fixedCanonical, type[].profile[], etc.)
+    """
+    # Basic field information
+    name: str  # Full path including resolved prefix
+    original_name: str  # Original field name in the source profile
+    
+    # Profile information per profile key
+    source_profiles: dict[str, "ResolvedProfileFieldInfo | None"]
+    target_profile: "ResolvedProfileFieldInfo | None"
+    
+    # Classification and issues
+    classification: str  # compat, warn, incompat
+    issues: list[str] | None = None
+    
+    # Action information (same as MappingField)
+    action: Action | None = None
+    other: str | None = None
+    fixed: str | None = None
+    actions_allowed: list[Action] = []
+    action_info: ActionInfo | None = None
+    evaluation: EvaluationResult | None = None
+    recommendations: list[ActionInfo] = []
+    
+    # Resolution metadata
+    resolved_from: str | None = None  # Path of the parent field if resolved
+    resolution_depth: int = 0  # Depth of resolution (0 = direct field)
+    referenced_profile_url: str | None = None  # URL of the referenced profile
+    is_expanded: bool = False  # For frontend: Is this branch expanded?
+    
+    # Profile-specific resolution info
+    source_resolution_info: ProfileResolutionInfo | None = None
+    target_resolution_info: ProfileResolutionInfo | None = None
+
+
+class ResolvedProfileFieldInfo(BaseModel):
+    """Profile-specific field information with resolution context."""
+    min: int
+    max: str
+    must_support: bool = False
+    types: list[str] | None = None
+    ref_types: list[str] | None = None
+    type_profiles: list[str] | None = None
+    cardinality_note: str | None = None
+    fixed_value: str | None = None
+    fixed_value_type: str | None = None
+    
+    # Resolution capabilities
+    can_be_expanded: bool = False
+    resolved_profile_id: str | None = None
+
+
+class UnresolvedReference(BaseModel):
+    """Information about a reference that could not be resolved."""
+    field_path: str
+    reference_url: str
+    reference_type: str  # 'fixedUri', 'fixedCanonical', 'type_profile', 'ref_type'
+    profile_context: str  # Which profile this reference is from (source/target)
+
+
+class ResolutionStats(BaseModel):
+    """Statistics about the resolution process."""
+    total_fields: int = 0
+    resolved_references: int = 0
+    unresolved_references: int = 0
+    max_depth_reached: int = 0
+    profiles_loaded: list[str] = []
+
+
+class ResolvedMappingFieldsResponse(BaseModel):
+    """Response containing recursively resolved mapping fields."""
+    id: str  # Mapping ID
+    fields: list[ResolvedMappingField]
+    unresolved_references: list[UnresolvedReference] = []
+    resolution_stats: ResolutionStats
