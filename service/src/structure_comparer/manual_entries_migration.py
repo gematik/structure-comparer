@@ -25,6 +25,7 @@ CLASSIFICATION_TO_ACTION = {
     # Legacy extension is migrated to copy_node_to
     "extension": "copy_node_to",
     "copy_node_to": "copy_node_to",
+    "copy_node_from": "copy_node_from",
     "manual": "manual",
     # medication_service is deprecated - migrate to manual
     "medication_service": "manual",

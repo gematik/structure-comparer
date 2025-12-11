@@ -29,6 +29,7 @@ _INHERITABLE_ACTIONS = {
     ActionType.COPY_VALUE_FROM,
     ActionType.COPY_VALUE_TO,
     ActionType.COPY_NODE_TO,  # Copy node actions should be inherited to child fields
+    ActionType.COPY_NODE_FROM,  # Copy node from actions should be inherited to child fields
 }
 
 
@@ -226,12 +227,14 @@ def _inherit_or_default(
     if field_parent_name:
         parent_info = result.get(field_parent_name)
         if parent_info and parent_info.action in _INHERITABLE_ACTIONS:
-            # For copy_value_from/copy_value_to/copy_node_to: DON'T inherit as active action anymore
+            # For copy_value_from/copy_value_to/copy_node_to/copy_node_from:
+            # DON'T inherit as active action anymore
             # These will be handled as recommendations instead
             is_copy_action = parent_info.action in {
                 ActionType.COPY_VALUE_FROM,
                 ActionType.COPY_VALUE_TO,
-                ActionType.COPY_NODE_TO,  # Copy node actions also handled as recommendations
+                ActionType.COPY_NODE_TO,
+                ActionType.COPY_NODE_FROM,  # Copy node actions handled as recommendations
             }
             
             if is_copy_action:
@@ -377,6 +380,17 @@ def _augment_copy_links(manual_map: Dict[str, dict]) -> Dict[str, dict]:
             augmented.setdefault(
                 other,
                 {"action": ActionType.COPY_VALUE_FROM.value, "other": name, "_derived": True},
+            )
+        # Partner derivation for copy_node_to/copy_node_from
+        elif action == ActionType.COPY_NODE_TO:
+            augmented.setdefault(
+                other,
+                {"action": ActionType.COPY_NODE_FROM.value, "other": name, "_derived": True},
+            )
+        elif action == ActionType.COPY_NODE_FROM:
+            augmented.setdefault(
+                other,
+                {"action": ActionType.COPY_NODE_TO.value, "other": name, "_derived": True},
             )
 
     return augmented

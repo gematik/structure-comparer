@@ -182,8 +182,12 @@ class MappingHandler:
             for field_name in fields_to_delete:
                 if field_name in manual_entries:
                     # Clean up partners before deleting
+                    copy_actions = [
+                        Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO,
+                        Action.COPY_NODE_FROM, Action.COPY_NODE_TO
+                    ]
                     if (manual_entry := manual_entries.get(field_name)) and (
-                        manual_entry.action in [Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO]
+                        manual_entry.action in copy_actions
                     ):
                         logger.debug(
                             f"Cleaning up partner for {field_name}: "
@@ -219,7 +223,11 @@ class MappingHandler:
         # Build the entry that should be created/updated
         new_entry = MappingFieldBaseModel(name=field.name, action=input.action)
         target: MappingField | None = None
-        if new_entry.action in [Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO, Action.COPY_NODE_TO]:
+        copy_actions = [
+            Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO,
+            Action.COPY_NODE_TO, Action.COPY_NODE_FROM
+        ]
+        if new_entry.action in copy_actions:
             if target_id := input.other:
                 target = get_field_by_name(mapping, target_id)
 
@@ -238,9 +246,13 @@ class MappingHandler:
         if input.remark:
             new_entry.remark = input.remark
 
-        # Clean up existing COPY_VALUE_FROM/COPY_VALUE_TO/COPY_NODE_TO partners when changing action
+        # Clean up existing copy partners when changing action
+        cleanup_actions = [
+            Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO,
+            Action.COPY_NODE_TO, Action.COPY_NODE_FROM
+        ]
         if (manual_entry := manual_entries.get(field.name)) and (
-            manual_entry.action in [Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO, Action.COPY_NODE_TO]
+            manual_entry.action in cleanup_actions
         ):
             other_name = manual_entry.other
             if other_name:

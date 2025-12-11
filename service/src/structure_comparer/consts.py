@@ -10,6 +10,7 @@ REMARKS = {
     Action.COPY_VALUE_TO: "Value copied to '{}'",
     Action.FIXED: "Set to '{}' fixed value",
     Action.COPY_NODE_TO: "Node will be transferred to '{}'",
+    Action.COPY_NODE_FROM: "Node will be received from '{}'",
 }
 
 DESCRIPTIONS = {
@@ -22,4 +23,5 @@ DESCRIPTIONS = {
     Action.COPY_VALUE_TO: "Value(s) will be COPIED TO another field",
     Action.FIXED: "Value will be FIXED",
     Action.COPY_NODE_TO: "Node (extension) will be TRANSFERRED to target field",
+    Action.COPY_NODE_FROM: "Node (extension) will be RECEIVED from source field",
 }

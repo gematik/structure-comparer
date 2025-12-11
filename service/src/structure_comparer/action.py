@@ -11,3 +11,4 @@ class Action(StrEnum):
     COPY_VALUE_TO = "copy_value_to"
     FIXED = "fixed"
     COPY_NODE_TO = "copy_node_to"
+    COPY_NODE_FROM = "copy_node_from"

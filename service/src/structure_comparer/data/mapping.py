@@ -31,6 +31,7 @@ _ACTIONTYPE_TO_LEGACY: dict[ActionType, Action] = {
     ActionType.FIXED: Action.FIXED,
     ActionType.MANUAL: Action.MANUAL,
     ActionType.COPY_NODE_TO: Action.COPY_NODE_TO,
+    ActionType.COPY_NODE_FROM: Action.COPY_NODE_FROM,
     # Note: action=None indicates no action has been selected yet (user must decide)
 }
 
@@ -70,11 +71,19 @@ class MappingField(ComparisonField):
         target_present = self.profiles[target_profile] is not None
 
         if not any_source_present:
-            allowed -= set([Action.USE, Action.NOT_USE, Action.COPY_VALUE_FROM])
+            # No source profile: can't use, not_use, or copy FROM source
+            allowed -= set([
+                Action.USE, Action.NOT_USE,
+                Action.COPY_VALUE_FROM, Action.COPY_NODE_FROM
+            ])
         else:
             allowed -= set([Action.EMPTY])
         if not target_present:
-            allowed -= set([Action.USE, Action.EMPTY, Action.COPY_VALUE_TO])
+            # No target profile: can't use, empty, or copy TO target
+            allowed -= set([
+                Action.USE, Action.EMPTY,
+                Action.COPY_VALUE_TO, Action.COPY_NODE_TO
+            ])
 
         self.actions_allowed = list(allowed)
 

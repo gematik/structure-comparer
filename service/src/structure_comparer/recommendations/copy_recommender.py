@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class CopyRecommender:
-    """Generates inherited copy_value_from/copy_value_to/copy_node_to recommendations."""
+    """Generates inherited copy_value_from/copy_value_to/copy_node_to/copy_node_from recommendations."""
 
     def __init__(
         self,
@@ -138,6 +138,9 @@ class CopyRecommender:
             return recommendation
         
         return self.inherited_recommender.compute_inherited_recommendations(
-            action_types={ActionType.COPY_VALUE_FROM, ActionType.COPY_VALUE_TO, ActionType.COPY_NODE_TO},
+            action_types={
+                ActionType.COPY_VALUE_FROM, ActionType.COPY_VALUE_TO,
+                ActionType.COPY_NODE_TO, ActionType.COPY_NODE_FROM
+            },
             recommendation_factory=recommendation_factory_with_conflict_check
         )
