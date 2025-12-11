@@ -24,6 +24,7 @@ class ActionType(str, Enum):
     FIXED = "fixed"
     MANUAL = "manual"  # User provides free-text implementation instructions in remark field
     COPY_NODE_TO = "copy_node_to"  # For source extensions/nodes to be copied to any target field
+    COPY_NODE_FROM = "copy_node_from"  # For target fields receiving nodes from source extensions
 
 
 class ActionSource(str, Enum):
