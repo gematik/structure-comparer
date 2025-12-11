@@ -89,7 +89,7 @@ def find_skipped_slices(
         should_skip = False
         if info.action in skip_actions:
             should_skip = True
-        elif info.action in {ActionType.COPY_VALUE_TO, ActionType.MANUAL}:
+        elif info.action in {ActionType.COPY_VALUE_TO, ActionType.COPY_NODE_TO, ActionType.MANUAL}:
             should_skip = True
         else:
             field = mapping.fields.get(path)

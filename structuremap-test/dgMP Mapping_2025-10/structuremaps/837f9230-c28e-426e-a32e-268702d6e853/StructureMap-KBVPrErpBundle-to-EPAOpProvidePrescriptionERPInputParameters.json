@@ -5,7 +5,7 @@
   "name": "KBVPrErpBundleMap",
   "status": "draft",
   "version": "1.0",
-  "date": "2025-12-09",
+  "date": "2025-12-11",
   "description": "Auto-generated StructureMap for transformation KBV_PR_ERP_Bundle|1.3.2 -> EPAOpProvidePrescriptionERPInputParameters|1.0.6-2",
   "structure": [
     {
@@ -38,15 +38,611 @@
       ],
       "rule": [
         {
-          "name": "NoopRule",
-          "documentation": "Placeholder rule because no transformation field references a mapping yet",
+          "name": "ParameterRxprescriptionContainer",
+          "documentation": "Creates parameter:rxPrescription parameter container aggregating 4 part(s)",
           "source": [
             {
               "context": "KBVPRERPBundle"
+            }
+          ],
+          "target": [
+            {
+              "context": "EPAOpProvidePrescriptionERPInputParameters",
+              "contextType": "variable",
+              "element": "parameter",
+              "variable": "targetParameterRxprescriptionParameter77d85b46"
+            }
+          ],
+          "rule": [
+            {
+              "name": "SetParameterRxprescriptionName",
+              "source": [
+                {
+                  "context": "KBVPRERPBundle"
+                }
+              ],
+              "target": [
+                {
+                  "context": "targetParameterRxprescriptionParameter77d85b46",
+                  "contextType": "variable",
+                  "element": "name",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueString": "rxPrescription"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "PartMedicationPartContainer",
+              "documentation": "Creates part:medication part container aggregating 4 child rule(s)",
+              "source": [
+                {
+                  "context": "KBVPRERPBundle"
+                }
+              ],
+              "target": [
+                {
+                  "context": "targetParameterRxprescriptionParameter77d85b46",
+                  "contextType": "variable",
+                  "element": "part",
+                  "variable": "targetPartMedicationPart88f31ec4"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "SetPartMedicationName",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "targetPartMedicationPart88f31ec4",
+                      "contextType": "variable",
+                      "element": "name",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "medication"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "BundleEntryRezeptierdatenpznverordnungResource7400f329",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "sourceBundleEntryRezeptierdatenpznverordnungResource0Entry4c4ad0",
+                      "element": "entry",
+                      "condition": "resource is Medication"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "BundleEntryRezeptierdatenpznverordnungResource7400f329",
+                      "source": [
+                        {
+                          "context": "sourceBundleEntryRezeptierdatenpznverordnungResource0Entry4c4ad0",
+                          "variable": "sourceBundleEntryRezeptierdatenpznverordnungResource1Resource3bd",
+                          "element": "resource"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "CallEpamedicationmap",
+                          "source": [
+                            {
+                              "context": "sourceBundleEntryRezeptierdatenpznverordnungResource1Resource3bd"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "targetPartMedicationPart88f31ec4",
+                              "contextType": "variable",
+                              "element": "resource",
+                              "variable": "targetParameterRxprescriptionPartMedicationResourceResource38c62",
+                              "transform": "create",
+                              "parameter": [
+                                {
+                                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication"
+                                }
+                              ]
+                            }
+                          ],
+                          "dependent": [
+                            {
+                              "name": "EPAMedicationMap",
+                              "variable": [
+                                "sourceBundleEntryRezeptierdatenpznverordnungResource1Resource3bd",
+                                "targetParameterRxprescriptionPartMedicationResourceResource38c62"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Bundle.entry:RezeptierdatenPZNVerordnung.resource -> .parameter:rxPrescription.part:medication.resource using KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2"
+                },
+                {
+                  "name": "BundleEntryRezeptierdatenwirkstoffverordnungResource7400f329",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "sourceBundleEntryRezeptierdatenwirkstoffverordnungResource0Ent6b",
+                      "element": "entry",
+                      "condition": "resource is Medication"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "BundleEntryRezeptierdatenwirkstoffverordnungResource7400f329",
+                      "source": [
+                        {
+                          "context": "sourceBundleEntryRezeptierdatenwirkstoffverordnungResource0Ent6b",
+                          "variable": "sourceBundleEntryRezeptierdatenwirkstoffverordnungResource1Res9f",
+                          "element": "resource"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "CallEpamedicationmap",
+                          "source": [
+                            {
+                              "context": "sourceBundleEntryRezeptierdatenwirkstoffverordnungResource1Res9f"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "targetPartMedicationPart88f31ec4",
+                              "contextType": "variable",
+                              "element": "resource",
+                              "variable": "targetParameterRxprescriptionPartMedicationResourceResource38c62",
+                              "transform": "create",
+                              "parameter": [
+                                {
+                                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication"
+                                }
+                              ]
+                            }
+                          ],
+                          "dependent": [
+                            {
+                              "name": "EPAMedicationMap",
+                              "variable": [
+                                "sourceBundleEntryRezeptierdatenwirkstoffverordnungResource1Res9f",
+                                "targetParameterRxprescriptionPartMedicationResourceResource38c62"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Bundle.entry:RezeptierdatenWirkstoffverordnung.resource -> .parameter:rxPrescription.part:medication.resource using KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2"
+                },
+                {
+                  "name": "BundleEntryRezeptierdatenrezepturverordnungResource7400f329",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "sourceBundleEntryRezeptierdatenrezepturverordnungResource0Entr83",
+                      "element": "entry",
+                      "condition": "resource is Medication"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "BundleEntryRezeptierdatenrezepturverordnungResource7400f329",
+                      "source": [
+                        {
+                          "context": "sourceBundleEntryRezeptierdatenrezepturverordnungResource0Entr83",
+                          "variable": "sourceBundleEntryRezeptierdatenrezepturverordnungResource1Resocd",
+                          "element": "resource"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "CallEpamedicationmap",
+                          "source": [
+                            {
+                              "context": "sourceBundleEntryRezeptierdatenrezepturverordnungResource1Resocd"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "targetPartMedicationPart88f31ec4",
+                              "contextType": "variable",
+                              "element": "resource",
+                              "variable": "targetParameterRxprescriptionPartMedicationResourceResource38c62",
+                              "transform": "create",
+                              "parameter": [
+                                {
+                                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication"
+                                }
+                              ]
+                            }
+                          ],
+                          "dependent": [
+                            {
+                              "name": "EPAMedicationMap",
+                              "variable": [
+                                "sourceBundleEntryRezeptierdatenrezepturverordnungResource1Resocd",
+                                "targetParameterRxprescriptionPartMedicationResourceResource38c62"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Bundle.entry:RezeptierdatenRezepturverordnung.resource -> .parameter:rxPrescription.part:medication.resource using KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2"
+                },
+                {
+                  "name": "BundleEntryRezeptierdatenfreitextverordnungResource7400f329",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "sourceBundleEntryRezeptierdatenfreitextverordnungResource0Entrb4",
+                      "element": "entry",
+                      "condition": "resource is Medication"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "BundleEntryRezeptierdatenfreitextverordnungResource7400f329",
+                      "source": [
+                        {
+                          "context": "sourceBundleEntryRezeptierdatenfreitextverordnungResource0Entrb4",
+                          "variable": "sourceBundleEntryRezeptierdatenfreitextverordnungResource1Resob3",
+                          "element": "resource"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "CallEpamedicationmap",
+                          "source": [
+                            {
+                              "context": "sourceBundleEntryRezeptierdatenfreitextverordnungResource1Resob3"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "targetPartMedicationPart88f31ec4",
+                              "contextType": "variable",
+                              "element": "resource",
+                              "variable": "targetParameterRxprescriptionPartMedicationResourceResource38c62",
+                              "transform": "create",
+                              "parameter": [
+                                {
+                                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication"
+                                }
+                              ]
+                            }
+                          ],
+                          "dependent": [
+                            {
+                              "name": "EPAMedicationMap",
+                              "variable": [
+                                "sourceBundleEntryRezeptierdatenfreitextverordnungResource1Resob3",
+                                "targetParameterRxprescriptionPartMedicationResourceResource38c62"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Bundle.entry:RezeptierdatenFreitextverordnung.resource -> .parameter:rxPrescription.part:medication.resource using KBV_PR_ERP_Medication_Compounding|1.3.2, KBV_PR_ERP_Medication_FreeText|1.3.2, KBV_PR_ERP_Medication_Ingredient|1.3.2, KBV_PR_ERP_Medication_PZN|1.3.2 -> EPAMedication|1.0.6-2"
+                }
+              ]
+            },
+            {
+              "name": "PartMedicationrequestPartContainer",
+              "documentation": "Creates part:medicationRequest part container aggregating 1 child rule(s)",
+              "source": [
+                {
+                  "context": "KBVPRERPBundle"
+                }
+              ],
+              "target": [
+                {
+                  "context": "targetParameterRxprescriptionParameter77d85b46",
+                  "contextType": "variable",
+                  "element": "part",
+                  "variable": "targetPartMedicationrequestPart3ea10d80"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "SetPartMedicationrequestName",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "targetPartMedicationrequestPart3ea10d80",
+                      "contextType": "variable",
+                      "element": "name",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "medicationRequest"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "BundleEntryVerordnungarzneimittelResource890c831b",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "sourceBundleEntryVerordnungarzneimittelResource0Entry3c6c2e1b",
+                      "element": "entry",
+                      "condition": "resource is MedicationRequest"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "BundleEntryVerordnungarzneimittelResource890c831b",
+                      "source": [
+                        {
+                          "context": "sourceBundleEntryVerordnungarzneimittelResource0Entry3c6c2e1b",
+                          "variable": "sourceBundleEntryVerordnungarzneimittelResource1Resource61f06fbc",
+                          "element": "resource"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "CallKbvprerpprescriptionmap",
+                          "source": [
+                            {
+                              "context": "sourceBundleEntryVerordnungarzneimittelResource1Resource61f06fbc"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "targetPartMedicationrequestPart3ea10d80",
+                              "contextType": "variable",
+                              "element": "resource",
+                              "variable": "targetParameterRxprescriptionPartMedicationrequestResourceReso52",
+                              "transform": "create",
+                              "parameter": [
+                                {
+                                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request"
+                                }
+                              ]
+                            }
+                          ],
+                          "dependent": [
+                            {
+                              "name": "KBVPrErpPrescriptionMap",
+                              "variable": [
+                                "sourceBundleEntryVerordnungarzneimittelResource1Resource61f06fbc",
+                                "targetParameterRxprescriptionPartMedicationrequestResourceReso52"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Bundle.entry:VerordnungArzneimittel.resource -> .parameter:rxPrescription.part:medicationRequest.resource using KBV_PR_ERP_Prescription|1.3.2 -> EPAMedicationRequest|1.0.6-2"
+                }
+              ]
+            },
+            {
+              "name": "PartOrganizationPartContainer",
+              "documentation": "Creates part:organization part container aggregating 1 child rule(s)",
+              "source": [
+                {
+                  "context": "KBVPRERPBundle"
+                }
+              ],
+              "target": [
+                {
+                  "context": "targetParameterRxprescriptionParameter77d85b46",
+                  "contextType": "variable",
+                  "element": "part",
+                  "variable": "targetPartOrganizationPart5252e12d"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "SetPartOrganizationName",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "targetPartOrganizationPart5252e12d",
+                      "contextType": "variable",
+                      "element": "name",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "organization"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "BundleEntryEinrichtungResourceB36f36fb",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "sourceBundleEntryEinrichtungResource0Entry6bfa77fa",
+                      "element": "entry",
+                      "condition": "resource is Organization"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "BundleEntryEinrichtungResourceB36f36fb",
+                      "source": [
+                        {
+                          "context": "sourceBundleEntryEinrichtungResource0Entry6bfa77fa",
+                          "variable": "sourceBundleEntryEinrichtungResource1Resource45328e4f",
+                          "element": "resource"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "CallKbvprfororganizationmap",
+                          "source": [
+                            {
+                              "context": "sourceBundleEntryEinrichtungResource1Resource45328e4f"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "targetPartOrganizationPart5252e12d",
+                              "contextType": "variable",
+                              "element": "resource",
+                              "variable": "targetParameterRxprescriptionPartOrganizationResourceResource43b",
+                              "transform": "create",
+                              "parameter": [
+                                {
+                                  "valueString": "https://gematik.de/fhir/directory/StructureDefinition/OrganizationDirectory"
+                                }
+                              ]
+                            }
+                          ],
+                          "dependent": [
+                            {
+                              "name": "KBVPrForOrganizationMap",
+                              "variable": [
+                                "sourceBundleEntryEinrichtungResource1Resource45328e4f",
+                                "targetParameterRxprescriptionPartOrganizationResourceResource43b"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Bundle.entry:Einrichtung.resource -> .parameter:rxPrescription.part:organization.resource using KBV_PR_FOR_Organization|1.2.0 -> OrganizationDirectory|0.11.25"
+                }
+              ]
+            },
+            {
+              "name": "PartPractitionerPartContainer",
+              "documentation": "Creates part:practitioner part container aggregating 1 child rule(s)",
+              "source": [
+                {
+                  "context": "KBVPRERPBundle"
+                }
+              ],
+              "target": [
+                {
+                  "context": "targetParameterRxprescriptionParameter77d85b46",
+                  "contextType": "variable",
+                  "element": "part",
+                  "variable": "targetPartPractitionerParte111e9d1"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "SetPartPractitionerName",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "targetPartPractitionerParte111e9d1",
+                      "contextType": "variable",
+                      "element": "name",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "practitioner"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "BundleEntryAusstellendeverschreibendeverantwortlichepersonResour",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "sourceBundleEntryAusstellendeverschreibendeverantwortlichepersb5",
+                      "element": "entry",
+                      "condition": "resource is Practitioner"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "BundleEntryAusstellendeverschreibendeverantwortlichepersonResour",
+                      "source": [
+                        {
+                          "context": "sourceBundleEntryAusstellendeverschreibendeverantwortlichepersb5",
+                          "variable": "sourceBundleEntryAusstellendeverschreibendeverantwortlicheperse9",
+                          "element": "resource"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "CallKbvprforpractitionermap",
+                          "source": [
+                            {
+                              "context": "sourceBundleEntryAusstellendeverschreibendeverantwortlicheperse9"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "targetPartPractitionerParte111e9d1",
+                              "contextType": "variable",
+                              "element": "resource",
+                              "variable": "targetParameterRxprescriptionPartPractitionerResourceResource62d",
+                              "transform": "create",
+                              "parameter": [
+                                {
+                                  "valueString": "https://gematik.de/fhir/directory/StructureDefinition/PractitionerDirectory"
+                                }
+                              ]
+                            }
+                          ],
+                          "dependent": [
+                            {
+                              "name": "KBVPrForPractitionerMap",
+                              "variable": [
+                                "sourceBundleEntryAusstellendeverschreibendeverantwortlicheperse9",
+                                "targetParameterRxprescriptionPartPractitionerResourceResource62d"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Bundle.entry:AusstellendeVerschreibendeVerantwortlichePerson.resource -> .parameter:rxPrescription.part:practitioner.resource using KBV_PR_FOR_Practitioner|1.2.0 -> PractitionerDirectory|0.11.25"
+                }
+              ]
             }
           ]
         }
       ]
     }
+  ],
+  "import": [
+    "https://gematik.de/fhir/structure-comparer/StructureMap/EPAMedicationMap",
+    "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrErpPrescriptionMap",
+    "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrForOrganizationMap",
+    "https://gematik.de/fhir/structure-comparer/StructureMap/KBVPrForPractitionerMap"
   ]
 }

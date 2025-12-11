@@ -1042,8 +1042,11 @@ class _TransformationInlineFieldRuleBuilder:
         if action is None:
             return None
         descriptions = {
-            ActionType.COPY_TO: "Automatic copy",
+            ActionType.COPY_VALUE_FROM: "Automatic copy",
+            ActionType.COPY_VALUE_TO: "Automatic copy",
+            ActionType.COPY_NODE_TO: "Automatic copy",
             ActionType.USE: "Automatic copy",
+            ActionType.USE_RECURSIVE: "Automatic copy",
             ActionType.FIXED: f"Fixed value '{self._field.fixed or ''}'",
             ActionType.MANUAL: "Manual action required",
         }

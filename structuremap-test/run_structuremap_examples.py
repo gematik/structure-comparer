@@ -30,9 +30,8 @@ FHIR_VERSION = "4.0.1"
 VALIDATE_STRUCTUREMAPS = True
 RUN_TRANSFORMATIONS = True  # Enable to run example transformations via validator -transform
 PROJECT_FILTER: list[str] = ["dgMP Mapping_2025-10"]  # Leave empty to process every project that exists in the projects dir.
-MAPPING_FILTER: list[str] = ["3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702"]  # Optional list of mapping UUIDs to limit the run.
+MAPPING_FILTER: list[str] = []  # Optional list of mapping UUIDs to limit the run.
 TRANSFORMATION_FILTER: list[str] = []  # Optional list of transformation UUIDs to limit the run.
-EXAMPLE_FILTER: list[str] = []  # Optional list of example descriptor suffixes (text after the UUID in the filename).
 EXTRA_IG_SOURCES: list[str | Path] = []  # Additional -ig arguments besides the mapping test folder itself.
 ADDITIONAL_TRANSFORM_ARGS: list[str] = []
 SERVER_BASE_URL = os.environ.get("STRUCTUREMAP_SERVER_URL", "http://127.0.0.1:8000")
@@ -78,6 +77,7 @@ class TransformJob:
     identifier: str
     kind: str
     structuremap_dir: Path
+    structuremap_root: Path
     structure_map_url: str
     target_package_dir: Path | None
     target_profile_url: str | None
@@ -163,6 +163,7 @@ def main() -> None:
                     target_profile_url=getattr(target_profile, "url", None),
                     example_files=example_index.get(mapping_id, []),
                     output_dir=paths.outputs,
+                    structuremap_root=paths.structuremaps,
                 )
             )
 
@@ -198,6 +199,7 @@ def main() -> None:
                     example_files=example_index.get(transformation_id, []),
                     output_dir=paths.outputs,
                     dependency_dirs=dependency_dirs,
+                    structuremap_root=paths.structuremaps,
                 )
             )
 
@@ -227,21 +229,35 @@ def _run_transform_job(job: TransformJob) -> None:
         print(f"[{job.project_key}/{job.identifier}] No example input files found")
         return
 
-    base_ig_args: list[str] = ["-ig", _as_repo_relative(job.structuremap_dir)]
+    base_ig_args: list[str] = []
+
+    def _add_ig(value: str) -> None:
+        if not value:
+            return
+        base_ig_args.extend(["-ig", value])
+
+    seen_igs: set[str] = set()
+
+    def _add_unique_ig(value: str) -> None:
+        normalized = value.strip()
+        if not normalized or normalized in seen_igs:
+            return
+        seen_igs.add(normalized)
+        _add_ig(normalized)
+
+    for ig_dir in _structuremap_ig_directories(job.structuremap_root):
+        _add_unique_ig(_as_repo_relative(ig_dir))
     for dep_dir in job.dependency_dirs:
-        base_ig_args.extend(["-ig", _as_repo_relative(dep_dir)])
+        _add_unique_ig(_as_repo_relative(dep_dir))
     for ig in _project_ig_sources(job.project_key):
-        base_ig_args.extend(["-ig", ig])
+        _add_unique_ig(ig)
     for ig in EXTRA_IG_SOURCES:
-        base_ig_args.extend(["-ig", str(ig)])
+        _add_unique_ig(str(ig))
 
     job.output_dir.mkdir(parents=True, exist_ok=True)
 
     for example_file in example_files:
         descriptor = _example_descriptor(example_file)
-        if EXAMPLE_FILTER and descriptor not in EXAMPLE_FILTER:
-            continue
-
         output_name = f"output_{job.identifier}_{descriptor}.json"
         output_file = job.output_dir / output_name
         if output_file.exists():
@@ -411,7 +427,7 @@ def _validate_structuremaps(structure_map_paths: list[Path], project_key: str) -
         "-level",
         "error",
     ]
-    ig_args = ["hl7.fhir.r4.core#4.0.1", *_project_ig_sources(project_key)]
+    ig_args = list(_project_ig_sources(project_key))
     ig_args.extend(str(ig) for ig in EXTRA_IG_SOURCES)
     for ig in ig_args:
         cmd.extend(["-ig", ig])
@@ -430,7 +446,13 @@ def _validate_structuremaps(structure_map_paths: list[Path], project_key: str) -
 
 def _project_ig_sources(project_key: str) -> list[str]:
     sources = _project_ig_entries(project_key)
-    return [_as_repo_relative(src.path) for src in sources if src.path]
+    entries: list[str] = []
+    for src in sources:
+        if src.package_spec:
+            entries.append(src.package_spec)
+        elif src.path:
+            entries.append(_as_repo_relative(src.path))
+    return [entry for entry in entries if not entry.startswith("hl7.fhir.r4.core")]
 
 
 def _project_ig_package_specs(project_key: str) -> list[str]:
@@ -441,7 +463,13 @@ def _project_ig_package_specs(project_key: str) -> list[str]:
             specs.append(src.package_spec)
         elif src.path:
             specs.append(_as_repo_relative(src.path))
-    return specs
+    return [spec for spec in specs if not spec.startswith("hl7.fhir.r4.core")]
+
+
+def _structuremap_ig_directories(structuremap_root: Path) -> list[Path]:
+    if not structuremap_root.exists():
+        return []
+    return sorted(path for path in structuremap_root.iterdir() if path.is_dir())
 
 
 @dataclass(frozen=True)

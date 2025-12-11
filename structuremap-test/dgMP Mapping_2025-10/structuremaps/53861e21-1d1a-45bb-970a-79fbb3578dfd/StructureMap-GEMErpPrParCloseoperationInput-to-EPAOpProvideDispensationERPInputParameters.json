@@ -5,7 +5,7 @@
   "name": "GEMErpPrParCloseoperationInputMap",
   "status": "draft",
   "version": "1.0",
-  "date": "2025-12-09",
+  "date": "2025-12-11",
   "description": "Auto-generated StructureMap for transformation GEM_ERP_PR_PAR_CloseOperation_Input|1.5.2 -> EPAOpProvideDispensationERPInputParameters|1.0.6-2",
   "structure": [
     {

@@ -65,6 +65,15 @@ CHOICE_TYPE_SUFFIXES: tuple[str, ...] = (
     "SimpleQuantity",
 )
 
+COPY_RULE_INTENTS: set[str] = {
+    "copy",
+    "copy_other",
+    "copy_value_to",
+    "copy_node_to",
+}
+
+TARGET_REDIRECT_INTENTS: set[str] = {"copy_value_to", "copy_node_to"}
+
 
 class StructureMapRuleBuilder:
     """Builds StructureMap rule dictionaries from prepared nodes."""
@@ -114,16 +123,16 @@ class StructureMapRuleBuilder:
 
         tgt_element = head
 
-        if node.intent == "copy_value_to" and node.other_path:
+        if node.intent in TARGET_REDIRECT_INTENTS and node.other_path:
             tgt_element = node.other_path.split(".")[-1]
             parts = tgt_element.split(":")
             if parts[0].endswith("[x]"):
                 parts[0] = parts[0][:-3]
             tgt_element = ":".join(parts)
 
-        target_path = node.other_path if (node.intent == "copy_value_to" and node.other_path) else node.path
+        target_path = node.other_path if (node.intent in TARGET_REDIRECT_INTENTS and node.other_path) else node.path
         source_path = self._source_path_for_node(node)
-        if node.intent == "copy_value_to":
+        if node.intent in TARGET_REDIRECT_INTENTS:
             source_path = node.path
 
         is_extension = bool(target_path and is_extension_path(target_path))
@@ -194,7 +203,7 @@ class StructureMapRuleBuilder:
             "target": [target_entry],
         }
 
-        if is_extension and node.intent in {"copy", "copy_other", "copy_value_to"}:
+        if is_extension and node.intent in COPY_RULE_INTENTS:
             target_url = get_extension_url(self._mapping, target_path, self._target_profile_key)
             source_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
 
@@ -240,11 +249,11 @@ class StructureMapRuleBuilder:
         other_path_lower = node.other_path.lower() if node.other_path else ""
         debug_paths = "mehrfach" in node_path_lower or "multiple" in other_path_lower
 
-        if node.intent in {"copy", "copy_other", "copy_value_to"}:
+        if node.intent in COPY_RULE_INTENTS:
             source_path = self._source_path_for_node(node)
             target_path = node.path
 
-            if node.intent == "copy_value_to":
+            if node.intent in TARGET_REDIRECT_INTENTS:
                 source_path = node.path
                 target_path = node.other_path or node.path
 
@@ -336,7 +345,7 @@ class StructureMapRuleBuilder:
         else:
             rule["source"] = [{"context": self._source_alias}]
 
-        if node.intent in {"copy", "copy_other", "copy_value_to"}:
+        if node.intent in COPY_RULE_INTENTS:
             leaf_source = source_chain[-1]
             leaf_target = target_chain[-1]
             container_only = getattr(node, "force_container", False)
@@ -664,7 +673,7 @@ class StructureMapRuleBuilder:
         parent = node.parent
         if not parent:
             return False
-        target_parent_path = parent.other_path if (parent.intent == "copy_value_to" and parent.other_path) else parent.path
+        target_parent_path = parent.other_path if (parent.intent in TARGET_REDIRECT_INTENTS and parent.other_path) else parent.path
         if not target_parent_path or not is_extension_path(target_parent_path):
             return False
         target_url = get_extension_url(self._mapping, target_parent_path, self._target_profile_key)
@@ -724,6 +733,8 @@ class StructureMapRuleBuilder:
         intent_desc = {
             "copy": "Automatic copy",
             "copy_other": f"Copied from '{node.other_path}'" if node.other_path else "Automatic copy",
+            "copy_value_to": f"Copied to '{node.other_path}'" if node.other_path else "Automatic copy",
+            "copy_node_to": f"Copied to '{node.other_path}'" if node.other_path else "Automatic copy",
             "fixed": f"Fixed value '{node.fixed_value}'",
             "manual": "Manual action required",
         }.get(node.intent)
