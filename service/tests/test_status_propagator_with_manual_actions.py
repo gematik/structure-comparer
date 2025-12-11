@@ -51,10 +51,10 @@ def test_parent_with_manual_action_not_marked_as_inherited_incompatible():
         ),
     }
     
-    # Parent has manual EXTENSION action
+    # Parent has manual COPY_NODE_TO action
     actions = {
         "Organization.address:Strassenanschrift.line.extension": ActionInfo(
-            action=ActionType.EXTENSION,
+            action=ActionType.COPY_NODE_TO,
             source=ActionSource.MANUAL,
             other_value="Organization.address.line"
         ),

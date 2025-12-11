@@ -66,10 +66,10 @@ def test_migrate_legacy_format():
     not_use_field = fields_by_name["MedicationRequest.dosageInstruction.extension:Dosierungskennzeichen"]
     assert not_use_field["action"] == "not_use"
     
-    # Test copy_from with extra -> other
-    copy_from_field = fields_by_name["MedicationRequest.extension:Mehrfachverordnung"]
-    assert copy_from_field["action"] == "copy_from"
-    assert copy_from_field["other"] == "MedicationRequest.extension:multiplePrescription"
+    # Test copy_value_from with extra -> other
+    copy_value_from_field = fields_by_name["MedicationRequest.extension:Mehrfachverordnung"]
+    assert copy_value_from_field["action"] == "copy_value_from"
+    assert copy_value_from_field["other"] == "MedicationRequest.extension:multiplePrescription"
     
     # Test fixed with extra -> fixed
     fixed_field = fields_by_name["MedicationRequest.intent"]
@@ -107,9 +107,9 @@ def test_migrate_all_classifications():
     assert fields_by_name["field3"]["action"] == "empty"
     assert fields_by_name["field4"]["action"] == "fixed"
     assert fields_by_name["field4"]["fixed"] == "fixed-value"
-    assert fields_by_name["field5"]["action"] == "copy_from"
+    assert fields_by_name["field5"]["action"] == "copy_value_from"
     assert fields_by_name["field5"]["other"] == "source.field"
-    assert fields_by_name["field6"]["action"] == "copy_to"
+    assert fields_by_name["field6"]["action"] == "copy_value_to"
     assert fields_by_name["field6"]["other"] == "target.field"
     assert fields_by_name["field7"]["action"] == "manual"
     # medication_service is now migrated to manual with default remark

@@ -28,7 +28,7 @@ class TargetCreationAction(StrEnum):
     """Allowed actions for Target Creation fields.
     
     Only 'manual' and 'fixed' are allowed - no source-based actions like
-    use, use_recursive, copy_from, copy_to, etc.
+    use, use_recursive, copy_value_from, copy_value_to, etc.
     """
     MANUAL = "manual"
     FIXED = "fixed"
@@ -41,7 +41,7 @@ class TargetCreationFieldMinimal(BaseModel):
     - None: No action selected yet (field is pending)
     - TargetCreationAction value: Specific action chosen (manual or fixed)
     
-    Note: No 'other' field since copy_from/copy_to is not allowed.
+    Note: No 'other' field since copy_value_from/copy_value_to is not allowed.
     """
     action: TargetCreationAction | None
     fixed: str | None = None  # Required when action=fixed

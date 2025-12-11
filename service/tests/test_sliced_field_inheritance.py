@@ -63,7 +63,7 @@ def test_sliced_identifier_with_base_field_fallback():
     
     manual_entries = {
         "Practitioner.identifier:ANR": {
-            "action": "copy_to",
+            "action": "copy_value_to",
             "other": "Practitioner.identifier:LANR",
         }
     }
@@ -74,21 +74,21 @@ def test_sliced_identifier_with_base_field_fallback():
     # Even though LANR.id doesn't exist, Practitioner.identifier.id does (fallback)
     assert "Practitioner.identifier:ANR.id" in recommendations
     id_recs = recommendations["Practitioner.identifier:ANR.id"]
-    copy_to_rec = next((r for r in id_recs if r.action == ActionType.COPY_TO), None)
-    assert copy_to_rec is not None
-    assert copy_to_rec.other_value == "Practitioner.identifier:LANR.id"
+    copy_value_to_rec = next((r for r in id_recs if r.action == ActionType.COPY_VALUE_TO), None)
+    assert copy_value_to_rec is not None
+    assert copy_value_to_rec.other_value == "Practitioner.identifier:LANR.id"
     
     assert "Practitioner.identifier:ANR.system" in recommendations
     system_recs = recommendations["Practitioner.identifier:ANR.system"]
-    copy_to_rec = next((r for r in system_recs if r.action == ActionType.COPY_TO), None)
-    assert copy_to_rec is not None
-    assert copy_to_rec.other_value == "Practitioner.identifier:LANR.system"
+    copy_value_to_rec = next((r for r in system_recs if r.action == ActionType.COPY_VALUE_TO), None)
+    assert copy_value_to_rec is not None
+    assert copy_value_to_rec.other_value == "Practitioner.identifier:LANR.system"
     
     assert "Practitioner.identifier:ANR.value" in recommendations
     value_recs = recommendations["Practitioner.identifier:ANR.value"]
-    copy_to_rec = next((r for r in value_recs if r.action == ActionType.COPY_TO), None)
-    assert copy_to_rec is not None
-    assert copy_to_rec.other_value == "Practitioner.identifier:LANR.value"
+    copy_value_to_rec = next((r for r in value_recs if r.action == ActionType.COPY_VALUE_TO), None)
+    assert copy_value_to_rec is not None
+    assert copy_value_to_rec.other_value == "Practitioner.identifier:LANR.value"
 
 
 def test_no_fallback_when_base_field_also_missing():
@@ -111,7 +111,7 @@ def test_no_fallback_when_base_field_also_missing():
     
     manual_entries = {
         "Practitioner.identifier:ANR": {
-            "action": "copy_to",
+            "action": "copy_value_to",
             "other": "Practitioner.identifier:LANR",
         }
     }
@@ -121,12 +121,12 @@ def test_no_fallback_when_base_field_also_missing():
     # SHOULD create recommendation for customField (implicit slice - source has it)
     assert "Practitioner.identifier:ANR.customField" in recommendations
     custom_recs = recommendations["Practitioner.identifier:ANR.customField"]
-    copy_to_rec = next((r for r in custom_recs if r.action == ActionType.COPY_TO), None)
-    assert copy_to_rec is not None
-    assert copy_to_rec.other_value == "Practitioner.identifier:LANR.customField"
+    copy_value_to_rec = next((r for r in custom_recs if r.action == ActionType.COPY_VALUE_TO), None)
+    assert copy_value_to_rec is not None
+    assert copy_value_to_rec.other_value == "Practitioner.identifier:LANR.customField"
     # Check that the remarks indicate it's an implicit slice
-    assert copy_to_rec.system_remarks is not None
-    assert any("not explicitly defined" in remark for remark in copy_to_rec.system_remarks)
+    assert copy_value_to_rec.system_remarks is not None
+    assert any("not explicitly defined" in remark for remark in copy_value_to_rec.system_remarks)
 
 
 def test_non_sliced_fields_not_affected_by_fallback():
@@ -146,7 +146,7 @@ def test_non_sliced_fields_not_affected_by_fallback():
     
     manual_entries = {
         "Medication.code": {
-            "action": "copy_to",
+            "action": "copy_value_to",
             "other": "Medication.ingredient",
         }
     }
@@ -156,13 +156,13 @@ def test_non_sliced_fields_not_affected_by_fallback():
     # Should create recommendations for children
     assert "Medication.code.coding" in recommendations
     coding_recs = recommendations["Medication.code.coding"]
-    copy_to_rec = next((r for r in coding_recs if r.action == ActionType.COPY_TO), None)
-    assert copy_to_rec is not None
-    assert copy_to_rec.other_value == "Medication.ingredient.coding"
+    copy_value_to_rec = next((r for r in coding_recs if r.action == ActionType.COPY_VALUE_TO), None)
+    assert copy_value_to_rec is not None
+    assert copy_value_to_rec.other_value == "Medication.ingredient.coding"
     
     # Check nested child too
     assert "Medication.code.coding.system" in recommendations
     system_recs = recommendations["Medication.code.coding.system"]
-    copy_to_rec = next((r for r in system_recs if r.action == ActionType.COPY_TO), None)
-    assert copy_to_rec is not None
-    assert copy_to_rec.other_value == "Medication.ingredient.coding.system"
+    copy_value_to_rec = next((r for r in system_recs if r.action == ActionType.COPY_VALUE_TO), None)
+    assert copy_value_to_rec is not None
+    assert copy_value_to_rec.other_value == "Medication.ingredient.coding.system"

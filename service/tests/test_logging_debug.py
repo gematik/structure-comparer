@@ -39,11 +39,11 @@ class StubMapping:
         self.target = None
 
 
-def test_practitioner_identifier_copy_to():
+def test_practitioner_identifier_copy_value_to():
     """Test the exact case from the user: Practitioner.identifier:ANR -> LANR."""
     
     print("\n" + "="*80)
-    print("TEST: Practitioner.identifier:ANR COPY_TO Practitioner.identifier:LANR")
+    print("TEST: Practitioner.identifier:ANR COPY_VALUE_TO Practitioner.identifier:LANR")
     print("="*80 + "\n")
     
     mapping = StubMapping([
@@ -63,7 +63,7 @@ def test_practitioner_identifier_copy_to():
     
     manual_entries = {
         "Practitioner.identifier:ANR": {
-            "action": "copy_to",
+            "action": "copy_value_to",
             "other": "Practitioner.identifier:LANR",
         }
     }
@@ -121,4 +121,4 @@ def test_practitioner_identifier_copy_to():
 
 
 if __name__ == "__main__":
-    test_practitioner_identifier_copy_to()
+    test_practitioner_identifier_copy_value_to()

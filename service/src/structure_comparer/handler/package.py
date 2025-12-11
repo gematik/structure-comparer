@@ -380,50 +380,105 @@ class PackageHandler:
                 value_fields.append(resolved_field)
 
     def new_from_file_upload(self, proj_key: str, file: UploadFile) -> PackageModel:
-        if file.content_type != "application/gzip":
+        # Accept various content types for gzip/tarball files
+        valid_content_types = {
+            "application/gzip",
+            "application/x-gzip",
+            "application/x-tar",
+            "application/x-compressed-tar",
+            "application/octet-stream",  # Fallback for unknown types
+        }
+        
+        # Check content type or file extension
+        filename = file.filename or ""
+        is_valid_extension = filename.endswith(".tgz") or filename.endswith(".tar.gz")
+        is_valid_content_type = file.content_type in valid_content_types
+        
+        logger.info(f"Package upload: filename='{filename}', content_type='{file.content_type}'")
+        logger.debug(f"Valid extension: {is_valid_extension}, Valid content type: {is_valid_content_type}")
+        
+        if not (is_valid_content_type or is_valid_extension):
+            logger.error(f"Invalid file format: content_type='{file.content_type}', filename='{filename}'")
             raise InvalidFileFormat()
 
         # Get project
         proj = self.project_handler._get(proj_key)
+        logger.info(f"Uploading package to project: {proj_key}")
 
         with TemporaryDirectory() as tmp_dir:
             tmp = Path(tmp_dir)
 
             # Write the package file to temp dir
             tmp_pkg_file = tmp / "package.tgz"
-            tmp_pkg_file.write_bytes(file.file.read())
+            file_content = file.file.read()
+            logger.info(f"Read {len(file_content)} bytes from uploaded file")
+            tmp_pkg_file.write_bytes(file_content)
 
-            with tarfile.open(tmp_pkg_file) as tar_file:
-                tar_file.extractall(tmp)
+            try:
+                with tarfile.open(tmp_pkg_file) as tar_file:
+                    tar_file.extractall(tmp)
+                logger.info(f"Extracted tarball to {tmp}")
+            except Exception as e:
+                logger.error(f"Failed to extract tarball: {e}")
+                raise PackageCorrupted()
 
             pkg_info_file = tmp / "package/package.json"
 
             if not pkg_info_file.exists():
+                logger.error(f"package.json not found at {pkg_info_file}")
                 raise PackageCorrupted()
 
             pkg_info = json.loads(pkg_info_file.read_text(encoding="utf-8"))
+            logger.info(f"Package info: name='{pkg_info.get('name')}', version='{pkg_info.get('version')}'")
 
-            # try to find first StructureDefintion to determine if package has snapshots
+            # Check StructureDefinitions for snapshots
+            # We allow packages with some StructureDefinitions without snapshots (e.g., abstract models like FiveWs)
+            # as long as the majority have snapshots
+            with_snapshot = 0
+            without_snapshot = 0
+            without_snapshot_files = []
+            
             for f in (tmp / "package").glob("**/*.json"):
-                content = json.loads(f.read_text(encoding="utf-8"))
-                if content.get(
-                    "resourceType"
-                ) == "StructureDefinition" and not content.get("snapshot"):
-                    raise PackageNoSnapshots()
+                try:
+                    content = json.loads(f.read_text(encoding="utf-8"))
+                    if content.get("resourceType") == "StructureDefinition":
+                        if content.get("snapshot"):
+                            with_snapshot += 1
+                        else:
+                            without_snapshot += 1
+                            without_snapshot_files.append(f.name)
+                except json.JSONDecodeError as e:
+                    logger.warning(f"Failed to parse JSON file {f}: {e}")
+                    continue
+            
+            total = with_snapshot + without_snapshot
+            logger.info(f"Found {total} StructureDefinitions: {with_snapshot} with snapshot, {without_snapshot} without")
+            
+            if without_snapshot_files:
+                logger.warning(f"StructureDefinitions without snapshot: {', '.join(without_snapshot_files[:5])}{'...' if len(without_snapshot_files) > 5 else ''}")
+            
+            # Reject package only if NO StructureDefinitions have snapshots
+            if total > 0 and with_snapshot == 0:
+                logger.error(f"Package has no StructureDefinitions with snapshots")
+                raise PackageNoSnapshots()
 
             # Create package directory below project directory
             pkg_dir = Path(proj.data_dir) / f"{pkg_info['name']}#{pkg_info['version']}"
+            logger.info(f"Creating package directory: {pkg_dir}")
 
             if pkg_dir.exists():
+                logger.error(f"Package directory already exists: {pkg_dir}")
                 raise PackageAlreadyExists()
 
             pkg_dir.mkdir()
 
             # Move package contents to package directory
             shutil.copytree(tmp / "package", pkg_dir / "package")
+            logger.info(f"Successfully copied package to {pkg_dir}")
 
         pkg = Package(pkg_dir, proj)
         proj.pkgs.append(pkg)
+        logger.info(f"Package {pkg_info.get('name')}#{pkg_info.get('version')} uploaded successfully")
 
         return pkg.to_model()
 

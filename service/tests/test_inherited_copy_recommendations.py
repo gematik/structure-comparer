@@ -1,4 +1,4 @@
-"""Tests for inherited copy_from/copy_to recommendations."""
+"""Tests for inherited copy_value_from/copy_value_to recommendations."""
 
 from typing import Dict
 
@@ -29,8 +29,8 @@ class StubMapping:
             self.fields[name] = StubField(name, classification)
 
 
-def test_parent_copy_from_creates_child_recommendation():
-    """Test that parent copy_from creates recommendations for child fields."""
+def test_parent_copy_value_from_creates_child_recommendation():
+    """Test that parent copy_value_from creates recommendations for child fields."""
     mapping = StubMapping([
         "Medication.extension:A",
         "Medication.extension:A.url",
@@ -43,7 +43,7 @@ def test_parent_copy_from_creates_child_recommendation():
     
     manual_entries = {
         "Medication.extension:A": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Medication.extension:B",
         }
     }
@@ -54,8 +54,8 @@ def test_parent_copy_from_creates_child_recommendation():
     # Get recommendations
     recommendations = compute_recommendations(mapping, manual_entries)
     
-    # Parent should have manual copy_from action
-    assert actions["Medication.extension:A"].action == ActionType.COPY_FROM
+    # Parent should have manual copy_value_from action
+    assert actions["Medication.extension:A"].action == ActionType.COPY_VALUE_FROM
     assert actions["Medication.extension:A"].source == ActionSource.MANUAL
     
     # Parent should NOT have recommendations (has manual action)
@@ -66,9 +66,9 @@ def test_parent_copy_from_creates_child_recommendation():
     url_recs = recommendations["Medication.extension:A.url"]
     assert len(url_recs) >= 1
     
-    # Find the inherited copy_from recommendation
+    # Find the inherited copy_value_from recommendation
     inherited_rec = next(
-        (r for r in url_recs if r.action == ActionType.COPY_FROM), None
+        (r for r in url_recs if r.action == ActionType.COPY_VALUE_FROM), None
     )
     assert inherited_rec is not None
     assert inherited_rec.other_value == "Medication.extension:B.url"
@@ -79,8 +79,8 @@ def test_parent_copy_from_creates_child_recommendation():
     assert url_action.action is None  # No active action, only recommendation
 
 
-def test_parent_copy_to_creates_child_recommendation():
-    """Test that parent copy_to creates recommendations for child fields."""
+def test_parent_copy_value_to_creates_child_recommendation():
+    """Test that parent copy_value_to creates recommendations for child fields."""
     mapping = StubMapping([
         "Medication.code.coding:pzn",
         "Medication.code.coding:pzn.system",
@@ -93,19 +93,19 @@ def test_parent_copy_to_creates_child_recommendation():
     
     manual_entries = {
         "Medication.code.coding:pzn": {
-            "action": "copy_to",
+            "action": "copy_value_to",
             "other": "Medication.code.coding:PZN",
         }
     }
     
     recommendations = compute_recommendations(mapping, manual_entries)
     
-    # Children should have copy_to recommendations
+    # Children should have copy_value_to recommendations
     assert "Medication.code.coding:pzn.system" in recommendations
     system_recs = recommendations["Medication.code.coding:pzn.system"]
     
     inherited_rec = next(
-        (r for r in system_recs if r.action == ActionType.COPY_TO), None
+        (r for r in system_recs if r.action == ActionType.COPY_VALUE_TO), None
     )
     assert inherited_rec is not None
     assert inherited_rec.other_value == "Medication.code.coding:PZN.system"
@@ -120,7 +120,7 @@ def test_child_with_manual_action_no_recommendation():
     
     manual_entries = {
         "Patient.identifier": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Patient.identifier.reference",
         },
         "Patient.identifier.system": {
@@ -151,7 +151,7 @@ def test_inherited_recommendation_with_nested_children():
     
     manual_entries = {
         "Observation.component": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Observation.component.reference",
         }
     }
@@ -163,7 +163,7 @@ def test_inherited_recommendation_with_nested_children():
     
     code_recs = recommendations["Observation.component.code"]
     inherited_rec = next(
-        (r for r in code_recs if r.action == ActionType.COPY_FROM), None
+        (r for r in code_recs if r.action == ActionType.COPY_VALUE_FROM), None
     )
     assert inherited_rec is not None
     assert inherited_rec.other_value == "Observation.component.reference.code"
@@ -183,7 +183,7 @@ def test_no_recommendation_when_target_field_missing():
     
     manual_entries = {
         "Medication.extension:A": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Medication.extension:B",  # B doesn't have .url child explicitly
         }
     }
@@ -194,7 +194,7 @@ def test_no_recommendation_when_target_field_missing():
     # (even though Medication.extension:B.url doesn't exist explicitly)
     assert "Medication.extension:A.url" in recommendations
     url_recs = recommendations["Medication.extension:A.url"]
-    copy_recs = [r for r in url_recs if r.action == ActionType.COPY_FROM]
+    copy_recs = [r for r in url_recs if r.action == ActionType.COPY_VALUE_FROM]
     assert len(copy_recs) == 1
     
     # The recommendation should indicate it's implicitly valid
@@ -211,7 +211,7 @@ def test_compatible_and_inherited_recommendations_combined():
     
     manual_entries = {
         "Medication.extension:A": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Medication.extension:B",
         }
     }
@@ -222,13 +222,13 @@ def test_compatible_and_inherited_recommendations_combined():
     assert "Medication.extension:A.url" in recommendations
     url_recs = recommendations["Medication.extension:A.url"]
     
-    # Should have at least one recommendation (could be USE or inherited copy_from)
+    # Should have at least one recommendation (could be USE or inherited copy_value_from)
     assert len(url_recs) >= 1
     
-    # Could have both USE (compatible) and COPY_FROM (inherited)
+    # Could have both USE (compatible) and COPY_VALUE_FROM (inherited)
     action_types = {r.action for r in url_recs}
     # At least one of these should be present
-    assert ActionType.USE in action_types or ActionType.COPY_FROM in action_types
+    assert ActionType.USE in action_types or ActionType.COPY_VALUE_FROM in action_types
 
 
 def test_polymorphic_value_field_no_recommendation():
@@ -240,7 +240,7 @@ def test_polymorphic_value_field_no_recommendation():
     
     manual_entries = {
         "Extension.value[x]": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Extension.other",
         }
     }
@@ -251,8 +251,8 @@ def test_polymorphic_value_field_no_recommendation():
     # It might still have compatible USE recommendation though
     if "Extension.value[x]:valueBoolean" in recommendations:
         recs = recommendations["Extension.value[x]:valueBoolean"]
-        copy_recs = [r for r in recs if r.action == ActionType.COPY_FROM]
-        # Should not have inherited copy_from
+        copy_recs = [r for r in recs if r.action == ActionType.COPY_VALUE_FROM]
+        # Should not have inherited copy_value_from
         assert len(copy_recs) == 0
 
 

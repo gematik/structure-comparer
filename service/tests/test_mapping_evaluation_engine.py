@@ -190,7 +190,7 @@ def test_incompatible_field_with_inherited_action_is_solved():
     ])
     actions = {
         "Medication.extension:isVaccine.url": ActionInfo(
-            action=ActionType.COPY_FROM,
+            action=ActionType.COPY_VALUE_FROM,
             source=ActionSource.INHERITED,
             inherited_from="Medication.extension:isVaccine"
         )

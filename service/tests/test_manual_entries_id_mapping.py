@@ -173,7 +173,7 @@ class TestManualEntriesIdMapping(unittest.TestCase):
                     "id": "legacy-id-2",
                     "fields": [
                         {"name": "MedicationRequest.intent", "action": "use"},
-                        {"name": "MedicationRequest.extension:Mehrfachverordnung", "action": "copy_from"}
+                        {"name": "MedicationRequest.extension:Mehrfachverordnung", "action": "copy_value_from"}
                     ]
                 }
             ]

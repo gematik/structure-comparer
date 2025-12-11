@@ -16,9 +16,9 @@ class ConflictDetector:
     1. A field already has an active action (manual or system-generated)
     2. A recommendation would change or override this action
     
-    Special case: copy_to/copy_from recommendations
-    - When recommending copy_to X.field, check if X.field already has an action
-    - When recommending copy_from Y.field, check if current field already has an action
+    Special case: copy_value_to/copy_value_from recommendations
+    - When recommending copy_value_to X.field, check if X.field already has an action
+    - When recommending copy_value_from Y.field, check if current field already has an action
     """
     
     def __init__(self, action_map: Dict[str, ActionInfo]):
@@ -70,7 +70,7 @@ class ConflictDetector:
         # Same action with same parameters -> no conflict
         if action_info.action == recommended_action:
             # For copy actions, also check other_value
-            if recommended_action in {ActionType.COPY_FROM, ActionType.COPY_TO}:
+            if recommended_action in {ActionType.COPY_VALUE_FROM, ActionType.COPY_VALUE_TO}:
                 return action_info.other_value != recommended_other_value
             # For other actions, same action type means no conflict
             return False
@@ -84,20 +84,20 @@ class ConflictDetector:
         target_field: str,
         action_type: ActionType
     ) -> Optional[ActionInfo]:
-        """Check if a copy_to action would conflict with the target field's action.
+        """Check if a copy_value_to action would conflict with the target field's action.
         
-        For copy_to recommendations, we need to check if the TARGET field
+        For copy_value_to recommendations, we need to check if the TARGET field
         already has an action that would be overridden.
         
         Args:
             source_field: The source field (where recommendation is shown)
             target_field: The target field (where data would be copied to)
-            action_type: The action type (should be COPY_TO)
+            action_type: The action type (should be COPY_VALUE_TO)
             
         Returns:
             The conflicting ActionInfo if a conflict exists, None otherwise
         """
-        if action_type != ActionType.COPY_TO:
+        if action_type != ActionType.COPY_VALUE_TO:
             return None
         
         # Check if target field has an active action

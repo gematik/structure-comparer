@@ -97,7 +97,7 @@ class ManualEntriesTargetCreation(BaseModel):
     """Manual entries for a Target Creation (target-only profile definition).
 
     Target Creation fields only support 'manual' and 'fixed' actions.
-    No 'other' field since copy_from/copy_to is not allowed.
+    No 'other' field since copy_value_from/copy_value_to is not allowed.
     """
     id: str
     fields: list[TargetCreationFieldBase] = []

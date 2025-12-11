@@ -150,12 +150,12 @@ class TransformationHandler:
             action=input.action
         )
 
-        # Handle COPY_FROM/COPY_TO actions - store the other field path
-        # Note: For COPY_FROM, 'other' is a source profile field path
-        # For COPY_TO, 'other' is a target profile field path
+        # Handle COPY_VALUE_FROM/COPY_VALUE_TO actions - store the other field path
+        # Note: For COPY_VALUE_FROM, 'other' is a source profile field path
+        # For COPY_VALUE_TO, 'other' is a target profile field path
         # We don't validate if the field exists as it may reference source profile fields
         # that are not part of this transformation's target fields
-        if input.action in [Action.COPY_FROM, Action.COPY_TO]:
+        if input.action in [Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO]:
             if target_id := input.other:
                 new_entry.other = target_id
             else:
@@ -182,9 +182,9 @@ class TransformationHandler:
         if input.remark:
             new_entry.remark = input.remark
 
-        # Clean up existing COPY_FROM/COPY_TO partners when changing action
+        # Clean up existing COPY_VALUE_FROM/COPY_VALUE_TO partners when changing action
         existing_entry = manual_entries.get_field(field.name)
-        if existing_entry and existing_entry.action in [Action.COPY_FROM, Action.COPY_TO]:
+        if existing_entry and existing_entry.action in [Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO]:
             if other_name := existing_entry.other:
                 partner_entry = manual_entries.get_field(other_name)
                 if partner_entry and partner_entry.other == field.name:
@@ -216,7 +216,7 @@ class TransformationHandler:
             fields_to_delete.add(field.name)
 
             # Clean up COPY partners
-            if existing_entry.action in [Action.COPY_FROM, Action.COPY_TO]:
+            if existing_entry.action in [Action.COPY_VALUE_FROM, Action.COPY_VALUE_TO]:
                 if other_name := existing_entry.other:
                     partner_entry = manual_entries.get_field(other_name)
                     if partner_entry and partner_entry.other == field.name:

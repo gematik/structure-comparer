@@ -25,14 +25,40 @@ class Profile:
         self.__package = package
 
     @staticmethod
+    def _remove_underscore_fields(obj: Any) -> Any:
+        """
+        Rekursiv alle Felder entfernen, die mit '_' beginnen (z.B. _valueCode).
+        Diese werden von fhir.resources R4B nicht unterstützt.
+        """
+        if isinstance(obj, dict):
+            return {
+                k: Profile._remove_underscore_fields(v)
+                for k, v in obj.items()
+                if not k.startswith("_")
+            }
+        elif isinstance(obj, list):
+            return [Profile._remove_underscore_fields(item) for item in obj]
+        return obj
+
+    @staticmethod
     def _sanitize_structure_definition(sd: Dict[str, Any]) -> Dict[str, Any]:
         """
         Ergänzt fehlende 'base.min'/'base.max'/'base.path' in snapshot.element[*].
+        Entfernt auch '_valueXxx'-Felder, die von fhir.resources nicht unterstützt werden.
+        Setzt fehlende 'slicing.rules' auf Default-Wert 'open'.
         Fallback-Reihenfolge:
           1) base.min/base.max aus Elementfeldern 'min'/'max' übernehmen (falls vorhanden)
           2) andernfalls Defaults setzen: min=0, max="*"
         'base.path' wird aus 'element.path' oder ersatzweise aus 'element.id' (bis ':') abgeleitet.
         """
+        # Entferne problematische _valueXxx Felder rekursiv
+        sd = Profile._remove_underscore_fields(sd)
+        
+        # Check if snapshot exists - some StructureDefinitions (like abstract models) don't have one
+        if sd.get("snapshot") is None:
+            logger.warning(f"StructureDefinition '{sd.get('name', 'unknown')}' has no snapshot - skipping sanitization")
+            return sd
+        
         try:
             elements = sd.get("snapshot", {}).get("element", [])
             for el in elements:
@@ -63,6 +89,12 @@ class Profile:
                 # path setzen, falls fehlt
                 if base.get("path") is None and path_val is not None:
                     base["path"] = path_val
+                
+                # Fix slicing.rules if it's None or missing
+                slicing = el.get("slicing")
+                if slicing is not None:
+                    if slicing.get("rules") is None:
+                        slicing["rules"] = "open"  # Default to 'open' if rules is missing/null
         except Exception:
             # Im Fehlerfall nichts kaputtvalidieren; lieber unverändert zurückgeben
             logger.exception("Failed to sanitize StructureDefinition")
@@ -76,6 +108,10 @@ class Profile:
 
     def __init_fields(self) -> None:
         self.__fields: Dict[str, ProfileField] = {}
+        # Some StructureDefinitions (like abstract models) don't have a snapshot
+        if self.__data.snapshot is None:
+            logger.warning(f"StructureDefinition '{self.__data.name}' has no snapshot - no fields loaded")
+            return
         for elem in self.__data.snapshot.element:
             field = ProfileField(elem)
             if field.path is not None:

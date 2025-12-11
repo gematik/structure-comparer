@@ -299,6 +299,28 @@ async def delete_project(project_key: str, response: Response) -> None:
         return ErrorModel.from_except(e)
 
 
+@app.post(
+    "/project/{project_key}/reload",
+    tags=["Projects"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"model": ErrorModel}},
+)
+async def reload_project(project_key: str, response: Response) -> ProjectModel | ErrorModel:
+    """
+    Reload a project from disk to reflect file system changes.
+    
+    Use this endpoint after manually adding or removing package files
+    to update the in-memory state of the project.
+    """
+    global project_handler
+    try:
+        return project_handler.reload(project_key)
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
 @app.get(
     "/project/{project_key}/package",
     tags=["Packages"],
@@ -360,37 +382,6 @@ async def post_package(
 
 
 @app.post(
-    "/project/{project_key}/package/{package_id}",
-    tags=["Packages"],
-    response_model_exclude_unset=True,
-    response_model_exclude_none=True,
-    responses={400: {"error": {}}, 404: {"error": {}}},
-)
-async def update_package(
-    project_key: str,
-    package_id: str,
-    package_input: PackageInputModel,
-    response: Response,
-) -> PackageModel | ErrorModel:
-    """
-    Update the information of a package
-    """
-    global package_handler
-    try:
-        pkg = package_handler.update(project_key, package_id, package_input)
-
-    except (ProjectNotFound, PackageNotFound) as e:
-        response.status_code = 404
-        return ErrorModel.from_except(e)
-
-    except NotAllowed as e:
-        response.status_code = 400
-        return ErrorModel.from_except(e)
-
-    return pkg
-
-
-@app.post(
     "/project/{project_key}/package/download",
     tags=["Packages"],
     response_model_exclude_unset=True,
@@ -418,7 +409,7 @@ async def download_package_from_registry(
         from .errors import PackageDownloadFailed, PackageNotFoundInRegistry
         
         result = package_handler.download_from_registry(
-            project_key=project_key,
+            proj_key=project_key,
             package_name=request.package_name,
             version=request.version,
         )
@@ -473,6 +464,37 @@ async def download_packages_batch(
     except ProjectNotFound as e:
         response.status_code = 404
         return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/package/{package_id}",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={400: {"error": {}}, 404: {"error": {}}},
+)
+async def update_package(
+    project_key: str,
+    package_id: str,
+    package_input: PackageInputModel,
+    response: Response,
+) -> PackageModel | ErrorModel:
+    """
+    Update the information of a package
+    """
+    global package_handler
+    try:
+        pkg = package_handler.update(project_key, package_id, package_input)
+
+    except (ProjectNotFound, PackageNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+    except NotAllowed as e:
+        response.status_code = 400
+        return ErrorModel.from_except(e)
+
+    return pkg
 
 
 @app.get(
@@ -1716,8 +1738,8 @@ async def post_mapping_field_classification_old(
             action:
               type: string
               enum:
-                - copy_from
-                - copy_to
+                - copy_value_from
+                - copy_value_to
                 - fixed
                 - use
                 - not_use
@@ -1807,8 +1829,8 @@ async def post_mapping_field(
             action:
               type: string
               enum:
-                - copy_from
-                - copy_to
+                - copy_value_from
+                - copy_value_to
                 - fixed
                 - use
                 - not_use

@@ -6,10 +6,10 @@ REMARKS = {
     Action.NOT_USE: "Property and value(s) will NOT be retained",
     Action.EMPTY: "Will remain empty for now, as no source information is available",
     Action.MANUAL: "",
-    Action.COPY_FROM: "Mapped from '{}'",
-    Action.COPY_TO: "Mapped to '{}'",
+    Action.COPY_VALUE_FROM: "Value copied from '{}'",
+    Action.COPY_VALUE_TO: "Value copied to '{}'",
     Action.FIXED: "Set to '{}' fixed value",
-    Action.EXTENSION: "Extension will be transferred to '{}'",
+    Action.COPY_NODE_TO: "Node will be transferred to '{}'",
 }
 
 DESCRIPTIONS = {
@@ -18,8 +18,8 @@ DESCRIPTIONS = {
     Action.NOT_USE: "Property and value(s) will NOT be retained",
     Action.EMPTY: "Will remain EMPTY for now, as no source information is available",
     Action.MANUAL: "Make your own NOTE",
-    Action.COPY_FROM: "Value(s) will be MAPPED FROM another field",
-    Action.COPY_TO: "Value(s) will be MAPPED TO another field",
+    Action.COPY_VALUE_FROM: "Value(s) will be COPIED FROM another field",
+    Action.COPY_VALUE_TO: "Value(s) will be COPIED TO another field",
     Action.FIXED: "Value will be FIXED",
-    Action.EXTENSION: "Extension will be TRANSFERRED to target field",
+    Action.COPY_NODE_TO: "Node (extension) will be TRANSFERRED to target field",
 }

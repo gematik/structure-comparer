@@ -26,11 +26,11 @@ _ACTIONTYPE_TO_LEGACY: dict[ActionType, Action] = {
     ActionType.USE_RECURSIVE: Action.USE_RECURSIVE,
     ActionType.NOT_USE: Action.NOT_USE,
     ActionType.EMPTY: Action.EMPTY,
-    ActionType.COPY_FROM: Action.COPY_FROM,
-    ActionType.COPY_TO: Action.COPY_TO,
+    ActionType.COPY_VALUE_FROM: Action.COPY_VALUE_FROM,
+    ActionType.COPY_VALUE_TO: Action.COPY_VALUE_TO,
     ActionType.FIXED: Action.FIXED,
     ActionType.MANUAL: Action.MANUAL,
-    ActionType.EXTENSION: Action.EXTENSION,
+    ActionType.COPY_NODE_TO: Action.COPY_NODE_TO,
     # Note: action=None indicates no action has been selected yet (user must decide)
 }
 
@@ -70,11 +70,11 @@ class MappingField(ComparisonField):
         target_present = self.profiles[target_profile] is not None
 
         if not any_source_present:
-            allowed -= set([Action.USE, Action.NOT_USE, Action.COPY_FROM])
+            allowed -= set([Action.USE, Action.NOT_USE, Action.COPY_VALUE_FROM])
         else:
             allowed -= set([Action.EMPTY])
         if not target_present:
-            allowed -= set([Action.USE, Action.EMPTY, Action.COPY_TO])
+            allowed -= set([Action.USE, Action.EMPTY, Action.COPY_VALUE_TO])
 
         self.actions_allowed = list(allowed)
 

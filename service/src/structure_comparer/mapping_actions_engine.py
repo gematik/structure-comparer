@@ -26,9 +26,9 @@ _INHERITABLE_ACTIONS = {
     # ActionType.NOT_USE,  # Removed: Now handled as recommendation only
     ActionType.EMPTY,
     ActionType.USE_RECURSIVE,
-    ActionType.COPY_FROM,
-    ActionType.COPY_TO,
-    ActionType.EXTENSION,  # Extension actions should be inherited to child fields
+    ActionType.COPY_VALUE_FROM,
+    ActionType.COPY_VALUE_TO,
+    ActionType.COPY_NODE_TO,  # Copy node actions should be inherited to child fields
 }
 
 
@@ -83,7 +83,7 @@ def compute_recommendations(
         
         Includes:
         1. Compatible fields -> USE recommendation
-        2. Inherited copy_from/copy_to -> inherited recommendation with adjusted other_value
+        2. Inherited copy_value_from/copy_value_to -> inherited recommendation with adjusted other_value
     """
     engine = RecommendationEngine(mapping, manual_entries)
     return engine.compute_all_recommendations()
@@ -226,12 +226,12 @@ def _inherit_or_default(
     if field_parent_name:
         parent_info = result.get(field_parent_name)
         if parent_info and parent_info.action in _INHERITABLE_ACTIONS:
-            # For copy_from/copy_to/extension: DON'T inherit as active action anymore
+            # For copy_value_from/copy_value_to/copy_node_to: DON'T inherit as active action anymore
             # These will be handled as recommendations instead
             is_copy_action = parent_info.action in {
-                ActionType.COPY_FROM,
-                ActionType.COPY_TO,
-                ActionType.EXTENSION,  # Extension actions also handled as recommendations
+                ActionType.COPY_VALUE_FROM,
+                ActionType.COPY_VALUE_TO,
+                ActionType.COPY_NODE_TO,  # Copy node actions also handled as recommendations
             }
             
             if is_copy_action:
@@ -368,15 +368,15 @@ def _augment_copy_links(manual_map: Dict[str, dict]) -> Dict[str, dict]:
         if not other:
             continue
 
-        if action == ActionType.COPY_FROM:
+        if action == ActionType.COPY_VALUE_FROM:
             augmented.setdefault(
                 other,
-                {"action": ActionType.COPY_TO.value, "other": name, "_derived": True},
+                {"action": ActionType.COPY_VALUE_TO.value, "other": name, "_derived": True},
             )
-        elif action == ActionType.COPY_TO:
+        elif action == ActionType.COPY_VALUE_TO:
             augmented.setdefault(
                 other,
-                {"action": ActionType.COPY_FROM.value, "other": name, "_derived": True},
+                {"action": ActionType.COPY_VALUE_FROM.value, "other": name, "_derived": True},
             )
 
     return augmented

@@ -251,7 +251,7 @@ def test_use_recommendation_respects_actions_allowed():
     ])
     
     # Configure field to NOT allow USE action
-    mapping.fields["Medication.code.coding"].actions_allowed = [ActionType.FIXED, ActionType.COPY_FROM]
+    mapping.fields["Medication.code.coding"].actions_allowed = [ActionType.FIXED, ActionType.COPY_VALUE_FROM]
     
     manual_entries = {
         "Medication.code": {

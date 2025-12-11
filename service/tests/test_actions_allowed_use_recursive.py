@@ -940,7 +940,7 @@ def test_use_recursive_not_allowed_when_all_non_fixed_children_have_manual_actio
     - Root field: compatible
     - Child 1: compatible, has FIXED action
     - Child 2: incompatible, has MANUAL action
-    - Child 3: compatible, has COPY_FROM action
+    - Child 3: compatible, has COPY_VALUE_FROM action
     
     Expected: use_recursive IS allowed because child 1 has FIXED (which doesn't
     count as a manual action). USE_RECURSIVE can still apply to child 1, even though
@@ -957,7 +957,7 @@ def test_use_recursive_not_allowed_when_all_non_fixed_children_have_manual_actio
         ("Medication.identifier", ComparisonClassification.COMPAT),
     ])
     
-    # All children have actions: FIXED, MANUAL, COPY_FROM
+    # All children have actions: FIXED, MANUAL, COPY_VALUE_FROM
     action_info_map = {
         "Medication.extension": ActionInfo(
             action=ActionType.FIXED,
@@ -969,7 +969,7 @@ def test_use_recursive_not_allowed_when_all_non_fixed_children_have_manual_actio
             source=ActionSource.MANUAL
         ),
         "Medication.identifier": ActionInfo(
-            action=ActionType.COPY_FROM,
+            action=ActionType.COPY_VALUE_FROM,
             source=ActionSource.MANUAL,
             copy_from="Patient.identifier"
         )

@@ -189,7 +189,7 @@ def test_copy_from_entry_derives_partner_copy_to():
     ])
     manual_entries = {
         "Medication.ingredient": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Medication.ingredient.reference",
         }
     }
@@ -199,9 +199,9 @@ def test_copy_from_entry_derives_partner_copy_to():
     source_info = result["Medication.ingredient"]
     partner_info = result["Medication.ingredient.reference"]
 
-    assert source_info.action == ActionType.COPY_FROM
+    assert source_info.action == ActionType.COPY_VALUE_FROM
     assert source_info.source == ActionSource.MANUAL
-    assert partner_info.action == ActionType.COPY_TO
+    assert partner_info.action == ActionType.COPY_VALUE_TO
     assert partner_info.source == ActionSource.MANUAL
     assert partner_info.other_value == "Medication.ingredient"
 

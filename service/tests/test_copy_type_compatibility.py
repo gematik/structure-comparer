@@ -41,18 +41,18 @@ def test_copy_recommendation_with_compatible_types():
     
     manual_entries = {
         "Medication.code": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Medication.ingredient.item",
         }
     }
     
     recommendations = compute_recommendations(mapping, manual_entries)
     
-    # Child field should have copy_from recommendation (types are compatible: both string)
+    # Child field should have copy_value_from recommendation (types are compatible: both string)
     assert "Medication.code.text" in recommendations
     text_recs = recommendations["Medication.code.text"]
     
-    copy_rec = next((r for r in text_recs if r.action == ActionType.COPY_FROM), None)
+    copy_rec = next((r for r in text_recs if r.action == ActionType.COPY_VALUE_FROM), None)
     assert copy_rec is not None
     assert copy_rec.other_value == "Medication.ingredient.item.text"
     assert copy_rec.auto_generated is True
@@ -69,17 +69,17 @@ def test_copy_recommendation_skipped_for_incompatible_types():
     
     manual_entries = {
         "Medication.code": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Medication.ingredient.strength",
         }
     }
     
     recommendations = compute_recommendations(mapping, manual_entries)
     
-    # Child field should NOT have copy_from recommendation (string vs Quantity)
+    # Child field should NOT have copy_value_from recommendation (string vs Quantity)
     if "Medication.code.text" in recommendations:
         text_recs = recommendations["Medication.code.text"]
-        copy_rec = next((r for r in text_recs if r.action == ActionType.COPY_FROM), None)
+        copy_rec = next((r for r in text_recs if r.action == ActionType.COPY_VALUE_FROM), None)
         assert copy_rec is None  # No copy recommendation due to type mismatch
 
 
@@ -97,7 +97,7 @@ def test_not_use_recommendation_for_incompatible_types():
     
     manual_entries = {
         "Medication.code.coding": {
-            "action": "copy_to",
+            "action": "copy_value_to",
             "other": "Medication.amount.numerator",  # Coding -> Quantity
         }
     }
@@ -112,9 +112,9 @@ def test_not_use_recommendation_for_incompatible_types():
     not_use_rec = next((r for r in system_recs if r.action == ActionType.NOT_USE), None)
     
     # The NOT_USE might not be created if the copy recommendation is simply skipped
-    # Let's check that at least NO copy_to recommendation was created
-    copy_to_rec = next((r for r in system_recs if r.action == ActionType.COPY_TO), None)
-    assert copy_to_rec is None, "Should not have copy_to recommendation for incompatible types"
+    # Let's check that at least NO copy_value_to recommendation was created
+    copy_value_to_rec = next((r for r in system_recs if r.action == ActionType.COPY_VALUE_TO), None)
+    assert copy_value_to_rec is None, "Should not have copy_value_to recommendation for incompatible types"
     
     # NOT_USE should be there if type_incompatible_fields was populated
     if not_use_rec:
@@ -135,7 +135,7 @@ def test_copy_recommendation_with_overlapping_types():
     
     manual_entries = {
         "Observation.value[x]": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Component.value[x]",
         }
     }
@@ -159,7 +159,7 @@ def test_copy_recommendation_with_no_type_info():
     
     manual_entries = {
         "Extension.url": {
-            "action": "copy_to",
+            "action": "copy_value_to",
             "other": "Extension.value[x]",
         }
     }
@@ -171,15 +171,15 @@ def test_copy_recommendation_with_no_type_info():
     assert "Extension.url.id" in recommendations
     id_recs = recommendations["Extension.url.id"]
     
-    copy_rec = next((r for r in id_recs if r.action == ActionType.COPY_TO), None)
+    copy_rec = next((r for r in id_recs if r.action == ActionType.COPY_VALUE_TO), None)
     # May or may not have recommendation depending on implementation
     # Main point: should not crash
     # Copy rec may be None or present depending on conservative handling
     assert copy_rec is None or copy_rec.auto_generated is True
 
 
-def test_copy_to_with_fixed_value_creates_not_use():
-    """Test that copy_to to a field with fixed value creates NOT_USE recommendation."""
+def test_copy_value_to_with_fixed_value_creates_not_use():
+    """Test that copy_value_to to a field with fixed value creates NOT_USE recommendation."""
     # This test requires integration with ConflictDetector
     # For now, just verify the mapping setup works
     mapping = StubMapping([
@@ -205,7 +205,7 @@ def test_multiple_incompatible_children():
     
     manual_entries = {
         "Medication.code": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Medication.amount",
         }
     }
@@ -235,7 +235,7 @@ def test_copy_recommendation_preserves_other_recommendations():
     
     manual_entries = {
         "Patient.identifier": {
-            "action": "copy_from",
+            "action": "copy_value_from",
             "other": "Organization.identifier",
         }
     }
@@ -246,7 +246,7 @@ def test_copy_recommendation_preserves_other_recommendations():
     assert "Patient.identifier.system" in recommendations
     system_recs = recommendations["Patient.identifier.system"]
     
-    copy_rec = next((r for r in system_recs if r.action == ActionType.COPY_FROM), None)
+    copy_rec = next((r for r in system_recs if r.action == ActionType.COPY_VALUE_FROM), None)
     assert copy_rec is not None
     assert copy_rec.other_value == "Organization.identifier.system"
     
@@ -265,7 +265,7 @@ def test_type_compatibility_with_empty_types_list():
     
     manual_entries = {
         "Field.a": {
-            "action": "copy_to",
+            "action": "copy_value_to",
             "other": "Field.b",
         }
     }

@@ -78,11 +78,13 @@ class Package:
         self.__parent.write_config()
 
     def __load_profiles(self) -> None:
-        self.profiles = [
-            Profile.from_json(file, self)
-            for file in (self.dir).glob("**/*.json")
-            if _is_profile_file(file)
-        ]
+        profiles = []
+        for file in (self.dir).glob("**/*.json"):
+            if _is_profile_file(file):
+                p = Profile.from_json(file, self)
+                if p is not None:
+                    profiles.append(p)
+        self.profiles = profiles
 
     def to_model(self) -> PackageModel:
 

@@ -1,4 +1,4 @@
-"""Engine for computing inherited actions and recommendations for copy_from/copy_to."""
+"""Engine for computing inherited actions and recommendations for copy_value_from/copy_value_to."""
 
 from typing import Dict, Optional
 
@@ -7,7 +7,7 @@ from .model.mapping_action_models import ActionInfo, ActionSource, ActionType
 
 
 class InheritanceEngine:
-    """Handles inheritance logic for copy_from/copy_to actions."""
+    """Handles inheritance logic for copy_value_from/copy_value_to actions."""
 
     def __init__(self, all_fields: Dict[str, object]):
         """Initialize the inheritance engine.
@@ -25,7 +25,7 @@ class InheritanceEngine:
     ) -> Optional[tuple[str, bool]]:
         """Calculate the inherited other_value for a child field.
         
-        When a parent field has a copy_from/copy_to action with an other_value,
+        When a parent field has a copy_value_from/copy_value_to action with an other_value,
         child fields should inherit the same action with an adjusted other_value.
         
         For example:
@@ -179,24 +179,24 @@ class InheritanceEngine:
             # ActionType.NOT_USE,  # Removed: Now handled as recommendation only
             ActionType.EMPTY,
             ActionType.USE_RECURSIVE,
-            ActionType.COPY_FROM,
-            ActionType.COPY_TO,
-            ActionType.EXTENSION,  # Extension actions should be inherited to child fields
+            ActionType.COPY_VALUE_FROM,
+            ActionType.COPY_VALUE_TO,
+            ActionType.COPY_NODE_TO,  # Extension actions should be inherited to child fields
         }
         return action_type in inheritable_actions
 
     def is_copy_action(self, action_type: Optional[ActionType]) -> bool:
-        """Check if an action type is a copy action (copy_from, copy_to, or extension).
+        """Check if an action type is a copy action (copy_value_from, copy_value_to, or copy_node_to).
         
         Args:
             action_type: The action type to check
             
         Returns:
-            True if the action is copy_from, copy_to, or extension, False otherwise
+            True if the action is copy_value_from, copy_value_to, or copy_node_to, False otherwise
         """
         if action_type is None:
             return False
-        return action_type in {ActionType.COPY_FROM, ActionType.COPY_TO, ActionType.EXTENSION}
+        return action_type in {ActionType.COPY_VALUE_FROM, ActionType.COPY_VALUE_TO, ActionType.COPY_NODE_TO}
 
     def create_inherited_recommendation(
         self,
@@ -204,7 +204,7 @@ class InheritanceEngine:
         parent_field_name: str,
         parent_action: ActionInfo,
     ) -> Optional[ActionInfo]:
-        """Create an inherited recommendation for copy_from/copy_to/extension actions.
+        """Create an inherited recommendation for copy_value_from/copy_value_to/copy_node_to actions.
         
         Args:
             field_name: The child field name
