@@ -1,1 +1,0 @@
-{"resourceType":"Parameters","id":"example-epa-op-link-emp-entry-parameters-1","meta":{"profile":["https://gematik.de/fhir/epa-medication/StructureDefinition/epa-op-link-emp-entry-parameters"]},"parameter":[{"name":"medicationPlanIdentifier","valueIdentifier":{"system":"https://gematik.de/fhir/sid/emp-identifier","value":"266620a9-2c26-41c1-b0cb-a10947b867f5"}}]}
