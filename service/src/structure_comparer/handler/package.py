@@ -25,10 +25,20 @@ from ..model.package import Package as PackageModel
 from ..model.package import PackageInput as PackageInputModel
 from ..model.package import PackageList as PackageListModel
 from ..model.package import PackageDownloadResult as PackageDownloadResultModel
+from ..model.package import (
+    PackageStatus,
+    PackageWithStatus as PackageWithStatusModel,
+    PackageListWithStatus as PackageListWithStatusModel,
+    PackageAddRequest as PackageAddRequestModel,
+    PackageAddResult as PackageAddResultModel,
+    OrphanedCleanupResult as OrphanedCleanupResultModel,
+    OrphanedAdoptResult as OrphanedAdoptResultModel,
+)
 from ..model.profile import ProfileList as ProfileListModel
 from ..model.profile import ProfileDetails as ProfileDetailsModel
 from ..model.profile import ResolvedProfileField, ResolvedProfileFieldsResponse
 from .project import ProjectsHandler
+from ..data.config import PackageConfig
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +73,213 @@ class PackageHandler:
         proj = self.project_handler._get(proj_key)
         pkgs = [p.to_model() for p in proj.pkgs]
         return PackageListModel(packages=pkgs)
+
+    def get_list_with_status(self, proj_key: str) -> PackageListWithStatusModel:
+        """
+        Get all packages with their status (available/missing/orphaned).
+        
+        This includes:
+        - Packages from config that are downloaded (AVAILABLE)
+        - Packages from config that are NOT downloaded (MISSING)
+        - Packages in data folder that are NOT in config (ORPHANED)
+        """
+        proj = self.project_handler._get(proj_key)
+        
+        packages = []
+        
+        # Add packages from config (AVAILABLE or MISSING)
+        for pkg in proj.pkgs:
+            packages.append(pkg.to_model_with_status())
+        
+        # Add orphaned packages (in data folder but not in config)
+        orphaned_keys = proj.get_orphaned_packages()
+        for key in orphaned_keys:
+            name, version = key.split("#", 1)
+            packages.append(PackageWithStatusModel(
+                id=key,
+                name=name,
+                version=version,
+                display=None,
+                status=PackageStatus.ORPHANED
+            ))
+        
+        # Calculate statistics
+        available = sum(1 for p in packages if p.status == PackageStatus.AVAILABLE)
+        missing = sum(1 for p in packages if p.status == PackageStatus.MISSING)
+        orphaned = len(orphaned_keys)
+        
+        return PackageListWithStatusModel(
+            packages=packages,
+            total=len(packages),
+            available=available,
+            missing=missing,
+            orphaned=orphaned
+        )
+
+    def add_to_config(
+        self, proj_key: str, request: PackageAddRequestModel
+    ) -> PackageAddResultModel:
+        """
+        Add a package to config without downloading.
+        
+        The package will have status MISSING until downloaded.
+        """
+        proj = self.project_handler._get(proj_key)
+        
+        # Check if package already exists in config
+        pkg_key = f"{request.name}#{request.version}"
+        existing_keys = {f"{p.name}#{p.version}" for p in proj.config.packages}
+        
+        if pkg_key in existing_keys:
+            return PackageAddResultModel(
+                success=False,
+                package=None,
+                message=f"Package {pkg_key} already exists in config"
+            )
+        
+        # Add to config
+        pkg_config = PackageConfig(
+            name=request.name,
+            version=request.version,
+            display=request.display
+        )
+        proj.config.packages.append(pkg_config)
+        proj.config.write()
+        
+        # Determine status (might already be downloaded as orphaned)
+        pkg_dir = proj.data_dir / pkg_key
+        if pkg_dir.exists() and (pkg_dir / "package" / "package.json").exists():
+            status = PackageStatus.AVAILABLE
+            # Create proper package object and add to pkgs
+            pkg = Package(pkg_dir, proj, pkg_config, PackageStatus.AVAILABLE)
+            proj.pkgs.append(pkg)
+        else:
+            status = PackageStatus.MISSING
+            # Create placeholder package
+            pkg = Package.from_config_only(pkg_config, proj)
+            proj.pkgs.append(pkg)
+        
+        logger.info(f"Added package {pkg_key} to config with status {status}")
+        
+        return PackageAddResultModel(
+            success=True,
+            package=PackageWithStatusModel(
+                id=pkg_key,
+                name=request.name,
+                version=request.version,
+                display=request.display,
+                status=status
+            ),
+            message=f"Package {pkg_key} added to config"
+        )
+
+    def remove_from_config(self, proj_key: str, package_id: str) -> bool:
+        """
+        Remove a package from config (files remain in data folder as orphaned).
+        """
+        proj = self.project_handler._get(proj_key)
+        
+        name, version = package_id.split("#", 1)
+        
+        # Find and remove from config
+        original_count = len(proj.config.packages)
+        proj.config.packages = [
+            p for p in proj.config.packages
+            if not (p.name == name and p.version == version)
+        ]
+        
+        if len(proj.config.packages) == original_count:
+            raise PackageNotFound()
+        
+        proj.config.write()
+        
+        # Remove from pkgs list
+        proj.pkgs = [p for p in proj.pkgs if p.key != package_id]
+        
+        logger.info(f"Removed package {package_id} from config")
+        return True
+
+    def delete_files(self, proj_key: str, package_id: str) -> bool:
+        """
+        Delete package files from data folder.
+        
+        Note: This does NOT remove the package from config.
+        Use remove_from_config first if you want to remove completely.
+        """
+        proj = self.project_handler._get(proj_key)
+        pkg_dir = proj.data_dir / package_id
+        
+        if not pkg_dir.exists():
+            raise PackageNotFound()
+        
+        shutil.rmtree(pkg_dir)
+        logger.info(f"Deleted package files for {package_id}")
+        
+        # If package is in config, update its status to MISSING
+        for i, pkg in enumerate(proj.pkgs):
+            if pkg.key == package_id:
+                # Find config entry
+                for cfg in proj.config.packages:
+                    if f"{cfg.name}#{cfg.version}" == package_id:
+                        # Replace with missing placeholder
+                        proj.pkgs[i] = Package.from_config_only(cfg, proj)
+                        break
+                break
+        
+        return True
+
+    def cleanup_orphaned(self, proj_key: str) -> OrphanedCleanupResultModel:
+        """
+        Delete all orphaned packages (in data folder but not in config).
+        """
+        proj = self.project_handler._get(proj_key)
+        orphaned_keys = proj.get_orphaned_packages()
+        
+        deleted = []
+        for key in orphaned_keys:
+            pkg_dir = proj.data_dir / key
+            if pkg_dir.exists():
+                shutil.rmtree(pkg_dir)
+                deleted.append(key)
+                logger.info(f"Deleted orphaned package {key}")
+        
+        return OrphanedCleanupResultModel(
+            success=True,
+            deleted=deleted,
+            count=len(deleted)
+        )
+
+    def adopt_orphaned(self, proj_key: str) -> OrphanedAdoptResultModel:
+        """
+        Adopt all orphaned packages into config.
+        
+        This adds config entries for packages that are in data folder
+        but not in config.
+        """
+        proj = self.project_handler._get(proj_key)
+        orphaned_keys = proj.get_orphaned_packages()
+        
+        adopted = []
+        for key in orphaned_keys:
+            name, version = key.split("#", 1)
+            pkg_config = PackageConfig(name=name, version=version)
+            proj.config.packages.append(pkg_config)
+            
+            # Create package object
+            pkg_dir = proj.data_dir / key
+            pkg = Package(pkg_dir, proj, pkg_config, PackageStatus.AVAILABLE)
+            proj.pkgs.append(pkg)
+            
+            adopted.append(key)
+            logger.info(f"Adopted orphaned package {key} into config")
+        
+        proj.config.write()
+        
+        return OrphanedAdoptResultModel(
+            success=True,
+            adopted=adopted,
+            count=len(adopted)
+        )
 
     def update(
         self, proj_key: str, package_id: str, package_input: PackageInputModel
@@ -502,9 +719,9 @@ class PackageHandler:
         package_key = f"{package_name}#{version}"
         proj = self.project_handler._get(proj_key)
 
-        # Check if package already exists
+        # Check if package already exists AND is available (downloaded)
         existing_pkg = proj.get_package(package_key)
-        if existing_pkg:
+        if existing_pkg and existing_pkg.is_available:
             return PackageDownloadResultModel(
                 success=False,
                 package_key=package_key,

@@ -1,15 +1,20 @@
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
+import logging
 
 from ..manual_entries import ManualEntries
 from ..model.project import Project as ProjectModel
 from ..model.project import ProjectOverview as ProjectOverviewModel
+from ..model.package import PackageStatus
 from .comparison import Comparison
 from .config import PackageConfig, ProjectConfig
 from .mapping import Mapping
 from .package import Package
 from .transformation import Transformation
 from .target_creation import TargetCreation
+
+
+logger = logging.getLogger(__name__)
 
 
 class Project:
@@ -54,33 +59,107 @@ class Project:
         return parts[0], parts[1]
 
     def __load_packages(self) -> None:
-        # Load packages from config
-        self.pkgs = [Package(self.data_dir, self, p) for p in self.config.packages]
+        """
+        Load packages from config.json and auto-migrate orphaned packages.
+        
+        This method implements a hybrid approach for backwards compatibility:
+        1. Load packages defined in config.json
+        2. Auto-adopt orphaned packages (in data folder but not in config)
+        
+        Each package gets a status:
+        - AVAILABLE: Package is in config AND downloaded in data folder
+        - MISSING: Package is in config but NOT downloaded yet
+        
+        During migration phase, orphaned packages are automatically added to config.
+        """
+        self.pkgs = []
+        config_keys = {f"{p.name}#{p.version}" for p in self.config.packages}
+        
+        # Step 1: Load packages from config
+        for pkg_config in self.config.packages:
+            pkg_key = f"{pkg_config.name}#{pkg_config.version}"
+            pkg_dir = self.data_dir / pkg_key
+            
+            # Check if package is actually downloaded
+            if pkg_dir.exists() and (pkg_dir / "package" / "package.json").exists():
+                # Package is available - load from disk
+                self.pkgs.append(Package(pkg_dir, self, pkg_config, PackageStatus.AVAILABLE))
+                logger.debug(f"Package {pkg_key} loaded (available)")
+            else:
+                # Package is in config but not downloaded - create placeholder
+                self.pkgs.append(Package.from_config_only(pkg_config, self))
+                logger.debug(f"Package {pkg_key} registered (missing)")
+        
+        # Step 2: Auto-migrate orphaned packages (backwards compatibility)
+        # This ensures existing projects continue to work without manual migration
+        if self.data_dir.exists():
+            migrated_count = 0
+            for dir in self.data_dir.iterdir():
+                if not dir.is_dir():
+                    continue
+                
+                parsed = self.__safe_parse_pkg_dirname(dir.name)
+                if parsed is None:
+                    continue
+                
+                name, version = parsed
+                pkg_key = f"{name}#{version}"
+                
+                # Skip if already in config
+                if pkg_key in config_keys:
+                    continue
+                
+                # Check if it's a valid FHIR package
+                if not (dir / "package" / "package.json").exists():
+                    continue
+                
+                # Auto-adopt: Add to config and load
+                pkg_config = PackageConfig(name=name, version=version)
+                self.config.packages.append(pkg_config)
+                config_keys.add(pkg_key)
+                
+                self.pkgs.append(Package(dir, self, pkg_config, PackageStatus.AVAILABLE))
+                logger.info(f"Auto-migrated orphaned package {pkg_key} into config")
+                migrated_count += 1
+            
+            # Save config if we migrated any packages
+            if migrated_count > 0:
+                self.config.write()
+                logger.info(f"Auto-migrated {migrated_count} orphaned packages into config")
 
-        # Defensiv: falls data_dir nicht existierte, wurde es in _ensure_structure() erstellt
-        # Check for local packages not in config
+    def get_orphaned_packages(self) -> List[str]:
+        """
+        Find packages in data folder that are NOT in config.
+        
+        These are packages that were downloaded but later removed from config,
+        or packages that were manually placed in the data folder.
+        
+        Returns:
+            List of package keys (name#version) that are orphaned.
+        """
+        orphaned = []
+        config_keys = {f"{p.name}#{p.version}" for p in self.config.packages}
+        
+        if not self.data_dir.exists():
+            return orphaned
+        
         for dir in self.data_dir.iterdir():
             if not dir.is_dir():
                 continue
-
+            
             parsed = self.__safe_parse_pkg_dirname(dir.name)
             if parsed is None:
-                # Unbekanntes Verzeichnisformat im data-Ordner -> überspringen
+                # Unknown directory format in data folder - skip
                 continue
-
-            name, version = parsed
-            if not self.__has_pkg(name, version):
-                # FHIR package bringt eigene Infos mit
+            
+            # Check if this package is NOT in config
+            if dir.name not in config_keys:
+                # Only count as orphaned if it has a valid package.json
                 if (dir / "package" / "package.json").exists():
-                    self.pkgs.append(Package(dir, self))
-                else:
-                    # neuen Config-Eintrag erzeugen
-                    cfg = PackageConfig(name=name, version=version)
-                    self.config.packages.append(cfg)
-                    self.config.write()
-
-                    # Package anlegen/anhängen
-                    self.pkgs.append(Package(dir, self, cfg))
+                    orphaned.append(dir.name)
+                    logger.debug(f"Found orphaned package: {dir.name}")
+        
+        return orphaned
 
     def load_comparisons(self):
         self.comparisons = {

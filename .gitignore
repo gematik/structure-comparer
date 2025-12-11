@@ -9,3 +9,8 @@ dist/
 
 # IDE specific
 .history
+
+# Package data folders - these are downloaded caches, not source files
+# The config.json in each project contains the definitive package list
+# Packages can be re-downloaded from FHIR registries at any time
+structure-comparer-projects/*/data/

@@ -92,6 +92,13 @@ from .model.package import PackageDownloadRequest as PackageDownloadRequestModel
 from .model.package import PackageDownloadResult as PackageDownloadResultModel
 from .model.package import BatchDownloadRequest as BatchDownloadRequestModel
 from .model.package import BatchDownloadResult as BatchDownloadResultModel
+from .model.package import (
+    PackageListWithStatus as PackageListWithStatusModel,
+    PackageAddRequest as PackageAddRequestModel,
+    PackageAddResult as PackageAddResultModel,
+    OrphanedCleanupResult as OrphanedCleanupResultModel,
+    OrphanedAdoptResult as OrphanedAdoptResultModel,
+)
 from .model.package_dependency import (
     DependencyAnalysisResult as DependencyAnalysisResultModel,
     PackageDependencyInfo as PackageDependencyInfoModel,
@@ -480,6 +487,174 @@ async def update_package(
         return ErrorModel.from_except(e)
 
     return pkg
+
+
+# ============================================================================
+# NEW ENDPOINTS: Package Config Management (Package List in Config Feature)
+# ============================================================================
+
+@app.get(
+    "/project/{project_key}/package/with-status",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def get_package_list_with_status(
+    project_key: str, response: Response
+) -> PackageListWithStatusModel | ErrorModel:
+    """
+    Returns a list of packages with their status (available/missing/orphaned).
+    
+    This includes:
+    - Packages from config that are downloaded (AVAILABLE)
+    - Packages from config that are NOT downloaded (MISSING)
+    - Packages in data folder that are NOT in config (ORPHANED)
+    """
+    global package_handler
+    try:
+        return package_handler.get_list_with_status(project_key)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/package/add",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}, 409: {"error": {}}},
+)
+async def add_package_to_config(
+    project_key: str, request: PackageAddRequestModel, response: Response
+) -> PackageAddResultModel | ErrorModel:
+    """
+    Add a package to config without downloading.
+    
+    The package will have status MISSING until downloaded.
+    If the package files already exist (orphaned), status will be AVAILABLE.
+    """
+    global package_handler
+    try:
+        result = package_handler.add_to_config(project_key, request)
+        if not result.success:
+            response.status_code = 409
+        return result
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.delete(
+    "/project/{project_key}/package/{package_id}/config",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def remove_package_from_config(
+    project_key: str, package_id: str, response: Response
+) -> dict | ErrorModel:
+    """
+    Remove a package from config (files remain in data folder as orphaned).
+    
+    To completely remove a package:
+    1. First call this endpoint to remove from config
+    2. Then call DELETE /package/{package_id}/files to delete files
+    """
+    global package_handler
+    try:
+        package_handler.remove_from_config(project_key, package_id)
+        return {
+            "success": True,
+            "message": f"Package {package_id} removed from config. Files remain in data folder as orphaned."
+        }
+
+    except (ProjectNotFound, PackageNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.delete(
+    "/project/{project_key}/package/{package_id}/files",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def delete_package_files(
+    project_key: str, package_id: str, response: Response
+) -> dict | ErrorModel:
+    """
+    Delete package files from data folder.
+    
+    Note: This does NOT remove the package from config.
+    If package is in config, its status will change to MISSING.
+    """
+    global package_handler
+    try:
+        package_handler.delete_files(project_key, package_id)
+        return {
+            "success": True,
+            "message": f"Package files for {package_id} deleted from data folder."
+        }
+
+    except (ProjectNotFound, PackageNotFound) as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/package/cleanup-orphaned",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def cleanup_orphaned_packages(
+    project_key: str, response: Response
+) -> OrphanedCleanupResultModel | ErrorModel:
+    """
+    Delete all orphaned packages (in data folder but not in config).
+    
+    This is useful for cleaning up packages that were removed from config
+    but whose files were not deleted.
+    """
+    global package_handler
+    try:
+        return package_handler.cleanup_orphaned(project_key)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
+
+
+@app.post(
+    "/project/{project_key}/package/adopt-orphaned",
+    tags=["Packages"],
+    response_model_exclude_unset=True,
+    response_model_exclude_none=True,
+    responses={404: {"error": {}}},
+)
+async def adopt_orphaned_packages(
+    project_key: str, response: Response
+) -> OrphanedAdoptResultModel | ErrorModel:
+    """
+    Adopt all orphaned packages into config.
+    
+    This adds config entries for packages that are in data folder
+    but not in config. Their status will change from ORPHANED to AVAILABLE.
+    """
+    global package_handler
+    try:
+        return package_handler.adopt_orphaned(project_key)
+
+    except ProjectNotFound as e:
+        response.status_code = 404
+        return ErrorModel.from_except(e)
 
 
 @app.get(

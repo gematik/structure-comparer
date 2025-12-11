@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -121,5 +122,12 @@ class ProjectConfig(BaseModel):
             return config
 
     def write(self):
-        content = self.model_dump_json(indent=4, exclude_none=True, exclude_unset=True)
+        # Note: We use exclude_none but NOT exclude_unset to ensure packages list is written
+        # even when it was initially empty and then populated via auto-migration
+        # We also explicitly include 'packages' to ensure it's always written
+        data = self.model_dump(exclude_none=True)
+        # Ensure packages is always present (for package list in config feature)
+        if 'packages' not in data:
+            data['packages'] = []
+        content = json.dumps(data, indent=4, ensure_ascii=False)
         self._file_path.write_text(content, encoding="utf-8")
