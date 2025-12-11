@@ -1,0 +1,2618 @@
+entries:
+- fields: []
+  id: 2a3c4d5e-6f70-4a81-92b3-1c2d3e4f5601
+- fields:
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.profile:workflowProfile
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.id
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.implicitRules
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.language
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.text
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.contained
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:rxPrescriptionProcessIdentifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:isVaccine
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:isVaccine.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:isVaccine.value[x]
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:drugCategory
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:drugCategory.id
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:drugCategory.value[x]
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:normSizeCode
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:packaging
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:manufacturingInstructions
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.modifierExtension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.identifier
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:pzn
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:atc-de
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:ask
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:snomed
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.status
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.manufacturer
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.batch
+    other: null
+    remark: null
+  id: 1d770fac-529d-4579-8ee4-f1fa3fa6f4ed
+- fields:
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.meta
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.meta.profile:workflowProfile
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.implicitRules
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.language
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.text
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.contained
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.extension:rxPrescriptionProcessIdentifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.modifierExtension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.identifier
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.partOf
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.status
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.statusReason[x]
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.category
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.medication[x]
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.subject
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.context
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.supportingInformation
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.location
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.authorizingPrescription
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.type
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.quantity
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.daysSupply
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.whenPrepared
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.whenHandedOver
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.destination
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.receiver
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.note
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.dosageInstruction
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.substitution
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.detectedIssue
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationDispense.eventHistory
+    other: null
+    remark: null
+  id: 7d370a3d-3366-436d-8121-6d0fd50ec0f0
+- fields:
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.profile:forProfile
+    other: null
+    remark: null
+  - action: fixed
+    auto_generated: false
+    fixed: https://gematik.de/fhir/directory/CodeSystem/Origin
+    inherited_from: null
+    name: Organization.meta.tag:Origin.system
+    other: null
+    remark: null
+  - action: fixed
+    auto_generated: false
+    fixed: ldap
+    inherited_from: null
+    name: Organization.meta.tag:Origin.code
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.tag:Origin
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.tag
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.security
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.profile
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.source
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.lastUpdated
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.versionId
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.meta
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.language
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.text
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contained
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.modifierExtension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Standortnummer
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:VKNR
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.active
+    other: null
+    remark: null
+  - action: manual
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.type:profession
+    other: null
+    remark: professionOID → aus dem ACCESS_TOKEN der Anfrage
+  - action: manual
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.name
+    other: null
+    remark: organizationName → aus dem ACCESS_TOKEN der Anfrage
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.alias
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.id
+    other: Organization.contact.address.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.extension
+    other: Organization.contact.address.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.use
+    other: Organization.contact.address.use
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.type
+    other: Organization.contact.address.type
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.text
+    other: Organization.contact.address.text
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.line
+    other: Organization.contact.address.line
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.city
+    other: Organization.contact.address.city
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.district
+    other: Organization.contact.address.district
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.state
+    other: Organization.contact.address.state
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.postalCode
+    other: Organization.contact.address.postalCode
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.country
+    other: Organization.contact.address.country
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.contact.address
+    name: Organization.contact.address.period
+    other: Organization.contact.address.period
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.endpoint
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.partOf
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.address
+    other: Organization.address
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.id
+    other: Organization.address.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.extension
+    other: Organization.address.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.use
+    other: Organization.address.use
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.type
+    other: Organization.address.type
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.text
+    other: Organization.address.text
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.line
+    other: Organization.address.line
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.city
+    other: Organization.address.city
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.district
+    other: Organization.address.district
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.state
+    other: Organization.address.state
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.postalCode
+    other: Organization.address.postalCode
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.country
+    other: Organization.address.country
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address.period
+    other: Organization.address.period
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift
+    other: Organization.address:Strassenanschrift
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.id
+    other: Organization.address:Strassenanschrift.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.type
+    other: Organization.address:Strassenanschrift.type
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line
+    other: Organization.address:Strassenanschrift.line
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.id
+    other: Organization.address:Strassenanschrift.line.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension
+    other: Organization.address:Strassenanschrift.line.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Strasse
+    other: Organization.address:Strassenanschrift.line.extension:Strasse
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Strasse.id
+    other: Organization.address:Strassenanschrift.line.extension:Strasse.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Strasse.url
+    other: Organization.address:Strassenanschrift.line.extension:Strasse.url
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Strasse.value[x]
+    other: Organization.address:Strassenanschrift.line.extension:Strasse.value[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Strasse.value[x]:valueString
+    other: Organization.address:Strassenanschrift.line.extension:Strasse.value[x]:valueString
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Hausnummer
+    other: Organization.address:Strassenanschrift.line.extension:Hausnummer
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.id
+    other: Organization.address:Strassenanschrift.line.extension:Hausnummer.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.url
+    other: Organization.address:Strassenanschrift.line.extension:Hausnummer.url
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.value[x]
+    other: Organization.address:Strassenanschrift.line.extension:Hausnummer.value[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.value[x]:valueString
+    other: Organization.address:Strassenanschrift.line.extension:Hausnummer.value[x]:valueString
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz
+    other: Organization.address:Strassenanschrift.line.extension:Adresszusatz
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz.id
+    other: Organization.address:Strassenanschrift.line.extension:Adresszusatz.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz.url
+    other: Organization.address:Strassenanschrift.line.extension:Adresszusatz.url
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz.value[x]
+    other: Organization.address:Strassenanschrift.line.extension:Adresszusatz.value[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz.value[x]:valueString
+    other: Organization.address:Strassenanschrift.line.extension:Adresszusatz.value[x]:valueString
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.line.value
+    other: Organization.address:Strassenanschrift.line.value
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.city
+    other: Organization.address:Strassenanschrift.city
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.postalCode
+    other: Organization.address:Strassenanschrift.postalCode
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.address
+    name: Organization.address:Strassenanschrift.country
+    other: Organization.address:Strassenanschrift.country
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom:eMail
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom:fax
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom:telefon
+    other: Organization.telecom
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:telefon
+    name: Organization.telecom:telefon.id
+    other: Organization.telecom.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:telefon
+    name: Organization.telecom:telefon.extension
+    other: Organization.telecom.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:telefon
+    name: Organization.telecom:telefon.system
+    other: Organization.telecom.system
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:telefon
+    name: Organization.telecom:telefon.value
+    other: Organization.telecom.value
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.address:Postfach
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.type
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.type.coding:IHE-Code
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.type.coding:HL7-Fachschluesselgruppe
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.type.coding:HL7-Fachschluesselgruppe-erweitert
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.identifier:Institutionskennzeichen.type
+    name: Organization.identifier:Institutionskennzeichen.type.id
+    other: Organization.identifier:Institutionskennzeichen.type.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.identifier:Institutionskennzeichen.type
+    name: Organization.identifier:Institutionskennzeichen.type.extension
+    other: Organization.identifier:Institutionskennzeichen.type.extension
+    remark: null
+  - action: copy_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.identifier:Institutionskennzeichen.type
+    name: Organization.identifier:Institutionskennzeichen.type.coding.id
+    other: Organization.identifier:IKNR.type.coding.id
+    remark: null
+  - action: copy_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.identifier:Institutionskennzeichen.type
+    name: Organization.identifier:Institutionskennzeichen.type.coding.extension
+    other: Organization.identifier:IKNR.type.coding.extension
+    remark: null
+  - action: copy_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.identifier:Institutionskennzeichen.type
+    name: Organization.identifier:Institutionskennzeichen.type.coding.system
+    other: Organization.identifier:IKNR.type.coding.system
+    remark: null
+  - action: copy_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.identifier:Institutionskennzeichen.type
+    name: Organization.identifier:Institutionskennzeichen.type.coding.code
+    other: Organization.identifier:IKNR.type.coding.code
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:TelematikID
+    other: Organization.identifier:TelematikID
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:BSNR
+    other: Organization.identifier:Betriebsstaettennummer
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:KZVA
+    other: Organization.identifier:KZV-Abrechnungsnummer
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:IKNR
+    other: Organization.identifier:Institutionskennzeichen
+    remark: null
+  id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
+- fields:
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.language
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.text
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.contained
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.modifierExtension
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:SER
+    other: MedicationRequest.extension:isBvg
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:SER
+    name: MedicationRequest.extension:SER.id
+    other: MedicationRequest.extension:isBvg.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:SER
+    name: MedicationRequest.extension:SER.extension
+    other: MedicationRequest.extension:isBvg.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:SER
+    name: MedicationRequest.extension:SER.url
+    other: MedicationRequest.extension:isBvg.url
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:SER
+    name: MedicationRequest.extension:SER.value[x]
+    other: MedicationRequest.extension:isBvg.value[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:SER
+    name: MedicationRequest.extension:SER.value[x]:valueBoolean
+    other: MedicationRequest.extension:isBvg.value[x]:valueBoolean
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen.id
+    other: MedicationRequest.extension:multiplePrescription.extension:Kennzeichen.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:Kennzeichen.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen.url
+    other: MedicationRequest.extension:multiplePrescription.extension:Kennzeichen.url
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen.value[x]
+    other: MedicationRequest.extension:multiplePrescription.extension:Kennzeichen.value[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen.value[x]:valueBoolean
+    other: MedicationRequest.extension:multiplePrescription.extension:Kennzeichen.value[x]:valueBoolean
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.id
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.url
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.url
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.id
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.numerator
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.numerator
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.numerator.id
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.numerator.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.numerator.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.numerator.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.numerator.value
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.numerator.value
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.denominator
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.denominator
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.denominator.id
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.denominator.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.denominator.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.denominator.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.denominator.value
+    other: MedicationRequest.extension:multiplePrescription.extension:Nummerierung.value[x]:valueRatio.denominator.value
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.id
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.url
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.url
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.value[x]
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.value[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.value[x]:valuePeriod
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.value[x]:valuePeriod
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.value[x]:valuePeriod.id
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.value[x]:valuePeriod.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.value[x]:valuePeriod.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.value[x]:valuePeriod.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.value[x]:valuePeriod.start
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.value[x]:valuePeriod.start
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum.value[x]:valuePeriod.end
+    other: MedicationRequest.extension:multiplePrescription.extension:Zeitraum.value[x]:valuePeriod.end
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.id
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.url
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.url
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.value[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.value[x]:valueIdentifier
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier.id
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.value[x]:valueIdentifier.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier.extension
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.value[x]:valueIdentifier.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier.system
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.value[x]:valueIdentifier.system
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.extension:Mehrfachverordnung
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier.value
+    other: MedicationRequest.extension:multiplePrescription.extension:ID.value[x]:valueIdentifier.value
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Unfallinformationen
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:VerschreiberID
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.medication[x]:medicationReference
+    other: MedicationRequest.medication[x]
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.medication[x]:medicationReference
+    name: MedicationRequest.medication[x]:medicationReference.id
+    other: MedicationRequest.medication[x].id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.medication[x]:medicationReference
+    name: MedicationRequest.medication[x]:medicationReference.extension
+    other: MedicationRequest.medication[x].extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.medication[x]:medicationReference
+    name: MedicationRequest.medication[x]:medicationReference.reference
+    other: MedicationRequest.medication[x].reference
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Notdienstgebuehr
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Zuzahlungsstatus
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.eventHistory
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.detectedIssue
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.priorPrescription
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.substitution.reason
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.substitution.modifierExtension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.substitution.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.substitution.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.substitution
+    other: null
+    remark: null
+  - action: copy_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.substitution.allowed[x]
+    other: MedicationRequest.substitution.allowed[x]
+    remark: null
+  - action: copy_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.substitution.allowed[x]:allowedBoolean
+    other: MedicationRequest.substitution.allowed[x]:allowedBoolean
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.performer
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.expectedSupplyDuration
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.quantity.value
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.quantity.unit
+    other: null
+    remark: null
+  - action: manual
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.quantity.system
+    other: null
+    remark: Setzen einer data-absent-reason
+  - action: manual
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.quantity.code
+    other: null
+    remark: Setzen einer data-absent-reason
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.quantity.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.quantity.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.quantity
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.numberOfRepeatsAllowed
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.validityPeriod
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.dispenseInterval
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.initialFill
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.modifierExtension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dispenseRequest
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.extension:Dosierungskennzeichen
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.maxDosePerLifetime
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.maxDosePerAdministration
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.maxDosePerPeriod
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.doseAndRate
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.method
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.route
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.site
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.asNeeded[x]
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.timing
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.patientInstruction
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.additionalInstruction
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.text
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.sequence
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.modifierExtension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.dosageInstruction
+    other: null
+    remark: null
+  - action: copy_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.note.author[x]:authorReference
+    other: MedicationRequest.note.author[x]
+    remark: null
+  - action: copy_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.note.author[x]:authorString
+    other: MedicationRequest.note.author[x]
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.note.text
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.note.time
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.note.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.note.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.note
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.insurance
+    other: MedicationRequest.insurance
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.insurance
+    name: MedicationRequest.insurance.id
+    other: MedicationRequest.insurance.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.insurance
+    name: MedicationRequest.insurance.extension
+    other: MedicationRequest.insurance.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.insurance
+    name: MedicationRequest.insurance.reference
+    other: MedicationRequest.insurance.reference
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.courseOfTherapyType
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.groupIdentifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.basedOn
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.instantiatesUri
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.instantiatesCanonical
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.reasonReference
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.reasonCode
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.recorder
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.performerType
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.performer
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.requester
+    other: MedicationRequest.requester
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.requester
+    name: MedicationRequest.requester.id
+    other: MedicationRequest.requester.id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.requester
+    name: MedicationRequest.requester.extension
+    other: MedicationRequest.requester.extension
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.requester
+    name: MedicationRequest.requester.reference
+    other: MedicationRequest.requester.reference
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.subject
+    other: MedicationRequest.subject
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.subject
+    name: MedicationRequest.subject.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.subject
+    name: MedicationRequest.subject.extension
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.subject
+    name: MedicationRequest.subject.reference
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.subject
+    name: MedicationRequest.subject.type
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.subject
+    name: MedicationRequest.subject.identifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: MedicationRequest.subject
+    name: MedicationRequest.subject.display
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.medication[x]
+    other: MedicationRequest.medication[x]
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.supportingInformation
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.encounter
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.authoredOn
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.reported[x]
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.doNotPerform
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.priority
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.category
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.intent
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.statusReason
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.status
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.identifier:RxOriginatorProcessIdentifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.identifier:RxPrescriptionProcessIdentifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.identifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:isBvg
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:indicator
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:counter
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:counter.value[x].numerator
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:counter.value[x].denominator
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:period.value[x].start
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:period
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:counter.value[x].id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:counter.value[x].extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:period.value[x].id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:period.value[x].extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:period.value[x].end
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:id.value[x].id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:id.value[x].extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:multiplePrescription.extension:id.value[x].value
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.value[x]
+    other: null
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID
+    other: MedicationRequest.extension:multiplePrescription.extension:id
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Zeitraum
+    other: MedicationRequest.extension:multiplePrescription.extension:period
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung
+    other: MedicationRequest.extension:multiplePrescription.extension:counter
+    remark: null
+  - action: extension
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Kennzeichen
+    other: MedicationRequest.extension:multiplePrescription.extension:indicator
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension
+    other: null
+    remark: null
+  - action: fixed
+    auto_generated: false
+    fixed: https://gematik.de/fhir/epa-medication/StructureDefinition/multiple-prescription-extension
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.url
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.requester.type
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.requester.identifier
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.requester.display
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.insurance.type
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.insurance.identifier
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.insurance.display
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.numerator.comparator
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.numerator.unit
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.numerator.system
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.numerator.code
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.denominator.comparator
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.denominator.unit
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.denominator.system
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:Nummerierung.value[x]:valueRatio.denominator.code
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier.use
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier.type
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier.period
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension:Mehrfachverordnung.extension:ID.value[x]:valueIdentifier.assigner
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.medication[x]:medicationReference.type
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.medication[x]:medicationReference.identifier
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.medication[x]:medicationReference.display
+    other: null
+    remark: null
+  id: 3b4c5d6e-7f81-4b92-a3c4-2d3e4f5a6702
+transformation_entries:
+- fields:
+  - action: copy_from
+    fixed: null
+    map: null
+    name: Parameters.parameter:rxPrescription.part:prescriptionId.value[x]
+    other: Bundle.identifier.value
+    remark: null
+    target_creation: null
+  - action: copy_from
+    fixed: null
+    map: null
+    name: Parameters.parameter:rxPrescription.part:prescriptionId.value[x]
+    other: Bundle.entry:VerordnungArzneimittel.resource.authoredOn
+    remark: null
+    target_creation: null
+  id: 837f9230-c28e-426e-a32e-268702d6e853
