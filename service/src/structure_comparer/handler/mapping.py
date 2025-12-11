@@ -24,12 +24,14 @@ from ..model.mapping import MappingFieldBase as MappingFieldBaseModel
 from ..model.mapping import MappingFieldMinimal as MappingFieldMinimalModel
 from ..model.mapping import MappingFieldsOutput as MappingFieldsOutputModel
 from ..model.mapping import MappingUpdate as MappingUpdateModel
+from ..model.mapping import ResolvedMappingFieldsResponse
 from ..data.config import MappingConfig as MappingConfigModel
 from ..data.config import ComparisonProfilesConfig as ComparisonProfilesConfigModel
 from ..data.config import ComparisonProfileConfig as ComparisonProfileConfigModel
 from ..data.mapping import Mapping as MappingModel
 from .project import ProjectsHandler
 from ..results_html import create_results_html
+from ..resolver.mapping_field_resolver import MappingFieldResolver
 
 
 class MappingHandler:
@@ -579,6 +581,49 @@ class MappingHandler:
     def _to_profiles_config(self, url: str) -> ComparisonProfileConfigModel:
         url, version = url.split("|")
         return ComparisonProfileConfigModel(url=url, version=version)
+
+    def get_resolved_fields(
+        self,
+        project_key: str,
+        mapping_id: str,
+        max_depth: int = 3,
+        include_references: bool = True
+    ) -> ResolvedMappingFieldsResponse:
+        """Get mapping fields with recursive resolution of profile references.
+
+        This method loads a mapping and recursively resolves profile references
+        (fixedUri, fixedCanonical, type[].profile[], type[].targetProfile[])
+        to provide a complete view of all fields including those from
+        referenced profiles.
+
+        Args:
+            project_key: The project identifier
+            mapping_id: The mapping identifier
+            max_depth: Maximum recursion depth (default: 3)
+            include_references: Whether to resolve references (default: True)
+
+        Returns:
+            ResolvedMappingFieldsResponse with all resolved fields and metadata
+        """
+        proj = self.project_handler._get(project_key)
+        if proj is None:
+            raise ProjectNotFound()
+
+        mapping = proj.mappings.get(mapping_id)
+        if not mapping:
+            raise MappingNotFound()
+
+        # Fill action and remark data
+        mapping.fill_action_remark(proj.manual_entries)
+
+        if not include_references:
+            # Return fields without recursive resolution (max_depth=0)
+            resolver = MappingFieldResolver(proj, max_depth=0)
+            return resolver.resolve_mapping_fields(mapping)
+
+        # Use the resolver for recursive resolution
+        resolver = MappingFieldResolver(proj, max_depth=max_depth)
+        return resolver.resolve_mapping_fields(mapping)
 
     def __get(self, project_key, mapping_id, proj: Project | None = None):
         if proj is None:
