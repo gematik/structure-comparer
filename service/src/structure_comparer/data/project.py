@@ -162,36 +162,50 @@ class Project:
         return orphaned
 
     def load_comparisons(self):
-        self.comparisons = {
-            c.id: Comparison(c, self).init_ext() for c in self.config.comparisons
-        }
+        """Load all comparisons from config, skipping those with missing profiles."""
+        self.comparisons = {}
+        for c in self.config.comparisons:
+            try:
+                comparison = Comparison(c, self).init_ext()
+                self.comparisons[c.id] = comparison
+            except Exception as e:
+                logger.warning(f"Skipping comparison '{c.id}': {e} (missing packages?)")
 
     def load_mappings(self):
-        self.mappings = {
-            m.id: Mapping(m, self).init_ext() for m in self.config.mappings
-        }
+        """Load all mappings from config, skipping those with missing profiles."""
+        self.mappings = {}
+        for m in self.config.mappings:
+            try:
+                mapping = Mapping(m, self).init_ext()
+                self.mappings[m.id] = mapping
+            except Exception as e:
+                logger.warning(f"Skipping mapping '{m.id}': {e} (missing packages?)")
 
     def load_transformations(self):
-        """Load all transformations from config."""
+        """Load all transformations from config, skipping those with missing profiles."""
+        self.transformations = {}
         if not self.config.transformations:
-            self.transformations = {}
             return
 
-        self.transformations = {
-            t.id: Transformation(t, self).init_ext()
-            for t in self.config.transformations
-        }
+        for t in self.config.transformations:
+            try:
+                transformation = Transformation(t, self).init_ext()
+                self.transformations[t.id] = transformation
+            except Exception as e:
+                logger.warning(f"Skipping transformation '{t.id}': {e} (missing packages?)")
 
     def load_target_creations(self):
-        """Load all target creations from config."""
+        """Load all target creations from config, skipping those with missing profiles."""
+        self.target_creations = {}
         if not self.config.target_creations:
-            self.target_creations = {}
             return
 
-        self.target_creations = {
-            tc.id: TargetCreation(tc, self).init_ext()
-            for tc in self.config.target_creations
-        }
+        for tc in self.config.target_creations:
+            try:
+                target_creation = TargetCreation(tc, self).init_ext()
+                self.target_creations[tc.id] = target_creation
+            except Exception as e:
+                logger.warning(f"Skipping target creation '{tc.id}': {e} (missing packages?)")
 
     def __read_manual_entries(self):
         manual_entries_file = self.dir / self.config.manual_entries_file
@@ -271,11 +285,36 @@ class Project:
         return any([p.name == name and p.version == version for p in self.pkgs])
 
     def to_model(self) -> ProjectModel:
-        mappings = [m.to_base_model() for m in self.mappings.values()]
+        # Safely convert items, skipping any that fail
+        mappings = []
+        for m in self.mappings.values():
+            try:
+                mappings.append(m.to_base_model())
+            except Exception as e:
+                logger.warning(f"Skipping mapping in to_model: {e}")
+        
+        comparisons = []
+        for c in self.comparisons.values():
+            try:
+                comparisons.append(c.to_overview_model())
+            except Exception as e:
+                logger.warning(f"Skipping comparison in to_model: {e}")
+        
+        transformations = []
+        for t in self.transformations.values():
+            try:
+                transformations.append(t.to_base_model())
+            except Exception as e:
+                logger.warning(f"Skipping transformation in to_model: {e}")
+        
+        target_creations = []
+        for tc in self.target_creations.values():
+            try:
+                target_creations.append(tc.to_base_model())
+            except Exception as e:
+                logger.warning(f"Skipping target creation in to_model: {e}")
+        
         pkgs = [p.to_model() for p in self.pkgs]
-        comparisons = [c.to_overview_model() for c in self.comparisons.values()]
-        transformations = [t.to_base_model() for t in self.transformations.values()]
-        target_creations = [tc.to_base_model() for tc in self.target_creations.values()]
 
         return ProjectModel(
             name=self.name,

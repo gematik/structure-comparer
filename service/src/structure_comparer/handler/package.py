@@ -33,6 +33,7 @@ from ..model.package import (
     PackageAddResult as PackageAddResultModel,
     OrphanedCleanupResult as OrphanedCleanupResultModel,
     OrphanedAdoptResult as OrphanedAdoptResultModel,
+    BatchDownloadResult as BatchDownloadResultModel,
 )
 from ..model.profile import ProfileList as ProfileListModel
 from ..model.profile import ProfileDetails as ProfileDetailsModel
@@ -891,7 +892,7 @@ class PackageHandler:
 
     def download_multiple_from_registry(
         self, proj_key: str, packages: list[tuple[str, str]]
-    ) -> list[PackageDownloadResultModel]:
+    ) -> BatchDownloadResultModel:
         """
         Download multiple packages from registries.
 
@@ -900,11 +901,24 @@ class PackageHandler:
             packages: List of (package_name, version) tuples
 
         Returns:
-            List of download results
+            BatchDownloadResult with aggregated results
         """
         results = []
+        successful = 0
+        failed = 0
+        
         for package_name, version in packages:
             result = self.download_from_registry(proj_key, package_name, version)
             results.append(result)
-        return results
+            if result.success:
+                successful += 1
+            else:
+                failed += 1
+        
+        return BatchDownloadResultModel(
+            total_requested=len(packages),
+            successful=successful,
+            failed=failed,
+            results=results
+        )
 

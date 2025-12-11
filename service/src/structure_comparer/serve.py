@@ -448,7 +448,7 @@ async def download_packages_batch(
             (pkg.package_name, pkg.version) for pkg in request.packages
         ]
         result = package_handler.download_multiple_from_registry(
-            project_key=project_key,
+            proj_key=project_key,
             packages=packages_to_download,
         )
         return result

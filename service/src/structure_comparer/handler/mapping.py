@@ -40,7 +40,14 @@ class MappingHandler:
 
     def get_list(self, project_key: str) -> List[MappingBaseModel]:
         proj = self.project_handler._get(project_key)
-        return [comp.to_base_model() for comp in proj.mappings.values()]
+        result = []
+        for m in proj.mappings.values():
+            try:
+                result.append(m.to_base_model())
+            except (ValueError, Exception):
+                # Skip mappings with missing profiles
+                pass
+        return result
 
     def get(self, project_key: str, mapping_id: str) -> MappingDetailsModel:
         mapping = self.__get(project_key, mapping_id)
