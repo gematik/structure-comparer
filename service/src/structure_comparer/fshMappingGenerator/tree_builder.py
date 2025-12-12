@@ -44,6 +44,7 @@ class FieldTreeBuilder:
         self._source_profile_keys = source_profile_keys
 
         self._root = FieldNode(segment="", path="")
+        self._node_by_path: dict[str, FieldNode] = {"": self._root}
         self._nodes_to_emit: list[FieldNode] = []
         self._blocked_prefixes: set[str] = set()
         self._field_source_support: dict[str, bool] = {}
@@ -87,12 +88,14 @@ class FieldTreeBuilder:
         if not self._target_profile_key:
             return True
 
+        info = self._actions.get(path)
+
         target_field = field.profiles.get(self._target_profile_key)
-        if not self._profile_supports_field(target_field):
+        target_supported = self._profile_supports_field(target_field)
+        if not target_supported and not (info and info.action == ActionType.COPY_NODE_TO):
             self._blocked_prefixes.add(path)
             return False
 
-        info = self._actions.get(path)
         if info and info.action == ActionType.COPY_VALUE_FROM:
             return self._copy_value_from_source_supported(info)
 
@@ -177,8 +180,6 @@ class FieldTreeBuilder:
             return False
         if info.action == ActionType.MANUAL and info.fixed_value:
             return False
-        if info.action == ActionType.COPY_VALUE_FROM:
-            return False
         return True
 
     def _copy_value_from_source_supported(self, info: ActionInfo) -> bool:
@@ -199,6 +200,7 @@ class FieldTreeBuilder:
             if segment not in current.children:
                 current.children[segment] = FieldNode(segment=segment, path=current_path, parent=current)
             current = current.children[segment]
+            self._node_by_path[current_path] = current
             interim_info = self._actions.get(current_path)
             if interim_info is not None:
                 self._apply_action_info(current, interim_info, overwrite=False)
@@ -248,25 +250,35 @@ class FieldTreeBuilder:
         if overwrite or (node.remark is None and remark):
             node.remark = remark
 
+    def _action_requires_runtime_source(self, info: ActionInfo | None) -> bool:
+        if info is None:
+            return True
+        action = info.action
+        if action is None:
+            return True
+        if action in {ActionType.EMPTY, ActionType.NOT_USE}:
+            return False
+        if action == ActionType.FIXED:
+            return False
+        if action == ActionType.MANUAL and info.fixed_value:
+            return False
+        if action == ActionType.COPY_VALUE_FROM:
+            return False
+        return True
+
+    def _propagate_requires_source(self, node: FieldNode) -> None:
+        requires_source = node.requires_source
+        for child in node.children.values():
+            if requires_source and child.requires_source is None:
+                child.requires_source = True
+            self._propagate_requires_source(child)
+
     def _annotate_tree(self, node: FieldNode) -> None:
         for child in node.children.values():
             self._annotate_tree(child)
 
         intent = self._determine_intent(node)
 
-        def _action_requires_runtime_source(self, info: ActionInfo | None) -> bool:
-            if info is None:
-                return True
-            action = info.action
-            if action is None:
-                return True
-            if action in {ActionType.EMPTY, ActionType.NOT_USE}:
-                return False
-            if action == ActionType.FIXED:
-                return False
-            if action == ActionType.MANUAL and info.fixed_value:
-                return False
-            return True
         node.intent = intent
 
         if intent not in COPY_INTENTS:
@@ -315,10 +327,23 @@ class FieldTreeBuilder:
 
         return "copy"
 
+    def _apply_container_flags(self, node: FieldNode) -> None:
+        for child in node.children.values():
+            self._apply_container_flags(child)
+
+        if self._should_force_container(node):
+            node.force_container = True
+
     def _collect_nodes(self, node: FieldNode) -> None:
         slice_bases = self._collect_special_slice_bases(node)
         for child in sorted(node.children.values(), key=lambda item: item.path):
             if child.intent == "skip":
+                continue
+
+            if child.intent == "copy_node_to":
+                if self._is_redundant_copy_node(child):
+                    continue
+                self._nodes_to_emit.append(child)
                 continue
 
             if child.intent in COPY_INTENTS:
@@ -337,6 +362,10 @@ class FieldTreeBuilder:
                         self._collect_nodes(child)
                 else:
                     self._collect_nodes(child)
+                continue
+
+            if child.intent == "manual":
+                self._collect_nodes(child)
                 continue
 
             if child.depth >= 2:
@@ -364,12 +393,40 @@ class FieldTreeBuilder:
             bases.add(base)
         return bases
 
+    def _is_redundant_copy_node(self, node: FieldNode) -> bool:
+        if ":" not in node.segment:
+            return False
+        base_path = self._unsliced_path(node.path)
+        if not base_path or node.other_path != base_path:
+            return False
+        base_node = self._node_by_path.get(base_path)
+        if base_node is None:
+            return False
+        return base_node.intent in COPY_INTENTS
+
+    def _unsliced_path(self, path: str | None) -> str | None:
+        if not path:
+            return None
+        if ":" not in path:
+            return path
+        segments = path.split(".")
+        if not segments:
+            return path
+        last_segment = segments[-1]
+        if ":" not in last_segment:
+            return path
+        base_segment = last_segment.split(":", 1)[0]
+        segments[-1] = base_segment
+        return ".".join(segments)
+
     def _needs_container_node(self, node: FieldNode) -> bool:
         if not node.children:
             return False
         if node.intent not in COPY_INTENTS:
             return False
         for child in node.children.values():
+            if child.intent == "manual":
+                continue
             if child.intent not in COPY_INTENTS:
                 return True
         return False

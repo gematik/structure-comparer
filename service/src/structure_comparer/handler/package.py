@@ -70,6 +70,46 @@ class PackageHandler:
     def __init__(self, project_handler: ProjectsHandler):
         self.project_handler: ProjectsHandler = project_handler
 
+    def _register_installed_package(
+        self,
+        proj,
+        package_name: str,
+        version: str,
+        pkg_dir: Path,
+    ) -> Package:
+        """Attach a downloaded package to the project and config, replacing placeholders."""
+        # Try to find existing config entry
+        pkg_config = next(
+            (
+                cfg
+                for cfg in proj.config.packages
+                if cfg.name == package_name and cfg.version == version
+            ),
+            None,
+        )
+
+        config_added = False
+        if pkg_config is None:
+            pkg_config = PackageConfig(name=package_name, version=version)
+            proj.config.packages.append(pkg_config)
+            config_added = True
+
+        pkg = Package(pkg_dir, proj, pkg_config, PackageStatus.AVAILABLE)
+
+        # Replace existing placeholder or append as new package
+        pkg_key = pkg.key
+        for idx, existing in enumerate(proj.pkgs):
+            if existing.key == pkg_key:
+                proj.pkgs[idx] = pkg
+                break
+        else:
+            proj.pkgs.append(pkg)
+
+        if config_added:
+            proj.config.write()
+
+        return pkg
+
     def get_list(self, proj_key: str) -> PackageListModel:
         proj = self.project_handler._get(proj_key)
         pkgs = [p.to_model() for p in proj.pkgs]
@@ -694,8 +734,12 @@ class PackageHandler:
             shutil.copytree(tmp / "package", pkg_dir / "package")
             logger.info(f"Successfully copied package to {pkg_dir}")
 
-        pkg = Package(pkg_dir, proj)
-        proj.pkgs.append(pkg)
+        pkg = self._register_installed_package(
+            proj,
+            pkg_info["name"],
+            pkg_info["version"],
+            pkg_dir,
+        )
         logger.info(f"Package {pkg_info.get('name')}#{pkg_info.get('version')} uploaded successfully")
 
         return pkg.to_model()
@@ -877,8 +921,12 @@ class PackageHandler:
             shutil.copytree(tmp / "package", pkg_dir / "package")
 
         # Create Package object and add to project
-        pkg = Package(pkg_dir, proj)
-        proj.pkgs.append(pkg)
+        pkg = self._register_installed_package(
+            proj,
+            pkg_info["name"],
+            pkg_info["version"],
+            pkg_dir,
+        )
 
         logger.info(f"Successfully downloaded and installed {package_key} from {registry_url}")
 

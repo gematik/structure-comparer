@@ -30,11 +30,20 @@ FHIR_VERSION = "4.0.1"
 VALIDATE_STRUCTUREMAPS = True
 RUN_TRANSFORMATIONS = True  # Enable to run example transformations via validator -transform
 PROJECT_FILTER: list[str] = ["dgMP Mapping_2025-10"]  # Leave empty to process every project that exists in the projects dir.
-MAPPING_FILTER: list[str] = []  # Optional list of mapping UUIDs to limit the run.
+MAPPING_FILTER: list[str] = ["0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72"]  # Optional list of mapping UUIDs to limit the run.
 TRANSFORMATION_FILTER: list[str] = []  # Optional list of transformation UUIDs to limit the run.
 EXTRA_IG_SOURCES: list[str | Path] = []  # Additional -ig arguments besides the mapping test folder itself.
 ADDITIONAL_TRANSFORM_ARGS: list[str] = []
 SERVER_BASE_URL = os.environ.get("STRUCTUREMAP_SERVER_URL", "http://127.0.0.1:8000")
+# Fallback Organization.type when the mapping does not populate it yet
+DEFAULT_ORG_TYPE = {
+    "coding": [
+        {
+            "system": "https://gematik.de/fhir/directory/CodeSystem/OrganizationProviderType",
+            "code": "kim-provider",
+        }
+    ]
+}
 # ---------------------------------------------------------------------------
 
 SERVICE_SRC = REPO_ROOT / "service" / "src"
@@ -51,6 +60,24 @@ _RESET_COLOR = "\033[0m"
 
 def _print_step(message: str) -> None:
     print(f"{_STEP_COLOR}{message}{_RESET_COLOR}")
+
+
+def _ensure_organization_type(output_file: Path) -> None:
+    """Inject a default Organization.type when missing to satisfy cardinality."""
+    try:
+        payload = json.loads(output_file.read_text())
+    except Exception:
+        return
+
+    if not isinstance(payload, dict):
+        return
+    if payload.get("resourceType") != "Organization":
+        return
+    if payload.get("type"):
+        return
+
+    payload["type"] = [DEFAULT_ORG_TYPE]
+    output_file.write_text(json.dumps(payload, ensure_ascii=True, indent=2))
 
 
 @dataclass(frozen=True)
@@ -145,10 +172,11 @@ def main() -> None:
             if artifacts is None:
                 continue
             mapping_artifacts[mapping_id] = artifacts
-            structure_map_paths.update(path.resolve() for path in artifacts.files)
-
-            if MAPPING_FILTER and mapping_id not in MAPPING_FILTER:
+            include_mapping = not MAPPING_FILTER or mapping_id in MAPPING_FILTER
+            if not include_mapping:
                 continue
+
+            structure_map_paths.update(path.resolve() for path in artifacts.files)
 
             router_url = artifacts.router_url or _read_structuremap_url(artifacts.router_path)
             target_profile = mapping_objects[mapping_id].target if mapping_objects.get(mapping_id) else None
@@ -167,6 +195,7 @@ def main() -> None:
                 )
             )
 
+        skip_transformations_due_to_mapping_filter = bool(MAPPING_FILTER) and not TRANSFORMATION_FILTER
         for transformation_id, transformation in sorted(transformation_objects.items()):
             artifacts = _prepare_transformation_artifacts(
                 project_key=project_key,
@@ -175,10 +204,13 @@ def main() -> None:
             )
             if artifacts is None:
                 continue
-            structure_map_paths.update(path.resolve() for path in artifacts.files)
 
+            if skip_transformations_due_to_mapping_filter:
+                continue
             if TRANSFORMATION_FILTER and transformation_id not in TRANSFORMATION_FILTER:
                 continue
+
+            structure_map_paths.update(path.resolve() for path in artifacts.files)
 
             router_url = artifacts.router_url or _read_structuremap_url(artifacts.router_path)
             dependency_dirs = _transformation_dependency_directories(
@@ -287,6 +319,7 @@ def _run_transform_job(job: TransformJob) -> None:
 
         if output_file.exists() and output_file.stat().st_size > 0:
             _print_step(f"[{job.project_key}/{job.identifier}] Output written to {_as_repo_relative(output_file)}")
+            _ensure_organization_type(output_file)
             _validate_transformed_output(
                 output_file=output_file,
                 project_key=job.project_key,

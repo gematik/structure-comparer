@@ -5,7 +5,7 @@
   "name": "KBVPrForPractitionerMap",
   "status": "active",
   "version": "1.0",
-  "date": "2025-12-09",
+  "date": "2025-12-12",
   "description": "Auto-generated StructureMap for KBV_PR_FOR_Practitioner|1.2.0 -> PractitionerDirectory|0.11.25",
   "structure": [
     {
@@ -159,7 +159,8 @@
                     }
                   ]
                 }
-              ]
+              ],
+              "documentation": "Automatic copy"
             },
             {
               "name": "PractitionerQualificationIdbd899a43",
@@ -183,7 +184,8 @@
                     }
                   ]
                 }
-              ]
+              ],
+              "documentation": "Automatic copy"
             },
             {
               "name": "PractitionerQualificationIdentifiera0f351ca",
@@ -207,7 +209,8 @@
                     }
                   ]
                 }
-              ]
+              ],
+              "documentation": "Automatic copy"
             },
             {
               "name": "PractitionerQualificationIssuer16de1a10",
@@ -231,7 +234,8 @@
                     }
                   ]
                 }
-              ]
+              ],
+              "documentation": "Automatic copy"
             },
             {
               "name": "PractitionerQualificationPeriode7fc59e2",
@@ -255,7 +259,8 @@
                     }
                   ]
                 }
-              ]
+              ],
+              "documentation": "Automatic copy"
             }
           ]
         }

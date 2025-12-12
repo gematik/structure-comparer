@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Iterable
 
-from structure_comparer.model.mapping_action_models import ActionInfo
+from structure_comparer.model.mapping_action_models import ActionInfo, ActionType
 
 from .extension_utils import find_skipped_slices, get_extension_url, is_extension_path
 from .naming import slug, stable_id, var_name
@@ -110,6 +110,7 @@ class StructureMapRuleBuilder:
             return None
 
         rule_name = slug(node.path, suffix=stable_id(node.path))
+        documentation = self._build_documentation(node)
 
         src_element = node.segment.split(":")[0]
         if src_element.endswith("[x]"):
@@ -152,25 +153,35 @@ class StructureMapRuleBuilder:
             "context": parent_src["variable"],
             "variable": src_var,
         }
-        if node.requires_source:
+        if node.requires_source or node.intent in COPY_RULE_INTENTS:
             source_entry["element"] = src_element
 
-            skipped_urls = find_skipped_slices(
-                node,
-                self._actions,
-                self._mapping,
-                self._target_profile_key,
-                SKIP_ACTIONS,
-            )
+            skipped_urls: list[str] = []
+            if source_path and is_extension_path(source_path):
+                skipped_urls = find_skipped_slices(
+                    node,
+                    self._actions,
+                    self._mapping,
+                    self._target_profile_key,
+                    SKIP_ACTIONS,
+                )
             source_conditions: list[str] = []
             source_extension_url = None
             if source_path and is_extension_path(source_path):
                 source_extension_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
                 if source_extension_url:
                     source_conditions.append(f"url = '{source_extension_url}'")
+            slice_conditions = self._slice_conditions_for_path(source_path, self._source_profile_keys)
+            if slice_conditions:
+                source_conditions.extend(slice_conditions)
+            exclusion_conditions = self._child_slice_exclusion_conditions(node)
+            if exclusion_conditions:
+                source_conditions.extend(exclusion_conditions)
             if skipped_urls:
                 source_conditions.extend([f"url != '{url}'" for url in skipped_urls])
             if source_conditions:
+                if source_path and not is_extension_path(source_path):
+                    source_conditions = [c for c in source_conditions if "url" not in c]
                 condition_str = " and ".join(source_conditions)
                 if "condition" in source_entry:
                     source_entry["condition"] += f" and {condition_str}"
@@ -202,6 +213,8 @@ class StructureMapRuleBuilder:
             "source": [source_entry],
             "target": [target_entry],
         }
+        if documentation:
+            rule["documentation"] = documentation
 
         if is_extension and node.intent in COPY_RULE_INTENTS:
             target_url = get_extension_url(self._mapping, target_path, self._target_profile_key)
@@ -218,10 +231,12 @@ class StructureMapRuleBuilder:
                     }
                 )
 
-        if node.children:
+        if node.children and node.intent != "copy_node_to":
             sub_rules = []
             for child in sorted(node.children.values(), key=lambda item: item.path):
                 if child.intent == "skip":
+                    continue
+                if child.intent == "manual":
                     continue
                 sub_rule = self.build_rule(child, source_entry, target_entry)
                 if sub_rule:
@@ -292,13 +307,25 @@ class StructureMapRuleBuilder:
                     source_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
                     if source_url:
                         conditions.append(f"url = '{source_url}'")
+                slice_conditions = self._slice_conditions_for_path(source_path, self._source_profile_keys)
+                if slice_conditions:
+                    conditions.extend(slice_conditions)
+                exclusion_conditions = self._child_slice_exclusion_conditions(node)
+                if exclusion_conditions:
+                    conditions.extend(exclusion_conditions)
 
+                conditions = [c for c in conditions if c]
                 if conditions:
-                    condition_str = " and ".join(conditions)
-                    if "condition" in source_chain[-1]:
-                        source_chain[-1]["condition"] += f" and {condition_str}"
+                    if source_path and not is_extension_path(source_path):
+                        conditions = [c for c in conditions if "url" not in c]
+                    if not conditions:
+                        pass
                     else:
-                        source_chain[-1]["condition"] = condition_str
+                        condition_str = " and ".join(conditions)
+                        if "condition" in source_chain[-1]:
+                            source_chain[-1]["condition"] += f" and {condition_str}"
+                        else:
+                            source_chain[-1]["condition"] = condition_str
 
             target_chain = self._build_path_chain(
                 target_path,
@@ -327,13 +354,32 @@ class StructureMapRuleBuilder:
                     chain_kind="source",
                     profile_keys=self._source_profile_keys,
                 )
+        elif node.intent == "manual":
+            target_chain = self._build_path_chain(
+                node.path,
+                alias=self._target_alias,
+                prefix="tgt",
+                chain_kind="target",
+                profile_keys=self._target_profile_key,
+            )
+            if not target_chain:
+                return None
+            if node.requires_source and self._field_source_support.get(node.path, True):
+                source_chain = self._build_path_chain(
+                    node.path,
+                    alias=self._source_alias,
+                    prefix="src",
+                    chain_kind="source",
+                    profile_keys=self._source_profile_keys,
+                )
 
         rule: dict = {"name": rule_name}
         if documentation:
             rule["documentation"] = documentation
 
-        if source_chain:
-            leaf_source = source_chain[-1]
+        leaf_source = source_chain[-1] if source_chain else None
+
+        if leaf_source:
             source_entry = {
                 "context": leaf_source["context"],
                 "element": leaf_source["element"],
@@ -346,12 +392,14 @@ class StructureMapRuleBuilder:
             rule["source"] = [{"context": self._source_alias}]
 
         if node.intent in COPY_RULE_INTENTS:
-            leaf_source = source_chain[-1]
             leaf_target = target_chain[-1]
             container_only = getattr(node, "force_container", False)
 
             is_extension = is_extension_path(node.path)
             use_create = is_extension and bool(node.children)
+
+            if not container_only and not use_create and leaf_source is None:
+                return None
 
             target_url = None
             source_url = None
@@ -375,9 +423,7 @@ class StructureMapRuleBuilder:
                         "parameter": [{"valueString": create_type}],
                     }
                 ]
-            elif not source_chain:
-                return None
-            else:
+            elif leaf_source is not None:
                 rule["target"] = [
                     {
                         "context": leaf_target["context"],
@@ -388,6 +434,8 @@ class StructureMapRuleBuilder:
                         "parameter": [{"valueId": leaf_source["variable"]}],
                     }
                 ]
+            else:
+                return None
 
             if not container_only and is_extension:
                 if target_url and (use_create or (source_url and target_url != source_url)):
@@ -412,15 +460,27 @@ class StructureMapRuleBuilder:
                     "parameter": [{"valueString": node.fixed_value or ""}],
                 }
             ]
+        elif node.intent == "manual":
+            leaf_target = target_chain[-1]
+            rule["target"] = [
+                {
+                    "context": leaf_target["context"],
+                    "contextType": "variable",
+                    "element": leaf_target["element"],
+                    "variable": leaf_target["variable"],
+                }
+            ]
 
-        if node.children:
-            leaf_src_var = source_chain[-1]["variable"] if source_chain else self._source_alias
+        if node.children and node.intent != "copy_node_to":
+            leaf_src_var = leaf_source["variable"] if leaf_source else self._source_alias
             leaf_tgt_var = target_chain[-1]["variable"] if target_chain else None
 
             if leaf_src_var and leaf_tgt_var:
                 sub_rules = []
                 for child in sorted(node.children.values(), key=lambda item: item.path):
                     if child.intent == "skip":
+                        continue
+                    if child.intent == "manual":
                         continue
                     sub_rule = self.build_rule(child, {"variable": leaf_src_var}, {"variable": leaf_tgt_var})
                     if sub_rule:
@@ -708,7 +768,6 @@ class StructureMapRuleBuilder:
                     wrapper_entry["transform"] = "create"
                     wrapper_entry["parameter"] = [{"valueString": create_type}]
 
-            documentation = wrapped_rule.pop("documentation", None)
             wrapped_rule = {
                 "name": wrapped_rule.get("name"),
                 direction: [wrapper_entry],
@@ -717,16 +776,140 @@ class StructureMapRuleBuilder:
             if direction == "target":
                 wrapped_rule["source"] = [{"context": self._source_alias}]
 
-            if documentation:
-                wrapped_rule["documentation"] = documentation
-
         return wrapped_rule
+
+    def _child_slice_exclusion_conditions(self, node: FieldNode) -> list[str]:
+        if node.intent not in COPY_RULE_INTENTS:
+            return []
+        parent_source_path = self._source_path_for_node(node)
+        if not parent_source_path or ":" in parent_source_path:
+            return []
+
+        base_path = self._unsliced_path(parent_source_path)
+        if not base_path:
+            return []
+
+        candidate_paths: set[str] = set()
+
+        prefix = f"{base_path}:"
+        for field_path, action_info in self._actions.items():
+            if not isinstance(field_path, str):
+                continue
+            if not action_info or action_info.action is None:
+                continue
+            if action_info.action != ActionType.COPY_NODE_FROM:
+                continue
+            other = action_info.other_value if isinstance(action_info.other_value, str) else None
+            if not other or self._unsliced_path(other) != base_path:
+                continue
+            if ":" not in other:
+                continue
+            candidate_paths.add(other)
+
+        exclusions: list[str] = []
+        seen: set[str] = set()
+        for path in sorted(candidate_paths):
+            child_conditions = self._slice_conditions_for_path(path, self._source_profile_keys)
+            if not child_conditions:
+                continue
+            clause = " and ".join(child_conditions)
+            expression = f"({clause}) != true"
+            if expression in seen:
+                continue
+            seen.add(expression)
+            exclusions.append(expression)
+        return exclusions
+
+    def _slice_conditions_for_path(self, path: str | None, profile_keys: str | list[str] | None) -> list[str]:
+        if not path or ":" not in path:
+            return []
+        prefix = f"{path}."
+        simple_fields = {"system", "use"}
+        conditions: list[str] = []
+        coding_requirements: dict[str, dict[str, str]] = {}
+
+        for field_path, field in self._mapping.fields.items():
+            if not field_path.startswith(prefix):
+                continue
+            relative = field_path[len(prefix) :]
+            if not relative or ":" in relative:
+                continue
+            profile_field = self._profile_field_for_keys(field, profile_keys)
+            if not profile_field:
+                continue
+            value = self._normalized_fixed_value(profile_field)
+            if value is None:
+                continue
+
+            if relative in simple_fields:
+                conditions.append(f"{relative} = '{value}'")
+                continue
+
+            if relative.startswith("type.coding"):
+                suffix = relative[len("type.coding") :].lstrip(".")
+                coding_entry = coding_requirements.setdefault("type.coding", {})
+                if suffix:
+                    coding_entry[suffix] = value
+                continue
+
+            if relative.startswith("coding"):
+                suffix = relative[len("coding") :].lstrip(".")
+                coding_entry = coding_requirements.setdefault("coding", {})
+                if suffix:
+                    coding_entry[suffix] = value
+
+        for coding_path, parts in coding_requirements.items():
+            cond_parts: list[str] = []
+            for key in ("system", "code", "display"):
+                if key in parts:
+                    cond_parts.append(f"{key} = '{parts[key]}'")
+            if cond_parts:
+                joined = " and ".join(cond_parts)
+                conditions.append(f"{coding_path}.where({joined}).exists()")
+
+        seen: set[str] = set()
+        result: list[str] = []
+        for cond in conditions:
+            if cond in seen:
+                continue
+            seen.add(cond)
+            result.append(cond)
+        return result
+
+    def _normalized_fixed_value(self, profile_field) -> str | None:
+        if not profile_field:
+            return None
+        value = getattr(profile_field, "fixed_value", None)
+        if value is None:
+            pattern = getattr(profile_field, "pattern_coding_system", None)
+            if pattern:
+                value = pattern
+        if value is None:
+            return None
+        if isinstance(value, bool):
+            normalized = "true" if value else "false"
+        else:
+            normalized = str(value)
+        return normalized.replace("'", "\\'")
 
     def _relative_path(self, path: str | None) -> str:
         if not path:
             return ""
         parts = path.split(".", 1)
         return parts[1] if len(parts) == 2 else ""
+
+    def _unsliced_path(self, path: str | None) -> str | None:
+        if not path or ":" not in path:
+            return path
+        segments = path.split(".")
+        if not segments:
+            return path
+        last_segment = segments[-1]
+        if ":" not in last_segment:
+            return path
+        base, _ = last_segment.split(":", 1)
+        segments[-1] = base
+        return ".".join(segments)
 
     def _build_documentation(self, node: FieldNode) -> str | None:
         details: list[str] = []

@@ -13,6 +13,14 @@
         {
             "name": "de.gematik.epa.medication",
             "version": "1.0.6-2"
+        },
+        {
+            "name": "de.gematik.terminology",
+            "version": "1.0.5-4"
+        },
+        {
+            "name": "de.gematik.terminology",
+            "version": "1.0.7"
         }
     ],
     "comparisons": [],
