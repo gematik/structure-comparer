@@ -3,6 +3,10 @@
   "parameter" : [{
     "name" : "rxPrescription",
     "part" : [{
+      "name" : "authoredOn",
+      "valueDateTime" : "2024-05-20"
+    },
+    {
       "name" : "medication",
       "resource" : {
         "resourceType" : "Medication",
@@ -205,6 +209,10 @@
           }
         }]
       }
+    },
+    {
+      "name" : "prescriptionId",
+      "valueString" : "160.100.000.000.037.28"
     }]
   }]
 }

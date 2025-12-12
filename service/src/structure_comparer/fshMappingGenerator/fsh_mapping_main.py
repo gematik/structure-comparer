@@ -671,6 +671,7 @@ class _TransformationFieldContext:
     target_path: _TransformationPath
     source_alias: str
     reference: _StructureMapReference | None
+    source_path_override: _TransformationPath | None = None
 
 
 class _TransformationTargetBuilder:
@@ -884,14 +885,16 @@ class _TransformationInlineFieldRuleBuilder:
         source_alias: str,
         target_alias: str,
         target_path_override: _TransformationPath | None = None,
+        source_path_override: _TransformationPath | None = None,
     ) -> None:
         self._field = field
         self._source_alias = source_alias or "source"
         self._target_alias = target_alias or "target"
         self._target_path_override = target_path_override
+        self._source_path_override = source_path_override
 
     def build(self) -> dict | None:
-        if not self._field.other:
+        if self._target_path_override is None and not self._field.other:
             return None
 
         target_path = self._target_path_override or _TransformationPath.parse(self._field.other)
@@ -900,17 +903,16 @@ class _TransformationInlineFieldRuleBuilder:
 
         action = getattr(self._field, "action", None)
         requires_source = self._action_needs_source(action)
-        source_chain: list[dict]
 
+        source_path = self._source_path_override or _TransformationPath.parse(self._field.name)
+        if requires_source and not source_path.segments:
+            return None
+
+        source_chain: list[dict] = []
         if requires_source:
-            if not self._field.name:
-                return None
-            source_path = _TransformationPath.parse(self._field.name)
             source_chain = self._build_source_chain(source_path)
             if not source_chain:
                 return None
-        else:
-            source_chain = []
 
         target_chain = self._build_target_chain(target_path)
         if len(target_chain) != 1:
@@ -1137,9 +1139,22 @@ class _TransformationStructureMapBuilder:
     def _build_rules(self) -> list[dict]:
         contexts: list[_TransformationFieldContext] = []
         for field in getattr(self._transformation, "fields", {}).values():
-            target_path = _TransformationPath.parse(getattr(field, "other", None))
+            action_raw = getattr(field, "action", None)
+            action_value = action_raw.value if hasattr(action_raw, "value") else action_raw
+            is_copy_value_from = action_value == ActionType.COPY_VALUE_FROM.value
+
+            target_source = getattr(field, "other", None)
+            target_name = getattr(field, "name", None) or getattr(field, "path", None)
+            target_path_input = target_name if is_copy_value_from else target_source
+            target_path = _TransformationPath.parse(target_path_input)
             if not target_path.segments:
                 continue
+
+            source_override = None
+            if is_copy_value_from and target_source:
+                source_override = _TransformationPath.parse(target_source)
+                if not source_override.segments:
+                    continue
             map_id = getattr(field, "map", None)
             mapping = getattr(self._project, "mappings", {}).get(map_id) if map_id else None
             if map_id and mapping is None:
@@ -1153,6 +1168,7 @@ class _TransformationStructureMapBuilder:
                     target_path=target_path,
                     source_alias=source_alias,
                     reference=reference,
+                    source_path_override=source_override,
                 )
             )
             if reference is not None:
@@ -1188,13 +1204,15 @@ class _TransformationStructureMapBuilder:
         *,
         target_alias: str | None = None,
         target_path_override: _TransformationPath | None = None,
+        source_path_override: _TransformationPath | None = None,
     ) -> dict | None:
         if ctx.mapping is None or ctx.reference is None:
             inline_builder = _TransformationInlineFieldRuleBuilder(
                 field=ctx.field,
                 source_alias=ctx.source_alias,
                 target_alias=target_alias or self._target_alias,
-                target_path_override=target_path_override,
+                target_path_override=target_path_override or ctx.target_path,
+                source_path_override=source_path_override or ctx.source_path_override,
             )
             return inline_builder.build()
 

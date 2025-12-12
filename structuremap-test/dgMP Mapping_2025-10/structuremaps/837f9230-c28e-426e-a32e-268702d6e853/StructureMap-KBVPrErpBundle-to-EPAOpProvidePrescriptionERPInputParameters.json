@@ -39,7 +39,7 @@
       "rule": [
         {
           "name": "ParameterRxprescriptionContainer",
-          "documentation": "Creates parameter:rxPrescription parameter container aggregating 4 part(s)",
+          "documentation": "Creates parameter:rxPrescription parameter container aggregating 6 part(s)",
           "source": [
             {
               "context": "KBVPRERPBundle"
@@ -72,6 +72,95 @@
                       "valueString": "rxPrescription"
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "name": "PartAuthoredonPartContainer",
+              "documentation": "Creates part:authoredOn part container aggregating 1 child rule(s)",
+              "source": [
+                {
+                  "context": "KBVPRERPBundle"
+                }
+              ],
+              "target": [
+                {
+                  "context": "targetParameterRxprescriptionParameter77d85b46",
+                  "contextType": "variable",
+                  "element": "part",
+                  "variable": "targetPartAuthoredonPartb106c48f"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "SetPartAuthoredonName",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "targetPartAuthoredonPartb106c48f",
+                      "contextType": "variable",
+                      "element": "name",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "authoredOn"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "InlineParametersParameterRxprescriptionPartAuthoredonValueX1c6fc",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "inline_sourceParametersParameterRxprescriptionPartAuthoredonValu",
+                      "element": "entry"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "InlineParametersParameterRxprescriptionPartAuthoredonValueX1c6fc",
+                      "source": [
+                        {
+                          "context": "inline_sourceParametersParameterRxprescriptionPartAuthoredonValu",
+                          "variable": "inline_sourceParametersParameterRxprescriptionPartAuthoredonValu",
+                          "element": "resource"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "InlineParametersParameterRxprescriptionPartAuthoredonValueX1c6fc",
+                          "source": [
+                            {
+                              "context": "inline_sourceParametersParameterRxprescriptionPartAuthoredonValu",
+                              "variable": "inline_sourceParametersParameterRxprescriptionPartAuthoredonValu",
+                              "element": "authoredOn"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "targetPartAuthoredonPartb106c48f",
+                              "contextType": "variable",
+                              "element": "value",
+                              "variable": "inline_targetParametersParameterRxprescriptionPartAuthoredonValu",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "inline_sourceParametersParameterRxprescriptionPartAuthoredonValu"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Automatic copy"
                 }
               ]
             },
@@ -631,6 +720,83 @@
                     }
                   ],
                   "documentation": "Bundle.entry:AusstellendeVerschreibendeVerantwortlichePerson.resource -> .parameter:rxPrescription.part:practitioner.resource using KBV_PR_FOR_Practitioner|1.2.0 -> PractitionerDirectory|0.11.25"
+                }
+              ]
+            },
+            {
+              "name": "PartPrescriptionidPartContainer",
+              "documentation": "Creates part:prescriptionId part container aggregating 1 child rule(s)",
+              "source": [
+                {
+                  "context": "KBVPRERPBundle"
+                }
+              ],
+              "target": [
+                {
+                  "context": "targetParameterRxprescriptionParameter77d85b46",
+                  "contextType": "variable",
+                  "element": "part",
+                  "variable": "targetPartPrescriptionidPartee663288"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "SetPartPrescriptionidName",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "targetPartPrescriptionidPartee663288",
+                      "contextType": "variable",
+                      "element": "name",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "prescriptionId"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "InlineParametersParameterRxprescriptionPartPrescriptionidValueX9",
+                  "source": [
+                    {
+                      "context": "KBVPRERPBundle",
+                      "variable": "inline_sourceParametersParameterRxprescriptionPartPrescriptionid",
+                      "element": "identifier"
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "InlineParametersParameterRxprescriptionPartPrescriptionidValueX9",
+                      "source": [
+                        {
+                          "context": "inline_sourceParametersParameterRxprescriptionPartPrescriptionid",
+                          "variable": "inline_sourceParametersParameterRxprescriptionPartPrescriptionid",
+                          "element": "value"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "targetPartPrescriptionidPartee663288",
+                          "contextType": "variable",
+                          "element": "value",
+                          "variable": "inline_targetParametersParameterRxprescriptionPartPrescriptionid",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "inline_sourceParametersParameterRxprescriptionPartPrescriptionid"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "documentation": "Automatic copy"
                 }
               ]
             }
