@@ -476,13 +476,15 @@ def adjust_use_recursive_actions_allowed(
     mapping, evaluation_map: Dict[str, EvaluationResult],
     action_info_map: Dict[str, ActionInfo] = None
 ) -> None:
-    """Adjust actions_allowed for all fields regarding use_recursive.
+    """Adjust actions_allowed for all fields regarding use_recursive and copy_node actions.
     
     This function applies evaluation-aware logic to determine whether
-    use_recursive should be in actions_allowed:
+    use_recursive and copy_node_to/copy_node_from should be in actions_allowed:
     - use_recursive is allowed when the field has descendants AND
       all descendants WITHOUT manual actions are either compatible or solved.
-    - Otherwise, use_recursive is removed from actions_allowed.
+    - copy_node_to/copy_node_from are allowed when the field has descendants AND
+      all descendants are either compatible or solved (recursive copy requires all children to be mappable).
+    - Otherwise, these actions are removed from actions_allowed.
     
     This is a second pass after the baseline actions_allowed has been set
     by fill_allowed_actions(), enriching it with knowledge from evaluation
@@ -505,7 +507,7 @@ def adjust_use_recursive_actions_allowed(
         descendants = navigator.get_all_descendants(field_name)
         
         if not descendants:
-            # Leaf field: remove use_recursive if present
+            # Leaf field: remove use_recursive if present (copy_node stays for leaf nodes)
             if Action.USE_RECURSIVE in field.actions_allowed:
                 field.actions_allowed.remove(Action.USE_RECURSIVE)
         else:
@@ -522,4 +524,17 @@ def adjust_use_recursive_actions_allowed(
                 # Not all descendants are compatible/solved: remove use_recursive
                 if Action.USE_RECURSIVE in field.actions_allowed:
                     field.actions_allowed.remove(Action.USE_RECURSIVE)
+            
+            # For copy_node_to/copy_node_from: check if all descendants are compatible or solved
+            # (without considering manual actions - copy_node should only be allowed if ALL children can be copied)
+            all_children_ok = all_descendants_compatible_or_solved(
+                field_name, fields, evaluation_map, None  # None = don't exclude manual actions
+            )
+            
+            if not all_children_ok:
+                # Some descendants are incompatible and not solved: remove copy_node actions
+                if Action.COPY_NODE_TO in field.actions_allowed:
+                    field.actions_allowed.remove(Action.COPY_NODE_TO)
+                if Action.COPY_NODE_FROM in field.actions_allowed:
+                    field.actions_allowed.remove(Action.COPY_NODE_FROM)
 
