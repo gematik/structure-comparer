@@ -15,7 +15,13 @@ class ComparisonHandler:
 
     def get_list(self, project_key) -> ComparisonListModel:
         p = self.project_handler._get(project_key)
-        cs = [c.to_overview_model() for c in p.comparisons.values()]
+        cs = []
+        for c in p.comparisons.values():
+            try:
+                cs.append(c.to_overview_model())
+            except (ValueError, Exception):
+                # Skip comparisons with missing profiles
+                pass
         return ComparisonListModel(comparisons=cs)
 
     def get(self, project_key, comparison_id):

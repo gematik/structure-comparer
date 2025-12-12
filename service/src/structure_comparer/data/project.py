@@ -1,15 +1,20 @@
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
+import logging
 
 from ..manual_entries import ManualEntries
 from ..model.project import Project as ProjectModel
 from ..model.project import ProjectOverview as ProjectOverviewModel
+from ..model.package import PackageStatus
 from .comparison import Comparison
 from .config import PackageConfig, ProjectConfig
 from .mapping import Mapping
 from .package import Package
 from .transformation import Transformation
 from .target_creation import TargetCreation
+
+
+logger = logging.getLogger(__name__)
 
 
 class Project:
@@ -54,65 +59,153 @@ class Project:
         return parts[0], parts[1]
 
     def __load_packages(self) -> None:
-        # Load packages from config
-        self.pkgs = [Package(self.data_dir, self, p) for p in self.config.packages]
+        """
+        Load packages from config.json and auto-migrate orphaned packages.
+        
+        This method implements a hybrid approach for backwards compatibility:
+        1. Load packages defined in config.json
+        2. Auto-adopt orphaned packages (in data folder but not in config)
+        
+        Each package gets a status:
+        - AVAILABLE: Package is in config AND downloaded in data folder
+        - MISSING: Package is in config but NOT downloaded yet
+        
+        During migration phase, orphaned packages are automatically added to config.
+        """
+        self.pkgs = []
+        config_keys = {f"{p.name}#{p.version}" for p in self.config.packages}
+        
+        # Step 1: Load packages from config
+        for pkg_config in self.config.packages:
+            pkg_key = f"{pkg_config.name}#{pkg_config.version}"
+            pkg_dir = self.data_dir / pkg_key
+            
+            # Check if package is actually downloaded
+            if pkg_dir.exists() and (pkg_dir / "package" / "package.json").exists():
+                # Package is available - load from disk
+                self.pkgs.append(Package(pkg_dir, self, pkg_config, PackageStatus.AVAILABLE))
+                logger.debug(f"Package {pkg_key} loaded (available)")
+            else:
+                # Package is in config but not downloaded - create placeholder
+                self.pkgs.append(Package.from_config_only(pkg_config, self))
+                logger.debug(f"Package {pkg_key} registered (missing)")
+        
+        # Step 2: Auto-migrate orphaned packages (backwards compatibility)
+        # This ensures existing projects continue to work without manual migration
+        if self.data_dir.exists():
+            migrated_count = 0
+            for dir in self.data_dir.iterdir():
+                if not dir.is_dir():
+                    continue
+                
+                parsed = self.__safe_parse_pkg_dirname(dir.name)
+                if parsed is None:
+                    continue
+                
+                name, version = parsed
+                pkg_key = f"{name}#{version}"
+                
+                # Skip if already in config
+                if pkg_key in config_keys:
+                    continue
+                
+                # Check if it's a valid FHIR package
+                if not (dir / "package" / "package.json").exists():
+                    continue
+                
+                # Auto-adopt: Add to config and load
+                pkg_config = PackageConfig(name=name, version=version)
+                self.config.packages.append(pkg_config)
+                config_keys.add(pkg_key)
+                
+                self.pkgs.append(Package(dir, self, pkg_config, PackageStatus.AVAILABLE))
+                logger.info(f"Auto-migrated orphaned package {pkg_key} into config")
+                migrated_count += 1
+            
+            # Save config if we migrated any packages
+            if migrated_count > 0:
+                self.config.write()
+                logger.info(f"Auto-migrated {migrated_count} orphaned packages into config")
 
-        # Defensiv: falls data_dir nicht existierte, wurde es in _ensure_structure() erstellt
-        # Check for local packages not in config
+    def get_orphaned_packages(self) -> List[str]:
+        """
+        Find packages in data folder that are NOT in config.
+        
+        These are packages that were downloaded but later removed from config,
+        or packages that were manually placed in the data folder.
+        
+        Returns:
+            List of package keys (name#version) that are orphaned.
+        """
+        orphaned = []
+        config_keys = {f"{p.name}#{p.version}" for p in self.config.packages}
+        
+        if not self.data_dir.exists():
+            return orphaned
+        
         for dir in self.data_dir.iterdir():
             if not dir.is_dir():
                 continue
-
+            
             parsed = self.__safe_parse_pkg_dirname(dir.name)
             if parsed is None:
-                # Unbekanntes Verzeichnisformat im data-Ordner -> überspringen
+                # Unknown directory format in data folder - skip
                 continue
-
-            name, version = parsed
-            if not self.__has_pkg(name, version):
-                # FHIR package bringt eigene Infos mit
+            
+            # Check if this package is NOT in config
+            if dir.name not in config_keys:
+                # Only count as orphaned if it has a valid package.json
                 if (dir / "package" / "package.json").exists():
-                    self.pkgs.append(Package(dir, self))
-                else:
-                    # neuen Config-Eintrag erzeugen
-                    cfg = PackageConfig(name=name, version=version)
-                    self.config.packages.append(cfg)
-                    self.config.write()
-
-                    # Package anlegen/anhängen
-                    self.pkgs.append(Package(dir, self, cfg))
+                    orphaned.append(dir.name)
+                    logger.debug(f"Found orphaned package: {dir.name}")
+        
+        return orphaned
 
     def load_comparisons(self):
-        self.comparisons = {
-            c.id: Comparison(c, self).init_ext() for c in self.config.comparisons
-        }
+        """Load all comparisons from config, skipping those with missing profiles."""
+        self.comparisons = {}
+        for c in self.config.comparisons:
+            try:
+                comparison = Comparison(c, self).init_ext()
+                self.comparisons[c.id] = comparison
+            except Exception as e:
+                logger.warning(f"Skipping comparison '{c.id}': {e} (missing packages?)")
 
     def load_mappings(self):
-        self.mappings = {
-            m.id: Mapping(m, self).init_ext() for m in self.config.mappings
-        }
+        """Load all mappings from config, skipping those with missing profiles."""
+        self.mappings = {}
+        for m in self.config.mappings:
+            try:
+                mapping = Mapping(m, self).init_ext()
+                self.mappings[m.id] = mapping
+            except Exception as e:
+                logger.warning(f"Skipping mapping '{m.id}': {e} (missing packages?)")
 
     def load_transformations(self):
-        """Load all transformations from config."""
+        """Load all transformations from config, skipping those with missing profiles."""
+        self.transformations = {}
         if not self.config.transformations:
-            self.transformations = {}
             return
 
-        self.transformations = {
-            t.id: Transformation(t, self).init_ext()
-            for t in self.config.transformations
-        }
+        for t in self.config.transformations:
+            try:
+                transformation = Transformation(t, self).init_ext()
+                self.transformations[t.id] = transformation
+            except Exception as e:
+                logger.warning(f"Skipping transformation '{t.id}': {e} (missing packages?)")
 
     def load_target_creations(self):
-        """Load all target creations from config."""
+        """Load all target creations from config, skipping those with missing profiles."""
+        self.target_creations = {}
         if not self.config.target_creations:
-            self.target_creations = {}
             return
 
-        self.target_creations = {
-            tc.id: TargetCreation(tc, self).init_ext()
-            for tc in self.config.target_creations
-        }
+        for tc in self.config.target_creations:
+            try:
+                target_creation = TargetCreation(tc, self).init_ext()
+                self.target_creations[tc.id] = target_creation
+            except Exception as e:
+                logger.warning(f"Skipping target creation '{tc.id}': {e} (missing packages?)")
 
     def __read_manual_entries(self):
         manual_entries_file = self.dir / self.config.manual_entries_file
@@ -192,11 +285,36 @@ class Project:
         return any([p.name == name and p.version == version for p in self.pkgs])
 
     def to_model(self) -> ProjectModel:
-        mappings = [m.to_base_model() for m in self.mappings.values()]
+        # Safely convert items, skipping any that fail
+        mappings = []
+        for m in self.mappings.values():
+            try:
+                mappings.append(m.to_base_model())
+            except Exception as e:
+                logger.warning(f"Skipping mapping in to_model: {e}")
+        
+        comparisons = []
+        for c in self.comparisons.values():
+            try:
+                comparisons.append(c.to_overview_model())
+            except Exception as e:
+                logger.warning(f"Skipping comparison in to_model: {e}")
+        
+        transformations = []
+        for t in self.transformations.values():
+            try:
+                transformations.append(t.to_base_model())
+            except Exception as e:
+                logger.warning(f"Skipping transformation in to_model: {e}")
+        
+        target_creations = []
+        for tc in self.target_creations.values():
+            try:
+                target_creations.append(tc.to_base_model())
+            except Exception as e:
+                logger.warning(f"Skipping target creation in to_model: {e}")
+        
         pkgs = [p.to_model() for p in self.pkgs]
-        comparisons = [c.to_overview_model() for c in self.comparisons.values()]
-        transformations = [t.to_base_model() for t in self.transformations.values()]
-        target_creations = [tc.to_base_model() for tc in self.target_creations.values()]
 
         return ProjectModel(
             name=self.name,

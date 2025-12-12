@@ -2,8 +2,23 @@
     "name": "ePA Changes: epa.medication|1.0.6-2 -> epa.medication|1.2.0",
     "version": "0.9",
     "status": "draft",
+    "manual_entries_file": "manual_entries.yaml",
+    "data_dir": "data",
+    "html_output_dir": "docs",
+    "packages": [
+        {
+            "name": "de.gematik.epa.medication",
+            "version": "1.2.0"
+        },
+        {
+            "name": "de.gematik.epa.medication",
+            "version": "1.0.6-2"
+        }
+    ],
     "comparisons": [],
     "transformations": [],
+    "target_creations": [],
+    "mapping_output_file": "mapping.json",
     "mappings": [
         {
             "id": "a2d13465-9e01-4cdb-9aba-ce7060433e82",
@@ -491,5 +506,7 @@
             },
             "last_updated": "2025-11-10T14:07:45.533712+00:00"
         }
-    ]
+    ],
+    "show_remarks": true,
+    "show_warnings": true
 }

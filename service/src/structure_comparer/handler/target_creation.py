@@ -76,7 +76,14 @@ class TargetCreationHandler:
             List of TargetCreationBase models with summary info
         """
         proj = self.project_handler._get(project_key)
-        return [tc.to_base_model() for tc in proj.target_creations.values()]
+        result = []
+        for tc in proj.target_creations.values():
+            try:
+                result.append(tc.to_base_model())
+            except ValueError:
+                # Skip target creations with missing profiles
+                pass
+        return result
 
     def get(self, project_key: str, target_creation_id: str) -> TargetCreationDetailsModel:
         """Get a specific Target Creation with full details.

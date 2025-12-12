@@ -68,7 +68,14 @@ class TransformationHandler:
         if not hasattr(proj, "transformations") or proj.transformations is None:
             return []
 
-        return [trans.to_base_model() for trans in proj.transformations.values()]
+        result = []
+        for trans in proj.transformations.values():
+            try:
+                result.append(trans.to_base_model())
+            except (ValueError, Exception):
+                # Skip transformations with missing profiles
+                pass
+        return result
 
     def get(self, project_key: str, transformation_id: str) -> TransformationDetailsModel:
         """Get detailed information about a specific transformation."""
