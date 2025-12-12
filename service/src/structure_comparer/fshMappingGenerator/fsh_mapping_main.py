@@ -492,7 +492,7 @@ class _StructureMapBuilder:
         nodes_to_emit = list(tree_result.nodes_to_emit)
         self._field_source_support = tree_result.field_source_support
 
-        if not nodes_to_emit:
+        if not nodes_to_emit and not self._actions:
             first_path = self._first_field_path()
             if first_path:
                 fallback_node = FieldNode(segment=first_path.split(".")[-1], path=first_path)

@@ -38,27 +38,13 @@
       ],
       "rule": [
         {
-          "name": "MedicationAmountac45bfbc",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "KBVPRERPMedicationCompounding",
-              "element": "amount",
-              "variable": "srcKBVPRERPMedicationCompoundingAmount143a90a8"
-            }
-          ],
+          "name": "MedicationAmountDenominator9360de0f",
           "target": [
             {
               "context": "EPAMedication",
-              "contextType": "variable",
               "element": "amount",
               "variable": "tgtEPAMedicationAmount30d45c22",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcKBVPRERPMedicationCompoundingAmount143a90a8"
-                }
-              ]
+              "contextType": "variable"
             }
           ],
           "rule": [
@@ -66,130 +52,95 @@
               "name": "MedicationAmountDenominator9360de0f",
               "source": [
                 {
-                  "context": "srcKBVPRERPMedicationCompoundingAmount143a90a8",
-                  "variable": "srcMedicationAmountDenominator9360de0f",
-                  "element": "denominator"
+                  "context": "KBVPRERPMedicationCompounding",
+                  "element": "amount",
+                  "variable": "srcKBVPRERPMedicationCompoundingAmount143a90a8"
                 }
               ],
-              "target": [
+              "rule": [
                 {
-                  "context": "tgtEPAMedicationAmount30d45c22",
-                  "contextType": "variable",
-                  "element": "denominator",
-                  "variable": "tgtMedicationAmountDenominator9360de0f",
-                  "transform": "create",
-                  "parameter": [
+                  "name": "MedicationAmountDenominator9360de0f",
+                  "documentation": "Automatic copy",
+                  "source": [
                     {
-                      "valueString": "Quantity"
+                      "context": "srcKBVPRERPMedicationCompoundingAmount143a90a8",
+                      "element": "denominator",
+                      "variable": "srcKBVPRERPMedicationCompoundingAmountDenominator11047302"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationAmount30d45c22",
+                      "contextType": "variable",
+                      "element": "denominator",
+                      "variable": "tgtEPAMedicationAmountDenominator54efb2bd",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcKBVPRERPMedicationCompoundingAmountDenominator11047302"
+                        }
+                      ]
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "MedicationAmountDenominatorId76f03ade",
+                      "source": [
+                        {
+                          "context": "srcKBVPRERPMedicationCompoundingAmountDenominator11047302",
+                          "variable": "srcMedicationAmountDenominatorId76f03ade",
+                          "element": "id"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationAmountDenominator54efb2bd",
+                          "contextType": "variable",
+                          "element": "id",
+                          "variable": "tgtMedicationAmountDenominatorId76f03ade",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "srcMedicationAmountDenominatorId76f03ade"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy"
+                    },
+                    {
+                      "name": "MedicationAmountDenominatorValue23e41913",
+                      "source": [
+                        {
+                          "context": "srcKBVPRERPMedicationCompoundingAmountDenominator11047302",
+                          "variable": "srcMedicationAmountDenominatorValue23e41913",
+                          "element": "value"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationAmountDenominator54efb2bd",
+                          "contextType": "variable",
+                          "element": "value",
+                          "variable": "tgtMedicationAmountDenominatorValue23e41913",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "srcMedicationAmountDenominatorValue23e41913"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy"
                     }
                   ]
                 }
-              ],
-              "documentation": "Automatic copy",
-              "rule": [
-                {
-                  "name": "MedicationAmountDenominatorId76f03ade",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "variable": "srcMedicationAmountDenominatorId76f03ade",
-                      "element": "id"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationAmountDenominatorId76f03ade",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorId76f03ade"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy"
-                },
-                {
-                  "name": "MedicationAmountDenominatorValue23e41913",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountDenominator9360de0f",
-                      "variable": "srcMedicationAmountDenominatorValue23e41913",
-                      "element": "value"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountDenominator9360de0f",
-                      "contextType": "variable",
-                      "element": "value",
-                      "variable": "tgtMedicationAmountDenominatorValue23e41913",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountDenominatorValue23e41913"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy"
-                }
               ]
-            },
+            }
+          ],
+          "source": [
             {
-              "name": "MedicationAmountNumeratore3b2d8b0",
-              "source": [
-                {
-                  "context": "srcKBVPRERPMedicationCompoundingAmount143a90a8",
-                  "variable": "srcMedicationAmountNumeratore3b2d8b0",
-                  "element": "numerator"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationAmount30d45c22",
-                  "contextType": "variable",
-                  "element": "numerator",
-                  "variable": "tgtMedicationAmountNumeratore3b2d8b0",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Quantity"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy",
-              "rule": [
-                {
-                  "name": "MedicationAmountNumeratorUnit56268718",
-                  "source": [
-                    {
-                      "context": "srcMedicationAmountNumeratore3b2d8b0",
-                      "variable": "srcMedicationAmountNumeratorUnit56268718",
-                      "element": "unit"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationAmountNumeratore3b2d8b0",
-                      "contextType": "variable",
-                      "element": "unit",
-                      "variable": "tgtMedicationAmountNumeratorUnit56268718",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationAmountNumeratorUnit56268718"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy"
-                }
-              ]
+              "context": "KBVPRERPMedicationCompounding"
             }
           ]
         },
@@ -219,27 +170,13 @@
           ]
         },
         {
-          "name": "MedicationCoded98e85bf",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "KBVPRERPMedicationCompounding",
-              "element": "code",
-              "variable": "srcKBVPRERPMedicationCompoundingCode19fc48cb"
-            }
-          ],
+          "name": "MedicationCodeCoding9b1e4117",
           "target": [
             {
               "context": "EPAMedication",
-              "contextType": "variable",
               "element": "code",
               "variable": "tgtEPAMedicationCodea6251800",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcKBVPRERPMedicationCompoundingCode19fc48cb"
-                }
-              ]
+              "contextType": "variable"
             }
           ],
           "rule": [
@@ -247,77 +184,156 @@
               "name": "MedicationCodeCoding9b1e4117",
               "source": [
                 {
-                  "context": "srcKBVPRERPMedicationCompoundingCode19fc48cb",
-                  "variable": "srcMedicationCodeCoding9b1e4117",
-                  "element": "coding"
+                  "context": "KBVPRERPMedicationCompounding",
+                  "element": "code",
+                  "variable": "srcKBVPRERPMedicationCompoundingCode19fc48cb"
                 }
               ],
-              "target": [
+              "rule": [
                 {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "coding",
-                  "variable": "tgtMedicationCodeCoding9b1e4117",
-                  "transform": "copy",
-                  "parameter": [
+                  "name": "MedicationCodeCoding9b1e4117",
+                  "documentation": "Copied to 'Medication.code.coding'",
+                  "source": [
                     {
-                      "valueId": "srcMedicationCodeCoding9b1e4117"
+                      "context": "srcKBVPRERPMedicationCompoundingCode19fc48cb",
+                      "element": "coding",
+                      "variable": "srcKBVPRERPMedicationCompoundingCodeCoding48afb42d"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationCodea6251800",
+                      "contextType": "variable",
+                      "element": "coding",
+                      "variable": "tgtEPAMedicationCodeCoding3200612d",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcKBVPRERPMedicationCompoundingCodeCoding48afb42d"
+                        }
+                      ]
                     }
                   ]
                 }
-              ],
-              "documentation": "Copied to 'Medication.code.coding'"
-            },
+              ]
+            }
+          ],
+          "source": [
             {
-              "name": "MedicationCodeText75c8453e",
-              "source": [
-                {
-                  "context": "srcKBVPRERPMedicationCompoundingCode19fc48cb",
-                  "variable": "srcMedicationCodeText75c8453e",
-                  "element": "text"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationCodea6251800",
-                  "contextType": "variable",
-                  "element": "text",
-                  "variable": "tgtMedicationCodeText75c8453e",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationCodeText75c8453e"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy"
+              "context": "KBVPRERPMedicationCompounding"
             }
           ]
         },
         {
-          "name": "MedicationExtension9f8d5121",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "KBVPRERPMedicationCompounding",
-              "element": "extension",
-              "variable": "srcKBVPRERPMedicationCompoundingExtension3e44d0a1",
-              "condition": "url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_Base_Medication_Type' and url != 'http://fhir.de/StructureDefinition/normgroesse' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Packaging' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine' and url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_CompoundingInstruction'"
-            }
-          ],
+          "name": "MedicationCodeCodingAtcDeSystem3066dab5",
           "target": [
             {
               "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "extension",
-              "variable": "tgtEPAMedicationExtension59cd7688",
-              "transform": "copy",
-              "parameter": [
+              "element": "code",
+              "variable": "tgtEPAMedicationCodea6251800",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationCodeCodingAtcDeSystem3066dab5",
+              "target": [
                 {
-                  "valueId": "srcKBVPRERPMedicationCompoundingExtension3e44d0a1"
+                  "context": "tgtEPAMedicationCodea6251800",
+                  "element": "coding",
+                  "variable": "tgtEPAMedicationCodeCodingAtcDeab8e6f47",
+                  "contextType": "variable"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "MedicationCodeCodingAtcDeSystem3066dab5",
+                  "documentation": "Fixed value 'http://fhir.de/CodeSystem/bfarm/atc' | Auto-detected fixed value from target profile",
+                  "source": [
+                    {
+                      "context": "KBVPRERPMedicationCompounding"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationCodeCodingAtcDeab8e6f47",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "http://fhir.de/CodeSystem/bfarm/atc"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
                 }
               ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
+            }
+          ]
+        },
+        {
+          "name": "MedicationCodeCodingPzn518bd133",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "code",
+              "variable": "tgtEPAMedicationCodea6251800",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationCodeCodingPzn518bd133",
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding",
+                  "element": "code",
+                  "variable": "srcKBVPRERPMedicationCompoundingCode19fc48cb"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "MedicationCodeCodingPzn518bd133",
+                  "documentation": "Copied to 'Medication.code.coding:pzn'",
+                  "source": [
+                    {
+                      "context": "srcKBVPRERPMedicationCompoundingCode19fc48cb",
+                      "element": "coding",
+                      "variable": "srcKBVPRERPMedicationCompoundingCodeCodingPzndb2f764b"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationCodea6251800",
+                      "contextType": "variable",
+                      "element": "coding",
+                      "variable": "tgtEPAMedicationCodeCodingPzn873c9e79",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcKBVPRERPMedicationCompoundingCodeCodingPzndb2f764b"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
             }
           ]
         },
@@ -433,6 +449,32 @@
           ]
         },
         {
+          "name": "MedicationExtensionNormgroessea96c51af",
+          "documentation": "Copied to 'Medication.extension:normSizeCode'",
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding",
+              "element": "extension",
+              "variable": "srcKBVPRERPMedicationCompoundingExtensionNormgroesse892c3ca8",
+              "condition": "url = 'http://fhir.de/StructureDefinition/normgroesse' and url = 'http://fhir.de/StructureDefinition/normgroesse'"
+            }
+          ],
+          "target": [
+            {
+              "context": "EPAMedication",
+              "contextType": "variable",
+              "element": "extension",
+              "variable": "tgtEPAMedicationExtensionNormsizecode7bd0a39d",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "srcKBVPRERPMedicationCompoundingExtensionNormgroesse892c3ca8"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "MedicationExtensionVerpackunge32f0b06",
           "documentation": "Copied to 'Medication.extension:packaging'",
           "source": [
@@ -470,6 +512,98 @@
           ]
         },
         {
+          "name": "MedicationExtensionManufacturinginstructionsUrla3502b68",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "extension",
+              "variable": "tgtEPAMedicationExtensionManufacturinginstructionsb88614b8",
+              "contextType": "variable",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationExtensionManufacturinginstructionsUrla3502b68",
+              "documentation": "Fixed value 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension' | Auto-detected fixed value from target profile",
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
+                }
+              ],
+              "target": [
+                {
+                  "context": "tgtEPAMedicationExtensionManufacturinginstructionsb88614b8",
+                  "contextType": "variable",
+                  "element": "url",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
+            }
+          ]
+        },
+        {
+          "name": "MedicationExtensionPackagingUrl8a186f3e",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "extension",
+              "variable": "tgtEPAMedicationExtensionPackaging63847a7e",
+              "contextType": "variable",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationExtensionPackagingUrl8a186f3e",
+              "documentation": "Fixed value 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension' | Auto-detected fixed value from target profile",
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
+                }
+              ],
+              "target": [
+                {
+                  "context": "tgtEPAMedicationExtensionPackaging63847a7e",
+                  "contextType": "variable",
+                  "element": "url",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
+            }
+          ]
+        },
+        {
           "name": "MedicationForm5a0bbd5f",
           "documentation": "Copied to 'Medication.form'",
           "source": [
@@ -495,27 +629,13 @@
           ]
         },
         {
-          "name": "MedicationIngredient801affef",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "KBVPRERPMedicationCompounding",
-              "element": "ingredient",
-              "variable": "srcKBVPRERPMedicationCompoundingIngredient3e616846"
-            }
-          ],
+          "name": "MedicationIngredientExtensionDarreichungsform84c75c93",
           "target": [
             {
               "context": "EPAMedication",
-              "contextType": "variable",
               "element": "ingredient",
               "variable": "tgtEPAMedicationIngredient78db398c",
-              "transform": "create",
-              "parameter": [
-                {
-                  "valueString": "BackboneElement"
-                }
-              ]
+              "contextType": "variable"
             }
           ],
           "rule": [
@@ -523,399 +643,323 @@
               "name": "MedicationIngredientExtensionDarreichungsform84c75c93",
               "source": [
                 {
-                  "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
-                  "variable": "srcMedicationIngredientExtensionDarreichungsform84c75c93",
-                  "element": "extension",
-                  "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form'"
+                  "context": "KBVPRERPMedicationCompounding",
+                  "element": "ingredient",
+                  "variable": "srcKBVPRERPMedicationCompoundingIngredient3e616846"
                 }
               ],
-              "target": [
+              "rule": [
                 {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "extension:darreichungsform",
-                  "variable": "tgtMedicationIngredientExtensionDarreichungsform84c75c93",
-                  "transform": "copy",
-                  "parameter": [
+                  "name": "MedicationIngredientExtensionDarreichungsform84c75c93",
+                  "documentation": "Copied to 'Medication.ingredient.extension:darreichungsform'",
+                  "source": [
                     {
-                      "valueId": "srcMedicationIngredientExtensionDarreichungsform84c75c93"
+                      "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
+                      "element": "extension",
+                      "variable": "srcKBVPRERPMedicationCompoundingIngredientExtensionDarreichf1127",
+                      "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form' and url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Form'"
                     }
-                  ]
-                },
-                {
-                  "context": "tgtMedicationIngredientExtensionDarreichungsform84c75c93",
-                  "contextType": "variable",
-                  "element": "url",
-                  "transform": "copy",
-                  "parameter": [
+                  ],
+                  "target": [
                     {
-                      "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension"
+                      "context": "tgtEPAMedicationIngredient78db398c",
+                      "contextType": "variable",
+                      "element": "extension",
+                      "variable": "tgtEPAMedicationIngredientExtensionDarreichungsformc9afdd62",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcKBVPRERPMedicationCompoundingIngredientExtensionDarreichf1127"
+                        }
+                      ]
+                    },
+                    {
+                      "context": "tgtEPAMedicationIngredientExtensionDarreichungsformc9afdd62",
+                      "contextType": "variable",
+                      "element": "url",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension"
+                        }
+                      ]
                     }
                   ]
                 }
-              ],
-              "documentation": "Copied to 'Medication.ingredient.extension:darreichungsform'"
-            },
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
+            }
+          ]
+        },
+        {
+          "name": "MedicationIngredientId69411acf",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "ingredient",
+              "variable": "tgtEPAMedicationIngredient78db398c",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
             {
               "name": "MedicationIngredientId69411acf",
               "source": [
                 {
-                  "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
-                  "variable": "srcMedicationIngredientId69411acf",
-                  "element": "id"
+                  "context": "KBVPRERPMedicationCompounding",
+                  "element": "ingredient",
+                  "variable": "srcKBVPRERPMedicationCompoundingIngredient3e616846"
                 }
               ],
-              "target": [
+              "rule": [
                 {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "id",
-                  "variable": "tgtMedicationIngredientId69411acf",
-                  "transform": "copy",
-                  "parameter": [
+                  "name": "MedicationIngredientId69411acf",
+                  "documentation": "Automatic copy",
+                  "source": [
                     {
-                      "valueId": "srcMedicationIngredientId69411acf"
+                      "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
+                      "element": "id",
+                      "variable": "srcKBVPRERPMedicationCompoundingIngredientId88efea49"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationIngredient78db398c",
+                      "contextType": "variable",
+                      "element": "id",
+                      "variable": "tgtEPAMedicationIngredientIdae7bc66e",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcKBVPRERPMedicationCompoundingIngredientId88efea49"
+                        }
+                      ]
                     }
                   ]
                 }
-              ],
-              "documentation": "Automatic copy"
-            },
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
+            }
+          ]
+        },
+        {
+          "name": "MedicationIngredientItemXItemcodeableconcept79498202",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "ingredient",
+              "variable": "tgtEPAMedicationIngredient78db398c",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
             {
               "name": "MedicationIngredientItemXItemcodeableconcept79498202",
               "source": [
                 {
-                  "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
-                  "variable": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                  "element": "item"
+                  "context": "KBVPRERPMedicationCompounding",
+                  "element": "ingredient",
+                  "variable": "srcKBVPRERPMedicationCompoundingIngredient3e616846"
                 }
               ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "item",
-                  "variable": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "CodeableConcept"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy",
               "rule": [
                 {
-                  "name": "MedicationIngredientItemXItemcodeableconceptCoding67c8f473",
+                  "name": "MedicationIngredientItemXItemcodeableconcept79498202",
+                  "documentation": "Automatic copy",
                   "source": [
                     {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
-                      "element": "coding"
+                      "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
+                      "element": "item",
+                      "variable": "srcKBVPRERPMedicationCompoundingIngredientItemXItemcodeable3e6a6"
                     }
                   ],
                   "target": [
                     {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
+                      "context": "tgtEPAMedicationIngredient78db398c",
                       "contextType": "variable",
-                      "element": "coding",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
+                      "element": "item",
+                      "variable": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
                       "transform": "copy",
                       "parameter": [
                         {
-                          "valueId": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473"
+                          "valueId": "srcKBVPRERPMedicationCompoundingIngredientItemXItemcodeable3e6a6"
                         }
                       ]
                     }
                   ],
-                  "documentation": "Automatic copy"
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                      "element": "coding",
-                      "condition": "system = 'http://fhir.de/CodeSystem/ifa/pzn'"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "coding",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Coding"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy",
                   "rule": [
                     {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6043",
+                      "name": "MedicationIngredientItemXItemcodeableconceptCoding67c8f473",
                       "source": [
                         {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6",
-                          "element": "code"
+                          "context": "srcKBVPRERPMedicationCompoundingIngredientItemXItemcodeable3e6a6",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
+                          "element": "coding"
                         }
                       ],
                       "target": [
                         {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
                           "contextType": "variable",
-                          "element": "code",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6",
+                          "element": "coding",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
                           "transform": "copy",
                           "parameter": [
                             {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6"
+                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473"
                             }
                           ]
                         }
                       ],
                       "documentation": "Automatic copy"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3053",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3",
-                          "element": "extension"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "extension",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznId78d9b235",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2",
-                          "element": "id"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2a94",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "system",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueString": "http://fhir.de/CodeSystem/ifa/pzn"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Fixed value 'http://fhir.de/CodeSystem/ifa/pzn' | Auto-detected fixed value from target profile"
                     }
                   ]
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptTextbe5864f4",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4",
-                      "element": "text"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "text",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptTextbe5864f4",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy"
                 }
               ]
-            },
+            }
+          ],
+          "source": [
             {
-              "name": "MedicationIngredientStrengthc9e22fc0",
-              "source": [
-                {
-                  "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
-                  "variable": "srcMedicationIngredientStrengthc9e22fc0",
-                  "element": "strength"
-                }
-              ],
+              "context": "KBVPRERPMedicationCompounding"
+            }
+          ]
+        },
+        {
+          "name": "MedicationIngredientStrengthExtensionMengefreitextae0f2c54",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "ingredient",
+              "variable": "tgtEPAMedicationIngredient78db398c",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationIngredientStrengthExtensionMengefreitextae0f2c54",
               "target": [
                 {
                   "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
                   "element": "strength",
-                  "variable": "tgtMedicationIngredientStrengthc9e22fc0",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Ratio"
-                    }
-                  ]
+                  "variable": "tgtEPAMedicationIngredientStrengtha8086cba",
+                  "contextType": "variable"
                 }
               ],
-              "documentation": "Automatic copy",
               "rule": [
-                {
-                  "name": "MedicationIngredientStrengthDenominatorde24b47d",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                      "element": "denominator"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "denominator",
-                      "variable": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Quantity"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy",
-                  "rule": [
-                    {
-                      "name": "MedicationIngredientStrengthDenominatorValuedc89d810",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "variable": "srcMedicationIngredientStrengthDenominatorValuedc89d810",
-                          "element": "value"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                          "contextType": "variable",
-                          "element": "value",
-                          "variable": "tgtMedicationIngredientStrengthDenominatorValuedc89d810",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthDenominatorValuedc89d810"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy"
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationIngredientStrengthExtension6c46fd06",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthExtension6c46fd06",
-                      "element": "extension",
-                      "condition": "url != 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount'"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationIngredientStrengthExtension6c46fd06",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationIngredientStrengthExtension6c46fd06"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy"
-                },
                 {
                   "name": "MedicationIngredientStrengthExtensionMengefreitextae0f2c54",
                   "source": [
                     {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthExtensionMengefreitextae0f2c54",
-                      "element": "extension",
-                      "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount'"
+                      "context": "KBVPRERPMedicationCompounding",
+                      "element": "ingredient",
+                      "variable": "srcKBVPRERPMedicationCompoundingIngredient3e616846"
                     }
                   ],
-                  "target": [
+                  "rule": [
                     {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "extension:amountText",
-                      "variable": "tgtMedicationIngredientStrengthExtensionMengefreitextae0f2c54",
-                      "transform": "copy",
-                      "parameter": [
+                      "name": "MedicationIngredientStrengthExtensionMengefreitextae0f2c54",
+                      "source": [
                         {
-                          "valueId": "srcMedicationIngredientStrengthExtensionMengefreitextae0f2c54"
+                          "context": "srcKBVPRERPMedicationCompoundingIngredient3e616846",
+                          "element": "strength",
+                          "variable": "srcKBVPRERPMedicationCompoundingIngredientStrengthde956ed4"
+                        }
+                      ],
+                      "rule": [
+                        {
+                          "name": "MedicationIngredientStrengthExtensionMengefreitextae0f2c54",
+                          "documentation": "Copied to 'Medication.ingredient.strength.extension:amountText'",
+                          "source": [
+                            {
+                              "context": "srcKBVPRERPMedicationCompoundingIngredientStrengthde956ed4",
+                              "element": "extension",
+                              "variable": "srcKBVPRERPMedicationCompoundingIngredientStrengthExtension5014c",
+                              "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount' and url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount'"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtEPAMedicationIngredientStrengtha8086cba",
+                              "contextType": "variable",
+                              "element": "extension",
+                              "variable": "tgtEPAMedicationIngredientStrengthExtensionAmounttext8310ef9e",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcKBVPRERPMedicationCompoundingIngredientStrengthExtension5014c"
+                                }
+                              ]
+                            },
+                            {
+                              "context": "tgtEPAMedicationIngredientStrengthExtensionAmounttext8310ef9e",
+                              "contextType": "variable",
+                              "element": "url",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension"
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
-                    },
+                    }
+                  ]
+                }
+              ],
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
+            }
+          ]
+        },
+        {
+          "name": "MedicationIngredientStrengthExtensionAmounttextUrla67b8a42",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "ingredient",
+              "variable": "tgtEPAMedicationIngredient78db398c",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationIngredientStrengthExtensionAmounttextUrla67b8a42",
+              "target": [
+                {
+                  "context": "tgtEPAMedicationIngredient78db398c",
+                  "element": "strength",
+                  "variable": "tgtEPAMedicationIngredientStrengtha8086cba",
+                  "contextType": "variable"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "MedicationIngredientStrengthExtensionAmounttextUrla67b8a42",
+                  "target": [
                     {
-                      "context": "tgtMedicationIngredientStrengthExtensionMengefreitextae0f2c54",
+                      "context": "tgtEPAMedicationIngredientStrengtha8086cba",
+                      "element": "extension",
+                      "variable": "tgtEPAMedicationIngredientStrengthExtensionAmounttext8310ef9e",
                       "contextType": "variable",
-                      "element": "url",
-                      "transform": "copy",
+                      "transform": "create",
                       "parameter": [
                         {
                           "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension"
@@ -923,120 +967,67 @@
                       ]
                     }
                   ],
-                  "documentation": "Copied to 'Medication.ingredient.strength.extension:amountText'"
-                },
-                {
-                  "name": "MedicationIngredientStrengthNumerator70e21324",
-                  "source": [
+                  "rule": [
                     {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthNumerator70e21324",
-                      "element": "numerator"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "numerator",
-                      "variable": "tgtMedicationIngredientStrengthNumerator70e21324",
-                      "transform": "create",
-                      "parameter": [
+                      "name": "MedicationIngredientStrengthExtensionAmounttextUrla67b8a42",
+                      "documentation": "Fixed value 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension' | Auto-detected fixed value from target profile",
+                      "source": [
                         {
-                          "valueString": "Quantity"
+                          "context": "KBVPRERPMedicationCompounding"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientStrengthExtensionAmounttext8310ef9e",
+                          "contextType": "variable",
+                          "element": "url",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension"
+                            }
+                          ]
                         }
                       ]
                     }
                   ],
-                  "documentation": "Automatic copy",
-                  "rule": [
+                  "source": [
                     {
-                      "name": "MedicationIngredientStrengthNumeratorUnit84581745",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorUnit84581745",
-                          "element": "unit"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "unit",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorUnit84581745",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorUnit84581745"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthNumeratorValue18459ad9",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorValue18459ad9",
-                          "element": "value"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "value",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorValue18459ad9",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorValue18459ad9"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy"
+                      "context": "KBVPRERPMedicationCompounding"
                     }
                   ]
                 }
+              ],
+              "source": [
+                {
+                  "context": "KBVPRERPMedicationCompounding"
+                }
               ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
             }
           ]
         },
         {
-          "name": "MedicationMetaf9f176bc",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "KBVPRERPMedicationCompounding",
-              "element": "meta",
-              "variable": "srcKBVPRERPMedicationCompoundingMeta80467efb"
-            }
-          ],
+          "name": "MedicationMetaProfile399adfc6",
           "target": [
             {
               "context": "EPAMedication",
-              "contextType": "variable",
               "element": "meta",
               "variable": "tgtEPAMedicationMeta8591b307",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcKBVPRERPMedicationCompoundingMeta80467efb"
-                }
-              ]
+              "contextType": "variable"
             }
           ],
           "rule": [
             {
               "name": "MedicationMetaProfile399adfc6",
+              "documentation": "Fixed value 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication'",
               "source": [
                 {
-                  "context": "srcKBVPRERPMedicationCompoundingMeta80467efb",
-                  "variable": "srcMedicationMetaProfile399adfc6"
+                  "context": "KBVPRERPMedicationCompounding"
                 }
               ],
               "target": [
@@ -1044,7 +1035,6 @@
                   "context": "tgtEPAMedicationMeta8591b307",
                   "contextType": "variable",
                   "element": "profile",
-                  "variable": "tgtMedicationMetaProfile399adfc6",
                   "transform": "copy",
                   "parameter": [
                     {
@@ -1052,8 +1042,12 @@
                     }
                   ]
                 }
-              ],
-              "documentation": "Fixed value 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication'"
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRERPMedicationCompounding"
             }
           ]
         }

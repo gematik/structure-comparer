@@ -50,6 +50,64 @@ def test_copy_node_slice_redirect_to_parent_is_skipped() -> None:
 
     result = builder.build()
     emitted_paths = [node.path for node in result.nodes_to_emit]
+    assert emitted_paths == []
 
-    assert "Organization.telecom" in emitted_paths
-    assert "Organization.telecom:eMail" not in emitted_paths
+
+def test_manual_action_is_not_emitted_as_rule() -> None:
+    target_key = "target"
+    source_key = "source"
+    fields = {
+        "Organization.name": _field_with_profiles([target_key, source_key]),
+    }
+    mapping = _DummyMapping(fields)
+    actions = {
+        "Organization.name": ActionInfo(action=ActionType.MANUAL, source=ActionSource.MANUAL),
+    }
+
+    builder = FieldTreeBuilder(
+        mapping=mapping,
+        actions=actions,
+        target_profile_key=target_key,
+        source_profile_keys=[source_key],
+    )
+
+    result = builder.build()
+
+    assert result.nodes_to_emit == []
+
+
+def test_copy_node_from_is_non_emitting_and_relies_on_source_counterpart() -> None:
+    target_key = "target"
+    source_key = "source"
+    source_path = "Organization.identifier:Telematik-ID"
+    target_path = "Organization.identifier:TelematikID"
+    fields = {
+        source_path: _field_with_profiles([target_key, source_key]),
+        target_path: _field_with_profiles([target_key, source_key]),
+    }
+    mapping = _DummyMapping(fields)
+    actions = {
+        source_path: ActionInfo(
+            action=ActionType.COPY_NODE_TO,
+            source=ActionSource.MANUAL,
+            other_value=target_path,
+        ),
+        target_path: ActionInfo(
+            action=ActionType.COPY_NODE_FROM,
+            source=ActionSource.MANUAL,
+            other_value=source_path,
+        ),
+    }
+
+    builder = FieldTreeBuilder(
+        mapping=mapping,
+        actions=actions,
+        target_profile_key=target_key,
+        source_profile_keys=[source_key],
+    )
+
+    result = builder.build()
+    emitted_paths = [node.path for node in result.nodes_to_emit]
+
+    assert source_path in emitted_paths
+    assert target_path not in emitted_paths

@@ -151,22 +151,22 @@ entries:
     auto_generated: false
     fixed: null
     inherited_from: null
-    name: Organization.identifier:BSNR
-    other: Organization.identifier:Betriebsstaettennummer
+    name: Organization.identifier:Betriebsstaettennummer
+    other: Organization.identifier:BSNR
     remark: null
   - action: copy_node_to
     auto_generated: false
     fixed: null
     inherited_from: null
-    name: Organization.identifier:KZVA
-    other: Organization.identifier:KZV-Abrechnungsnummer
+    name: Organization.identifier:KZV-Abrechnungsnummer
+    other: Organization.identifier:KZVA
     remark: null
   - action: copy_node_to
     auto_generated: false
     fixed: null
     inherited_from: null
-    name: Organization.identifier:IKNR
-    other: Organization.identifier:Institutionskennzeichen
+    name: Organization.identifier:Institutionskennzeichen
+    other: Organization.identifier:IKNR
     remark: null
   - action: not_use
     auto_generated: false
@@ -216,7 +216,7 @@ entries:
     inherited_from: null
     name: Organization.name
     other: null
-    remark: organizationName → aus dem ACCESS_TOKEN der Anfrage
+    remark: organizationName -> aus dem ACCESS_TOKEN der Anfrage
   - action: not_use
     auto_generated: false
     fixed: null

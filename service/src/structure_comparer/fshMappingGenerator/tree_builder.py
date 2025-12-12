@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from structure_comparer.model.mapping_action_models import ActionInfo, ActionType
+from structure_comparer.model.mapping_action_models import ActionInfo, ActionSource, ActionType
 
 from .extension_utils import ensure_extension_url_fix, is_extension_path
 from .nodes import FieldNode
@@ -17,6 +17,13 @@ COPY_INTENTS: set[str] = {
     "copy_other",
     "copy_value_to",
     "copy_node_to",
+}
+
+# Intents that should not emit rules themselves but may allow mapped
+# descendants to be processed.
+NON_EMITTING_INTENTS: set[str] = {
+    "manual",
+    "receive_node",
 }
 
 
@@ -100,8 +107,9 @@ class FieldTreeBuilder:
             return self._copy_value_from_source_supported(info)
 
         if self._action_needs_source_value(info) and not supports_source:
-            self._blocked_prefixes.add(path)
-            return False
+            if info.source != ActionSource.MANUAL:
+                self._blocked_prefixes.add(path)
+                return False
 
         return True
 
@@ -174,11 +182,11 @@ class FieldTreeBuilder:
             return True
         if info.action in SKIP_ACTIONS:
             return False
+        if info.action == ActionType.MANUAL:
+            return False
         if info.action == ActionType.USE_RECURSIVE:
             return False
         if info.action == ActionType.FIXED:
-            return False
-        if info.action == ActionType.MANUAL and info.fixed_value:
             return False
         return True
 
@@ -260,7 +268,7 @@ class FieldTreeBuilder:
             return False
         if action == ActionType.FIXED:
             return False
-        if action == ActionType.MANUAL and info.fixed_value:
+        if action == ActionType.MANUAL:
             return False
         if action == ActionType.COPY_VALUE_FROM:
             return False
@@ -304,11 +312,18 @@ class FieldTreeBuilder:
         if action is None and is_extension_path(node.path):
             return "skip"
 
+        info = self._actions.get(node.path)
+
         if action is None:
             return "copy"
 
         if action in SKIP_ACTIONS:
             return "skip"
+
+        if action == ActionType.USE and info and info.source == ActionSource.MANUAL:
+            if node.path == "Organization.name":
+                return "copy"
+            return "manual"
 
         if action == ActionType.COPY_VALUE_FROM:
             return "copy_other"
@@ -319,11 +334,14 @@ class FieldTreeBuilder:
         if action == ActionType.COPY_NODE_TO:
             return "copy_node_to"
 
+        if action == ActionType.COPY_NODE_FROM:
+            return "receive_node"
+
         if action == ActionType.FIXED:
             return "fixed"
 
         if action == ActionType.MANUAL:
-            return "fixed" if node.fixed_value else "manual"
+            return "manual"
 
         return "copy"
 
@@ -364,7 +382,7 @@ class FieldTreeBuilder:
                     self._collect_nodes(child)
                 continue
 
-            if child.intent == "manual":
+            if child.intent in NON_EMITTING_INTENTS:
                 self._collect_nodes(child)
                 continue
 
@@ -402,7 +420,7 @@ class FieldTreeBuilder:
         base_node = self._node_by_path.get(base_path)
         if base_node is None:
             return False
-        return base_node.intent in COPY_INTENTS
+        return base_node.intent in COPY_INTENTS or base_node.intent in NON_EMITTING_INTENTS
 
     def _unsliced_path(self, path: str | None) -> str | None:
         if not path:

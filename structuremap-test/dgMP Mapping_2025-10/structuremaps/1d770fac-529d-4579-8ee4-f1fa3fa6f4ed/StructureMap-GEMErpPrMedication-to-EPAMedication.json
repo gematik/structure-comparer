@@ -1784,57 +1784,6 @@
           ]
         },
         {
-          "name": "MedicationContainedadc2ca88",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "contained",
-              "variable": "srcGEMERPPRMedicationContained400f575d"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "contained",
-              "variable": "tgtEPAMedicationContainedead4902e",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationContained400f575d"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationExtension9f8d5121",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtension58cce3e7",
-              "condition": "url != 'https://gematik.de/fhir/epa-medication/StructureDefinition/rx-prescription-process-identifier-extension'"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "extension",
-              "variable": "tgtEPAMedicationExtension59cd7688",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationExtension58cce3e7"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "name": "MedicationExtensionDrugcategorye963e601",
           "documentation": "Automatic copy",
           "source": [
@@ -2398,32 +2347,6 @@
                 }
               ],
               "documentation": "Automatic copy | Inherited from Medication.extension:packaging"
-            }
-          ]
-        },
-        {
-          "name": "MedicationExtensionType61374588",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "extension",
-              "variable": "srcGEMERPPRMedicationExtensionTypeee167fd8",
-              "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-type-extension' and url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-type-extension'"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "extension",
-              "variable": "tgtEPAMedicationExtensionType1a2ef415",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationExtensionTypeee167fd8"
-                }
-              ]
             }
           ]
         },
@@ -3161,77 +3084,13 @@
           ]
         },
         {
-          "name": "MedicationId034aa67d",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "id",
-              "variable": "srcGEMERPPRMedicationId0d17bfdd"
-            }
-          ],
+          "name": "MedicationIngredientExtensionc6131219",
           "target": [
             {
               "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "id",
-              "variable": "tgtEPAMedicationId43c6d2b2",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationId0d17bfdd"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationImplicitrules565a1a2d",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "implicitRules",
-              "variable": "srcGEMERPPRMedicationImplicitrules398c7037"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "implicitRules",
-              "variable": "tgtEPAMedicationImplicitrules7d262e16",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationImplicitrules398c7037"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationIngredient801affef",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "ingredient",
-              "variable": "srcGEMERPPRMedicationIngrediente7804034"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
               "element": "ingredient",
               "variable": "tgtEPAMedicationIngredient78db398c",
-              "transform": "create",
-              "parameter": [
-                {
-                  "valueString": "BackboneElement"
-                }
-              ]
+              "contextType": "variable"
             }
           ],
           "rule": [
@@ -3239,1682 +3098,1664 @@
               "name": "MedicationIngredientExtensionc6131219",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "variable": "srcMedicationIngredientExtensionc6131219",
-                  "element": "extension"
+                  "context": "GEMERPPRMedication",
+                  "element": "ingredient",
+                  "variable": "srcGEMERPPRMedicationIngrediente7804034"
                 }
               ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "extension",
-                  "variable": "tgtMedicationIngredientExtensionc6131219",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationIngredientExtensionc6131219"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy"
-            },
-            {
-              "name": "MedicationIngredientExtensionDarreichungsform3870feb0",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "variable": "srcMedicationIngredientExtensionDarreichungsform3870feb0",
-                  "element": "extension",
-                  "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension'"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "extension",
-                  "variable": "tgtMedicationIngredientExtensionDarreichungsform3870feb0",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationIngredientExtensionDarreichungsform3870feb0"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy | Inherited from Medication.ingredient.extension"
-            },
-            {
-              "name": "MedicationIngredientId69411acf",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "variable": "srcMedicationIngredientId69411acf",
-                  "element": "id"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "id",
-                  "variable": "tgtMedicationIngredientId69411acf",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationIngredientId69411acf"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy"
-            },
-            {
-              "name": "MedicationIngredientIsactive2d24fcb2",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "variable": "srcMedicationIngredientIsactive2d24fcb2",
-                  "element": "isActive"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "isActive",
-                  "variable": "tgtMedicationIngredientIsactive2d24fcb2",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationIngredientIsactive2d24fcb2"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy"
-            },
-            {
-              "name": "MedicationIngredientItemXItemcodeableconcept79498202",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "variable": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                  "element": "item"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "item",
-                  "variable": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "CodeableConcept"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy",
               "rule": [
                 {
-                  "name": "MedicationIngredientItemXItemcodeableconceptCoding67c8f473",
+                  "name": "MedicationIngredientExtensionc6131219",
+                  "documentation": "Automatic copy",
                   "source": [
                     {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
-                      "element": "coding"
+                      "context": "srcGEMERPPRMedicationIngrediente7804034",
+                      "element": "extension",
+                      "variable": "srcGEMERPPRMedicationIngredientExtension9685e189"
                     }
                   ],
                   "target": [
                     {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "coding",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept"
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                      "element": "coding"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "coding",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Coding"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding",
-                  "rule": [
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAskCod1d63eef3",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e",
-                          "element": "code"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "contextType": "variable",
-                          "element": "code",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAskDisa3775491",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskDisa3775",
-                          "element": "display"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "contextType": "variable",
-                          "element": "display",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskDisa3775",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskDisa3775"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d81d7",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d8",
-                          "element": "extension"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "contextType": "variable",
-                          "element": "extension",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d8",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d8"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAskId28ba447e",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44",
-                          "element": "id"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a04b",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a",
-                          "element": "system"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "contextType": "variable",
-                          "element": "system",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAskUse6639bc99",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskUse6639b",
-                          "element": "userSelected"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "contextType": "variable",
-                          "element": "userSelected",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskUse6639b",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskUse6639b"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAskVerf0648728",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskVerf0648",
-                          "element": "version"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
-                          "contextType": "variable",
-                          "element": "version",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskVerf0648",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskVerf0648"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDe593d725e",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                      "element": "coding"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "coding",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Coding"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding",
-                  "rule": [
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3f31",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3",
-                          "element": "code"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "contextType": "variable",
-                          "element": "code",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0fc5",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0",
-                          "element": "display"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "contextType": "variable",
-                          "element": "display",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536fd3",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536",
-                          "element": "extension"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "contextType": "variable",
-                          "element": "extension",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb708f4",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb70",
-                          "element": "id"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb70",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb70"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbfc31",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbf",
-                          "element": "system"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "contextType": "variable",
-                          "element": "system",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbf",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbf"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384d8f",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384",
-                          "element": "userSelected"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "contextType": "variable",
-                          "element": "userSelected",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826c14",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826",
-                          "element": "version"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
-                          "contextType": "variable",
-                          "element": "version",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                      "element": "coding"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "coding",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Coding"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding",
-                  "rule": [
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6043",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6",
-                          "element": "code"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "code",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznDisa01da683",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznDisa01da",
-                          "element": "display"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "display",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznDisa01da",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznDisa01da"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3053",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3",
-                          "element": "extension"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "extension",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznId78d9b235",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2",
-                          "element": "id"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2a94",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2",
-                          "element": "system"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "system",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznUseb020bc16",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznUseb020b",
-                          "element": "userSelected"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "userSelected",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznUseb020b",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznUseb020b"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznVer4c462865",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznVer4c462",
-                          "element": "version"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
-                          "contextType": "variable",
-                          "element": "version",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznVer4c462",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznVer4c462"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomed09941ef6",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                      "element": "coding"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "coding",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Coding"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding",
-                  "rule": [
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomeda84640e8",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda8464",
-                          "element": "code"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "contextType": "variable",
-                          "element": "code",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomeda8464",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda8464"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1f5c",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1",
-                          "element": "display"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "contextType": "variable",
-                          "element": "display",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead7d9",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead",
-                          "element": "extension"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "contextType": "variable",
-                          "element": "extension",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7d05",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7",
-                          "element": "id"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomedaa919917",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedaa919",
-                          "element": "system"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "contextType": "variable",
-                          "element": "system",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomedaa919",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedaa919"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2efbc",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2e",
-                          "element": "userSelected"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "contextType": "variable",
-                          "element": "userSelected",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2e",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2e"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
-                    },
-                    {
-                      "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3c14",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3",
-                          "element": "version"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
-                          "contextType": "variable",
-                          "element": "version",
-                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptExtensioncd351c31",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptExtensioncd351c31",
-                      "element": "extension"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
+                      "context": "tgtEPAMedicationIngredient78db398c",
                       "contextType": "variable",
                       "element": "extension",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptExtensioncd351c31",
+                      "variable": "tgtEPAMedicationIngredientExtension34c80e2a",
                       "transform": "copy",
                       "parameter": [
                         {
-                          "valueId": "srcMedicationIngredientItemXItemcodeableconceptExtensioncd351c31"
+                          "valueId": "srcGEMERPPRMedicationIngredientExtension9685e189"
                         }
                       ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept"
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptId1a42460f",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptId1a42460f",
-                      "element": "id"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptId1a42460f",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationIngredientItemXItemcodeableconceptId1a42460f"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept"
-                },
-                {
-                  "name": "MedicationIngredientItemXItemcodeableconceptTextbe5864f4",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientItemXItemcodeableconcept79498202",
-                      "variable": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4",
-                      "element": "text"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientItemXItemcodeableconcept79498202",
-                      "contextType": "variable",
-                      "element": "text",
-                      "variable": "tgtMedicationIngredientItemXItemcodeableconceptTextbe5864f4",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept"
-                }
-              ]
-            },
-            {
-              "name": "MedicationIngredientItemXItemreferencead13835a",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "variable": "srcMedicationIngredientItemXItemreferencead13835a",
-                  "element": "item"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "item",
-                  "variable": "tgtMedicationIngredientItemXItemreferencead13835a",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationIngredientItemXItemreferencead13835a"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy"
-            },
-            {
-              "name": "MedicationIngredientModifierextension2d30e92a",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "variable": "srcMedicationIngredientModifierextension2d30e92a",
-                  "element": "modifierExtension"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "modifierExtension",
-                  "variable": "tgtMedicationIngredientModifierextension2d30e92a",
-                  "transform": "copy",
-                  "parameter": [
-                    {
-                      "valueId": "srcMedicationIngredientModifierextension2d30e92a"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy"
-            },
-            {
-              "name": "MedicationIngredientStrengthc9e22fc0",
-              "source": [
-                {
-                  "context": "srcGEMERPPRMedicationIngrediente7804034",
-                  "variable": "srcMedicationIngredientStrengthc9e22fc0",
-                  "element": "strength"
-                }
-              ],
-              "target": [
-                {
-                  "context": "tgtEPAMedicationIngredient78db398c",
-                  "contextType": "variable",
-                  "element": "strength",
-                  "variable": "tgtMedicationIngredientStrengthc9e22fc0",
-                  "transform": "create",
-                  "parameter": [
-                    {
-                      "valueString": "Ratio"
-                    }
-                  ]
-                }
-              ],
-              "documentation": "Automatic copy",
-              "rule": [
-                {
-                  "name": "MedicationIngredientStrengthDenominatorde24b47d",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                      "element": "denominator"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "denominator",
-                      "variable": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Quantity"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.strength",
-                  "rule": [
-                    {
-                      "name": "MedicationIngredientStrengthDenominatorCode9043cedb",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "variable": "srcMedicationIngredientStrengthDenominatorCode9043cedb",
-                          "element": "code"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                          "contextType": "variable",
-                          "element": "code",
-                          "variable": "tgtMedicationIngredientStrengthDenominatorCode9043cedb",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthDenominatorCode9043cedb"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthDenominatorComparator4345836d",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "variable": "srcMedicationIngredientStrengthDenominatorComparator4345836d",
-                          "element": "comparator"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                          "contextType": "variable",
-                          "element": "comparator",
-                          "variable": "tgtMedicationIngredientStrengthDenominatorComparator4345836d",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthDenominatorComparator4345836d"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthDenominatorExtension1afdd0e3",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "variable": "srcMedicationIngredientStrengthDenominatorExtension1afdd0e3",
-                          "element": "extension"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                          "contextType": "variable",
-                          "element": "extension",
-                          "variable": "tgtMedicationIngredientStrengthDenominatorExtension1afdd0e3",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthDenominatorExtension1afdd0e3"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthDenominatorId0d7266f8",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "variable": "srcMedicationIngredientStrengthDenominatorId0d7266f8",
-                          "element": "id"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationIngredientStrengthDenominatorId0d7266f8",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthDenominatorId0d7266f8"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthDenominatorSystem042773cf",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "variable": "srcMedicationIngredientStrengthDenominatorSystem042773cf",
-                          "element": "system"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                          "contextType": "variable",
-                          "element": "system",
-                          "variable": "tgtMedicationIngredientStrengthDenominatorSystem042773cf",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthDenominatorSystem042773cf"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthDenominatorUnite34c7ede",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "variable": "srcMedicationIngredientStrengthDenominatorUnite34c7ede",
-                          "element": "unit"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                          "contextType": "variable",
-                          "element": "unit",
-                          "variable": "tgtMedicationIngredientStrengthDenominatorUnite34c7ede",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthDenominatorUnite34c7ede"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthDenominatorValuedc89d810",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
-                          "variable": "srcMedicationIngredientStrengthDenominatorValuedc89d810",
-                          "element": "value"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
-                          "contextType": "variable",
-                          "element": "value",
-                          "variable": "tgtMedicationIngredientStrengthDenominatorValuedc89d810",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthDenominatorValuedc89d810"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationIngredientStrengthExtension6c46fd06",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthExtension6c46fd06",
-                      "element": "extension"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationIngredientStrengthExtension6c46fd06",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationIngredientStrengthExtension6c46fd06"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.strength"
-                },
-                {
-                  "name": "MedicationIngredientStrengthExtensionAmounttextac949f1b",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                      "element": "extension",
-                      "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension'"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "extension",
-                      "variable": "tgtMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Extension"
-                        }
-                      ]
-                    },
-                    {
-                      "context": "tgtMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                      "contextType": "variable",
-                      "element": "url",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.extension",
-                  "rule": [
-                    {
-                      "name": "MedicationIngredientStrengthExtensionAmounttextId32b0d583",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                          "variable": "srcMedicationIngredientStrengthExtensionAmounttextId32b0d583",
-                          "element": "id"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationIngredientStrengthExtensionAmounttextId32b0d583",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthExtensionAmounttextId32b0d583"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.extension:amountText"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthExtensionAmounttextValueXed73d843",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                          "variable": "srcMedicationIngredientStrengthExtensionAmounttextValueXed73d843",
-                          "element": "value"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthExtensionAmounttextac949f1b",
-                          "contextType": "variable",
-                          "element": "value",
-                          "variable": "tgtMedicationIngredientStrengthExtensionAmounttextValueXed73d843",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthExtensionAmounttextValueXed73d843"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.extension:amountText"
-                    }
-                  ]
-                },
-                {
-                  "name": "MedicationIngredientStrengthId4189648d",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthId4189648d",
-                      "element": "id"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "id",
-                      "variable": "tgtMedicationIngredientStrengthId4189648d",
-                      "transform": "copy",
-                      "parameter": [
-                        {
-                          "valueId": "srcMedicationIngredientStrengthId4189648d"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.strength"
-                },
-                {
-                  "name": "MedicationIngredientStrengthNumerator70e21324",
-                  "source": [
-                    {
-                      "context": "srcMedicationIngredientStrengthc9e22fc0",
-                      "variable": "srcMedicationIngredientStrengthNumerator70e21324",
-                      "element": "numerator"
-                    }
-                  ],
-                  "target": [
-                    {
-                      "context": "tgtMedicationIngredientStrengthc9e22fc0",
-                      "contextType": "variable",
-                      "element": "numerator",
-                      "variable": "tgtMedicationIngredientStrengthNumerator70e21324",
-                      "transform": "create",
-                      "parameter": [
-                        {
-                          "valueString": "Quantity"
-                        }
-                      ]
-                    }
-                  ],
-                  "documentation": "Automatic copy | Inherited from Medication.ingredient.strength",
-                  "rule": [
-                    {
-                      "name": "MedicationIngredientStrengthNumeratorCodec38da2e4",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorCodec38da2e4",
-                          "element": "code"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "code",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorCodec38da2e4",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorCodec38da2e4"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthNumeratorComparatorc906a444",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorComparatorc906a444",
-                          "element": "comparator"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "comparator",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorComparatorc906a444",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorComparatorc906a444"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthNumeratorExtensione303a23f",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorExtensione303a23f",
-                          "element": "extension"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "extension",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorExtensione303a23f",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorExtensione303a23f"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthNumeratorId4e9e18d4",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorId4e9e18d4",
-                          "element": "id"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "id",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorId4e9e18d4",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorId4e9e18d4"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthNumeratorSystema1a49a13",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorSystema1a49a13",
-                          "element": "system"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "system",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorSystema1a49a13",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorSystema1a49a13"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthNumeratorUnit84581745",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorUnit84581745",
-                          "element": "unit"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "unit",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorUnit84581745",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorUnit84581745"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
-                    },
-                    {
-                      "name": "MedicationIngredientStrengthNumeratorValue18459ad9",
-                      "source": [
-                        {
-                          "context": "srcMedicationIngredientStrengthNumerator70e21324",
-                          "variable": "srcMedicationIngredientStrengthNumeratorValue18459ad9",
-                          "element": "value"
-                        }
-                      ],
-                      "target": [
-                        {
-                          "context": "tgtMedicationIngredientStrengthNumerator70e21324",
-                          "contextType": "variable",
-                          "element": "value",
-                          "variable": "tgtMedicationIngredientStrengthNumeratorValue18459ad9",
-                          "transform": "copy",
-                          "parameter": [
-                            {
-                              "valueId": "srcMedicationIngredientStrengthNumeratorValue18459ad9"
-                            }
-                          ]
-                        }
-                      ],
-                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
                     }
                   ]
                 }
               ]
+            }
+          ],
+          "source": [
+            {
+              "context": "GEMERPPRMedication"
             }
           ]
         },
         {
-          "name": "MedicationLanguage82de8c0e",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "language",
-              "variable": "srcGEMERPPRMedicationLanguage9cb45f67"
-            }
-          ],
+          "name": "MedicationIngredientExtensionDarreichungsform3870feb0",
           "target": [
             {
               "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "language",
-              "variable": "tgtEPAMedicationLanguage3e88579d",
-              "transform": "copy",
-              "parameter": [
+              "element": "ingredient",
+              "variable": "tgtEPAMedicationIngredient78db398c",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationIngredientExtensionDarreichungsform3870feb0",
+              "source": [
                 {
-                  "valueId": "srcGEMERPPRMedicationLanguage9cb45f67"
+                  "context": "GEMERPPRMedication",
+                  "element": "ingredient",
+                  "variable": "srcGEMERPPRMedicationIngrediente7804034"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "MedicationIngredientExtensionDarreichungsform3870feb0",
+                  "documentation": "Automatic copy | Inherited from Medication.ingredient.extension",
+                  "source": [
+                    {
+                      "context": "srcGEMERPPRMedicationIngrediente7804034",
+                      "element": "extension",
+                      "variable": "srcGEMERPPRMedicationIngredientExtensionDarreichungsformbc13f984",
+                      "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension' and url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-darreichungsform-extension'"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationIngredient78db398c",
+                      "contextType": "variable",
+                      "element": "extension",
+                      "variable": "tgtEPAMedicationIngredientExtensionDarreichungsformc9afdd62",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcGEMERPPRMedicationIngredientExtensionDarreichungsformbc13f984"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
+            }
+          ],
+          "source": [
+            {
+              "context": "GEMERPPRMedication"
+            }
+          ]
+        },
+        {
+          "name": "MedicationIngredientItemXItemcodeableconcept79498202",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "ingredient",
+              "variable": "tgtEPAMedicationIngredient78db398c",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationIngredientItemXItemcodeableconcept79498202",
+              "source": [
+                {
+                  "context": "GEMERPPRMedication",
+                  "element": "ingredient",
+                  "variable": "srcGEMERPPRMedicationIngrediente7804034"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "MedicationIngredientItemXItemcodeableconcept79498202",
+                  "documentation": "Automatic copy",
+                  "source": [
+                    {
+                      "context": "srcGEMERPPRMedicationIngrediente7804034",
+                      "element": "item",
+                      "variable": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationIngredient78db398c",
+                      "contextType": "variable",
+                      "element": "item",
+                      "variable": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                      "transform": "create",
+                      "parameter": [
+                        {
+                          "valueString": "CodeableConcept"
+                        }
+                      ]
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "MedicationIngredientItemXItemcodeableconceptCoding67c8f473",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
+                          "element": "coding"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                          "contextType": "variable",
+                          "element": "coding",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCoding67c8f473",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptCoding67c8f473"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept"
+                    },
+                    {
+                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                          "element": "coding"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                          "contextType": "variable",
+                          "element": "coding",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                          "transform": "create",
+                          "parameter": [
+                            {
+                              "valueString": "Coding"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding",
+                      "rule": [
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAskCod1d63eef3",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e",
+                              "element": "code"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "contextType": "variable",
+                              "element": "code",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskCod1d63e"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAskDisa3775491",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskDisa3775",
+                              "element": "display"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "contextType": "variable",
+                              "element": "display",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskDisa3775",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskDisa3775"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d81d7",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d8",
+                              "element": "extension"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "contextType": "variable",
+                              "element": "extension",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d8",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskExt3e8d8"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAskId28ba447e",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44",
+                              "element": "id"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "contextType": "variable",
+                              "element": "id",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskId28ba44"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a04b",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a",
+                              "element": "system"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "contextType": "variable",
+                              "element": "system",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskSysaad7a"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAskUse6639bc99",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskUse6639b",
+                              "element": "userSelected"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "contextType": "variable",
+                              "element": "userSelected",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskUse6639b",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskUse6639b"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAskVerf0648728",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAskVerf0648",
+                              "element": "version"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskb55856cc",
+                              "contextType": "variable",
+                              "element": "version",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAskVerf0648",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAskVerf0648"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:ask"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDe593d725e",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                          "element": "coding"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                          "contextType": "variable",
+                          "element": "coding",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                          "transform": "create",
+                          "parameter": [
+                            {
+                              "valueString": "Coding"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding",
+                      "rule": [
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3f31",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3",
+                              "element": "code"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "contextType": "variable",
+                              "element": "code",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeC62fd3"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0fc5",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0",
+                              "element": "display"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "contextType": "variable",
+                              "element": "display",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeD5b8a0"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536fd3",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536",
+                              "element": "extension"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "contextType": "variable",
+                              "element": "extension",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeE58536"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb708f4",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb70",
+                              "element": "id"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "contextType": "variable",
+                              "element": "id",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb70",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeIebb70"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbfc31",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbf",
+                              "element": "system"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "contextType": "variable",
+                              "element": "system",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbf",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeS6ddbf"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384d8f",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384",
+                              "element": "userSelected"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "contextType": "variable",
+                              "element": "userSelected",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeU42384"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826c14",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826",
+                              "element": "version"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDe593d72",
+                              "contextType": "variable",
+                              "element": "version",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingAtcDeV9b826"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "MedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                          "element": "coding"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                          "contextType": "variable",
+                          "element": "coding",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                          "transform": "create",
+                          "parameter": [
+                            {
+                              "valueString": "Coding"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding",
+                      "rule": [
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6043",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6",
+                              "element": "code"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "contextType": "variable",
+                              "element": "code",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznCod9c3a6"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingPznDisa01da683",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznDisa01da",
+                              "element": "display"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "contextType": "variable",
+                              "element": "display",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznDisa01da",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznDisa01da"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3053",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3",
+                              "element": "extension"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "contextType": "variable",
+                              "element": "extension",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznExt3e0c3"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingPznId78d9b235",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2",
+                              "element": "id"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "contextType": "variable",
+                              "element": "id",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznId78d9b2"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2a94",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2",
+                              "element": "system"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "contextType": "variable",
+                              "element": "system",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznSysc3fe2"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingPznUseb020bc16",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznUseb020b",
+                              "element": "userSelected"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "contextType": "variable",
+                              "element": "userSelected",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznUseb020b",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznUseb020b"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingPznVer4c462865",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingPznVer4c462",
+                              "element": "version"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznfb744650",
+                              "contextType": "variable",
+                              "element": "version",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingPznVer4c462",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingPznVer4c462"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomed09941ef6",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                          "element": "coding"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                          "contextType": "variable",
+                          "element": "coding",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                          "transform": "create",
+                          "parameter": [
+                            {
+                              "valueString": "Coding"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding",
+                      "rule": [
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomeda84640e8",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda8464",
+                              "element": "code"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "contextType": "variable",
+                              "element": "code",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomeda8464",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda8464"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1f5c",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1",
+                              "element": "display"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "contextType": "variable",
+                              "element": "display",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed7afa1"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead7d9",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead",
+                              "element": "extension"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "contextType": "variable",
+                              "element": "extension",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedf7ead"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7d05",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7",
+                              "element": "id"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "contextType": "variable",
+                              "element": "id",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda48d7"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomedaa919917",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedaa919",
+                              "element": "system"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "contextType": "variable",
+                              "element": "system",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomedaa919",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedaa919"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2efbc",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2e",
+                              "element": "userSelected"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "contextType": "variable",
+                              "element": "userSelected",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2e",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomeda2e2e"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
+                        },
+                        {
+                          "name": "MedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3c14",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "variable": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3",
+                              "element": "version"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomed09941",
+                              "contextType": "variable",
+                              "element": "version",
+                              "variable": "tgtMedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientItemXItemcodeableconceptCodingSnomedc69e3"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "MedicationIngredientItemXItemcodeableconceptExtensioncd351c31",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptExtensioncd351c31",
+                          "element": "extension"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                          "contextType": "variable",
+                          "element": "extension",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptExtensioncd351c31",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptExtensioncd351c31"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept"
+                    },
+                    {
+                      "name": "MedicationIngredientItemXItemcodeableconceptId1a42460f",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptId1a42460f",
+                          "element": "id"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                          "contextType": "variable",
+                          "element": "id",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptId1a42460f",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptId1a42460f"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept"
+                    },
+                    {
+                      "name": "MedicationIngredientItemXItemcodeableconceptTextbe5864f4",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientItemXItemcodeableconcepte632d139",
+                          "variable": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4",
+                          "element": "text"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientItemXItemcodeableconcept04a689ea",
+                          "contextType": "variable",
+                          "element": "text",
+                          "variable": "tgtMedicationIngredientItemXItemcodeableconceptTextbe5864f4",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "srcMedicationIngredientItemXItemcodeableconceptTextbe5864f4"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.item[x]:itemCodeableConcept"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "GEMERPPRMedication"
+            }
+          ]
+        },
+        {
+          "name": "MedicationIngredientStrengthc9e22fc0",
+          "target": [
+            {
+              "context": "EPAMedication",
+              "element": "ingredient",
+              "variable": "tgtEPAMedicationIngredient78db398c",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "MedicationIngredientStrengthc9e22fc0",
+              "source": [
+                {
+                  "context": "GEMERPPRMedication",
+                  "element": "ingredient",
+                  "variable": "srcGEMERPPRMedicationIngrediente7804034"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "MedicationIngredientStrengthc9e22fc0",
+                  "documentation": "Automatic copy",
+                  "source": [
+                    {
+                      "context": "srcGEMERPPRMedicationIngrediente7804034",
+                      "element": "strength",
+                      "variable": "srcGEMERPPRMedicationIngredientStrength7510f45d"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtEPAMedicationIngredient78db398c",
+                      "contextType": "variable",
+                      "element": "strength",
+                      "variable": "tgtEPAMedicationIngredientStrengtha8086cba",
+                      "transform": "create",
+                      "parameter": [
+                        {
+                          "valueString": "Ratio"
+                        }
+                      ]
+                    }
+                  ],
+                  "rule": [
+                    {
+                      "name": "MedicationIngredientStrengthDenominatorde24b47d",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientStrength7510f45d",
+                          "variable": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                          "element": "denominator"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientStrengtha8086cba",
+                          "contextType": "variable",
+                          "element": "denominator",
+                          "variable": "tgtMedicationIngredientStrengthDenominatorde24b47d",
+                          "transform": "create",
+                          "parameter": [
+                            {
+                              "valueString": "Quantity"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength",
+                      "rule": [
+                        {
+                          "name": "MedicationIngredientStrengthDenominatorCode9043cedb",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                              "variable": "srcMedicationIngredientStrengthDenominatorCode9043cedb",
+                              "element": "code"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
+                              "contextType": "variable",
+                              "element": "code",
+                              "variable": "tgtMedicationIngredientStrengthDenominatorCode9043cedb",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthDenominatorCode9043cedb"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthDenominatorComparator4345836d",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                              "variable": "srcMedicationIngredientStrengthDenominatorComparator4345836d",
+                              "element": "comparator"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
+                              "contextType": "variable",
+                              "element": "comparator",
+                              "variable": "tgtMedicationIngredientStrengthDenominatorComparator4345836d",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthDenominatorComparator4345836d"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthDenominatorExtension1afdd0e3",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                              "variable": "srcMedicationIngredientStrengthDenominatorExtension1afdd0e3",
+                              "element": "extension"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
+                              "contextType": "variable",
+                              "element": "extension",
+                              "variable": "tgtMedicationIngredientStrengthDenominatorExtension1afdd0e3",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthDenominatorExtension1afdd0e3"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthDenominatorId0d7266f8",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                              "variable": "srcMedicationIngredientStrengthDenominatorId0d7266f8",
+                              "element": "id"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
+                              "contextType": "variable",
+                              "element": "id",
+                              "variable": "tgtMedicationIngredientStrengthDenominatorId0d7266f8",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthDenominatorId0d7266f8"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthDenominatorSystem042773cf",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                              "variable": "srcMedicationIngredientStrengthDenominatorSystem042773cf",
+                              "element": "system"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
+                              "contextType": "variable",
+                              "element": "system",
+                              "variable": "tgtMedicationIngredientStrengthDenominatorSystem042773cf",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthDenominatorSystem042773cf"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthDenominatorUnite34c7ede",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                              "variable": "srcMedicationIngredientStrengthDenominatorUnite34c7ede",
+                              "element": "unit"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
+                              "contextType": "variable",
+                              "element": "unit",
+                              "variable": "tgtMedicationIngredientStrengthDenominatorUnite34c7ede",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthDenominatorUnite34c7ede"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthDenominatorValuedc89d810",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthDenominatorde24b47d",
+                              "variable": "srcMedicationIngredientStrengthDenominatorValuedc89d810",
+                              "element": "value"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthDenominatorde24b47d",
+                              "contextType": "variable",
+                              "element": "value",
+                              "variable": "tgtMedicationIngredientStrengthDenominatorValuedc89d810",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthDenominatorValuedc89d810"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.denominator"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "MedicationIngredientStrengthExtension6c46fd06",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientStrength7510f45d",
+                          "variable": "srcMedicationIngredientStrengthExtension6c46fd06",
+                          "element": "extension"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientStrengtha8086cba",
+                          "contextType": "variable",
+                          "element": "extension",
+                          "variable": "tgtMedicationIngredientStrengthExtension6c46fd06",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "srcMedicationIngredientStrengthExtension6c46fd06"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength"
+                    },
+                    {
+                      "name": "MedicationIngredientStrengthExtensionAmounttextac949f1b",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientStrength7510f45d",
+                          "variable": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
+                          "element": "extension",
+                          "condition": "url = 'https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension'"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientStrengtha8086cba",
+                          "contextType": "variable",
+                          "element": "extension",
+                          "variable": "tgtMedicationIngredientStrengthExtensionAmounttextac949f1b",
+                          "transform": "create",
+                          "parameter": [
+                            {
+                              "valueString": "Extension"
+                            }
+                          ]
+                        },
+                        {
+                          "context": "tgtMedicationIngredientStrengthExtensionAmounttextac949f1b",
+                          "contextType": "variable",
+                          "element": "url",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueString": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.extension",
+                      "rule": [
+                        {
+                          "name": "MedicationIngredientStrengthExtensionAmounttextId32b0d583",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
+                              "variable": "srcMedicationIngredientStrengthExtensionAmounttextId32b0d583",
+                              "element": "id"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthExtensionAmounttextac949f1b",
+                              "contextType": "variable",
+                              "element": "id",
+                              "variable": "tgtMedicationIngredientStrengthExtensionAmounttextId32b0d583",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthExtensionAmounttextId32b0d583"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.extension:amountText"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthExtensionAmounttextValueXed73d843",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthExtensionAmounttextac949f1b",
+                              "variable": "srcMedicationIngredientStrengthExtensionAmounttextValueXed73d843",
+                              "element": "value"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthExtensionAmounttextac949f1b",
+                              "contextType": "variable",
+                              "element": "value",
+                              "variable": "tgtMedicationIngredientStrengthExtensionAmounttextValueXed73d843",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthExtensionAmounttextValueXed73d843"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.extension:amountText"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "MedicationIngredientStrengthId4189648d",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientStrength7510f45d",
+                          "variable": "srcMedicationIngredientStrengthId4189648d",
+                          "element": "id"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientStrengtha8086cba",
+                          "contextType": "variable",
+                          "element": "id",
+                          "variable": "tgtMedicationIngredientStrengthId4189648d",
+                          "transform": "copy",
+                          "parameter": [
+                            {
+                              "valueId": "srcMedicationIngredientStrengthId4189648d"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength"
+                    },
+                    {
+                      "name": "MedicationIngredientStrengthNumerator70e21324",
+                      "source": [
+                        {
+                          "context": "srcGEMERPPRMedicationIngredientStrength7510f45d",
+                          "variable": "srcMedicationIngredientStrengthNumerator70e21324",
+                          "element": "numerator"
+                        }
+                      ],
+                      "target": [
+                        {
+                          "context": "tgtEPAMedicationIngredientStrengtha8086cba",
+                          "contextType": "variable",
+                          "element": "numerator",
+                          "variable": "tgtMedicationIngredientStrengthNumerator70e21324",
+                          "transform": "create",
+                          "parameter": [
+                            {
+                              "valueString": "Quantity"
+                            }
+                          ]
+                        }
+                      ],
+                      "documentation": "Automatic copy | Inherited from Medication.ingredient.strength",
+                      "rule": [
+                        {
+                          "name": "MedicationIngredientStrengthNumeratorCodec38da2e4",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthNumerator70e21324",
+                              "variable": "srcMedicationIngredientStrengthNumeratorCodec38da2e4",
+                              "element": "code"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthNumerator70e21324",
+                              "contextType": "variable",
+                              "element": "code",
+                              "variable": "tgtMedicationIngredientStrengthNumeratorCodec38da2e4",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthNumeratorCodec38da2e4"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthNumeratorComparatorc906a444",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthNumerator70e21324",
+                              "variable": "srcMedicationIngredientStrengthNumeratorComparatorc906a444",
+                              "element": "comparator"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthNumerator70e21324",
+                              "contextType": "variable",
+                              "element": "comparator",
+                              "variable": "tgtMedicationIngredientStrengthNumeratorComparatorc906a444",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthNumeratorComparatorc906a444"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthNumeratorExtensione303a23f",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthNumerator70e21324",
+                              "variable": "srcMedicationIngredientStrengthNumeratorExtensione303a23f",
+                              "element": "extension"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthNumerator70e21324",
+                              "contextType": "variable",
+                              "element": "extension",
+                              "variable": "tgtMedicationIngredientStrengthNumeratorExtensione303a23f",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthNumeratorExtensione303a23f"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthNumeratorId4e9e18d4",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthNumerator70e21324",
+                              "variable": "srcMedicationIngredientStrengthNumeratorId4e9e18d4",
+                              "element": "id"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthNumerator70e21324",
+                              "contextType": "variable",
+                              "element": "id",
+                              "variable": "tgtMedicationIngredientStrengthNumeratorId4e9e18d4",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthNumeratorId4e9e18d4"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthNumeratorSystema1a49a13",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthNumerator70e21324",
+                              "variable": "srcMedicationIngredientStrengthNumeratorSystema1a49a13",
+                              "element": "system"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthNumerator70e21324",
+                              "contextType": "variable",
+                              "element": "system",
+                              "variable": "tgtMedicationIngredientStrengthNumeratorSystema1a49a13",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthNumeratorSystema1a49a13"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthNumeratorUnit84581745",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthNumerator70e21324",
+                              "variable": "srcMedicationIngredientStrengthNumeratorUnit84581745",
+                              "element": "unit"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthNumerator70e21324",
+                              "contextType": "variable",
+                              "element": "unit",
+                              "variable": "tgtMedicationIngredientStrengthNumeratorUnit84581745",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthNumeratorUnit84581745"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
+                        },
+                        {
+                          "name": "MedicationIngredientStrengthNumeratorValue18459ad9",
+                          "source": [
+                            {
+                              "context": "srcMedicationIngredientStrengthNumerator70e21324",
+                              "variable": "srcMedicationIngredientStrengthNumeratorValue18459ad9",
+                              "element": "value"
+                            }
+                          ],
+                          "target": [
+                            {
+                              "context": "tgtMedicationIngredientStrengthNumerator70e21324",
+                              "contextType": "variable",
+                              "element": "value",
+                              "variable": "tgtMedicationIngredientStrengthNumeratorValue18459ad9",
+                              "transform": "copy",
+                              "parameter": [
+                                {
+                                  "valueId": "srcMedicationIngredientStrengthNumeratorValue18459ad9"
+                                }
+                              ]
+                            }
+                          ],
+                          "documentation": "Automatic copy | Inherited from Medication.ingredient.strength.numerator"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "GEMERPPRMedication"
             }
           ]
         },
@@ -5096,36 +4937,22 @@
           ]
         },
         {
-          "name": "MedicationMetaf9f176bc",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "meta",
-              "variable": "srcGEMERPPRMedicationMeta06ca3a13"
-            }
-          ],
+          "name": "MedicationMetaProfile399adfc6",
           "target": [
             {
               "context": "EPAMedication",
-              "contextType": "variable",
               "element": "meta",
               "variable": "tgtEPAMedicationMeta8591b307",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationMeta06ca3a13"
-                }
-              ]
+              "contextType": "variable"
             }
           ],
           "rule": [
             {
               "name": "MedicationMetaProfile399adfc6",
+              "documentation": "Fixed value 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication'",
               "source": [
                 {
-                  "context": "srcGEMERPPRMedicationMeta06ca3a13",
-                  "variable": "srcMedicationMetaProfile399adfc6"
+                  "context": "GEMERPPRMedication"
                 }
               ],
               "target": [
@@ -5133,7 +4960,6 @@
                   "context": "tgtEPAMedicationMeta8591b307",
                   "contextType": "variable",
                   "element": "profile",
-                  "variable": "tgtMedicationMetaProfile399adfc6",
                   "transform": "copy",
                   "parameter": [
                     {
@@ -5141,83 +4967,12 @@
                     }
                   ]
                 }
-              ],
-              "documentation": "Fixed value 'https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication'"
-            }
-          ]
-        },
-        {
-          "name": "MedicationModifierextension860b84a5",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "modifierExtension",
-              "variable": "srcGEMERPPRMedicationModifierextension3315be77"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "modifierExtension",
-              "variable": "tgtEPAMedicationModifierextensionef5040c7",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationModifierextension3315be77"
-                }
               ]
             }
-          ]
-        },
-        {
-          "name": "MedicationStatus0df0b6be",
-          "documentation": "Automatic copy",
+          ],
           "source": [
             {
-              "context": "GEMERPPRMedication",
-              "element": "status",
-              "variable": "srcGEMERPPRMedicationStatus8fb59631"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "status",
-              "variable": "tgtEPAMedicationStatus2253c436",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationStatus8fb59631"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "MedicationTextf7e42d1a",
-          "documentation": "Automatic copy",
-          "source": [
-            {
-              "context": "GEMERPPRMedication",
-              "element": "text",
-              "variable": "srcGEMERPPRMedicationTextf6718a42"
-            }
-          ],
-          "target": [
-            {
-              "context": "EPAMedication",
-              "contextType": "variable",
-              "element": "text",
-              "variable": "tgtEPAMedicationText8e24e1a6",
-              "transform": "copy",
-              "parameter": [
-                {
-                  "valueId": "srcGEMERPPRMedicationTextf6718a42"
-                }
-              ]
+              "context": "GEMERPPRMedication"
             }
           ]
         }

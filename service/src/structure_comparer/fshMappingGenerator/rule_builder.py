@@ -7,7 +7,7 @@ from structure_comparer.model.mapping_action_models import ActionInfo, ActionTyp
 from .extension_utils import find_skipped_slices, get_extension_url, is_extension_path
 from .naming import slug, stable_id, var_name
 from .nodes import FieldNode
-from .tree_builder import SKIP_ACTIONS
+from .tree_builder import NON_EMITTING_INTENTS, SKIP_ACTIONS
 
 
 CHOICE_TYPE_SUFFIXES: tuple[str, ...] = (
@@ -98,6 +98,8 @@ class StructureMapRuleBuilder:
         self._field_source_support = field_source_support
 
     def build_rule(self, node: FieldNode, parent_src: dict | None = None, parent_tgt: dict | None = None) -> dict | None:
+        if node.intent in NON_EMITTING_INTENTS or node.intent == "skip":
+            return None
         if parent_src and parent_tgt:
             return self._build_relative_rule(node, parent_src, parent_tgt)
         return self._build_root_rule(node)
@@ -308,6 +310,12 @@ class StructureMapRuleBuilder:
                     if source_url:
                         conditions.append(f"url = '{source_url}'")
                 slice_conditions = self._slice_conditions_for_path(source_path, self._source_profile_keys)
+
+                if node.intent == "copy_node_to" and not slice_conditions and node.other_path:
+                    fallback_conditions = self._slice_conditions_for_path(node.other_path, self._target_profile_key)
+                    if fallback_conditions:
+                        slice_conditions.extend(fallback_conditions)
+
                 if slice_conditions:
                     conditions.extend(slice_conditions)
                 exclusion_conditions = self._child_slice_exclusion_conditions(node)
@@ -333,6 +341,7 @@ class StructureMapRuleBuilder:
                 prefix="tgt",
                 chain_kind="target",
                 profile_keys=self._target_profile_key,
+                allow_missing_target=node.intent == "copy_node_to",
             )
             if not target_chain:
                 return None
@@ -524,6 +533,7 @@ class StructureMapRuleBuilder:
         prefix: str,
         chain_kind: str,
         profile_keys: str | list[str] | None,
+        allow_missing_target: bool = False,
     ) -> list[dict]:
         relative = self._relative_path(path)
         if not relative:
@@ -548,8 +558,9 @@ class StructureMapRuleBuilder:
             profile_field = self._profile_field_for_keys(field, profile_keys)
             if chain_kind == "target":
                 if profile_field is None:
-                    return []
-                if not self._profile_field_supports(profile_field):
+                    if not allow_missing_target:
+                        return []
+                elif not self._profile_field_supports(profile_field):
                     return []
             if field and self._target_profile_key and chain_kind == "target":
                 target_field = field.profiles.get(self._target_profile_key)

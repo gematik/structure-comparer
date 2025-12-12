@@ -290,14 +290,14 @@
           ]
         },
         {
-          "name": "OrganizationIdentifiercd09dff1",
-          "documentation": "Automatic copy",
+          "name": "OrganizationIdentifierBetriebsstaettennummerd282829b",
+          "documentation": "Copied to 'Organization.identifier:BSNR'",
           "source": [
             {
               "context": "KBVPRFOROrganization",
               "element": "identifier",
-              "variable": "srcKBVPRFOROrganizationIdentifier520cdc39",
-              "condition": "(system = 'https://gematik.de/fhir/sid/telematik-id') != true"
+              "variable": "srcKBVPRFOROrganizationIdentifierBetriebsstaettennummer10bcc9e5",
+              "condition": "use = 'official' and system = 'https://fhir.kbv.de/NamingSystem/KBV_NS_Base_BSNR'"
             }
           ],
           "target": [
@@ -305,11 +305,63 @@
               "context": "OrganizationDirectory",
               "contextType": "variable",
               "element": "identifier",
-              "variable": "tgtOrganizationDirectoryIdentifierb9fb6742",
+              "variable": "tgtOrganizationDirectoryIdentifierBsnr5530a72d",
               "transform": "copy",
               "parameter": [
                 {
-                  "valueId": "srcKBVPRFOROrganizationIdentifier520cdc39"
+                  "valueId": "srcKBVPRFOROrganizationIdentifierBetriebsstaettennummer10bcc9e5"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "OrganizationIdentifierInstitutionskennzeichen298c285b",
+          "documentation": "Copied to 'Organization.identifier:IKNR'",
+          "source": [
+            {
+              "context": "KBVPRFOROrganization",
+              "element": "identifier",
+              "variable": "srcKBVPRFOROrganizationIdentifierInstitutionskennzeichenf4e9068e",
+              "condition": "system = 'http://fhir.de/sid/arge-ik/iknr'"
+            }
+          ],
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "contextType": "variable",
+              "element": "identifier",
+              "variable": "tgtOrganizationDirectoryIdentifierIknr272d4c4d",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "srcKBVPRFOROrganizationIdentifierInstitutionskennzeichenf4e9068e"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "OrganizationIdentifierKzvAbrechnungsnummer18ca9fd4",
+          "documentation": "Copied to 'Organization.identifier:KZVA'",
+          "source": [
+            {
+              "context": "KBVPRFOROrganization",
+              "element": "identifier",
+              "variable": "srcKBVPRFOROrganizationIdentifierKzvAbrechnungsnummerd991d7ce",
+              "condition": "use = 'official' and system = 'http://fhir.de/sid/kzbv/kzvabrechnungsnummer'"
+            }
+          ],
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "contextType": "variable",
+              "element": "identifier",
+              "variable": "tgtOrganizationDirectoryIdentifierKzvac903ff4f",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "srcKBVPRFOROrganizationIdentifierKzvAbrechnungsnummerd991d7ce"
                 }
               ]
             }
@@ -448,7 +500,7 @@
         },
         {
           "name": "OrganizationName61d5a4f1",
-          "documentation": "Automatic copy | organizationName → aus dem ACCESS_TOKEN der Anfrage",
+          "documentation": "Automatic copy | organizationName -> aus dem ACCESS_TOKEN der Anfrage",
           "source": [
             {
               "context": "KBVPRFOROrganization",
@@ -493,6 +545,156 @@
                   "valueId": "srcKBVPRFOROrganizationTelecomca093d46"
                 }
               ]
+            }
+          ]
+        },
+        {
+          "name": "OrganizationTypeCodingf7ac7e10",
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "element": "type",
+              "variable": "tgtOrganizationDirectoryType865f8e27",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "OrganizationTypeCodingf7ac7e10",
+              "source": [
+                {
+                  "context": "KBVPRFOROrganization",
+                  "element": "type",
+                  "variable": "srcKBVPRFOROrganizationTypee0388f6b"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "OrganizationTypeCodingf7ac7e10",
+                  "documentation": "Automatic copy",
+                  "source": [
+                    {
+                      "context": "srcKBVPRFOROrganizationTypee0388f6b",
+                      "element": "coding",
+                      "variable": "srcKBVPRFOROrganizationTypeCoding303f5adc"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtOrganizationDirectoryType865f8e27",
+                      "contextType": "variable",
+                      "element": "coding",
+                      "variable": "tgtOrganizationDirectoryTypeCoding476b79f5",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcKBVPRFOROrganizationTypeCoding303f5adc"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRFOROrganization"
+            }
+          ]
+        },
+        {
+          "name": "OrganizationTypeId18ab48a7",
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "element": "type",
+              "variable": "tgtOrganizationDirectoryType865f8e27",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "OrganizationTypeId18ab48a7",
+              "source": [
+                {
+                  "context": "KBVPRFOROrganization",
+                  "element": "type",
+                  "variable": "srcKBVPRFOROrganizationTypee0388f6b"
+                }
+              ],
+              "rule": [
+                {
+                  "name": "OrganizationTypeId18ab48a7",
+                  "documentation": "Automatic copy",
+                  "source": [
+                    {
+                      "context": "srcKBVPRFOROrganizationTypee0388f6b",
+                      "element": "id",
+                      "variable": "srcKBVPRFOROrganizationTypeId76144370"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "tgtOrganizationDirectoryType865f8e27",
+                      "contextType": "variable",
+                      "element": "id",
+                      "variable": "tgtOrganizationDirectoryTypeIdf6cb4890",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueId": "srcKBVPRFOROrganizationTypeId76144370"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRFOROrganization"
+            }
+          ]
+        },
+        {
+          "name": "OrganizationTypeTextcfa96a85",
+          "target": [
+            {
+              "context": "OrganizationDirectory",
+              "element": "type",
+              "variable": "tgtOrganizationDirectoryType865f8e27",
+              "contextType": "variable"
+            }
+          ],
+          "rule": [
+            {
+              "name": "OrganizationTypeTextcfa96a85",
+              "documentation": "Fixed value 'kim-provider' | Default provider type label until source supplies a coding",
+              "source": [
+                {
+                  "context": "KBVPRFOROrganization"
+                }
+              ],
+              "target": [
+                {
+                  "context": "tgtOrganizationDirectoryType865f8e27",
+                  "contextType": "variable",
+                  "element": "text",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueString": "kim-provider"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "context": "KBVPRFOROrganization"
             }
           ]
         }
