@@ -8,5 +8,8 @@
     "flake8.args": [
         "--max-line-length=120"
     ],
-    "flake8.enabled": true
+    "flake8.enabled": true,
+    "workbench.editorAssociations": {   
+        "*.md": "vscode.markdown.preview.editor",
+    }
 }

@@ -30,7 +30,7 @@ FHIR_VERSION = "4.0.1"
 VALIDATE_STRUCTUREMAPS = True
 RUN_TRANSFORMATIONS = True  # Enable to run example transformations via validator -transform
 PROJECT_FILTER: list[str] = ["dgMP Mapping_2025-10"]  # Leave empty to process every project that exists in the projects dir.
-MAPPING_FILTER: list[str] = ["0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72"]  # Optional list of mapping UUIDs to limit the run.
+MAPPING_FILTER: list[str] = []  # Optional list of mapping UUIDs to limit the run.
 TRANSFORMATION_FILTER: list[str] = []  # Optional list of transformation UUIDs to limit the run.
 EXTRA_IG_SOURCES: list[str | Path] = []  # Additional -ig arguments besides the mapping test folder itself.
 ADDITIONAL_TRANSFORM_ARGS: list[str] = []
@@ -111,6 +111,27 @@ class TransformJob:
     example_files: list[Path]
     output_dir: Path
     dependency_dirs: tuple[Path, ...] = tuple()
+
+
+@dataclass
+class ExampleRunResult:
+    project_key: str
+    identifier: str
+    kind: str
+    example_file: Path
+    output_file: Path | None
+    transform_ok: bool
+    transform_error: str | None
+    validation_ok: bool | None
+    validation_error: str | None
+
+
+@dataclass
+class ProjectRunReport:
+    project_key: str
+    timestamp: datetime
+    structuremap_validation_ok: bool | None
+    examples: list[ExampleRunResult]
 
 
 @dataclass
@@ -237,6 +258,8 @@ def main() -> None:
 
         validation_ok = _validate_structuremaps(sorted(structure_map_paths), project_key)
 
+        project_results: list[ExampleRunResult] = []
+
         if RUN_TRANSFORMATIONS:
             if not validation_ok:
                 print(
@@ -244,22 +267,34 @@ def main() -> None:
                 )
             _print_step(f"[{project_key}] Running StructureMap transformations")
             for job in transform_jobs:
-                _run_transform_job(job)
+                project_results.extend(_run_transform_job(job))
+
+        _write_project_report(
+            ProjectRunReport(
+                project_key=project_key,
+                timestamp=datetime.now(timezone.utc),
+                structuremap_validation_ok=validation_ok if VALIDATE_STRUCTUREMAPS else None,
+                examples=project_results,
+            ),
+            project_dir=project_dir,
+        )
 
 
-def _run_transform_job(job: TransformJob) -> None:
+def _run_transform_job(job: TransformJob) -> list[ExampleRunResult]:
     if not job.structure_map_url:
         print(f"[{job.project_key}/{job.identifier}] Missing StructureMap url, skipping validator")
-        return
+        return []
 
     if not JAVA_VALIDATOR_JAR.exists():
         print(f"[{job.project_key}/{job.identifier}] Validator jar not found at {JAVA_VALIDATOR_JAR}")
-        return
+        return []
 
     example_files = job.example_files or []
     if not example_files:
         print(f"[{job.project_key}/{job.identifier}] No example input files found")
-        return
+        return []
+
+    results: list[ExampleRunResult] = []
 
     base_ig_args: list[str] = []
 
@@ -311,16 +346,22 @@ def _run_transform_job(job: TransformJob) -> None:
         cmd.extend(ADDITIONAL_TRANSFORM_ARGS)
 
         _print_step(f"[{job.project_key}/{job.identifier}] Transforming {example_file.name} via StructureMap")
+        transform_ok = True
+        transform_error: str | None = None
         try:
             subprocess.run(cmd, cwd=REPO_ROOT, check=True)
         except subprocess.CalledProcessError as exc:  # noqa: PERF203 - want explicit feedback
+            transform_ok = False
+            transform_error = str(exc)
             print(f"[{job.project_key}/{job.identifier}] Validator failed for {example_file.name}: {exc}")
-            continue
 
-        if output_file.exists() and output_file.stat().st_size > 0:
+        validation_ok: bool | None = None
+        validation_error: str | None = None
+
+        if output_file.exists() and output_file.stat().st_size > 0 and transform_ok:
             _print_step(f"[{job.project_key}/{job.identifier}] Output written to {_as_repo_relative(output_file)}")
             _ensure_organization_type(output_file)
-            _validate_transformed_output(
+            validation_ok, validation_error = _validate_transformed_output(
                 output_file=output_file,
                 project_key=job.project_key,
                 identifier=job.identifier,
@@ -328,10 +369,30 @@ def _run_transform_job(job: TransformJob) -> None:
                 target_package_dir=job.target_package_dir,
                 target_profile_url=job.target_profile_url,
             )
+        elif not transform_ok:
+            print(
+                f"[{job.project_key}/{job.identifier}] Transform failed; skipping validation for {example_file.name}."
+            )
         else:
             print(
                 f"[{job.project_key}/{job.identifier}] Validator finished but no output file was produced for {example_file.name}."
             )
+
+        results.append(
+            ExampleRunResult(
+                project_key=job.project_key,
+                identifier=job.identifier,
+                kind=job.kind,
+                example_file=example_file,
+                output_file=output_file if output_file.exists() else None,
+                transform_ok=transform_ok,
+                transform_error=transform_error,
+                validation_ok=validation_ok,
+                validation_error=validation_error,
+            )
+        )
+
+    return results
 
 
 def _ensure_project_paths(project_dir: Path) -> ProjectPaths:
@@ -555,12 +616,12 @@ def _validate_transformed_output(
     resource_type: str,
     target_package_dir: Path | None,
     target_profile_url: str | None,
-) -> None:
+) -> tuple[bool, str | None]:
     if not JAVA_VALIDATOR_JAR.exists():
         print(
             f"[{project_key}/{identifier}] Validator jar not found at {JAVA_VALIDATOR_JAR}; skipping validation for output-{resource_type}.json"
         )
-        return
+        return False, "validator_jar_missing"
 
     cmd = [
         "java",
@@ -600,9 +661,24 @@ def _validate_transformed_output(
         f"target profile {target_profile_url or 'Resource'} using Java validator"
     )
     try:
-        subprocess.run(cmd, cwd=REPO_ROOT, check=True)
-    except subprocess.CalledProcessError as exc:  # noqa: PERF203 - want explicit feedback
-        print(f"[{project_key}/{identifier}] Output validation failed for output-{resource_type}.json: {exc}")
+        proc = subprocess.run(cmd, cwd=REPO_ROOT, check=False, capture_output=True, text=True)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[{project_key}/{identifier}] Output validation execution failed: {exc}")
+        return False, str(exc)
+
+    if proc.returncode != 0:
+        combined_output = (proc.stdout or "") + "\n" + (proc.stderr or "")
+        summary = _summarize_validation_errors(combined_output)
+        print(
+            f"[{project_key}/{identifier}] Output validation failed for output-{resource_type}.json: return code {proc.returncode}"
+        )
+        if summary:
+            print(f"[{project_key}/{identifier}] Validation errors: {summary}")
+        else:
+            print(f"[{project_key}/{identifier}] Validator output:\n{combined_output}")
+        return False, summary or "validation_failed"
+
+    return True, None
 
 
 def _download_structuremap(
@@ -860,6 +936,61 @@ def _as_repo_relative(path: Path) -> str:
         return str(path.relative_to(REPO_ROOT))
     except ValueError:
         return str(path)
+
+
+def _summarize_validation_errors(output: str) -> str:
+    errors: list[str] = []
+    for line in output.splitlines():
+        if "Error @" in line:
+            fragment = line.split("Error @", 1)[1].strip()
+            if ":" in fragment:
+                fragment = fragment.split(":", 1)[1].strip()
+            if " (from" in fragment:
+                fragment = fragment.split(" (from", 1)[0].strip()
+            errors.append(fragment)
+    return "\n".join(errors)
+
+
+def _write_project_report(report: ProjectRunReport, *, project_dir: Path) -> None:
+    project_dir.mkdir(parents=True, exist_ok=True)
+    timestamp_str = report.timestamp.strftime("%Y-%m-%d %H:%M:%S %Z")
+    report_path = project_dir / "run_report.md"
+
+    def _status_line(ok: bool | None) -> str:
+        if ok is None:
+            return "skipped"
+        return "passed" if ok else "failed"
+
+    def _format_example(result: ExampleRunResult) -> str:
+        transform_status = _status_line(result.transform_ok)
+        validation_status = _status_line(result.validation_ok)
+        validation_detail = ""
+        if result.validation_error:
+            validation_detail = "<br>" + result.validation_error.replace("\n", "<br>")
+        example_rel = _as_repo_relative(result.example_file)
+        output_rel = _as_repo_relative(result.output_file) if result.output_file else "-"
+        return (
+            f"| {result.identifier} | {result.kind} | {example_rel} | {transform_status} | {output_rel} | "
+            f"{validation_status}{validation_detail} |"
+        )
+
+    lines: list[str] = []
+    lines.append(f"# Run Report - {report.project_key}")
+    lines.append("")
+    lines.append(f"Timestamp: {timestamp_str}")
+    lines.append(f"StructureMap validation: {_status_line(report.structuremap_validation_ok)}")
+    lines.append("")
+
+    if not report.examples:
+        lines.append("No transformations were executed.")
+    else:
+        lines.append("| Identifier | Kind | Example | Transform | Output | Validation |")
+        lines.append("| --- | --- | --- | --- | --- | --- |")
+        for example in report.examples:
+            lines.append(_format_example(example))
+
+    content = "\n".join(lines) + "\n"
+    report_path.write_text(content, encoding="utf-8")
 
 
 if __name__ == "__main__":

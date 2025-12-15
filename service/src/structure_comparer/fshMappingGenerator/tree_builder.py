@@ -321,8 +321,6 @@ class FieldTreeBuilder:
             return "skip"
 
         if action == ActionType.USE and info and info.source == ActionSource.MANUAL:
-            if node.path == "Organization.name":
-                return "copy"
             return "manual"
 
         if action == ActionType.COPY_VALUE_FROM:

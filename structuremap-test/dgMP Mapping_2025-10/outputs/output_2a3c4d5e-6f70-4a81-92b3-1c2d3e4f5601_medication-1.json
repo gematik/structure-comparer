@@ -1,23 +1,91 @@
 {
   "resourceType" : "Medication",
-  "id" : "47076fb4-dc5c-4f75-85f6-b200033b3280",
+  "extension" : [{
+    "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
+    "valueCoding" : {
+      "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_ERP_Medication_Category",
+      "code" : "00"
+    }
+  },
+  {
+    "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_Base_Medication_Type",
+    "valueCodeableConcept" : {
+      "coding" : [{
+        "system" : "http://snomed.info/sct",
+        "version" : "http://snomed.info/sct/11000274103/version/20240515",
+        "code" : "763158003",
+        "display" : "Medicinal product (product)"
+      }]
+    }
+  },
+  {
+    "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
+    "valueCoding" : {
+      "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_ERP_Medication_Category",
+      "code" : "00"
+    }
+  },
+  {
+    "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
+    "valueBoolean" : false
+  },
+  {
+    "url" : "http://fhir.de/StructureDefinition/normgroesse",
+    "valueCode" : "N1"
+  },
+  {
+    "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension"
+  },
+  {
+    "url" : "http://fhir.de/StructureDefinition/normgroesse"
+  },
+  {
+    "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_Base_Medication_Type",
+    "valueCodeableConcept" : {
+      "coding" : [{
+        "system" : "http://snomed.info/sct",
+        "version" : "http://snomed.info/sct/11000274103/version/20240515",
+        "code" : "763158003",
+        "display" : "Medicinal product (product)"
+      }]
+    }
+  },
+  {
+    "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
+    "valueCoding" : {
+      "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_ERP_Medication_Category",
+      "code" : "00"
+    }
+  },
+  {
+    "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
+    "valueBoolean" : false
+  },
+  {
+    "url" : "http://fhir.de/StructureDefinition/normgroesse",
+    "valueCode" : "N1"
+  },
+  {
+    "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension"
+  },
+  {
+    "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension"
+  }],
   "code" : {
     "coding" : [{
       "system" : "http://fhir.de/CodeSystem/ifa/pzn",
       "code" : "00814665"
     },
     {
+      "system" : "http://fhir.de/CodeSystem/bfarm/atc"
+    },
+    {
       "system" : "http://fhir.de/CodeSystem/ifa/pzn",
       "code" : "00814665"
-    }],
-    "text" : "Januvia® 50 mg 28 Filmtabletten N1"
+    }]
   },
   "form" : {
     "coding" : [{
-      "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM",
-      "code" : "FTA"
-    },
-    {
       "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM",
       "code" : "FTA"
     }]
@@ -31,18 +99,22 @@
       {
         "system" : "http://fhir.de/CodeSystem/ask",
         "code" : "34150"
+      },
+      {
+        "system" : "http://fhir.de/CodeSystem/ask",
+        "code" : "34150"
       }],
       "text" : "Sitagliptin"
-    },
-    "strength" : {
-      "numerator" : {
-        "value" : 50,
-        "unit" : "mg"
-      },
-      "denominator" : {
-        "value" : 1,
-        "unit" : "Stück"
-      }
     }
-  }]
+  },
+  {
+    "strength" : {
+      "extension" : [{
+        "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension"
+      }]
+    }
+  }],
+  "meta" : {
+    "profile" : ["https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication"]
+  }
 }

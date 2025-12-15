@@ -1,44 +1,62 @@
 {
-  "resourceType" : "Organization",
-  "identifier" : [{
-    "type" : {
-      "coding" : [{
-        "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
-        "code" : "XX"
-      }]
+  "resourceType": "Organization",
+  "identifier": [
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+            "code": "XX"
+          }
+        ]
+      },
+      "system": "http://fhir.de/sid/arge-ik/iknr",
+      "value": "839502745"
     },
-    "system" : "http://fhir.de/sid/arge-ik/iknr",
-    "value" : "839502745"
-  },
-  {
-    "type" : {
-      "coding" : [{
-        "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
-        "code" : "PRN"
-      }]
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+            "code": "PRN"
+          }
+        ]
+      },
+      "system": "https://gematik.de/fhir/sid/telematik-id",
+      "value": "1-Test-ABC"
+    }
+  ],
+  "address": [
+    {
+      "type": "both",
+      "line": [
+        "Herbert-Lewin-Platz 2"
+      ],
+      "city": "Berlin"
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "0301234567"
     },
-    "system" : "https://gematik.de/fhir/sid/telematik-id",
-    "value" : "1-Test-ABC"
-  }],
-  "address" : [{
-    "type" : "both",
-    "line" : ["Herbert-Lewin-Platz 2"],
-    "city" : "Berlin"
-  }],
-  "name" : "MVZ",
-  "telecom" : [{
-    "system" : "phone",
-    "value" : "0301234567"
-  },
-  {
-    "system" : "fax",
-    "value" : "030123456789"
-  },
-  {
-    "system" : "email",
-    "value" : "mvz@e-mail.de"
-  }],
-  "type" : [{
-    "text" : "kim-provider"
-  }]
+    {
+      "system": "fax",
+      "value": "030123456789"
+    },
+    {
+      "system": "email",
+      "value": "mvz@e-mail.de"
+    }
+  ],
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "https://gematik.de/fhir/directory/CodeSystem/OrganizationProviderType",
+          "code": "kim-provider"
+        }
+      ]
+    }
+  ]
 }

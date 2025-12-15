@@ -10,24 +10,85 @@
       "name" : "medication",
       "resource" : {
         "resourceType" : "Medication",
-        "id" : "5ff1bd22-ce14-484e-be56-d2ba4adeac31",
+        "extension" : [{
+          "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_Base_Medication_Type",
+          "valueCodeableConcept" : {
+            "coding" : [{
+              "system" : "http://snomed.info/sct",
+              "version" : "http://snomed.info/sct/11000274103/version/20240515",
+              "code" : "763158003",
+              "display" : "Medicinal product (product)"
+            }]
+          }
+        },
+        {
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
+          "valueCoding" : {
+            "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_ERP_Medication_Category",
+            "code" : "00"
+          }
+        },
+        {
+          "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
+          "valueBoolean" : false
+        },
+        {
+          "url" : "http://fhir.de/StructureDefinition/normgroesse",
+          "valueCode" : "N1"
+        },
+        {
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension"
+        },
+        {
+          "url" : "http://fhir.de/StructureDefinition/normgroesse"
+        },
+        {
+          "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_Base_Medication_Type",
+          "valueCodeableConcept" : {
+            "coding" : [{
+              "system" : "http://snomed.info/sct",
+              "version" : "http://snomed.info/sct/11000274103/version/20240515",
+              "code" : "763158003",
+              "display" : "Medicinal product (product)"
+            }]
+          }
+        },
+        {
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/drug-category-extension",
+          "valueCoding" : {
+            "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_ERP_Medication_Category",
+            "code" : "00"
+          }
+        },
+        {
+          "url" : "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine",
+          "valueBoolean" : false
+        },
+        {
+          "url" : "http://fhir.de/StructureDefinition/normgroesse",
+          "valueCode" : "N1"
+        },
+        {
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-manufacturing-instructions-extension"
+        },
+        {
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-formulation-packaging-extension"
+        }],
         "code" : {
           "coding" : [{
             "system" : "http://fhir.de/CodeSystem/ifa/pzn",
             "code" : "07765007"
           },
           {
+            "system" : "http://fhir.de/CodeSystem/bfarm/atc"
+          },
+          {
             "system" : "http://fhir.de/CodeSystem/ifa/pzn",
             "code" : "07765007"
-          }],
-          "text" : "NEUPRO 8MG/24H PFT 7 ST"
+          }]
         },
         "form" : {
           "coding" : [{
-            "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM",
-            "code" : "PFT"
-          },
-          {
             "system" : "https://fhir.kbv.de/CodeSystem/KBV_CS_SFHIR_KBV_DARREICHUNGSFORM",
             "code" : "PFT"
           }]
@@ -35,48 +96,44 @@
         "ingredient" : [{
           "itemCodeableConcept" : {
             "text" : "Rotigotin"
-          },
-          "strength" : {
-            "numerator" : {
-              "value" : 8,
-              "unit" : "mg/24 h"
-            },
-            "denominator" : {
-              "value" : 1,
-              "unit" : "Stück"
-            }
           }
-        }]
+        },
+        {
+          "strength" : {
+            "extension" : [{
+              "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-ingredient-amount-extension"
+            }]
+          }
+        }],
+        "meta" : {
+          "profile" : ["https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication"]
+        }
       }
     },
     {
       "name" : "medicationRequest",
       "resource" : {
         "resourceType" : "MedicationRequest",
-        "id" : "43c2b7ae-ad11-4387-910a-e6b7a3c38d4f",
-        "status" : "active",
-        "intent" : "order",
+        "extension" : [{
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/multiple-prescription-extension"
+        },
+        {
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/indicator-bvg-extension"
+        },
+        {
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/indicator-bvg-extension"
+        },
+        {
+          "url" : "https://gematik.de/fhir/epa-medication/StructureDefinition/multiple-prescription-extension"
+        }],
+        "meta" : {
+          "profile" : ["https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request"]
+        },
         "subject" : {
           "reference" : "Patient/93866fdc-3e50-4902-a7e9-891b54737b5e"
         },
-        "medicationReference" : {
-          "reference" : "Medication/5ff1bd22-ce14-484e-be56-d2ba4adeac31"
-        },
-        "authoredOn" : "2024-05-20",
         "requester" : {
           "reference" : "Practitioner/d6f3b55d-3095-4655-96dc-da3bec21271c"
-        },
-        "insurance" : [{
-          "reference" : "Coverage/1b89236c-ab14-4e92-937e-5af0b59d0cd4"
-        }],
-        "dispenseRequest" : {
-          "quantity" : {
-            "value" : 1,
-            "unit" : "Packung"
-          }
-        },
-        "substitution" : {
-          "allowedBoolean" : true
         }
       }
     },
@@ -84,77 +141,12 @@
       "name" : "organization",
       "resource" : {
         "resourceType" : "Organization",
-        "id" : "2a555cd3-0543-483c-88b3-f68647620962",
-        "identifier" : [{
-          "type" : {
-            "coding" : [{
-              "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
-              "code" : "BSNR"
-            }]
-          },
-          "system" : "https://fhir.kbv.de/NamingSystem/KBV_NS_Base_BSNR",
-          "value" : "724444400"
-        },
-        {
-          "type" : {
-            "coding" : [{
-              "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
-              "code" : "BSNR"
-            }]
-          },
-          "system" : "https://fhir.kbv.de/NamingSystem/KBV_NS_Base_BSNR",
-          "value" : "724444400"
-        },
-        {
-          "type" : {
-            "coding" : [{
-              "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
-              "code" : "BSNR"
-            }]
-          },
-          "system" : "https://fhir.kbv.de/NamingSystem/KBV_NS_Base_BSNR",
-          "value" : "724444400"
-        },
-        {
-          "type" : {
-            "coding" : [{
-              "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
-              "code" : "BSNR"
-            }]
-          },
-          "system" : "https://fhir.kbv.de/NamingSystem/KBV_NS_Base_BSNR",
-          "value" : "724444400"
-        }],
         "address" : [{
           "type" : "both",
           "line" : ["Herbert-Lewin-Platz 2",
           "Erdgeschoss"],
-          "_line" : [{
-            "extension" : [{
-              "url" : "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber",
-              "valueString" : "2"
-            },
-            {
-              "url" : "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName",
-              "valueString" : "Herbert-Lewin-Platz"
-            }]
-          },
-          {
-            "extension" : [{
-              "url" : "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-additionalLocator",
-              "valueString" : "Erdgeschoss"
-            }]
-          }],
-          "city" : "Berlin",
-          "postalCode" : "10623",
-          "country" : "D"
+          "city" : "Berlin"
         }],
-        "meta" : {
-          "tag" : [{
-            "system" : "https://gematik.de/fhir/directory/CodeSystem/Origin",
-            "code" : "ldap"
-          }]
-        },
         "telecom" : [{
           "system" : "phone",
           "value" : "030321654987"

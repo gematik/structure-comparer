@@ -339,7 +339,20 @@ class PackageHandler:
     def get_profiles(self, proj_key: str) -> ProfileListModel:
         proj = self.project_handler._get(proj_key)
 
-        profs = [prof.to_pkg_model() for pkg in proj.pkgs for prof in pkg.profiles]
+        profs = []
+        for pkg in proj.pkgs:
+            for prof in pkg.profiles:
+                if prof is None:
+                    continue
+                model = prof.to_pkg_model()
+                if model is None:
+                    logger.warning(
+                        "Skipping profile %s in package %s due to validation error",
+                        getattr(prof, "id", "<unknown>"),
+                        getattr(pkg, "key", "<unknown>"),
+                    )
+                    continue
+                profs.append(model)
         return ProfileListModel(profiles=profs)
 
     def get_profile(self, proj_key: str, profile_id: str) -> ProfileDetailsModel:

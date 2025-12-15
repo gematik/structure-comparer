@@ -5,7 +5,7 @@
   "name": "KBVPrErpPrescriptionMap",
   "status": "active",
   "version": "1.0",
-  "date": "2025-12-12",
+  "date": "2025-12-15",
   "description": "Auto-generated StructureMap for KBV_PR_ERP_Prescription|1.3.2 -> EPAMedicationRequest|1.0.6-2",
   "structure": [
     {
@@ -45,7 +45,7 @@
               "context": "KBVPRERPPrescription",
               "element": "extension",
               "variable": "srcKBVPRERPPrescriptionExtensionMehrfachverordnungc7120a1c",
-              "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription' and url != 'Kennzeichen' and url != 'ID' and url != 'Nummerierung' and url != 'Zeitraum' and url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription'"
+              "condition": "url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription' and url != 'Nummerierung' and url != 'ID' and url != 'Kennzeichen' and url != 'Zeitraum' and url = 'https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Multiple_Prescription'"
             }
           ],
           "target": [
