@@ -57,11 +57,16 @@ class MappingField(ComparisonField):
     def name_parent(self) -> str:
         return self.name.rsplit(".", 1)[0]
 
-    def fill_allowed_actions(self, source_profiles: List[str], target_profile: str):
+    def fill_allowed_actions(self, source_profiles: List[str], target_profile: str, all_fields: Dict[str, 'MappingField'] = None):
         """Set baseline actions_allowed based on source/target presence.
         
         Note: use_recursive filtering based on descendants is handled separately
         by adjust_use_recursive_actions_allowed() after evaluation is computed.
+        
+        Args:
+            source_profiles: List of source profile keys
+            target_profile: Target profile key
+            all_fields: Optional dict of all fields for hierarchy check (to exclude leaf fields from copy_node)
         """
         allowed = set([c for c in Action])
 
@@ -84,6 +89,15 @@ class MappingField(ComparisonField):
                 Action.USE, Action.EMPTY,
                 Action.COPY_VALUE_TO, Action.COPY_NODE_TO
             ])
+
+        # copy_node_* only for parent fields (not leaf fields)
+        if all_fields is not None:
+            from ..field_hierarchy import FieldHierarchyNavigator
+            navigator = FieldHierarchyNavigator(all_fields)
+            descendants = navigator.get_all_descendants(self.name)
+            if not descendants:
+                # Leaf field: copy_node not applicable (no children to inherit)
+                allowed -= set([Action.COPY_NODE_TO, Action.COPY_NODE_FROM])
 
         self.actions_allowed = list(allowed)
 
@@ -235,7 +249,7 @@ class Mapping(Comparison):
         all_profiles_keys = [profile.key for profile in all_profiles]
         # Add remarks and actions for each field
         for field in self.fields.values():
-            field.fill_allowed_actions(all_profiles_keys[:-1], all_profiles_keys[-1])
+            field.fill_allowed_actions(all_profiles_keys[:-1], all_profiles_keys[-1], self.fields)
 
     def to_base_model(self) -> MappingBaseModel:
         if self.sources is None or self.target is None:

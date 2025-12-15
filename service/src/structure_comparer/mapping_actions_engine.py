@@ -238,9 +238,28 @@ def _inherit_or_default(
             }
             
             if is_copy_action:
-                # Skip inheritance for copy and extension actions, fall through to default
-                # These fields will get recommendations instead of active inherited actions
-                pass
+                # For copy_node_to/copy_node_from: Only inherit if field is compatible
+                is_copy_node_action = parent_info.action in {
+                    ActionType.COPY_NODE_TO,
+                    ActionType.COPY_NODE_FROM,
+                }
+                
+                if is_copy_node_action:
+                    # Check if this field is compatible
+                    classification = getattr(field, "classification", "unknown") if field else "unknown"
+                    if str(classification).lower() == "compatible":
+                        # Compatible field: inherit the copy_node action
+                        return ActionInfo(
+                            action=parent_info.action,
+                            source=ActionSource.INHERITED,
+                            inherited_from=field_parent_name,
+                            auto_generated=True,
+                            system_remark=f"Inherited from {field_parent_name}",
+                            other_value=parent_info.other_value,
+                        )
+                    # else: Incompatible field - do NOT inherit, fall through to default
+                    # Field remains needs_action
+                # else: Other copy actions (copy_value_*): existing behavior (recommendations)
             else:
                 # Other inheritable actions (NOT_USE, EMPTY, USE_RECURSIVE)
                 # Continue with existing inheritance logic
@@ -525,16 +544,6 @@ def adjust_use_recursive_actions_allowed(
                 if Action.USE_RECURSIVE in field.actions_allowed:
                     field.actions_allowed.remove(Action.USE_RECURSIVE)
             
-            # For copy_node_to/copy_node_from: check if all descendants are compatible or solved
-            # (without considering manual actions - copy_node should only be allowed if ALL children can be copied)
-            all_children_ok = all_descendants_compatible_or_solved(
-                field_name, fields, evaluation_map, None  # None = don't exclude manual actions
-            )
-            
-            if not all_children_ok:
-                # Some descendants are incompatible and not solved: remove copy_node actions
-                if Action.COPY_NODE_TO in field.actions_allowed:
-                    field.actions_allowed.remove(Action.COPY_NODE_TO)
-                if Action.COPY_NODE_FROM in field.actions_allowed:
-                    field.actions_allowed.remove(Action.COPY_NODE_FROM)
+            # copy_node_to/copy_node_from: Always available for parent fields
+            # (regardless of children compatibility - incompatible children will remain needs_action)
 

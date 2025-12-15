@@ -423,6 +423,12 @@ class MappingHandler:
             if not field:
                 continue
             
+            # Only process compatible children - incompatible remain needs_action
+            classification = getattr(field, "classification", "unknown")
+            if str(classification).lower() != "compatible":
+                # Skip incompatible fields - they remain needs_action
+                continue
+            
             # Check if field has recommendations
             if not hasattr(field, 'recommendations') or not field.recommendations:
                 continue
