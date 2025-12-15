@@ -66,7 +66,12 @@ def test_parent_extension_action_marked_as_solved():
 
 
 def test_parent_extension_creates_child_recommendation():
-    """Test that parent extension creates recommendations for child fields."""
+    """Test that parent copy_node action is inherited by compatible children.
+    
+    With the new behavior (copy_node_for_all_parents-spec.md):
+    - Compatible children inherit the copy_node action actively
+    - Incompatible children remain needs_action (get recommendation only)
+    """
     mapping = StubMapping([
         "Organization.address:Strassenanschrift.line.extension",
         "Organization.address:Strassenanschrift.line.extension:Hausnummer",
@@ -100,8 +105,14 @@ def test_parent_extension_creates_child_recommendation():
     # Parent should NOT have recommendations (has manual action)
     assert parent_field not in recommendations
     
-    # Children should have recommendations (not active actions)
+    # Compatible children should INHERIT the action (new behavior)
     child_field = "Organization.address:Strassenanschrift.line.extension:Hausnummer"
+    child_action = actions[child_field]
+    assert child_action.action == ActionType.COPY_NODE_TO
+    assert child_action.source == ActionSource.INHERITED
+    assert child_action.inherited_from == parent_field
+    
+    # Children should also have recommendations as alternative
     assert child_field in recommendations
     child_recs = recommendations[child_field]
     assert len(child_recs) >= 1
@@ -114,10 +125,6 @@ def test_parent_extension_creates_child_recommendation():
     # Parent maps .extension -> .line, so child should map .extension:Hausnummer -> .line:Hausnummer
     assert inherited_rec.other_value == "Organization.address.line:Hausnummer"
     assert inherited_rec.auto_generated is True
-    
-    # Children should NOT have active inherited actions
-    child_action = actions[child_field]
-    assert child_action.action is None  # No active action, only recommendation
 
 
 def test_multiple_children_get_extension_recommendations():
