@@ -254,6 +254,76 @@ entries:
     name: Organization.telecom:telefon.value
     other: Organization.telecom.value
     remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Telematik-ID
+    other: Organization.identifier:TelematikID
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Telematik-ID.type
+    other: Organization.identifier:TelematikID.type
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom:eMail
+    other: Organization.telecom
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.use
+    other: Organization.telecom.use
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.rank
+    other: Organization.telecom.rank
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.period
+    other: Organization.telecom.period
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.id
+    other: Organization.telecom.id
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.extension
+    other: Organization.telecom.extension
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.system
+    other: Organization.telecom.system
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.value
+    other: Organization.telecom.value
+    remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
 mapping_entries:
 - fields:

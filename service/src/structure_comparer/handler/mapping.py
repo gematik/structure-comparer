@@ -369,12 +369,12 @@ class MappingHandler:
         mapping_id: str,
         parent_field_name: str,
     ) -> List[MappingFieldModel]:
-        """Apply all recommendations for all children of a parent field.
+        """Apply copy_node action to all compatible children of a parent field.
         
         This method:
-        1. Reloads the mapping to ensure recommendations are up-to-date
+        1. Reloads the mapping to get the parent's action
         2. Gets all descendant fields of the parent
-        3. For each descendant that has recommendations, applies the first one
+        3. For each compatible descendant, applies the parent's copy_node action
         4. Persists all changes in manual_entries.yaml
         5. Re-evaluates the mapping
         6. Returns list of all updated fields
@@ -393,13 +393,24 @@ class MappingHandler:
         if proj is None:
             raise ProjectNotFound()
 
-        # IMPORTANT: Reload mapping to ensure recommendations are regenerated
-        # after the parent action was saved
+        # IMPORTANT: Reload mapping to ensure we have the latest parent action
         mapping = self.__get(project_key, mapping_id, proj)
         
         # Get all fields
         fields = getattr(mapping, "fields", {}) or {}
         if not fields:
+            return []
+        
+        # Get parent field and its action
+        parent_field = fields.get(parent_field_name)
+        if not parent_field:
+            return []
+        
+        parent_action = getattr(parent_field, "action", None)
+        parent_other = getattr(parent_field, "other", None)
+        
+        # Only process if parent has copy_node_to or copy_node_from
+        if parent_action not in [Action.COPY_NODE_TO, Action.COPY_NODE_FROM]:
             return []
         
         # Create navigator to find all descendants
@@ -417,45 +428,34 @@ class MappingHandler:
         
         updated_fields = []
         
-        # Process each descendant
+        # Process each descendant - apply to ALL children (compatible and incompatible)
+        # The user explicitly chose to apply to all children via the checkbox
         for field_name in all_descendants:
             field = fields.get(field_name)
             if not field:
                 continue
             
-            # Only process compatible children - incompatible remain needs_action
-            classification = getattr(field, "classification", "unknown")
-            if str(classification).lower() != "compatible":
-                # Skip incompatible fields - they remain needs_action
+            # Check if field already has a manual action (don't override)
+            existing_entry = manual_entries.get(field_name)
+            if existing_entry and existing_entry.action:
                 continue
             
-            # Check if field has recommendations
-            if not hasattr(field, 'recommendations') or not field.recommendations:
-                continue
-            
-            # Get the first recommendation
-            recommendation = field.recommendations[0]
-            
-            if recommendation.action is None:
-                continue
-            
-            # Convert recommendation to manual action
-            converted_action = Action(recommendation.action.value) if recommendation.action else None
+            # Calculate the child's "other" value based on parent's other value
+            # Parent: Organization.telecom:eMail -> Organization.telecom
+            # Child:  Organization.telecom:eMail.id -> Organization.telecom.id
+            child_other = None
+            if parent_other:
+                # Get the suffix of the child relative to parent
+                suffix = field_name[len(parent_field_name):]  # e.g., ".id"
+                child_other = parent_other + suffix
             
             new_entry = MappingFieldBaseModel(
                 name=field.name,
-                action=converted_action,
+                action=parent_action,
+                other=child_other,
                 inherited_from=parent_field_name,
                 auto_generated=False,  # User explicitly requested these, so they should be persisted
             )
-            
-            # Copy values from recommendation if present
-            if recommendation.fixed_value and isinstance(recommendation.fixed_value, str):
-                new_entry.fixed = recommendation.fixed_value
-            if recommendation.other_value and isinstance(recommendation.other_value, str):
-                new_entry.other = recommendation.other_value
-            if recommendation.user_remark:
-                new_entry.remark = recommendation.user_remark
             
             # Save to manual entries
             manual_entries[field.name] = new_entry
