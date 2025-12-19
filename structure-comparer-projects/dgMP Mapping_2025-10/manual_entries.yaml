@@ -389,147 +389,7 @@ entries:
     auto_generated: false
     fixed: null
     inherited_from: null
-    name: Organization.address:Strassenanschrift.line.extension:Strasse
-    other: null
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Strasse.id
-    other: Organization.address.line.extension:Strasse.id
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Strasse.url
-    other: Organization.address.line.extension:Strasse.url
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Strasse.value[x]
-    other: Organization.address.line.extension:Strasse.value[x]
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Strasse.value[x]:valueString
-    other: Organization.address.line.extension:Strasse.value[x]:valueString
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Organization.address:Strassenanschrift.line.extension:Hausnummer
-    other: null
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.id
-    other: Organization.address.line.extension:Hausnummer.id
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.url
-    other: Organization.address.line.extension:Hausnummer.url
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.value[x]
-    other: Organization.address.line.extension:Hausnummer.value[x]
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.value[x]:valueString
-    other: Organization.address.line.extension:Hausnummer.value[x]:valueString
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz
-    other: null
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz.id
-    other: Organization.address.line.extension:Adresszusatz.id
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz.url
-    other: Organization.address.line.extension:Adresszusatz.url
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz.value[x]
-    other: Organization.address.line.extension:Adresszusatz.value[x]
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.extension:Adresszusatz.value[x]:valueString
-    other: Organization.address.line.extension:Adresszusatz.value[x]:valueString
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.line.value
-    other: Organization.address.line.value
-    remark: null
-  - action: copy_value_to
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Organization.address:Strassenanschrift.city
-    other: Organization.address.city
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.postalCode
-    other: Organization.address.postalCode
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: Organization.address:Strassenanschrift
-    name: Organization.address:Strassenanschrift.country
-    other: Organization.address.country
-    remark: null
-  - action: use_recursive
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Organization.address:Strassenanschrift
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Organization.address:Strassenanschrift.id
+    name: Organization.address:Strassenanschrift.line.extension:Hausnummer.extension
     other: null
     remark: null
   - action: empty
@@ -620,15 +480,8 @@ entries:
     auto_generated: false
     fixed: null
     inherited_from: null
-    name: Organization.telecom:eMail
-    other: Organization.telecom
-    remark: null
-  - action: copy_node_to
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Organization.telecom:fax
-    other: Organization.telecom
+    name: Organization.address:Strassenanschrift.line.extension
+    other: Organization.address:Strassenanschrift.line.extension
     remark: null
   - action: copy_node_to
     auto_generated: false
@@ -643,6 +496,104 @@ entries:
     inherited_from: null
     name: Organization.type
     other: null
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:telefon
+    name: Organization.telecom:telefon.id
+    other: Organization.telecom.id
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:telefon
+    name: Organization.telecom:telefon.extension
+    other: Organization.telecom.extension
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:telefon
+    name: Organization.telecom:telefon.system
+    other: Organization.telecom.system
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:telefon
+    name: Organization.telecom:telefon.value
+    other: Organization.telecom.value
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Telematik-ID
+    other: Organization.identifier:TelematikID
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Telematik-ID.type
+    other: Organization.identifier:TelematikID.type
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom:eMail
+    other: Organization.telecom
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.use
+    other: Organization.telecom.use
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.rank
+    other: Organization.telecom.rank
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.period
+    other: Organization.telecom.period
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.id
+    other: Organization.telecom.id
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.extension
+    other: Organization.telecom.extension
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.system
+    other: Organization.telecom.system
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: Organization.telecom:eMail
+    name: Organization.telecom:eMail.value
+    other: Organization.telecom.value
     remark: null
   id: 0c2a1b59-6c5f-4e9b-9f22-1a3d4b5c6e72
 - fields:
