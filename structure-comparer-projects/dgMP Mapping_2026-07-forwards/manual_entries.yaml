@@ -154,6 +154,902 @@ entries:
     name: Medication.extension:Kategorie.value[x]:valueCodeableConcept.coding.code
     other: Medication.extension:drugCategory.value[x].code
     remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Impfstoff
+    other: Medication.extension:isVaccine
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie
+    other: Medication.extension:drugCategory
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Normgroesse
+    other: Medication.extension:normSizeCode
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Kategorie
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.batch
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.status
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:packaging
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.identifier:EPAMedicationUniqueIdentifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.identifier:RxOriginatorProcessIdentifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.identifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.modifierExtension
+    other: null
+    remark: null
+  - action: manual
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:type
+    other: null
+    remark: 'Fester Wert: 781405001, Medicinal product package (product)'
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:manufacturingInstructions
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.manufacturer
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:atc-de
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:ask
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.text
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:snomed
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:atc
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:pzn
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.extension
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.coding:snomed
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.coding:edqm
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.text
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.coding:kbvDarreichungsform
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.coding
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.denominator.code
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.denominator.system
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.denominator.unit
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.denominator.comparator
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.denominator.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.denominator.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.denominator.value
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.denominator
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.id
+    other: null
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.extension:Packungsgroesse
+    other: Medication.amount.numerator.extension:packagingSize
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.extension:Packungsgroesse.value[x]
+    other: Medication.amount.numerator.extension:packagingSize.value[x]
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.extension:Packungsgroesse.value[x]:valueString
+    other: Medication.amount.numerator.extension:packagingSize.value[x]
+    remark: null
+  - action: fixed
+    auto_generated: false
+    fixed: https://gematik.de/fhir/epa-medication/StructureDefinition/medication-packaging-size-extension
+    inherited_from: null
+    name: Medication.amount.numerator.extension:Packungsgroesse.url
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.extension:Packungsgroesse.extension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.extension:Packungsgroesse.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.extension:totalQuantity
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.value
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.comparator
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.system
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.code
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.unit
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator.extension
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount.numerator
+    other: null
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.extension:data-absent-reason
+    other: Medication.ingredient.strength.extension
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.denominator.code
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.denominator.system
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.denominator.unit
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.denominator.comparator
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.denominator.value
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.denominator.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.denominator.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.denominator
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.numerator.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.numerator.extension
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.numerator.value
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.numerator.comparator
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.numerator.unit
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.numerator.system
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.numerator.code
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.numerator
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.strength
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.isActive
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemReference
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:snomed
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.text
+    other: null
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.extension:data-absent-reason
+    other: Medication.ingredient.item[x]:itemCodeableConcept.extension
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]
+    other: null
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.item[x]:itemCodeableConcept
+    other: Medication.ingredient.item[x]:itemCodeableConcept
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.extension
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.extension
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.system
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.version
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.code
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.display
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:ask.userSelected
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.display
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:atc-de.userSelected
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.version
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.display
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: Medication.ingredient.item[x]:itemCodeableConcept
+    name: Medication.ingredient.item[x]:itemCodeableConcept.coding:pzn.userSelected
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.modifierExtension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.extension:darreichungsform
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Normgroesse.extension
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding
+    other: Medication.extension:drugCategory.value[x]:valueCoding
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.version
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.display
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.userSelected
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Normgroesse.id
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Normgroesse.value[x]
+    other: Medication.extension:normSizeCode.value[x]
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Normgroesse.value[x]:valueCode
+    other: Medication.extension:normSizeCode.value[x]:valueCode
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.extension
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]
+    other: Medication.extension:drugCategory.value[x]
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.extension
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.system
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie.value[x]:valueCoding.code
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Impfstoff.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Impfstoff.extension
+    other: null
+    remark: null
   id: 53d9439c-59a3-474f-b734-38c367eec6aa
 - fields:
   - action: empty
@@ -769,7 +1665,7 @@ entries:
     name: Organization.active
     other: null
     remark: null
-  - action: use
+  - action: not_use
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -1005,6 +1901,188 @@ entries:
     fixed: null
     inherited_from: null
     name: Organization.address:Postfach
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom
+    other: null
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.address
+    other: Organization.address
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom:telefon
+    other: Organization.telecom
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom:fax
+    other: Organization.telecom
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.telecom:eMail
+    other: Organization.telecom
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.address:Strassenanschrift
+    other: Organization.address
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.address:Strassenanschrift.line
+    other: Organization.address.line
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.type.coding:IHE-Code
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.type.coding:HL7-Fachschluesselgruppe
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.type.coding:HL7-Fachschluesselgruppe-erweitert
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.extension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.use
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.type
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.text
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.city
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.district
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.line
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.state
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.postalCode
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.country
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.contact.address.period
+    other: null
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Institutionskennzeichen.type
+    other: Organization.identifier:IKNR.type
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Institutionskennzeichen.type.coding
+    other: Organization.identifier:IKNR.type.coding
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Institutionskennzeichen.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Organization.identifier:Institutionskennzeichen.extension
     other: null
     remark: null
   id: 18fb1ff9-93a4-b201-6175-c1245de67f89
@@ -1261,6 +2339,755 @@ entries:
     name: Practitioner.identifier:Telematik-ID.period
     other: null
     remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.identifier:Telematik-ID
+    other: Practitioner.identifier:TelematikID
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.identifier:ANR
+    other: Practitioner.identifier:LANR
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.identifier:ZANR
+    other: Practitioner.identifier
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification
+    other: null
+    remark: null
+  - action: copy_node_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.name:name
+    other: Practitioner.name
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Typ.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Typ.extension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Typ.modifierExtension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Typ.identifier
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Typ.period
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Typ.issuer
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Typ
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:ASV-Fachgruppennummer
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung
+    other: Practitioner.qualification
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.extension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.modifierExtension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.identifier
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.code
+    other: Practitioner.qualification.code
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.code.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.code.extension
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.code.text
+    other: Practitioner.qualification.code.text
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.code.coding
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.period
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung.issuer
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.gender.extension:other-amtlich
+    other: null
+    remark: null
   id: 07ea0ee8-8293-a0f0-5064-b0134cd56e78
-- fields: []
+- fields:
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.language
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.text
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.contained
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta
+    other: null
+    remark: null
+  - action: fixed
+    auto_generated: false
+    fixed: https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication
+    inherited_from: null
+    name: Medication.meta.profile
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.tag
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.security
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.source
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.lastUpdated
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.versionId
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.meta.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:rxPrescriptionProcessIdentifier
+    other: null
+    remark: null
+  - action: copy_value_to
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Impfstoff
+    other: Medication.extension:isVaccine
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Impfstoff.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Impfstoff.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.identifier
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.modifierExtension
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.status
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.manufacturer
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.coding
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form.text
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.amount
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.ingredient
+    other: null
+    remark: null
+  - action: use_recursive
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.batch
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.batch.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.batch.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.batch.modifierExtension
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Kategorie
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Normgroesse
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:Arzneimittelkategorie
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:normSizeCode
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:drugCategory
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:packaging
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:manufacturingInstructions
+    other: null
+    remark: null
+  - action: manual
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.extension:type
+    other: null
+    remark: 'Fester Wert: 781405001, Medicinal product package (product)'
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.form
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:pzn
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.text
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.extension
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:atc-de
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:ask
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:snomed
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:atc
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.code.coding:verordnungskategorieCode
+    other: null
+    remark: null
   id: d8db7e9b-b49f-4138-b204-226acbad43d1
+- fields:
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.id
+    other: null
+    remark: null
+  - action: empty
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.profile:erpProfile
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.tag
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.security
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.implicitRules
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.language
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.text
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.contained
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.id
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.versionId
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.lastUpdated
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.meta.source
+    other: null
+    remark: null
+  - action: fixed
+    auto_generated: false
+    fixed: https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-request
+    inherited_from: null
+    name: MedicationRequest.meta.profile
+    other: null
+    remark: null
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.extension
+    other: null
+    remark: null
+  id: f6d9edd7-7182-9edf-4f63-af123bc45d67
+- fields:
+  - action: use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Medication.id
+    other: null
+    remark: null
+  id: b1e0fa98-2dca-4dce-8daa-23ddd57feb4c
+transformation_entries:
+- fields:
+  - action: use
+    fixed: null
+    map: f6d9edd7-7182-9edf-4f63-af123bc45d67
+    name: Bundle.entry:VerordnungArzneimittel.resource
+    other: .parameter:rxPrescription.part:medicationRequest.resource
+    remark: null
+    target_creation: null
+  - action: use
+    fixed: null
+    map: 53d9439c-59a3-474f-b734-38c367eec6aa
+    name: Bundle.entry:RezeptierdatenPZNVerordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
+    remark: null
+    target_creation: null
+  - action: use
+    fixed: null
+    map: b1e0fa98-2dca-4dce-8daa-23ddd57feb4c
+    name: Bundle.entry:RezeptierdatenWirkstoffverordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
+    remark: null
+    target_creation: null
+  - action: use
+    fixed: null
+    map: 07ea0ee8-8293-a0f0-5064-b0134cd56e78
+    name: Bundle.entry:AusstellendeVerschreibendeVerantwortlichePerson.resource
+    other: .parameter:rxPrescription.part:practitioner.resource
+    remark: null
+    target_creation: null
+  - action: use
+    fixed: null
+    map: 72140861-b408-426a-aec0-2b901fa5f3b3
+    name: Bundle.entry:RezeptierdatenRezepturverordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
+    remark: null
+    target_creation: null
+  - action: use
+    fixed: null
+    map: d8db7e9b-b49f-4138-b204-226acbad43d1
+    name: Bundle.entry:RezeptierdatenFreitextverordnung.resource
+    other: .parameter:rxPrescription.part:medication.resource
+    remark: null
+    target_creation: null
+  - action: use
+    fixed: null
+    map: 18fb1ff9-93a4-b201-6175-c1245de67f89
+    name: Bundle.entry:Einrichtung.resource
+    other: .parameter:rxPrescription.part:organization.resource
+    remark: null
+    target_creation: null
+  - action: copy_value_from
+    fixed: null
+    map: null
+    name: Parameters.parameter:rxPrescription.part:prescriptionId.value[x]
+    other: Bundle.identifier.value
+    remark: null
+    target_creation: null
+  - action: copy_value_from
+    fixed: null
+    map: null
+    name: Parameters.parameter:rxPrescription.part:authoredOn.value[x]
+    other: Bundle.entry:VerordnungArzneimittel.resource.authoredOn
+    remark: null
+    target_creation: null
+  id: ff474360-c315-4119-bf42-95c4ebc7e6fe
