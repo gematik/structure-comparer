@@ -1,0 +1,90 @@
+{
+        "amount": {
+          "numerator": {
+            "unit": "ml",
+            "extension": [
+              {
+                "valueString": "100",
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_PackagingSize"
+              }
+            ]
+          },
+          "denominator": {
+            "value": 1
+          }
+        },
+        "extension": [
+          {
+            "valueCodeableConcept": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "display": "Extemporaneous preparation (product)",
+                  "code": "1208954007",
+                  "version": "http://snomed.info/sct/11000274103/version/20240515"
+                }
+              ]
+            },
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_Base_Medication_Type"
+          },
+          {
+            "valueCoding": {
+              "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_ERP_Medication_Category",
+              "code": "00"
+            },
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Category"
+          },
+          {
+            "valueBoolean": false,
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Vaccine"
+          }
+        ],
+        "ingredient": [
+          {
+            "itemCodeableConcept": {
+              "text": "Salicylsäure"
+            },
+            "strength": {
+              "numerator": {
+                "unit": "g",
+                "value": 5
+              },
+              "denominator": {
+                "value": 1
+              }
+            }
+          },
+          {
+            "itemCodeableConcept": {
+              "text": "2-propanol 70 %"
+            },
+            "strength": {
+              "extension": [
+                {
+                  "valueString": "Ad 100 g",
+                  "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_ERP_Medication_Ingredient_Amount"
+                }
+              ]
+            }
+          }
+        ],
+        "resourceType": "Medication",
+        "form": {
+          "text": "Lösung"
+        },
+        "id": "5cd916fc-2ae2-4148-b016-911ec5f4c0a5",
+        "meta": {
+          "versionId": "1",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Medication_Compounding|1.4"
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_ERP_Medication_Type",
+              "code": "rezeptur"
+            }
+          ]
+        }
+      }

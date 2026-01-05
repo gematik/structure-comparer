@@ -89,8 +89,14 @@ def find_skipped_slices(
         should_skip = False
         if info.action in skip_actions:
             should_skip = True
-        elif info.action in {ActionType.COPY_VALUE_TO, ActionType.COPY_NODE_TO, ActionType.MANUAL}:
+        elif info.action in {ActionType.COPY_VALUE_TO, ActionType.COPY_NODE_TO, ActionType.MANUAL, ActionType.USE}:
             should_skip = True
+        elif is_extension_path(path):
+            # Skip explicitly mapped slices so the generic extension copy rule
+            # does not pull them in again.
+            last_segment = path.split(".")[-1]
+            if ":" in last_segment:
+                should_skip = True
         else:
             field = mapping.fields.get(path)
             if field:
@@ -99,8 +105,43 @@ def find_skipped_slices(
                     should_skip = True
 
         if should_skip:
-            url = get_extension_url(mapping, path)
-            if url:
-                skipped_urls.append(url)
+            slice_name = _slice_name(path)
+
+            # Prefer canonical URLs but also include the slice name so source-side
+            # conditions can exclude the original slice label when the target URL
+            # is changed (e.g., Kennzeichen -> indicator).
+            url_candidates = [
+                get_extension_url(mapping, path),
+                _action_fixed_url(actions, path),
+                slice_name,
+            ]
+
+            for url in url_candidates:
+                if url:
+                    skipped_urls.append(url)
 
     return list(set(skipped_urls))
+
+
+def _action_fixed_url(actions: dict[str, ActionInfo], path: str) -> str | None:
+    """Fallback to action-based fixed url hints when profile data is missing."""
+
+    action = actions.get(path)
+    if action and action.fixed_value:
+        return action.fixed_value
+
+    url_path = f"{path}.url" if not path.endswith(".url") else path
+    url_action = actions.get(url_path)
+    if url_action and url_action.fixed_value:
+        return url_action.fixed_value
+
+    return None
+
+
+def _slice_name(path: str) -> str | None:
+    if not path:
+        return None
+    last_segment = path.split(".")[-1]
+    if ":" in last_segment:
+        return last_segment.split(":", 1)[1]
+    return None

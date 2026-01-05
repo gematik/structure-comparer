@@ -922,8 +922,6 @@ def _summarize_validation_errors(output: str) -> str:
             fragment = line.split("Error @", 1)[1].strip()
             if ":" in fragment:
                 fragment = fragment.split(":", 1)[1].strip()
-            if " (from" in fragment:
-                fragment = fragment.split(" (from", 1)[0].strip()
             errors.append(fragment)
     return "\n".join(errors)
 

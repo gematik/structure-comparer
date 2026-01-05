@@ -13,10 +13,13 @@ SKIP_ACTIONS: set[ActionType] = {
 }
 
 COPY_INTENTS: set[str] = {
+    "use",
     "copy",
     "copy_other",
     "copy_value_to",
     "copy_node_to",
+    "copy_node_from",
+    "use_recursive",
 }
 
 # Intents that should not emit rules themselves but may allow mapped
@@ -117,9 +120,12 @@ class FieldTreeBuilder:
         relative = self._relative_path(path)
         if not relative:
             return False
+        info = self._actions.get(path)
         if relative.startswith("meta"):
             return not self._is_allowed_meta_field(path)
         if "[x]" in relative and ":" not in relative and not self._can_resolve_choice_field(path):
+            if info is not None:
+                return False
             return True
         return False
 
@@ -289,6 +295,9 @@ class FieldTreeBuilder:
 
         node.intent = intent
 
+        if node.requires_source is None and intent in COPY_INTENTS:
+            node.requires_source = True
+
         if intent not in COPY_INTENTS:
             node.can_collapse = False
             node.collapse_kind = None
@@ -314,14 +323,14 @@ class FieldTreeBuilder:
 
         info = self._actions.get(node.path)
 
+        if action in {ActionType.NOT_USE, ActionType.MANUAL} and self._is_target_required(node.path):
+            return "copy"
+
         if action is None:
             return "copy"
 
         if action in SKIP_ACTIONS:
             return "skip"
-
-        if action == ActionType.USE and info and info.source == ActionSource.MANUAL:
-            return "manual"
 
         if action == ActionType.COPY_VALUE_FROM:
             return "copy_other"
@@ -341,7 +350,28 @@ class FieldTreeBuilder:
         if action == ActionType.MANUAL:
             return "manual"
 
+        if action == ActionType.USE:
+            return "copy"
+
         return "copy"
+
+    def _is_target_required(self, path: str | None) -> bool:
+        if not path or not self._target_profile_key:
+            return False
+
+        field = self._mapping.fields.get(path)
+        if not field:
+            return False
+
+        profile_field = field.profiles.get(self._target_profile_key)
+        if profile_field is None:
+            return False
+
+        min_num = getattr(profile_field, "min_num", None)
+        try:
+            return bool(min_num) and float(min_num) > 0
+        except (TypeError, ValueError):
+            return False
 
     def _apply_container_flags(self, node: FieldNode) -> None:
         for child in node.children.values():
@@ -353,13 +383,32 @@ class FieldTreeBuilder:
     def _collect_nodes(self, node: FieldNode) -> None:
         slice_bases = self._collect_special_slice_bases(node)
         for child in sorted(node.children.values(), key=lambda item: item.path):
+            parent_can_cover = (
+                bool(node.path)
+                and node.intent in COPY_INTENTS
+                and child.intent in COPY_INTENTS
+                and not self._needs_container_node(node)
+            )
+            if parent_can_cover:
+                continue
+            if child.segment == "url" and child.parent and is_extension_path(child.parent.path):
+                continue
             if child.intent == "skip":
+                continue
+
+            # Avoid emitting separate top-level rules for nested extension fields; the parent
+            # extension rule will take care of its entire subtree during rule building.
+            if child.parent and is_extension_path(child.parent.path):
                 continue
 
             if child.intent == "copy_node_to":
                 if self._is_redundant_copy_node(child):
                     continue
                 self._nodes_to_emit.append(child)
+                if is_extension_path(child.path):
+                    # For extensions we still need to emit children (e.g., value[x])
+                    # because the parent rule only creates the shell.
+                    self._collect_nodes(child)
                 continue
 
             if child.intent in COPY_INTENTS:
@@ -368,6 +417,9 @@ class FieldTreeBuilder:
 
                 if (child.can_collapse and child.depth >= 2) or is_extension_slice:
                     self._nodes_to_emit.append(child)
+                    if is_extension_path(child.path):
+                        # Ensure nested fields (e.g., value[x]) are emitted for extension slices
+                        self._collect_nodes(child)
                 elif self._should_force_container(child):
                     child.force_container = True
                     self._nodes_to_emit.append(child)
@@ -394,6 +446,10 @@ class FieldTreeBuilder:
             return False
         if not node.children:
             return False
+        if node.segment == "meta":
+            return True
+        if node.action == ActionType.COPY_NODE_TO:
+            return False
         if node.action == ActionType.USE_RECURSIVE:
             return True
         return self._is_repeating_field(node.path)
@@ -418,7 +474,9 @@ class FieldTreeBuilder:
         base_node = self._node_by_path.get(base_path)
         if base_node is None:
             return False
-        return base_node.intent in COPY_INTENTS or base_node.intent in NON_EMITTING_INTENTS
+        # Treat as redundant only when the base node already emits a copy; non-emitting
+        # intents (e.g., manual) still need this redirected copy_node_to to be produced.
+        return base_node.intent in COPY_INTENTS
 
     def _unsliced_path(self, path: str | None) -> str | None:
         if not path:

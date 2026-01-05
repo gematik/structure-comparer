@@ -66,10 +66,13 @@ CHOICE_TYPE_SUFFIXES: tuple[str, ...] = (
 )
 
 COPY_RULE_INTENTS: set[str] = {
+    "use",
     "copy",
     "copy_other",
     "copy_value_to",
     "copy_node_to",
+    "copy_node_from",
+    "use_recursive",
 }
 
 TARGET_REDIRECT_INTENTS: set[str] = {"copy_value_to", "copy_node_to"}
@@ -114,11 +117,13 @@ class StructureMapRuleBuilder:
         rule_name = slug(node.path, suffix=stable_id(node.path))
         documentation = self._build_documentation(node)
 
-        src_element = node.segment.split(":")[0]
-        if src_element.endswith("[x]"):
+        original_segment = node.segment
+        src_element = original_segment.split(":")[0]
+        has_choice_suffix = src_element.endswith("[x]")
+        if has_choice_suffix:
             src_element = src_element[:-3]
 
-        tgt_element = node.segment
+        tgt_element = original_segment
         parts = tgt_element.split(":", 1)
         head = parts[0]
         if head.endswith("[x]"):
@@ -129,9 +134,12 @@ class StructureMapRuleBuilder:
         if node.intent in TARGET_REDIRECT_INTENTS and node.other_path:
             tgt_element = node.other_path.split(".")[-1]
             parts = tgt_element.split(":")
-            if parts[0].endswith("[x]"):
-                parts[0] = parts[0][:-3]
-            tgt_element = ":".join(parts)
+            base = parts[0]
+            if base.endswith("[x]"):
+                base = base[:-3]
+            # Do not propagate slice names (e.g., coding:ask) into the StructureMap
+            # element name; the slice is enforced by system/code conditions instead.
+            tgt_element = base
 
         target_path = node.other_path if (node.intent in TARGET_REDIRECT_INTENTS and node.other_path) else node.path
         source_path = self._source_path_for_node(node)
@@ -167,6 +175,43 @@ class StructureMapRuleBuilder:
                     self._target_profile_key,
                     SKIP_ACTIONS,
                 )
+                # Also skip explicitly mapped sibling slices under the same extension
+                # (e.g., Kennzeichen) so the generic copy rule does not duplicate them.
+                parent = node.parent
+                if parent:
+                    sibling_prefix = f"{node.path}:"
+                    for sibling in parent.children.values():
+                        sibling_path = sibling.path or ""
+                        if not sibling_path.startswith(sibling_prefix):
+                            continue
+                        last_segment = sibling_path.split(".")[-1]
+                        if ":" in last_segment:
+                            skipped_urls.append(last_segment.split(":", 1)[1])
+                    # Some slices are mapped via actions but are not present as child
+                    # nodes (e.g., Kennzeichen -> indicator); include their slice names
+                    # directly from the actions so they are excluded from the generic copy.
+                    for action_path in self._actions:
+                        if not isinstance(action_path, str):
+                            continue
+                        if not action_path.startswith(sibling_prefix):
+                            continue
+                        last_segment = action_path.split(".")[-1]
+                        if ":" in last_segment:
+                            skipped_urls.append(last_segment.split(":", 1)[1])
+                    # Also consider actions whose targets are under this extension but whose
+                    # source slice names differ (renames). We must skip the original slice
+                    # names from the source side to avoid duplicating them in the generic copy.
+                    for action_path, action_info in self._actions.items():
+                        if not isinstance(action_path, str):
+                            continue
+                        other_value = getattr(action_info, "other_value", None)
+                        if not isinstance(other_value, str):
+                            continue
+                        if not other_value.startswith(sibling_prefix):
+                            continue
+                        last_segment = action_path.split(".")[-1]
+                        if ":" in last_segment:
+                            skipped_urls.append(last_segment.split(":", 1)[1])
             source_conditions: list[str] = []
             source_extension_url = None
             if source_path and is_extension_path(source_path):
@@ -198,8 +243,15 @@ class StructureMapRuleBuilder:
         }
 
         if node.intent == "fixed":
+            fixed_val = node.fixed_value or ""
+
+            # Override incorrect fixed system for drugCategory extension; the binding requires the
+            # ePA drug-category CodeSystem, not the extension canonical URL.
+            if target_path.endswith("extension:drugCategory.value[x].system"):
+                fixed_val = "https://gematik.de/fhir/epa-medication/CodeSystem/epa-drug-category-cs"
+
             target_entry["transform"] = "copy"
-            target_entry["parameter"] = [{"valueString": node.fixed_value or ""}]
+            target_entry["parameter"] = [{"valueString": fixed_val}]
         elif use_create:
             target_entry["transform"] = "create"
             target_entry["parameter"] = [{"valueString": "Extension"}]
@@ -222,7 +274,7 @@ class StructureMapRuleBuilder:
             target_url = get_extension_url(self._mapping, target_path, self._target_profile_key)
             source_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
 
-            if target_url and (use_create or (source_url and target_url != source_url)):
+            if target_url:
                 rule["target"].append(
                     {
                         "context": tgt_var,
@@ -233,16 +285,33 @@ class StructureMapRuleBuilder:
                     }
                 )
 
-        if node.children and node.intent != "copy_node_to":
+        if node.children and (node.intent != "copy_node_to" or is_extension):
             sub_rules = []
             for child in sorted(node.children.values(), key=lambda item: item.path):
                 if child.intent == "skip":
                     continue
                 if child.intent == "manual":
                     continue
+                if node.path and node.path.endswith("code") and child.segment.startswith("coding"):
+                    continue
+                if node.path and node.path.endswith("form") and child.segment.startswith("coding"):
+                    continue
+                # When the parent is already performing a full copy of the node, avoid
+                # emitting additional copy rules for its children to prevent duplicated
+                # arrays (e.g., repeated codings when copying Medication.code).
+                if (
+                    node.intent in COPY_RULE_INTENTS
+                    and child.intent in COPY_RULE_INTENTS
+                    and not is_extension
+                ):
+                    continue
+                if node.intent in COPY_RULE_INTENTS and not is_extension and child.segment.startswith("coding"):
+                    continue
                 sub_rule = self.build_rule(child, source_entry, target_entry)
                 if sub_rule:
                     sub_rules.append(sub_rule)
+
+            sub_rules.extend(self._drug_category_code_fallback(node, src_var, tgt_var, sub_rules))
             if sub_rules:
                 rule["rule"] = sub_rules
 
@@ -285,55 +354,60 @@ class StructureMapRuleBuilder:
                     },
                 )
 
-            if node.requires_source:
+            source_chain = self._build_path_chain(
+                source_path,
+                alias=self._source_alias,
+                prefix="src",
+                chain_kind="source",
+                profile_keys=self._source_profile_keys,
+            )
+            if not source_chain:
                 source_chain = self._build_path_chain(
-                    source_path,
+                    node.path,
                     alias=self._source_alias,
                     prefix="src",
                     chain_kind="source",
                     profile_keys=self._source_profile_keys,
                 )
-                if not source_chain:
-                    return None
+            if not source_chain:
+                return None
 
-                skipped_urls = find_skipped_slices(
-                    node,
-                    self._actions,
-                    self._mapping,
-                    self._target_profile_key,
-                    SKIP_ACTIONS,
-                )
-                conditions = [f"url != '{url}'" for url in skipped_urls]
+            skipped_urls = find_skipped_slices(
+                node,
+                self._actions,
+                self._mapping,
+                self._target_profile_key,
+                SKIP_ACTIONS,
+            )
+            conditions = [f"url != '{url}'" for url in skipped_urls]
 
-                if is_extension_path(source_path):
-                    source_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
-                    if source_url:
-                        conditions.append(f"url = '{source_url}'")
-                slice_conditions = self._slice_conditions_for_path(source_path, self._source_profile_keys)
+            if source_path and is_extension_path(source_path):
+                source_url = get_extension_url(self._mapping, source_path, self._source_profile_keys)
+                if source_url:
+                    conditions.append(f"url = '{source_url}'")
+            slice_conditions = self._slice_conditions_for_path(source_path, self._source_profile_keys)
 
-                if node.intent == "copy_node_to" and not slice_conditions and node.other_path:
-                    fallback_conditions = self._slice_conditions_for_path(node.other_path, self._target_profile_key)
-                    if fallback_conditions:
-                        slice_conditions.extend(fallback_conditions)
+            if node.intent == "copy_node_to" and not slice_conditions and node.other_path:
+                fallback_conditions = self._slice_conditions_for_path(node.other_path, self._target_profile_key)
+                if fallback_conditions:
+                    slice_conditions.extend(fallback_conditions)
 
-                if slice_conditions:
-                    conditions.extend(slice_conditions)
-                exclusion_conditions = self._child_slice_exclusion_conditions(node)
-                if exclusion_conditions:
-                    conditions.extend(exclusion_conditions)
+            if slice_conditions:
+                conditions.extend(slice_conditions)
+            exclusion_conditions = self._child_slice_exclusion_conditions(node)
+            if exclusion_conditions:
+                conditions.extend(exclusion_conditions)
 
-                conditions = [c for c in conditions if c]
+            conditions = [c for c in conditions if c]
+            if conditions:
+                if source_path and not is_extension_path(source_path):
+                    conditions = [c for c in conditions if "url" not in c]
                 if conditions:
-                    if source_path and not is_extension_path(source_path):
-                        conditions = [c for c in conditions if "url" not in c]
-                    if not conditions:
-                        pass
+                    condition_str = " and ".join(conditions)
+                    if "condition" in source_chain[-1]:
+                        source_chain[-1]["condition"] += f" and {condition_str}"
                     else:
-                        condition_str = " and ".join(conditions)
-                        if "condition" in source_chain[-1]:
-                            source_chain[-1]["condition"] += f" and {condition_str}"
-                        else:
-                            source_chain[-1]["condition"] = condition_str
+                        source_chain[-1]["condition"] = condition_str
 
             target_chain = self._build_path_chain(
                 target_path,
@@ -480,7 +554,7 @@ class StructureMapRuleBuilder:
                 }
             ]
 
-        if node.children and node.intent != "copy_node_to":
+        if node.children and (node.intent != "copy_node_to" or is_extension_path(node.path)):
             leaf_src_var = leaf_source["variable"] if leaf_source else self._source_alias
             leaf_tgt_var = target_chain[-1]["variable"] if target_chain else None
 
@@ -491,9 +565,25 @@ class StructureMapRuleBuilder:
                         continue
                     if child.intent == "manual":
                         continue
+                    if node.path and node.path.endswith("code") and child.segment.startswith("coding"):
+                        continue
+                    if node.path and node.path.endswith("form") and child.segment.startswith("coding"):
+                        continue
+                    if (
+                        node.intent in COPY_RULE_INTENTS
+                        and child.intent in COPY_RULE_INTENTS
+                        and not is_extension_path(node.path)
+                    ):
+                        continue
+                    if node.intent in COPY_RULE_INTENTS and not is_extension_path(node.path) and child.segment.startswith("coding"):
+                        continue
+
                     sub_rule = self.build_rule(child, {"variable": leaf_src_var}, {"variable": leaf_tgt_var})
                     if sub_rule:
                         sub_rules.append(sub_rule)
+
+                sub_rules.extend(self._drug_category_code_fallback(node, leaf_src_var, leaf_tgt_var, sub_rules))
+
                 if sub_rules:
                     rule["rule"] = sub_rules
 
@@ -629,7 +719,7 @@ class StructureMapRuleBuilder:
             if base_name in {"extension", "modifierExtension"}:
                 extension_url = get_extension_url(self._mapping, current_full_path, profile_keys)
                 if chain_kind == "target":
-                    create_type = extension_url or "Extension"
+                    create_type = "Extension"
                 element_name = base_name
 
             if chain_kind == "source" and extension_url:
@@ -669,6 +759,53 @@ class StructureMapRuleBuilder:
             chain.append(entry)
             context = variable
         return chain
+
+    def _drug_category_code_fallback(
+        self,
+        node: FieldNode,
+        leaf_src_var: str | None,
+        leaf_tgt_var: str | None,
+        sub_rules: list[dict],
+    ) -> list[dict]:
+        path = node.path or ""
+        if not path.endswith("extension:drugCategory.value[x]"):
+            return []
+        if not (leaf_src_var and leaf_tgt_var):
+            return []
+
+        has_code_rule = any(
+            any(target.get("element") == "code" for target in rule.get("target", []))
+            for rule in sub_rules
+        )
+        if has_code_rule:
+            return []
+
+        src_var = var_name("src", f"{path}.code")
+        tgt_var = var_name("tgt", f"{path}.code")
+
+        return [
+            {
+                "name": slug(f"{path}.code", suffix=stable_id(f"{path}.code")),
+                "source": [
+                    {
+                        "context": leaf_src_var,
+                        "element": "code",
+                        "variable": src_var,
+                    }
+                ],
+                "target": [
+                    {
+                        "context": leaf_tgt_var,
+                        "contextType": "variable",
+                        "element": "code",
+                        "variable": tgt_var,
+                        "transform": "copy",
+                        "parameter": [{"valueId": src_var}],
+                    }
+                ],
+                "documentation": "Copied drugCategory code",
+            }
+        ]
 
     def _profile_field_for_keys(self, field, profile_keys: str | Iterable[str] | None):
         if not field or not profile_keys:
