@@ -29,21 +29,12 @@ JAVA_VALIDATOR_JAR = Path("/Users/gematik/dev/validators/current_hapi_validator.
 FHIR_VERSION = "4.0.1"
 VALIDATE_STRUCTUREMAPS = True
 RUN_TRANSFORMATIONS = True  # Enable to run example transformations via validator -transform
-PROJECT_FILTER: list[str] = ["dgMP Mapping_2025-10"]  # Leave empty to process every project that exists in the projects dir.
+PROJECT_FILTER: list[str] = ["dgMP Mapping_2026-07-forwards"]  # Leave empty to process every project that exists in the projects dir.
 MAPPING_FILTER: list[str] = []  # Optional list of mapping UUIDs to limit the run.
 TRANSFORMATION_FILTER: list[str] = []  # Optional list of transformation UUIDs to limit the run.
 EXTRA_IG_SOURCES: list[str | Path] = []  # Additional -ig arguments besides the mapping test folder itself.
 ADDITIONAL_TRANSFORM_ARGS: list[str] = []
 SERVER_BASE_URL = os.environ.get("STRUCTUREMAP_SERVER_URL", "http://127.0.0.1:8000")
-# Fallback Organization.type when the mapping does not populate it yet
-DEFAULT_ORG_TYPE = {
-    "coding": [
-        {
-            "system": "https://gematik.de/fhir/directory/CodeSystem/OrganizationProviderType",
-            "code": "kim-provider",
-        }
-    ]
-}
 # ---------------------------------------------------------------------------
 
 SERVICE_SRC = REPO_ROOT / "service" / "src"
@@ -60,24 +51,6 @@ _RESET_COLOR = "\033[0m"
 
 def _print_step(message: str) -> None:
     print(f"{_STEP_COLOR}{message}{_RESET_COLOR}")
-
-
-def _ensure_organization_type(output_file: Path) -> None:
-    """Inject a default Organization.type when missing to satisfy cardinality."""
-    try:
-        payload = json.loads(output_file.read_text())
-    except Exception:
-        return
-
-    if not isinstance(payload, dict):
-        return
-    if payload.get("resourceType") != "Organization":
-        return
-    if payload.get("type"):
-        return
-
-    payload["type"] = [DEFAULT_ORG_TYPE]
-    output_file.write_text(json.dumps(payload, ensure_ascii=True, indent=2))
 
 
 @dataclass(frozen=True)
@@ -360,7 +333,6 @@ def _run_transform_job(job: TransformJob) -> list[ExampleRunResult]:
 
         if output_file.exists() and output_file.stat().st_size > 0 and transform_ok:
             _print_step(f"[{job.project_key}/{job.identifier}] Output written to {_as_repo_relative(output_file)}")
-            _ensure_organization_type(output_file)
             validation_ok, validation_error = _validate_transformed_output(
                 output_file=output_file,
                 project_key=job.project_key,
@@ -496,6 +468,11 @@ def _parse_example_filename(path: Path) -> tuple[str | None, str]:
         identifier, descriptor = remainder.split("_", 1)
         descriptor = descriptor or "payload"
         return identifier, descriptor
+    if "-" in remainder:
+        identifier, descriptor = remainder.rsplit("-", 1)
+        descriptor = descriptor or "payload"
+        if any(ch not in "0123456789abcdefABCDEF" for ch in descriptor):
+            return identifier, descriptor
     return remainder, "payload"
 
 

@@ -6375,12 +6375,12 @@ entries:
     name: Practitioner.qualification:ASV-Fachgruppennummer
     other: null
     remark: null
-  - action: copy_value_to
+  - action: empty
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.qualification:Berufsbezeichnung
-    other: Practitioner.qualification
+    other: null
     remark: null
   - action: empty
     auto_generated: false
@@ -6410,13 +6410,6 @@ entries:
     name: Practitioner.qualification:Berufsbezeichnung.identifier
     other: null
     remark: null
-  - action: copy_value_to
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.code
-    other: Practitioner.qualification.code
-    remark: null
   - action: empty
     auto_generated: false
     fixed: null
@@ -6430,13 +6423,6 @@ entries:
     inherited_from: null
     name: Practitioner.qualification:Berufsbezeichnung.code.extension
     other: null
-    remark: null
-  - action: copy_value_to
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.code.text
-    other: Practitioner.qualification.code.text
     remark: null
   - action: empty
     auto_generated: false

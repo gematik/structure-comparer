@@ -15,3 +15,7 @@ dist/
 # Packages can be re-downloaded from FHIR registries at any time
 structure-comparer-projects/*/data/
 structure-comparer-projects/*/data_old/
+
+structuremap-test/**/outputs/
+structuremap-test/**/structuremaps/
+run_report.md
