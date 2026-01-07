@@ -1,5 +1,7 @@
 # Structure Comparer
 
+**Further development has been suspended until further notice.**
+
 Tooling that allows to compare FHIR profiles and creating mappings between them.
 
 ## Service
