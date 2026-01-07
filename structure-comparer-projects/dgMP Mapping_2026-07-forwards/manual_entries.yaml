@@ -9487,13 +9487,6 @@ entries:
     name: MedicationRequest.requester.display
     other: MedicationRequest.requester.display
     remark: null
-  - action: use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: MedicationRequest.subject
-    other: null
-    remark: null
   - action: not_use
     auto_generated: false
     fixed: null
@@ -10397,6 +10390,14 @@ entries:
     name: MedicationRequest.extension:T-Rezept.extension:ErklaerungSachkenntnis.value[x]:valueBoolean.value
     other: MedicationRequest.extension:teratogenic.extension:declaration-of-expertise.value[x].value
     remark: null
+  - action: manual
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: MedicationRequest.subject
+    other: null
+    remark: 'Transformationsregel F_007: Wird aus KBV_PR_FOR_Patient.identifier:versichertenId
+      übernommen.'
   id: f6d9edd7-7182-9edf-4f63-af123bc45d67
 - fields:
   - action: use
