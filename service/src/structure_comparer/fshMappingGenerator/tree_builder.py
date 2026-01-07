@@ -23,9 +23,9 @@ COPY_INTENTS: set[str] = {
 }
 
 # Intents that should not emit rules themselves but may allow mapped
-# descendants to be processed.
+# descendants to be processed. Manual intents are handled explicitly so they
+# can surface documentation in the StructureMap output.
 NON_EMITTING_INTENTS: set[str] = {
-    "manual",
     "receive_node",
 }
 
@@ -399,6 +399,14 @@ class FieldTreeBuilder:
             # Avoid emitting separate top-level rules for nested extension fields; the parent
             # extension rule will take care of its entire subtree during rule building.
             if child.parent and is_extension_path(child.parent.path):
+                continue
+
+            if child.intent == "manual":
+                # Emit a documentation-only rule for manual actions so they are
+                # visible in the exported StructureMap.
+                self._nodes_to_emit.append(child)
+                # Manual fields may still have children with their own mappings.
+                self._collect_nodes(child)
                 continue
 
             if child.intent == "copy_node_to":

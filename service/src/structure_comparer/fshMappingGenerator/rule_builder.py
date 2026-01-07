@@ -101,6 +101,8 @@ class StructureMapRuleBuilder:
         self._field_source_support = field_source_support
 
     def build_rule(self, node: FieldNode, parent_src: dict | None = None, parent_tgt: dict | None = None) -> dict | None:
+        if node.intent == "manual":
+            return self._build_manual_rule(node, parent_src, parent_tgt)
         if node.intent in NON_EMITTING_INTENTS or node.intent == "skip":
             return None
         if parent_src and parent_tgt:
@@ -563,8 +565,6 @@ class StructureMapRuleBuilder:
                 for child in sorted(node.children.values(), key=lambda item: item.path):
                     if child.intent == "skip":
                         continue
-                    if child.intent == "manual":
-                        continue
                     if node.path and node.path.endswith("code") and child.segment.startswith("coding"):
                         continue
                     if node.path and node.path.endswith("form") and child.segment.startswith("coding"):
@@ -591,6 +591,46 @@ class StructureMapRuleBuilder:
             rule = self._wrap_with_chain(rule, source_chain[:-1], direction="source")
         if target_chain:
             rule = self._wrap_with_chain(rule, target_chain[:-1], direction="target")
+
+        return rule
+
+    def _build_manual_rule(self, node: FieldNode, parent_src: dict | None, parent_tgt: dict | None) -> dict:
+        """Emit a documentation-only rule for manual actions.
+
+        Manual actions contain human guidance that must be preserved in the
+        exported StructureMap. The rule anchors to the relevant source/target
+        paths without performing any transformation.
+        """
+
+        rule_name = slug(node.path or node.segment or "manual", suffix=stable_id(node.path or node.segment or "manual"))
+
+        documentation_parts: list[str] = []
+        doc = self._build_documentation(node)
+        if doc:
+            documentation_parts.append(doc)
+        if node.path:
+            documentation_parts.append(f"Field: {node.path}")
+
+        rule: dict[str, Any] = {"name": rule_name}
+        if documentation_parts:
+            rule["documentation"] = " | ".join(documentation_parts)
+
+        source_context = (parent_src or {}).get("variable") or self._source_alias
+        source_entry: dict[str, Any] = {
+            "context": source_context,
+            "variable": var_name("manual_src", node.path or node.segment or "manual"),
+        }
+        rule["source"] = [source_entry]
+
+        target_context = (parent_tgt or {}).get("variable")
+        if target_context:
+            rule["target"] = [
+                {
+                    "context": target_context,
+                    "contextType": "variable",
+                    "variable": var_name("manual_tgt", node.path or node.segment or "manual"),
+                }
+            ]
 
         return rule
 

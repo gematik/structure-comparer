@@ -540,7 +540,18 @@ def _project_ig_package_specs(project_key: str) -> list[str]:
 def _structuremap_ig_directories(structuremap_root: Path) -> list[Path]:
     if not structuremap_root.exists():
         return []
-    return sorted(path for path in structuremap_root.iterdir() if path.is_dir())
+    ig_dirs: set[Path] = set()
+    ig_dirs.update(path for path in structuremap_root.iterdir() if path.is_dir())
+
+    external_root = structuremap_root.parent / "externalDependencies"
+    if external_root.is_dir():
+        ig_dirs.update(
+            path
+            for path in external_root.iterdir()
+            if path.is_dir() or path.suffix in {".tgz", ".tar.gz", ".tar", ".zip"}
+        )
+
+    return sorted(ig_dirs)
 
 
 @dataclass(frozen=True)
@@ -553,6 +564,7 @@ def _project_ig_entries(project_key: str) -> list[ProjectIGSource]:
     data_dir = PROJECTS_DIR / project_key / "data"
     sources: list[ProjectIGSource] = []
     if not data_dir.is_dir():
+        sources.extend(_external_dependency_entries(project_key))
         return sources
 
     for entry in sorted(data_dir.iterdir()):
@@ -568,7 +580,23 @@ def _project_ig_entries(project_key: str) -> list[ProjectIGSource]:
         if (target_dir / "package.json").exists():
             sources.append(ProjectIGSource(_package_spec_from_name(entry.name), target_dir))
 
+    sources.extend(_external_dependency_entries(project_key))
+
     return sources
+
+
+def _external_dependency_entries(project_key: str) -> list[ProjectIGSource]:
+    """Return IG sources from a project's externalDependencies folder, if present."""
+
+    root = STRUCTUREMAP_ROOT / project_key / "externalDependencies"
+    if not root.is_dir():
+        return []
+
+    entries: list[ProjectIGSource] = []
+    for entry in sorted(root.iterdir()):
+        if entry.is_dir() or entry.suffix in {".tgz", ".tar.gz", ".tar", ".zip"}:
+            entries.append(ProjectIGSource(None, entry))
+    return entries
 
 
 def _package_spec_from_name(name: str) -> str | None:

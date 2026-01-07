@@ -6312,7 +6312,7 @@ entries:
     name: Practitioner.identifier:Telematik-ID.period
     other: null
     remark: null
-  - action: use
+  - action: not_use
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -7164,6 +7164,41 @@ entries:
     fixed: null
     inherited_from: null
     name: Practitioner.qualification.period
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification.code.id
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification.code.extension
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification.code.text
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification.code.coding
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.identifier:TelematikID
     other: null
     remark: null
   id: 07ea0ee8-8293-a0f0-5064-b0134cd56e78

@@ -35,9 +35,16 @@ def slug(text: str, *, suffix: str) -> str:
     return candidate or "Field"
 
 
-def var_name(prefix: str, path: str) -> str:
-    slugged = slug(path, suffix=stable_id(path))
-    candidate = f"{prefix}{slugged[0].upper()}{slugged[1:]}" if slugged else prefix
+def var_name(prefix: str, path: str | None) -> str:
+    safe_prefix = re.sub(r"[^A-Za-z0-9]+", "", prefix) or "Var"
+    if not safe_prefix[0].isalpha():
+        safe_prefix = f"V{safe_prefix}"
+
+    normalized_path = path or prefix or "Field"
+    slugged = slug(normalized_path, suffix=stable_id(normalized_path))
+    formatted = f"{slugged[0].upper()}{slugged[1:]}" if slugged else ""
+
+    candidate = f"{safe_prefix}{formatted}" if formatted else safe_prefix
     return candidate[:64]
 
 
