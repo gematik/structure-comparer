@@ -967,7 +967,7 @@ class _TransformationInlineFieldRuleBuilder:
     def _action_needs_source(self, action: ActionType | None) -> bool:
         if action is None:
             return True
-        if action in {ActionType.EMPTY, ActionType.NOT_USE}:
+        if action in {ActionType.EMPTY, ActionType.NOT_USE, ActionType.DELETE}:
             return False
         if action == ActionType.FIXED:
             return False
@@ -1051,6 +1051,7 @@ class _TransformationInlineFieldRuleBuilder:
             ActionType.USE_RECURSIVE: "Automatic copy",
             ActionType.FIXED: f"Fixed value '{self._field.fixed or ''}'",
             ActionType.MANUAL: "Manual action required",
+            ActionType.DELETE: "Feld wird gelöscht (nicht gemappt)",
         }
         return descriptions.get(action)
 

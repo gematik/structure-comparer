@@ -5,6 +5,7 @@ class Action(StrEnum):
     USE = "use"
     USE_RECURSIVE = "use_recursive"
     NOT_USE = "not_use"
+    DELETE = "delete"
     EMPTY = "empty"
     MANUAL = "manual"
     COPY_VALUE_FROM = "copy_value_from"

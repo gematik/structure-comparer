@@ -114,7 +114,7 @@ def _evaluate_field(field, action_info: ActionInfo) -> EvaluationResult:
     is_required = bool(getattr(field, "is_target_required", False))
     classification = getattr(field, "classification", "unknown")
 
-    if is_required and action_info.action == ActionType.NOT_USE:
+    if is_required and action_info.action in {ActionType.NOT_USE, ActionType.DELETE}:
         reason = EvaluationReason(
             code="TARGET_MIN_GT_SOURCE_MIN",
             severity=EvaluationSeverity.ERROR,

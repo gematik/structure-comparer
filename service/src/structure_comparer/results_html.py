@@ -12,6 +12,7 @@ CSS_CLASS = {
     Action.USE: "row-use",
     Action.USE_RECURSIVE: "row-use-recursive",
     Action.NOT_USE: "row-not-use",
+    Action.DELETE: "row-not-use",
     Action.EMPTY: "row-not-use",
     Action.MANUAL: "row-manual",
     Action.COPY_VALUE_FROM: "row-manual",

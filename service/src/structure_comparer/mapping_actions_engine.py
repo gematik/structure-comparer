@@ -26,6 +26,7 @@ _INHERITABLE_ACTIONS = {
     # ActionType.NOT_USE,  # Removed: Now handled as recommendation only
     ActionType.EMPTY,
     ActionType.USE_RECURSIVE,
+    ActionType.DELETE,
     ActionType.COPY_VALUE_FROM,
     ActionType.COPY_VALUE_TO,
     ActionType.COPY_NODE_TO,  # Copy node actions should be inherited to child fields
@@ -171,9 +172,9 @@ def _action_from_manual(
 def _propagate_not_use_to_direct_children(
     mapping, action_info_map: Dict[str, ActionInfo]
 ) -> None:
-    """Automatically propagate NOT_USE action from parent to direct children.
+    """Automatically propagate NOT_USE action from parent to all descendants.
     
-    When a field has NOT_USE with source=MANUAL, all its direct children
+    When a field has NOT_USE with source=MANUAL, all its descendant fields
     without manual actions receive NOT_USE with source=INHERITED.
     
     Args:
@@ -197,16 +198,16 @@ def _propagate_not_use_to_direct_children(
     
     # For each parent with manual NOT_USE
     for parent_field_name, parent_action in fields_with_manual_not_use:
-        direct_children = navigator.get_direct_children(parent_field_name)
+        descendants = navigator.get_all_descendants(parent_field_name)
         
-        for child_field_name in direct_children:
+        for child_field_name in descendants:
             # Check if child already has a manual action
             child_action = action_info_map.get(child_field_name)
             if child_action and child_action.source == ActionSource.MANUAL:
                 # Don't override manual actions
                 continue
             
-            # Set NOT_USE on child
+            # Set NOT_USE on descendant
             action_info_map[child_field_name] = ActionInfo(
                 action=ActionType.NOT_USE,
                 source=ActionSource.INHERITED,

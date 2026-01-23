@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 CLASSIFICATION_TO_ACTION = {
     "use": "use",
     "not_use": "not_use",
+    "delete": "delete",
     "empty": "empty",
     "fixed": "fixed",
     # Legacy copy_from/copy_to are migrated to the new names

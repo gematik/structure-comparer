@@ -18,6 +18,7 @@ class ActionType(str, Enum):
     USE = "use"
     USE_RECURSIVE = "use_recursive"
     NOT_USE = "not_use"
+    DELETE = "delete"
     EMPTY = "empty"
     COPY_VALUE_FROM = "copy_value_from"
     COPY_VALUE_TO = "copy_value_to"

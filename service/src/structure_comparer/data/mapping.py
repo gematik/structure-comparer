@@ -25,6 +25,7 @@ _ACTIONTYPE_TO_LEGACY: dict[ActionType, Action] = {
     ActionType.USE: Action.USE,
     ActionType.USE_RECURSIVE: Action.USE_RECURSIVE,
     ActionType.NOT_USE: Action.NOT_USE,
+    ActionType.DELETE: Action.DELETE,
     ActionType.EMPTY: Action.EMPTY,
     ActionType.COPY_VALUE_FROM: Action.COPY_VALUE_FROM,
     ActionType.COPY_VALUE_TO: Action.COPY_VALUE_TO,
@@ -78,7 +79,7 @@ class MappingField(ComparisonField):
         if not any_source_present:
             # No source profile: can't use, not_use, or copy FROM source
             allowed -= set([
-                Action.USE, Action.NOT_USE,
+                Action.USE,
                 Action.COPY_VALUE_FROM, Action.COPY_NODE_FROM
             ])
         else:
@@ -245,11 +246,11 @@ class Mapping(Comparison):
         if self.sources is None or self.target is None:
             raise NotInitialized()
 
-        all_profiles = [self.target] + self.sources
-        all_profiles_keys = [profile.key for profile in all_profiles]
+        source_profile_keys = [profile.key for profile in self.sources]
+        target_profile_key = self.target.key
         # Add remarks and actions for each field
         for field in self.fields.values():
-            field.fill_allowed_actions(all_profiles_keys[:-1], all_profiles_keys[-1], self.fields)
+            field.fill_allowed_actions(source_profile_keys, target_profile_key, self.fields)
 
     def to_base_model(self) -> MappingBaseModel:
         if self.sources is None or self.target is None:

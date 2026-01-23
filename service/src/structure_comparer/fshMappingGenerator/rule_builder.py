@@ -101,7 +101,7 @@ class StructureMapRuleBuilder:
         self._field_source_support = field_source_support
 
     def build_rule(self, node: FieldNode, parent_src: dict | None = None, parent_tgt: dict | None = None) -> dict | None:
-        if node.intent == "manual":
+        if node.intent in {"manual", "delete"}:
             return self._build_manual_rule(node, parent_src, parent_tgt)
         if node.intent in NON_EMITTING_INTENTS or node.intent == "skip":
             return None
@@ -609,28 +609,80 @@ class StructureMapRuleBuilder:
         if doc:
             documentation_parts.append(doc)
         if node.path:
-            documentation_parts.append(f"Field: {node.path}")
+            documentation_parts.append(f"Quelle: {node.path}")
 
         rule: dict[str, Any] = {"name": rule_name}
         if documentation_parts:
             rule["documentation"] = " | ".join(documentation_parts)
 
-        source_context = (parent_src or {}).get("variable") or self._source_alias
-        source_entry: dict[str, Any] = {
-            "context": source_context,
-            "variable": var_name("manual_src", node.path or node.segment or "manual"),
-        }
-        rule["source"] = [source_entry]
+        source_chain: list[dict] = []
+        target_chain: list[dict] = []
 
-        target_context = (parent_tgt or {}).get("variable")
-        if target_context:
-            rule["target"] = [
+        # If no parent context is provided, build a path-based chain so the rule
+        # is anchored like other tree-based rules (needed for delete/manual docs).
+        if parent_src is None and parent_tgt is None and node.path:
+            allow_missing_target = node.intent == "delete"
+            target_chain = self._build_path_chain(
+                node.path,
+                alias=self._target_alias,
+                prefix="tgt",
+                chain_kind="target",
+                profile_keys=self._target_profile_key,
+                allow_missing_target=allow_missing_target,
+            )
+            if self._field_source_support.get(node.path, True):
+                source_chain = self._build_path_chain(
+                    node.path,
+                    alias=self._source_alias,
+                    prefix="src",
+                    chain_kind="source",
+                    profile_keys=self._source_profile_keys,
+                )
+
+        leaf_source = source_chain[-1] if source_chain else None
+        if leaf_source:
+            source_entry: dict[str, Any] = {
+                "context": leaf_source["context"],
+                "element": leaf_source["element"],
+                "variable": leaf_source["variable"],
+            }
+            if "condition" in leaf_source:
+                source_entry["condition"] = leaf_source["condition"]
+            rule["source"] = [source_entry]
+        else:
+            source_context = (parent_src or {}).get("variable") or self._source_alias
+            rule["source"] = [
                 {
-                    "context": target_context,
-                    "contextType": "variable",
-                    "variable": var_name("manual_tgt", node.path or node.segment or "manual"),
+                    "context": source_context,
+                    "variable": var_name("manual_src", node.path or node.segment or "manual"),
                 }
             ]
+
+        leaf_target = target_chain[-1] if target_chain else None
+        if leaf_target:
+            rule["target"] = [
+                {
+                    "context": leaf_target["context"],
+                    "contextType": "variable",
+                    "element": leaf_target["element"],
+                    "variable": leaf_target["variable"],
+                }
+            ]
+        else:
+            target_context = (parent_tgt or {}).get("variable")
+            if target_context:
+                rule["target"] = [
+                    {
+                        "context": target_context,
+                        "contextType": "variable",
+                        "variable": var_name("manual_tgt", node.path or node.segment or "manual"),
+                    }
+                ]
+
+        if source_chain:
+            rule = self._wrap_with_chain(rule, source_chain[:-1], direction="source")
+        if target_chain:
+            rule = self._wrap_with_chain(rule, target_chain[:-1], direction="target")
 
         return rule
 
@@ -1108,6 +1160,7 @@ class StructureMapRuleBuilder:
             "copy_node_to": f"Copied to '{node.other_path}'" if node.other_path else "Automatic copy",
             "fixed": f"Fixed value '{node.fixed_value}'",
             "manual": "Manual action required",
+            "delete": "Feld wird nicht gemappt",
         }.get(node.intent)
         if intent_desc:
             details.append(intent_desc)

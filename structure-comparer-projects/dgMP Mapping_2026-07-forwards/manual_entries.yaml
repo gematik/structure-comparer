@@ -6312,139 +6312,6 @@ entries:
     name: Practitioner.identifier:Telematik-ID.period
     other: null
     remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Typ.id
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Typ.extension
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Typ.modifierExtension
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Typ.identifier
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Typ.period
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Typ.issuer
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Typ
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:ASV-Fachgruppennummer
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.id
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.extension
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.modifierExtension
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.identifier
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.code.id
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.code.extension
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.code.coding
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.period
-    other: null
-    remark: null
-  - action: empty
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification:Berufsbezeichnung.issuer
-    other: null
-    remark: null
   - action: empty
     auto_generated: false
     fixed: null
@@ -7128,77 +6995,35 @@ entries:
     auto_generated: false
     fixed: null
     inherited_from: null
-    name: Practitioner.qualification.issuer
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.id
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.extension
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.modifierExtension
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.identifier
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.period
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.code.id
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.code.extension
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.code.text
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
-    name: Practitioner.qualification.code.coding
-    other: null
-    remark: null
-  - action: not_use
-    auto_generated: false
-    fixed: null
-    inherited_from: null
     name: Practitioner.identifier:TelematikID
+    other: null
+    remark: null
+  - action: delete
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Typ
+    other: null
+    remark: null
+  - action: delete
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:Berufsbezeichnung
+    other: null
+    remark: null
+  - action: delete
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification:ASV-Fachgruppennummer
+    other: null
+    remark: null
+  - action: not_use
+    auto_generated: false
+    fixed: null
+    inherited_from: null
+    name: Practitioner.qualification
     other: null
     remark: null
   id: 07ea0ee8-8293-a0f0-5064-b0134cd56e78

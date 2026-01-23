@@ -11,6 +11,7 @@ DICT_REMOVE = "remove"
 
 IGNORE_CLASSIFICATIONS = [
     Action.NOT_USE,
+    Action.DELETE,
     Action.EMPTY,
     Action.COPY_VALUE_FROM,
     Action.MEDICATION_SERVICE,

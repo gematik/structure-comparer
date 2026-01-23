@@ -10,6 +10,7 @@ from .nodes import FieldNode
 SKIP_ACTIONS: set[ActionType] = {
     ActionType.EMPTY,
     ActionType.NOT_USE,
+    ActionType.DELETE,
 }
 
 COPY_INTENTS: set[str] = {
@@ -102,7 +103,7 @@ class FieldTreeBuilder:
 
         target_field = field.profiles.get(self._target_profile_key)
         target_supported = self._profile_supports_field(target_field)
-        if not target_supported and not (info and info.action == ActionType.COPY_NODE_TO):
+        if not target_supported and not (info and info.action in {ActionType.COPY_NODE_TO, ActionType.DELETE}):
             self._blocked_prefixes.add(path)
             return False
 
@@ -270,7 +271,7 @@ class FieldTreeBuilder:
         action = info.action
         if action is None:
             return True
-        if action in {ActionType.EMPTY, ActionType.NOT_USE}:
+        if action in {ActionType.EMPTY, ActionType.NOT_USE, ActionType.DELETE}:
             return False
         if action == ActionType.FIXED:
             return False
@@ -323,11 +324,14 @@ class FieldTreeBuilder:
 
         info = self._actions.get(node.path)
 
-        if action in {ActionType.NOT_USE, ActionType.MANUAL} and self._is_target_required(node.path):
+        if action in {ActionType.NOT_USE, ActionType.DELETE, ActionType.MANUAL} and self._is_target_required(node.path):
             return "copy"
 
         if action is None:
             return "copy"
+
+        if action == ActionType.DELETE:
+            return "delete"
 
         if action in SKIP_ACTIONS:
             return "skip"
@@ -401,7 +405,7 @@ class FieldTreeBuilder:
             if child.parent and is_extension_path(child.parent.path):
                 continue
 
-            if child.intent == "manual":
+            if child.intent in {"manual", "delete"}:
                 # Emit a documentation-only rule for manual actions so they are
                 # visible in the exported StructureMap.
                 self._nodes_to_emit.append(child)
