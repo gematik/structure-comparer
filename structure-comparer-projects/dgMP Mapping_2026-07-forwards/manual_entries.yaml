@@ -6564,12 +6564,12 @@ entries:
     name: Practitioner.identifier:ANR.assigner.display
     other: Practitioner.identifier:LANR.assigner.display
     remark: null
-  - action: empty
+  - action: copy_node_from
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Practitioner.identifier:ZANR
-    other: null
+    other: Practitioner.identifier:ZANR
     remark: null
   - action: copy_node_to
     auto_generated: false
@@ -7025,6 +7025,237 @@ entries:
     inherited_from: null
     name: Practitioner.qualification
     other: null
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.id
+    other: Practitioner.identifier:ZANR.id
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.extension
+    other: Practitioner.identifier:ZANR.extension
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.use
+    other: Practitioner.identifier:ZANR.use
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type
+    other: Practitioner.identifier:ZANR.type
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.id
+    other: Practitioner.identifier:ZANR.type.id
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.extension
+    other: Practitioner.identifier:ZANR.type.extension
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.coding
+    other: Practitioner.identifier:ZANR.type.coding
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.coding.id
+    other: Practitioner.identifier:ZANR.type.coding.id
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.coding.extension
+    other: Practitioner.identifier:ZANR.type.coding.extension
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.coding.system
+    other: Practitioner.identifier:ZANR.type.coding.system
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.coding.version
+    other: Practitioner.identifier:ZANR.type.coding.version
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.coding.code
+    other: Practitioner.identifier:ZANR.type.coding.code
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.coding.display
+    other: Practitioner.identifier:ZANR.type.coding.display
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.coding.userSelected
+    other: Practitioner.identifier:ZANR.type.coding.userSelected
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.type.text
+    other: Practitioner.identifier:ZANR.type.text
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.system
+    other: Practitioner.identifier:ZANR.system
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.value
+    other: Practitioner.identifier:ZANR.value
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.period
+    other: Practitioner.identifier:ZANR.period
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner
+    other: Practitioner.identifier:ZANR.assigner
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.id
+    other: Practitioner.identifier:ZANR.assigner.id
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.extension
+    other: Practitioner.identifier:ZANR.assigner.extension
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.reference
+    other: Practitioner.identifier:ZANR.assigner.reference
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.type
+    other: Practitioner.identifier:ZANR.assigner.type
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier
+    other: Practitioner.identifier:ZANR.assigner.identifier
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier.id
+    other: Practitioner.identifier:ZANR.assigner.identifier.id
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier.extension
+    other: Practitioner.identifier:ZANR.assigner.identifier.extension
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier.use
+    other: Practitioner.identifier:ZANR.assigner.identifier.use
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier.type
+    other: Practitioner.identifier:ZANR.assigner.identifier.type
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier.system
+    other: Practitioner.identifier:ZANR.assigner.identifier.system
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier.value
+    other: Practitioner.identifier:ZANR.assigner.identifier.value
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier.period
+    other: Practitioner.identifier:ZANR.assigner.identifier.period
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.identifier.assigner
+    other: Practitioner.identifier:ZANR.assigner.identifier.assigner
+    remark: null
+  - action: copy_node_from
+    auto_generated: false
+    fixed: null
+    inherited_from: Practitioner.identifier:ZANR
+    name: Practitioner.identifier:ZANR.assigner.display
+    other: Practitioner.identifier:ZANR.assigner.display
     remark: null
   id: 07ea0ee8-8293-a0f0-5064-b0134cd56e78
 - fields:
