@@ -406,10 +406,23 @@ class StructureMapRuleBuilder:
                     conditions = [c for c in conditions if "url" not in c]
                 if conditions:
                     condition_str = " and ".join(conditions)
-                    if "condition" in source_chain[-1]:
-                        source_chain[-1]["condition"] += f" and {condition_str}"
-                    else:
-                        source_chain[-1]["condition"] = condition_str
+                    applied = False
+                    if source_path and ":" in source_path and not is_extension_path(source_path):
+                        slice_name = self._slice_name_in_path(source_path)
+                        if slice_name:
+                            for entry in source_chain:
+                                if entry.get("slice_name") == slice_name:
+                                    if "condition" in entry:
+                                        entry["condition"] += f" and {condition_str}"
+                                    else:
+                                        entry["condition"] = condition_str
+                                    applied = True
+                                    break
+                    if not applied:
+                        if "condition" in source_chain[-1]:
+                            source_chain[-1]["condition"] += f" and {condition_str}"
+                        else:
+                            source_chain[-1]["condition"] = condition_str
 
             target_chain = self._build_path_chain(
                 target_path,
@@ -1063,10 +1076,12 @@ class StructureMapRuleBuilder:
     def _slice_conditions_for_path(self, path: str | None, profile_keys: str | list[str] | None) -> list[str]:
         if not path or ":" not in path:
             return []
-        prefix = f"{path}."
+        slice_root = self._slice_root(path)
+        prefix = f"{slice_root}."
         simple_fields = {"system", "use"}
         conditions: list[str] = []
         coding_requirements: dict[str, dict[str, str]] = {}
+        profile_requirements: list[str] = []
 
         for field_path, field in self._mapping.fields.items():
             if not field_path.startswith(prefix):
@@ -1083,6 +1098,18 @@ class StructureMapRuleBuilder:
 
             if relative in simple_fields:
                 conditions.append(f"{relative} = '{value}'")
+                continue
+
+            if relative == "resource":
+                type_profiles = getattr(profile_field, "type_profiles", []) or []
+                for profile_url in type_profiles:
+                    condition = self._profile_condition_for_url(profile_url, base_path="resource.meta.profile")
+                    if condition:
+                        profile_requirements.append(condition)
+                continue
+
+            if relative.endswith("meta.profile"):
+                profile_requirements.append(f"{relative}.where($this = '{value}').exists()")
                 continue
 
             if relative.startswith("type.coding"):
@@ -1107,6 +1134,9 @@ class StructureMapRuleBuilder:
                 joined = " and ".join(cond_parts)
                 conditions.append(f"{coding_path}.where({joined}).exists()")
 
+        if profile_requirements:
+            conditions.extend(profile_requirements)
+
         seen: set[str] = set()
         result: list[str] = []
         for cond in conditions:
@@ -1115,6 +1145,33 @@ class StructureMapRuleBuilder:
             seen.add(cond)
             result.append(cond)
         return result
+
+    def _slice_root(self, path: str | None) -> str | None:
+        if not path or ":" not in path:
+            return path
+        segments = path.split(".")
+        for idx, segment in enumerate(segments):
+            if ":" in segment:
+                return ".".join(segments[: idx + 1])
+        return path
+
+    def _slice_name_in_path(self, path: str | None) -> str | None:
+        if not path or ":" not in path:
+            return None
+        segments = path.split(".")
+        for segment in segments:
+            if ":" in segment:
+                return segment.split(":", 1)[1]
+        return None
+
+    def _profile_condition_for_url(self, url: str | None, *, base_path: str) -> str | None:
+        if not url:
+            return None
+        url_without_version = url.split("|", 1)[0]
+        if not url_without_version:
+            return None
+        escaped = url_without_version.replace("\\", "\\\\").replace("'", "\\'")
+        return f"{base_path}.where($this.contains('{escaped}')).exists()"
 
     def _normalized_fixed_value(self, profile_field) -> str | None:
         if not profile_field:

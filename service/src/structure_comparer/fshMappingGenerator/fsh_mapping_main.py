@@ -884,12 +884,14 @@ class _TransformationInlineFieldRuleBuilder:
         field: "TransformationField",
         source_alias: str,
         target_alias: str,
+        source_profiles: list["Profile"] | None = None,
         target_path_override: _TransformationPath | None = None,
         source_path_override: _TransformationPath | None = None,
     ) -> None:
         self._field = field
         self._source_alias = source_alias or "source"
         self._target_alias = target_alias or "target"
+        self._source_profiles = source_profiles or []
         self._target_path_override = target_path_override
         self._source_path_override = source_path_override
 
@@ -990,10 +992,67 @@ class _TransformationInlineFieldRuleBuilder:
             clause: dict[str, str] = {"context": context, "variable": variable}
             if element:
                 clause["element"] = element
+            if (
+                segment.slice_name
+                and element == "entry"
+                and idx + 1 < len(path.segments)
+                and path.segments[idx + 1].name == "resource"
+            ):
+                resource_path = self._build_path(path, end_index=idx + 1)
+                type_profiles = self._lookup_type_profiles(resource_path)
+                condition = self._profile_condition(type_profiles, base_path="resource.meta.profile")
+                if condition:
+                    clause["condition"] = condition
             clauses.append(clause)
             context = variable
 
         return clauses
+
+    def _build_path(self, path: _TransformationPath, *, end_index: int) -> str:
+        segments = path.segments[: end_index + 1]
+        segment_names: list[str] = []
+        for segment in segments:
+            if not segment.name:
+                continue
+            if segment.slice_name:
+                segment_names.append(f"{segment.name}:{segment.slice_name}")
+            else:
+                segment_names.append(segment.name)
+        joined = ".".join(segment_names)
+        if not joined:
+            return path.root
+        return f"{path.root}.{joined}"
+
+    def _lookup_type_profiles(self, full_path: str) -> list[str]:
+        profiles = self._source_profiles
+        if not profiles:
+            profiles = list((getattr(self._field, "_profile_objects", {}) or {}).values())
+        for profile in profiles:
+            fields = getattr(profile, "fields", {}) or {}
+            for field in fields.values():
+                field_path_full = getattr(field, "path_full", None)
+                field_path = getattr(field, "path", None)
+                if full_path == field_path_full or full_path == field_path:
+                    type_profiles = getattr(field, "type_profiles", None) or []
+                    if type_profiles:
+                        return list(type_profiles)
+        return []
+
+    def _profile_condition(self, urls: list[str], *, base_path: str) -> str | None:
+        normalized: list[str] = []
+        for url in urls:
+            if not url:
+                continue
+            normalized_url = url.split("|", 1)[0]
+            if normalized_url and normalized_url not in normalized:
+                normalized.append(normalized_url)
+        if not normalized:
+            return None
+        clauses = [
+            f"{base_path}.where($this.contains('{_escape_fhirpath_string(url)}')).exists()"
+            for url in normalized
+        ]
+        return " or ".join(clauses)
 
     def _build_target_chain(self, path: _TransformationPath) -> list[dict]:
         entries: list[dict] = []
@@ -1212,6 +1271,7 @@ class _TransformationStructureMapBuilder:
                 field=ctx.field,
                 source_alias=ctx.source_alias,
                 target_alias=target_alias or self._target_alias,
+                source_profiles=self._source_profiles,
                 target_path_override=target_path_override or ctx.target_path,
                 source_path_override=source_path_override or ctx.source_path_override,
             )
