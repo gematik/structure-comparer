@@ -175,7 +175,7 @@ entries:
     name: Medication.extension:Normgroesse
     other: Medication.extension:normSizeCode
     remark: null
-  - action: empty
+  - action: delete
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -4798,14 +4798,14 @@ entries:
     name: Organization.identifier:VKNR
     other: null
     remark: null
-  - action: empty
+  - action: delete
     auto_generated: false
     fixed: null
     inherited_from: null
     name: Organization.identifier:Telematik-ID
     other: null
     remark: null
-  - action: empty
+  - action: delete
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -8220,7 +8220,7 @@ entries:
     name: MedicationRequest.medication[x]:medicationReference.display
     other: MedicationRequest.medication[x].display
     remark: null
-  - action: empty
+  - action: delete
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -8598,21 +8598,21 @@ entries:
     name: MedicationRequest.extension:SER.value[x]:valueBoolean
     other: MedicationRequest.extension:isSer.value[x]:valueBoolean
     remark: null
-  - action: empty
+  - action: delete
     auto_generated: false
     fixed: null
     inherited_from: null
     name: MedicationRequest.extension:Unfallinformationen
     other: null
     remark: null
-  - action: empty
+  - action: delete
     auto_generated: false
     fixed: null
     inherited_from: null
     name: MedicationRequest.extension:Notdienstgebuehr
     other: null
     remark: null
-  - action: empty
+  - action: delete
     auto_generated: false
     fixed: null
     inherited_from: null
@@ -9417,7 +9417,7 @@ entries:
     name: MedicationRequest.note.text
     other: MedicationRequest.note.text
     remark: null
-  - action: not_use
+  - action: delete
     auto_generated: false
     fixed: null
     inherited_from: null
